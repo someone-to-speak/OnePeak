@@ -4,8 +4,8 @@ const Navibar = () => {
   return (
     <div className="relative z-[200]">
       <div
-        className="w-full min-w-[320px] max-w-[600px] mx-auto my-0 px-4 py-0 pb-safe-offset-0 fixed left-0 right-0 bottom-0 bg-rgb(#FFF)
-      border-[1px] border-solid border-rgba(138, 138, 138, .1) box-border flex gap-[12px]"
+        className="w-full min-w-[320px] max-w-[600px] mx-auto my-0 px-4 py-0 pb-safe-offset-0 fixed left-0 right-0 bottom-0 bg-white
+      border-[1px] border-solid border-rgba(138, 138, 138, .1) box-border flex gap-[12px] text-black"
       >
         <Link
           href={"/"}
