@@ -16,7 +16,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
-      <body>{children}</body>
+      <body>
+        <div className="h-full m-0 p-0">
+          <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">{children}</div>
+        </div>
+      </body>
     </html>
   );
 }
