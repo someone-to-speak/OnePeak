@@ -1,5 +1,6 @@
 "use client";
 
+import Agreement from "@/components/Agreement";
 import React, { useState } from "react";
 
 const lessonPage = () => {
@@ -44,6 +45,7 @@ const lessonPage = () => {
             </select>
           </div>
         </div>
+        <Agreement />
         <button>시작하기</button>
       </form>
     </>
