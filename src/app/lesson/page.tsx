@@ -1,6 +1,6 @@
 "use client";
 
-import Agreement from "@/components/Agreement";
+import Agreement from "@/components/lessonPage/Agreement";
 import React, { useState } from "react";
 
 const lessonPage = () => {
