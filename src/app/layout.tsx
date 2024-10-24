@@ -26,7 +26,7 @@ export default function RootLayout({
         <div className="h-full">
           <div className="flex flex-col w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
             <Header />
-            {children}
+            <main>{children}</main>
             <Navibar />
           </div>
         </div>
