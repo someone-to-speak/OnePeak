@@ -1,7 +1,7 @@
 "use client";
 
 import Agreement from "@/components/lessonPage/Agreement";
-import LessonExplanation from "@/components/lessonPage/LessonExplanation";
+import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import React, { useState } from "react";
 
 const lessonPage = () => {
@@ -21,7 +21,7 @@ const lessonPage = () => {
   return (
     <>
       <h1>언어수업</h1>
-      <LessonExplanation />
+      <EmblaCarousel />
       <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="flex">
           <div className="flex flex-col">
