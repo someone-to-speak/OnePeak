@@ -1,4 +1,10 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"],
+<<<<<<< HEAD
   "rules": { "react/no-unescaped-entities": 0 }
+=======
+  "rules": {
+    "react/no-unescaped-entities": 0
+  }
+>>>>>>> dev
 }
