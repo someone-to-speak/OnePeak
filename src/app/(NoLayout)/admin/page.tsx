@@ -7,7 +7,7 @@ const queryClient = new QueryClient();
 const userManagement = () => {
   return (
     <div>
-      <p>aaa</p>
+      <p>admin 페이지</p>
       <Link href={"/admin/userManagement"}>사용자관리</Link>
     </div>
   );
