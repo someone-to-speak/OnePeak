@@ -1,30 +1,43 @@
-import OpenAI from "openai";
+"use client";
 
-const page = async () => {
-  // API KEY
-  const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPEN_AI_KEY;
+import { useState } from "react";
+import { getChatResponse } from "../api/openAiService";
+import { Message } from "../types/chatBotType/chatBotType";
 
-  // open AI 통신
-  const openai = new OpenAI({
-    apiKey: OPENAI_API_KEY
-  });
+const page = () => {
+  const [userMessage, setUserMessage] = useState<string>("");
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini", // 모델명
-    messages: [
-      { role: "system", content: "나의 영어 선생님이 되어줘." },
-      {
-        role: "user",
-        content: "어떻게 하면 영어를 잘할 수 있을까?"
-      }
-    ]
-  });
+  const sendMessage = async () => {
+    if (!userMessage.trim()) return;
 
-  console.log("챗봇 답변 => ", completion.choices[0].message.content);
+    // 사용자가 보낸 메세지를 채팅 기록에 추가
+    const newUserMessage: Message = {
+      role: "user",
+      content: userMessage
+    };
+
+    setChatHistory((prev) => [...prev, newUserMessage]);
+
+    // API 통신
+    try {
+      // AI 응답 받아오기
+      const aiResponse = await getChatResponse([...chatHistory, newUserMessage]);
+      setChatHistory((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.log("AI 응답 오류 => ", error);
+    }
+  };
 
   return (
-    <div>
-      <h1>AI 튜터</h1>
+    <div className="w-full flex flex-col h-screen shadow-md">
+      <div className="flex-grow"></div>
+      <div className="w-full flex items-center justify-between p-5" style={{ marginBottom: "55px" }}>
+        <form className="w-full flex justify-between p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+          <input className="w-4/5" placeholder="질문을 입력해주세요." value={userMessage} />
+          <button className="p-4 text-sm text-white bg-blue-500 rounded-lg">전송</button>
+        </form>
+      </div>
     </div>
   );
 };
