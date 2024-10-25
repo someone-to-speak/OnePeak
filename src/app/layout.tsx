@@ -23,7 +23,7 @@ export default function RootLayout({
       </head>
       <body>
         <div className="h-full">
-          <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
+          <div className="w-full mx-auto my-0  min-h-full">
             {children}
             <Navibar />
           </div>
