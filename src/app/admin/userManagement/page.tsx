@@ -1,5 +1,5 @@
-import UsersInfo from '@/components/admin/UsersInfo';
-import React from 'react';
+import UsersInfo from "@/components/admin/UsersInfo";
+import React from "react";
 
 const page = () => {
   return (
