@@ -3,29 +3,21 @@
 import { useState } from "react";
 // import { useEffect } from "react";
 // import { createClient } from "@/utils/supabase/client";
-import ProfileImageDelete from "./ProfileImageDelete";
-// import Image from "next/image";
-
-interface UserProfile {
-  nickname: string;
-  profile_url: string;
-  language: string;
-  state_msg: string;
-}
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const UserProfile = () => {
+  const router = useRouter();
   // const supabase = createClient();
   // const [userId, setUserId] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>("dummyUserId"); // 더미 userId
   // const [loading, setLoading] = useState(true);
   // const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userProfile, setUserProfile] = useState({
-    email: "test@example.com",
     nickname: "나는 테스트 유저",
     state_msg: "상태메세지는 졸려",
     gender: "w",
     language: "🇰🇷",
-    profile_url: "https://example.com/example.jpg",
+    profile_url: "https://placehold.co/200x200/EEE/31343C",
     grammerChal_level: "3",
     study_lang: "english"
   });
@@ -79,16 +71,20 @@ const UserProfile = () => {
   //   return <p>{error}</p>;
   // }
 
+  const handleEditProfile = () => {
+    router.push("/editProfile"); // 수정 페이지로 이동합니다.
+  };
+
   return (
     <div>
       <h1>사용자 프로필</h1>
-      {userId && <ProfileImageDelete userId={userId} />}
       {userProfile ? (
         <div>
-          {/* <Image src={userProfile.profile_url} alt="Profile Image" width={150} height={150} layout="responsive" /> */}
+          <Image src={userProfile.profile_url} alt="Profile Image" width={150} height={150} layout="responsive" />
           <p>{userProfile.language}</p>
           <h1>{userProfile.nickname}</h1>
           <li>{userProfile.state_msg}</li>
+          <button onClick={handleEditProfile}>프로필 수정하기</button>
         </div>
       ) : (
         <p>사용자 정보를 찾을 수 없습니다.</p>

@@ -6,10 +6,10 @@ interface ProfileImageDeleteProps {
 
 const ProfileImageDelete: React.FC<ProfileImageDeleteProps> = ({ userId }) => {
   const handleDelete = async () => {
-    const response = await fetch("/api/imgDelete", {
+    const response = await fetch("/api/image", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagePublicId: userId }) // userId를 Public ID로 사용
+      body: JSON.stringify({ imagePublicId: userId })
     });
 
     const data = await response.json();
