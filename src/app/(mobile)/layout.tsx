@@ -1,3 +1,4 @@
+import Header from "@/components/header/Header";
 import "../globals.css";
 
 export default function MobileLayout({
@@ -7,7 +8,10 @@ export default function MobileLayout({
 }>) {
   return (
     <div className="">
-      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">{children}</div>
+      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
+        <Header />
+        {children}
+      </div>
     </div>
   );
 }
