@@ -1,6 +1,6 @@
-import CustomizedLearn from "@/components/chatBot/CustomizedLearn";
-import Reviewing from "@/components/chatBot/Reviewing";
-import TodayLearn from "@/components/chatBot/TodayLearn";
+import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
+import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
+import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
 
 export default function Home() {
   return (
