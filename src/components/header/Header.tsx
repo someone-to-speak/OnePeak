@@ -1,13 +1,40 @@
-import Link from "next/link";
+"use client";
+
+import { getUser, signInWithProvider, signOut } from "@/app/services/supabaseAuth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+  const [name, setName] = useState<string>("");
+  const router = useRouter();
+
+  const handleSignInWithGoogle = async () => {
+    await signInWithProvider("google");
+    router.refresh();
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.refresh();
+  };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const name: string = await getUser();
+      setName(name);
+    };
+
+    checkUser();
+  }, []);
+
   return (
     <header className="w-full sticky min-w-[320px] max-w-[600px] top-0 left-0 right-0 mx-auto mt-0">
       <div className="flex items-center justify-between box-border px-4 h-[52px] bg-blue-200">
         <div className="flex justify-center items-center w-[28px] h-[28px] bg-white">로고</div>
         <div className="flex justify-center items-center ml-auto gap-2">
-          <Link href={"/login"}>로그인</Link>
-          <Link href={"/signUp"}>회원가입</Link>
+          <span>{name}</span>
+          <button onClick={handleSignInWithGoogle}>구글 로그인</button>
+          <button onClick={handleSignOut}>로그아웃</button>
           <>출석</>
           <>알림</>
         </div>
