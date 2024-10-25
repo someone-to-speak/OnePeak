@@ -1,23 +1,20 @@
 "use client";
 
 import { getUser, signInWithProvider, signOut } from "@/app/services/supabaseAuth";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Header = () => {
   const [name, setName] = useState<string>("");
-  const router = useRouter();
 
   const handleSignInWithGoogle = async () => {
     await signInWithProvider("google");
-    router.refresh();
   };
 
   const handleSignOut = async () => {
     await signOut();
-    router.refresh();
   };
 
+  // 테스트 로직
   useEffect(() => {
     const checkUser = async () => {
       const name: string = await getUser();
