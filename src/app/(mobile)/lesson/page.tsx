@@ -4,17 +4,17 @@ import Agreement from "@/components/lessonPage/Agreement";
 import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import React, { useState } from "react";
 
-const lessonPage = () => {
-  const [language1, setLanguage1] = useState("");
-  const [language2, setLanguage2] = useState("");
+const LessonPage = () => {
+  const [firstLanguage, setfirstLanguage] = useState("");
+  const [secondLanguage, setsecondLanguage] = useState("");
 
-  const isSelected = language1 && language2;
+  const isSelected = firstLanguage && secondLanguage;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isSelected) {
-      console.log("Form Submitted:", { language1, language2 });
+      console.log("Form Submitted:", { firstLanguage, secondLanguage });
     }
   };
 
@@ -26,7 +26,7 @@ const lessonPage = () => {
         <div className="flex">
           <div className="flex flex-col">
             <label>1 사용 언어</label>
-            <select value={language1} onChange={(e) => setLanguage1(e.target.value)}>
+            <select value={firstLanguage} onChange={(e) => setfirstLanguage(e.target.value)}>
               <option value="">-- 첫 번째로 시작할 언어 선택 --</option>
               <option value="English">영어</option>
               <option value="Korean">한국어</option>
@@ -34,7 +34,7 @@ const lessonPage = () => {
           </div>
           <div className="flex flex-col">
             <label>2 사용 언어</label>
-            <select value={language2} onChange={(e) => setLanguage2(e.target.value)}>
+            <select value={secondLanguage} onChange={(e) => setsecondLanguage(e.target.value)}>
               <option value="">-- 두 번째로 시작할 언어 선택 --</option>
               <option value="English">영어</option>
               <option value="Korean">한국어</option>
@@ -48,4 +48,4 @@ const lessonPage = () => {
   );
 };
 
-export default lessonPage;
+export default LessonPage;
