@@ -1,93 +1,116 @@
 "use client";
 
-import { useState } from "react";
-// import { useEffect } from "react";
-// import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { UserPen } from "lucide-react";
+import { UserProfileType } from "@/types/UserProfile";
+import { createClient } from "@/utils/supabase/client";
 
 const UserProfile = () => {
   const router = useRouter();
-  // const supabase = createClient();
-  // const [userId, setUserId] = useState<string | null>(null);
-  // const [loading, setLoading] = useState(true);
-  // const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [userProfile, setUserProfile] = useState({
-    nickname: "나는 테스트 유저",
-    state_msg: "상태메세지는 졸려",
-    gender: "w",
-    language: "🇰🇷",
-    profile_url: "https://placehold.co/200x200/EEE/31343C",
-    grammerChal_level: "3",
-    study_lang: "english"
-  });
+  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
 
-  // const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      setLoading(true);
+      const {
+        data: { session },
+        error: sessionError
+      } = await supabase.auth.getSession();
 
-  // useEffect(() => {
-  //   const fetchUserProfile = async () => {
-  //     setLoading(true);
-  //     const {
-  //       data: { user },
-  //       error: userError
-  //     } = await supabase.auth.getUser();
+      if (sessionError) {
+        console.error("유저 오류", sessionError);
+        setError("유저 정보를 가져오는 데 실패했습니다.");
+        setLoading(false);
+        return;
+      }
 
-  //     if (userError) {
-  //       console.error("유저 오류", userError);
-  //       setError("유저 정보를 가져오는 데 실패했습니다.");
-  //       setLoading(false);
-  //       return;
-  //     }
+      if (session) {
+        const { data, error: profileError } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .single();
 
-  //     if (user) {
-  //       setUserId(user.id);
-  //       const { data, error: profileError } = await supabase
-  //         .from("profiles")
-  //         .select("*")
-  //         .eq("user_id", user.id)
-  //         .single();
+        if (profileError) {
+          console.error("프로필 오류", profileError);
+          setError("프로필 정보를 가져오는 데 실패했습니다.");
+        } else {
+          setUserProfile(data);
+        }
+      } else {
+        console.log("사용자가 로그인하지 않았습니다.");
+      }
 
-  //       if (profileError) {
-  //         console.error("프로필 오류", profileError);
-  //         setError("프로필 정보를 가져오는 데 실패했습니다.");
-  //       } else {
-  //         setUserProfile(data);
-  //       }
-  //     } else {
-  //       console.log("사용자가 로그인하지 않았습니다.");
-  //     }
+      setLoading(false);
+    };
 
-  //     setLoading(false);
-  //   };
+    fetchUserProfile();
+  }, [supabase]);
 
-  //   fetchUserProfile();
-  // }, [supabase]);
+  if (loading) {
+    return <p className="text-center text-lg font-semibold">로딩 중...</p>;
+  }
 
-  // if (loading) {
-  //   return <p>로딩 중...</p>;
-  // }
-
-  // if (error) {
-  //   return <p>{error}</p>;
-  // }
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
 
   const handleEditProfile = () => {
-    router.push("/editProfile"); // 수정 페이지로 이동합니다.
+    router.push("/editProfile");
   };
 
   return (
-    <div>
-      <h1>사용자 프로필</h1>
+    <div className="flex flex-col items-center mt-10 space-y-6">
+      <h1 className="text-3xl font-bold text-gray-700">사용자 프로필</h1>
       {userProfile ? (
-        <div>
-          <Image src={userProfile.profile_url} alt="Profile Image" width={150} height={150} layout="responsive" />
-          <p>{userProfile.language}</p>
-          <h1>{userProfile.nickname}</h1>
-          <li>{userProfile.state_msg}</li>
-          <button onClick={handleEditProfile}>프로필 수정하기</button>
+        <div className="flex flex-col items-center p-6 border border-gray-200 rounded-lg shadow-md max-w-sm w-full bg-white">
+          <div className="flex flex-row items-center gap-4">
+            <div className="w-[80px] h-[80px] overflow-hidden rounded-full shadow-md mb-4">
+              <Image
+                src={userProfile.profile_url}
+                alt="Profile Image"
+                width={128}
+                height={128}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <div>
+              <div className="flex flex-row items-center gap-2">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {userProfile.language} {userProfile.nickname}
+                </h2>
+                <UserPen
+                  size={34}
+                  strokeWidth={1.8}
+                  onClick={handleEditProfile}
+                  className="p-2 text-white bg-gray-500 hover:bg-gray-600 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+              <p className="text-sm text-gray-500 mt-2">{userProfile.state_msg}</p>
+            </div>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
+              <p className="text-gray-600 text-sm">배우고싶은 언어</p>
+              <p className="text-2xl">{userProfile.study_lang}</p>
+            </div>
+            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
+              <p className="text-gray-600 text-sm">챌린지 단어</p>
+              <p className="text-2xl">1</p>
+            </div>
+            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
+              <p className="text-gray-600 text-sm">챌린지 문법</p>
+              <p className="text-2xl">1</p>
+            </div>
+          </div>
         </div>
       ) : (
-        <p>사용자 정보를 찾을 수 없습니다.</p>
+        <p className="text-center text-gray-500">사용자 정보를 찾을 수 없습니다.</p>
       )}
     </div>
   );

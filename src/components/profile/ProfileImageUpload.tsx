@@ -1,50 +1,43 @@
 "use client";
 
 import { useState } from "react";
+import { uploadImage } from "@/app/actions/imageUpload";
 
-const ProfileImageUpload = () => {
+interface ProfileImageUploadProps {
+  onUploadSuccess: (url: string) => void;
+}
+
+const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({ onUploadSuccess }) => {
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
     }
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      alert("파일을 선택해주세요.");
-      return;
-    }
-
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch("/api/image", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-    setLoading(false);
-
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert("프로필 이미지가 성공적으로 업로드되었습니다.");
-      console.log("업로드url:", data.url);
+    if (file) {
+      try {
+        const data = await uploadImage(file); // uploadImage에서 반환된 data를 사용
+        const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`; // URL 구성
+        setUploadUrl(imageUrl);
+        onUploadSuccess(imageUrl); // 부모 컴포넌트에 URL 전달
+        alert("Image uploaded successfully!");
+      } catch (error) {
+        console.error(error);
+        alert("Failed to upload image");
+      }
     }
   };
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? "업로드 중..." : "프로필 이미지 업로드"}
-      </button>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload}>업로드</button>
+      {uploadUrl && <img src={uploadUrl} alt="프로필 이미지" />}
     </div>
   );
 };
