@@ -1,7 +1,7 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 
-import { error } from "console";
+// import { error } from "console";
 import { UUID } from "crypto";
 
 import React, { useEffect, useState } from "react";
