@@ -18,11 +18,13 @@ const ChatMessage = () => {
     };
 
     const newMessages: Message[] = [...messages, userMessage];
+    const situation = "영화관에서 팝콘 사기";
+    const level = 1;
     setMessages(newMessages);
     setUserInput("");
 
     // 챗봇의 응답 가져오기
-    const botResponse = await getChatResponse(newMessages);
+    const botResponse = await getChatResponse(newMessages, situation, level);
 
     if (botResponse) {
       const botMessage: Message = { role: "assistant", content: botResponse };
@@ -33,23 +35,28 @@ const ChatMessage = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-col h-screen w-full mx-auto bg-slate-500">
+      <div className="flex-grow overflow-y-auto p-4 mb-16">
         {messages.map((msg, index) => (
           <div key={index} className={msg.role}>
-            <strong>{msg.role === "user" ? "나: " : "챗봇: "}</strong>
-            {msg.content}
+            <strong>{msg.role === "user" ? "나" : "챗봇"}</strong>
+            <div className="border border-spacing-10 text-green-500 p-5">{msg.content}</div>
           </div>
         ))}
       </div>
-      <form onSubmit={sendMessage}>
+      <div className="overflow-y-auto"></div>
+      <div></div>
+      <form className="sticky bottom-[55px] flex w-full bg-gray-200 p-4" onSubmit={sendMessage}>
         <input
+          className="flex-grow p-2 rounded border border-gray-400"
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="메세지를 입력해주세요."
         />
-        <button type="submit">전송</button>
+        <button className="ml-4 px-4 py-2 bg-blue-500 text-white rounded" type="submit">
+          전송
+        </button>
       </form>
     </div>
   );
