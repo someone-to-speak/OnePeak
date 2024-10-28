@@ -14,25 +14,25 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
   if (type === "isBlocked") {
     const { data, error } = await browserClient.from("user_info").select().eq("is_blocked", true);
     if (error) errorFn(error, "차단 회원만 불러오는데 실패하였습니다");
-    return data;
+    return data || [];
   }
-
   if (type === "isDeleted") {
     const { data, error } = await browserClient.from("user_info").select().eq("is_deleted", false);
     if (error) errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
-    return data;
+    return data || [];
   }
   if (type === "isAll") {
     const { data, error } = await browserClient.from("user_info").select();
     if (error) errorFn(error, "모든 사용자들 정보를 가져오는데 실패하였습니다");
-    return data;
+    return data || [];
   }
   if (type === "searchNickname" && theNickname) {
     const { data, error } = await browserClient.from("user_info").select().eq("nickname", theNickname);
     if (error) errorFn(error, "해당 회원을 검색하는데 실패하였습니다");
-    return data;
+    return data || [];
   } else {
     const { data, error } = await browserClient.from("user_info").select();
+    console.log("data", data);
     if (error) errorFn(error, "사용자들 정보를 가져오는데 실패하였습니다");
     return data || [];
   }

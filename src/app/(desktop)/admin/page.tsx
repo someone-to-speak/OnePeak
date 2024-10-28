@@ -6,6 +6,7 @@ const userManagement = () => {
     <div>
       <p>admin 페이지</p>
       <Link href={"/admin/userManagement"}>사용자관리</Link>
+      <Link href={"/admin/blockManagement"}>차단관리</Link>
     </div>
   );
 };
