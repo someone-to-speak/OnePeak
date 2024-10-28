@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserPen } from "lucide-react";
-import { UserProfileType } from "@/types/UserProfile";
 import { createClient } from "@/utils/supabase/client";
+import { userProfile } from "@/types/userProfile";
 
 const UserProfile = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
+  const [profile, setProfile] = useState<userProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -40,7 +40,7 @@ const UserProfile = () => {
           console.error("프로필 오류", profileError);
           setError("프로필 정보를 가져오는 데 실패했습니다.");
         } else {
-          setUserProfile(data);
+          setProfile(data);
         }
       } else {
         console.log("사용자가 로그인하지 않았습니다.");
@@ -63,16 +63,17 @@ const UserProfile = () => {
   const handleEditProfile = () => {
     router.push("/editProfile");
   };
+  console.log(profile?.profile_url);
 
   return (
     <div className="flex flex-col items-center mt-10 space-y-6">
       <h1 className="text-3xl font-bold text-gray-700">사용자 프로필</h1>
-      {userProfile ? (
+      {profile ? (
         <div className="flex flex-col items-center p-6 border border-gray-200 rounded-lg shadow-md max-w-sm w-full bg-white">
           <div className="flex flex-row items-center gap-4">
             <div className="w-[80px] h-[80px] overflow-hidden rounded-full shadow-md mb-4">
               <Image
-                src={userProfile.profile_url}
+                src={profile.profile_url}
                 alt="Profile Image"
                 width={128}
                 height={128}
@@ -82,7 +83,7 @@ const UserProfile = () => {
             <div>
               <div className="flex flex-row items-center gap-2">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  {userProfile.language} {userProfile.nickname}
+                  {profile.language} {profile.nickname}
                 </h2>
                 <UserPen
                   size={34}
@@ -91,21 +92,21 @@ const UserProfile = () => {
                   className="p-2 text-white bg-gray-500 hover:bg-gray-600 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-2">{userProfile.state_msg}</p>
+              <p className="text-sm text-gray-500 mt-2">{profile.state_msg}</p>
             </div>
           </div>
           <div className="flex flex-row items-center gap-2">
             <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
               <p className="text-gray-600 text-sm">배우고싶은 언어</p>
-              <p className="text-2xl">{userProfile.study_lang}</p>
+              <p className="text-2xl">{profile.study_lang}</p>
             </div>
             <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
               <p className="text-gray-600 text-sm">챌린지 단어</p>
-              <p className="text-2xl">1</p>
+              <p className="text-gray-600 text-2xl">1</p>
             </div>
             <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
               <p className="text-gray-600 text-sm">챌린지 문법</p>
-              <p className="text-2xl">1</p>
+              <p className="text-gray-600 text-2xl">1</p>
             </div>
           </div>
         </div>

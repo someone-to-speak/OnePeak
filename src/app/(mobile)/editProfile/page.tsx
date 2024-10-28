@@ -2,13 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserProfileType } from "@/types/UserProfile";
-import ProfileImageUpload from "@/components/profile/ProfileImageUpload";
 import { createClient } from "@/utils/supabase/client";
+import { userProfile } from "@/types/userProfile";
+import Image from "next/image";
+import { uploadImage } from "@/utils/imageUpload";
 
 const EditProfile = () => {
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
+  const [profile, setProfile] = useState<userProfile | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -33,7 +38,8 @@ const EditProfile = () => {
         if (profileError) {
           console.error("프로필 오류", profileError);
         } else {
-          setUserProfile(data);
+          setProfile(data);
+          setPreviewUrl(data.profile_url); // 기존 프로필 URL을 미리보기로 설정
         }
       }
     };
@@ -41,22 +47,56 @@ const EditProfile = () => {
     fetchUserProfile();
   }, [supabase]);
 
-  const handleUploadSuccess = (url: string) => {
-    setUserProfile((prev) => (prev ? { ...prev, profile_url: url } : null));
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(objectUrl); // 선택한 파일의 미리보기 설정
+      console.log("Selected file for preview:", objectUrl); // 디버그 로그 추가
+      setError(null);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("파일을 선택해 주세요.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await uploadImage(file); // file을 그대로 전달
+      const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`;
+
+      // 기존 프로필 URL을 유지하되, 업로드한 이미지 URL을 프로필에 업데이트
+      setProfile((prev) => (prev ? { ...prev, profile_url: imageUrl } : null));
+
+      alert("이미지가 성공적으로 업로드 되었습니다!");
+    } catch {
+      setError("이미지 업로드에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (userProfile) {
+    if (!profile?.profile_url) {
+      alert("프로필 이미지를 업로드해야 합니다.");
+      return; // 프로필 이미지가 없으면 제출하지 않음
+    }
+
+    if (profile) {
       const { error } = await supabase
         .from("profiles")
         .update({
-          nickname: userProfile.nickname,
-          profile_url: userProfile.profile_url,
-          state_msg: userProfile.state_msg
+          nickname: profile.nickname,
+          profile_url: profile.profile_url,
+          state_msg: profile.state_msg
         })
-        .eq("user_id", userProfile.user_id);
+        .eq("user_id", profile.user_id);
 
       if (error) {
         alert("프로필 업데이트에 실패했습니다.");
@@ -74,8 +114,13 @@ const EditProfile = () => {
         <div>
           <label>
             프로필 이미지:
-            <ProfileImageUpload onUploadSuccess={handleUploadSuccess} />
+            <input type="file" onChange={handleFileChange} />
+            <button type="button" onClick={handleUpload} disabled={loading}>
+              {loading ? "업로드 중..." : "업로드"}
+            </button>
+            {previewUrl && <Image src={previewUrl} alt="미리보기 이미지" width={200} height={200} />}
           </label>
+          {error && <p className="text-red-500">{error}</p>}
         </div>
         <div>
           <label>
@@ -83,8 +128,8 @@ const EditProfile = () => {
             <input
               type="text"
               name="nickname"
-              value={userProfile?.nickname || ""}
-              onChange={(e) => setUserProfile((prev) => (prev ? { ...prev, nickname: e.target.value } : null))}
+              value={profile?.nickname || ""}
+              onChange={(e) => setProfile((prev) => (prev ? { ...prev, nickname: e.target.value } : null))}
             />
           </label>
         </div>
@@ -94,8 +139,8 @@ const EditProfile = () => {
             <input
               type="text"
               name="state_msg"
-              value={userProfile?.state_msg || ""}
-              onChange={(e) => setUserProfile((prev) => (prev ? { ...prev, state_msg: e.target.value } : null))}
+              value={profile?.state_msg || ""}
+              onChange={(e) => setProfile((prev) => (prev ? { ...prev, state_msg: e.target.value } : null))}
             />
           </label>
         </div>
