@@ -1,11 +1,12 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request
   });
 
+  // TODO: 재사용 위해 const supabase =
   createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
     cookies: {
       getAll() {
@@ -25,16 +26,29 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  //   const {
-  //     data: { user }
-  //   } = await supabase.auth.getUser();
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser();
 
-  //   if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
-  //     // no user, potentially respond by redirecting the user to the login page
-  //     const url = request.nextUrl.clone();
-  //     url.pathname = '/login';
-  //     return NextResponse.redirect(url);
-  //   }
+  // if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
+  //   // no user, potentially respond by redirecting the user to the login page
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = '/login';
+  //   return NextResponse.redirect(url);
+  // }
+
+  // ------------- TODO: 인증 로직 구현 시 주석처리 OFF ------------- //
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser();
+
+  // // 서연: 설정,프로필 페이지에 대한 접근 제어 코드
+  // if (!user && request.nextUrl.pathname.startsWith("/settings") && request.nextUrl.pathname.startsWith("/profile")) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/login";
+  //   return NextResponse.redirect(url);
+  // }
+  // ------------- TODO: 인증 로직 구현 시 주석처리 OFF ------------- //
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
