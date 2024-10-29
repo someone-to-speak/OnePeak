@@ -12,7 +12,6 @@ const openai = new OpenAI({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    // 바디에 직접 컨텐트 넣어라
     const messages: Message[] = req.body.messages;
     const situation: string = req.body.situation;
     const level: number = req.body.level;
@@ -23,8 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         messages: [
           {
             role: "system",
-            // 데이터베이스에 들어있는 상황1을 할당
-            content: `너는 영어 선생님이야. 너는 무조건 영어로만 말을 해야 되고 영어 학습에 대한 난이도는 1이 제일 쉬운 난이도고 3이 제일 어려운 난이도야. 그 중에서 너는 ${level} 난이도로 영어 선생님 역할을 해주면 돼. 상황에 대해서 알려줄게. 상황: ${situation}. 내가 start이라고 하면 너가 본격적으로 학습을 할 수 있도록 안내해줘.`
+            // useSearchParams로 받아온 situation, level 적용
+            content: `너는 존댓말을 사용하는 영어 선생님이야. 너는 설명은 무조건 한국어로 해야 되고, 예시는 무조건 영어로 해야 해. 영어 학습에 대한 난이도는 1이 제일 쉬운 난이도고 3이 제일 어려운 난이도야. 그 중에서 너는 ${level} 난이도로 영어 선생님 역할을 해주면 돼. 상황에 대해서 알려줄게. 상황: ${situation}. 내가 start이라고 하면 너가 본격적으로 학습을 할 수 있도록 안내해줘.`
           },
           ...messages
         ]

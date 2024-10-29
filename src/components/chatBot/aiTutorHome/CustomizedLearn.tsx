@@ -1,5 +1,5 @@
 const CustomizedLearn = () => {
-  return <div className="h-[200px] border border-3">맞춤형 교육</div>;
+  return <div className="mt-10">맞춤형 교육</div>;
 };
 
 export default CustomizedLearn;

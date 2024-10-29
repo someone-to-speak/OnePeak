@@ -7,10 +7,10 @@ export const getChatResponse = async (messages: Message[], situation: string, le
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ messages, situation, level }) // messages 배열을 JSON으로 변환
-      // next: {
-      //   revalidate: 86400 // 하루
-      // }
+      body: JSON.stringify({ messages, situation, level }), // messages 배열을 JSON으로 변환
+      next: {
+        revalidate: 86400 // 하루
+      }
     });
 
     if (!response.ok) {

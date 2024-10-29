@@ -2,12 +2,19 @@
 
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ChatMessage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState<string>("");
 
+  // 선택한 "오늘의 학습" 데이터 받아오기
+  const searchParams = useSearchParams();
+  const situation = searchParams?.get("situation") as string;
+  const level = Number(searchParams?.get("level"));
+
+  // 챗봇과 대화하기
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -18,24 +25,25 @@ const ChatMessage = () => {
     };
 
     const newMessages: Message[] = [...messages, userMessage];
-    const situation = "영화관에서 팝콘 사기";
-    const level = 1;
+
     setMessages(newMessages);
     setUserInput("");
 
     // 챗봇의 응답 가져오기
-    const botResponse = await getChatResponse(newMessages, situation, level);
+    if (situation && level !== undefined) {
+      const botResponse = await getChatResponse(newMessages, situation, level);
 
-    if (botResponse) {
-      const botMessage: Message = { role: "assistant", content: botResponse };
+      if (botResponse) {
+        const botMessage: Message = { role: "assistant", content: botResponse };
 
-      // 챗봇 메세지 추가
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
+        // 챗봇 메세지 추가
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      }
     }
   };
 
   return (
-    <div className="flex flex-col h-screen w-full mx-auto bg-slate-500">
+    <div className="flex flex-col h-screen w-full mx-auto bg-gray-100">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         {messages.map((msg, index) => (
           <div key={index} className={msg.role}>
