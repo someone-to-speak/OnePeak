@@ -2,8 +2,8 @@
 
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const ChatMessage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
