@@ -3,10 +3,21 @@
 import Agreement from "@/components/lessonPage/Agreement";
 import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import React, { useState } from "react";
+import { useMatching } from "@/hooks/useMatching";
+import { redirect } from "next/navigation";
 
 const LessonPage = () => {
   const [firstLanguage, setFirstLanguage] = useState("");
   const [secondLanguage, setSecondLanguage] = useState("");
+
+  const { handleMatching, userInfo, isLoading, isError } = useMatching();
+  const handleClickMachingButton = () => {
+    if (!userInfo) {
+      alert("로그인 후 이용이 가능합니다.");
+    }
+
+    handleMatching();
+  };
 
   const isSelected = firstLanguage && secondLanguage;
 
@@ -17,6 +28,15 @@ const LessonPage = () => {
       console.log("Form Submitted:", { firstLanguage, secondLanguage });
     }
   };
+
+  if (isLoading) {
+    return <div>잠시만 기다려주세요...</div>;
+  }
+
+  if (isError) {
+    alert("예기치 못한 오류가 발생하였습니다.");
+    redirect("/");
+  }
 
   return (
     <>
@@ -44,6 +64,7 @@ const LessonPage = () => {
         <Agreement />
         <button>시작하기</button>
       </form>
+      <button onClick={handleClickMachingButton}>매칭하기</button>
     </>
   );
 };

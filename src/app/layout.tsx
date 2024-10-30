@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navibar from "@/components/nav/Navibar";
+import Providers from "./provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,12 +23,14 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body>
-        <div className="h-full">
-          <div className="w-full mx-auto my-0  min-h-full">
-            {children}
-            <Navibar />
+        <Providers>
+          <div className="h-full">
+            <div className="w-full mx-auto my-0  min-h-full">
+              {children}
+              <Navibar />
+            </div>
           </div>
-        </div>
+        </Providers>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
-import React from "react";
+import FetchQuizButton from "@/components/challenge/(grammar)/fetchQuizButton";
 
-const Page = () => {
-  return <div>단어/문법 - 문제/오답노트</div>;
+const ChalPage = () => {
+  return <FetchQuizButton />;
 };
 
-export default Page;
+export default ChalPage;

@@ -1,4 +1,4 @@
-export type userProfile = {
+export type UserProfile = {
   nickname: string;
   profile_url: string;
   language: string;
