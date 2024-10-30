@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate";
@@ -10,15 +11,13 @@ type SignalData = {
 };
 
 const VideoChat = () => {
-  console.log("VideoChat");
   const supabase = createClient();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
 
-  const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
-  const tChannel = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const channel = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     const signalingChannel = supabase.channel("video-chat", {
@@ -26,7 +25,8 @@ const VideoChat = () => {
         broadcast: { ack: true }
       }
     });
-    setChannel(signalingChannel);
+    channel.current = signalingChannel;
+
     signalingChannel
       .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) => handleSignalData(payload))
       .on("broadcast", { event: "offer" }, (payload: SignalData) => handleSignalData(payload))
@@ -45,10 +45,8 @@ const VideoChat = () => {
         }
       });
 
-    // tChannel.current = signalingChannel;
-
     return () => {
-      channel?.unsubscribe();
+      channel.current?.unsubscribe();
       peerConnectionRef.current?.close();
     };
   }, []);
@@ -62,7 +60,7 @@ const VideoChat = () => {
       // console.log("onicecandidate event: :", event);
       if (event.candidate) {
         // console.log("send candidate");
-        channel?.send({
+        channel.current?.send({
           type: "broadcast",
           event: "ice-candidate",
           candidate: event.candidate
@@ -113,7 +111,7 @@ const VideoChat = () => {
         const answer = await peerConnectionRef.current.createAnswer();
         await peerConnectionRef.current.setLocalDescription(answer);
         // console.log("channel: ", channel);
-        const serverResponse = channel?.send({
+        const serverResponse = channel.current?.send({
           type: "broadcast",
           event: "answer",
           sdp: answer
@@ -170,7 +168,7 @@ const VideoChat = () => {
 
     const offer = await peerConnectionRef.current.createOffer();
     await peerConnectionRef.current.setLocalDescription(offer);
-    const serverResponse = channel?.send({
+    const serverResponse = channel.current?.send({
       type: "broadcast",
       event: "offer",
       sdp: offer

@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { Provider } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
+
 import { redirect } from "next/navigation";
 
 export const signInWithProvider = async (provider: Provider) => {
