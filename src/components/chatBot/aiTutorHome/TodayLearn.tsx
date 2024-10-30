@@ -13,15 +13,20 @@ const TodayLearn = () => {
 
   // situation 조회
   const getSituations = async () => {
-    const { data, error } = await supabase.from("situation").select("*");
+    try {
+      const { data, error } = await supabase.from("situation").select("*");
 
-    if (data) {
-      setSituations(data);
-    } else {
-      console.log(error);
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        setSituations(data);
+      }
+    } catch (error) {
+      console.log("situation을 가져오는 데에 실패하였습니다!", error);
+      throw error;
     }
-
-    return data;
   };
 
   useEffect(() => {
