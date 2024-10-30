@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { useSearchParams } from "next/navigation";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate";
@@ -18,13 +19,11 @@ const VideoChat = () => {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
 
   const channel = useRef<RealtimeChannel | null>(null);
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("room")?.split(",")[0];
 
   useEffect(() => {
-    const signalingChannel = supabase.channel("video-chat", {
-      config: {
-        broadcast: { ack: true }
-      }
-    });
+    const signalingChannel = supabase.channel(`video-chat-${roomId}`);
     channel.current = signalingChannel;
 
     signalingChannel
@@ -130,36 +129,6 @@ const VideoChat = () => {
     }
   };
 
-  // const handleOfferSignal = async (payload: SignalData) => {
-  //   if (!peerConnectionRef.current) return;
-  //   console.log("payload: ", payload);
-  //   const { sdp } = payload;
-  //   if (sdp?.sdp) {
-  //     await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
-  //     const answer = await peerConnectionRef.current.createAnswer();
-  //     console.log("answer: ", answer);
-  //     await peerConnectionRef.current.setLocalDescription(answer);
-  //     const serverResponse = channel?.send({ type: "broadcast", event: "answer", payload: { sdp: answer } });
-  //     console.log("serverResponse: ", serverResponse);
-  //   }
-  // };
-
-  // const handleAnswerSignal = async (payload: SignalData) => {
-  //   if (!peerConnectionRef.current) return;
-
-  //   const { sdp } = payload;
-  //   if (sdp) {
-  //     await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
-  //   }
-  // };
-
-  // const handleCandidateSignal = async (payload: SignalData) => {
-  //   if (!peerConnectionRef.current) return;
-
-  //   const { candidate } = payload;
-  //   if (candidate) await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
-  // };
-
   const createOffer = async () => {
     if (!peerConnectionRef.current) {
       console.log("not found peerConnectionRef");
@@ -168,13 +137,11 @@ const VideoChat = () => {
 
     const offer = await peerConnectionRef.current.createOffer();
     await peerConnectionRef.current.setLocalDescription(offer);
-    const serverResponse = channel.current?.send({
+    channel.current?.send({
       type: "broadcast",
       event: "offer",
       sdp: offer
     });
-    console.log("serverResponse: ", serverResponse);
-    // console.log("re channel: ", channel);
   };
 
   return (
