@@ -79,7 +79,7 @@ export const uncancle = async (targetUser: UserInfo) => {
 export const getBlockDetail = async () => {
   const { data, error } = await browserClient
     .from("block")
-    .select(`*,user_info:user_info!block_user_info_id_fkey(nickname,is_blocked)`)
+    .select(`*,user_info:user_info!block_target_id_fkey1(nickname)`)
     .order("created_at", { ascending: false });
   if (error) errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
 
@@ -93,23 +93,14 @@ export const getBlockDetail = async () => {
     ? Object.entries(targetIdsCount)
 
         .filter(([id, count]) => {
-          return count >= 3;
+          return count >= 2;
         })
         .map(([id]) => id)
     : [];
 
-  console.log("filteredTargetIds", filteredTargetIds);
-
-  const filteredData = data
-    ?.filter((item) => {
-      return filteredTargetIds.includes(item.target_id);
-    })
-    .map((item) => {
-      return {
-        ...item,
-        count: targetIdsCount[item.target_id]
-      };
-    });
+  const filteredData = data?.filter((item) => {
+    return filteredTargetIds.includes(item.target_id);
+  });
 
   return filteredData || [];
 };
@@ -118,7 +109,7 @@ export const getBlockDetail = async () => {
 export const getBlockTargetUsers = async () => {
   const { data, error } = await browserClient
     .from("block")
-    .select(`target_id,user_info:user_info!block_user_info_id_fkey(nickname,is_blocked)`)
+    .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
     .order("created_at", { ascending: false })
     .returns<BlockedUserInfo>();
 
@@ -126,7 +117,6 @@ export const getBlockTargetUsers = async () => {
     errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
     return [];
   }
-  console.log("data", data);
 
   // targetIdsCount를 객체 배열로 만들기
   const targetIdsCount = data?.reduce((acc, item) => {
@@ -138,8 +128,6 @@ export const getBlockTargetUsers = async () => {
     }
     return acc;
   }, [] as Array<{ id: string; count: number }>); // 초기값을 객체 배열로 지정
-
-  console.log("targetIdsCount", targetIdsCount);
 
   // 필터링 및 데이터 매핑
   const filteredData = targetIdsCount
@@ -156,19 +144,5 @@ export const getBlockTargetUsers = async () => {
       };
     });
 
-  console.log("filteredData", filteredData);
-
   return filteredData || [];
-};
-
-// 신고당한 회원 차단
-export const blockedUserBlock = async (targetUser: UserInfo) => {
-  const { error } = await browserClient.from("block").update({ is_blocked: false }).eq("id", targetUser.id);
-  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
-};
-
-// 신고당한 회원 차단 해제
-export const blockedUserUnblock = async (targetUser: UserInfo) => {
-  const { error } = await browserClient.from("block").update({ is_blocked: false }).eq("id", targetUser.id);
-  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
 };

@@ -4,6 +4,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/re
 import React, { useState } from "react";
 import PageNationUI from "../PageNationUI";
 import { BlockedUserInfo } from "@/type";
+import BlockDetail from "./BlockDetail";
 
 const BlockTargetUsers = () => {
   const queryClient = useQueryClient();
@@ -31,7 +32,6 @@ const BlockTargetUsers = () => {
     }
   });
 
-  console.log("data", data);
   // 페이지네이션 계산
   const totalPages = data ? Math.ceil(data.length / usersPerPage) : 0;
   const indexOfLastUser = currentPage * usersPerPage;
@@ -50,7 +50,7 @@ const BlockTargetUsers = () => {
               <th className="p-3 "></th>
               <th className="p-3 ">id</th>
               <th className="p-3 ">닉네임</th>
-              <th className="p-3 ">누적차단횟수</th>
+              <th className="p-3 ">신고당한횟수</th>
               <th className="p-3">차단여부</th>
               <th className="p-3 ">차단관리</th>
             </tr>
@@ -58,7 +58,7 @@ const BlockTargetUsers = () => {
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={10} className="pt-3">
+                <td colSpan={5} className="pt-3">
                   신고당한 회원이 없습니다
                 </td>
               </tr>
@@ -76,7 +76,10 @@ const BlockTargetUsers = () => {
                     {target.user_info.is_blocked ? (
                       <button
                         className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
-                        onClick={() => unblockUser.mutate(target)}
+                        onClick={() => {
+                          const formatedTarget = { ...target, id: target.target_id };
+                          unblockUser.mutate(formatedTarget);
+                        }}
                       >
                         차단해제
                       </button>
@@ -84,7 +87,6 @@ const BlockTargetUsers = () => {
                       <button
                         className="px-3 py-1 text-white bg-orange-500 rounded hover:bg-red-600"
                         onClick={() => {
-                          console.log("target", target);
                           const formatedTarget = { ...target, id: target.target_id };
                           blockUser.mutate(formatedTarget);
                         }}
@@ -105,6 +107,7 @@ const BlockTargetUsers = () => {
         totalPages={totalPages}
         usersInfo={data}
       />
+      <BlockDetail />
     </div>
   );
 };
