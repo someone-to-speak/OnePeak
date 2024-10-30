@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { WebRTCService } from "@/services/webRTCService";
+import { WebRTCService } from "@/services/webrtcService";
 import { createChannel, getUserId } from "@/repositories/clientRepository";
 
 type SignalData = {
