@@ -1,17 +1,18 @@
 "use client";
-import { block, getBlockTargetUsers, unblock } from "@/api/api";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import React, { useState } from "react";
 import PageNationUI from "../PageNationUI";
 import { BlockedUserInfo } from "@/type";
 import BlockDetail from "./BlockDetail";
+import { block, getBlockTargetUsers, unblock } from "@/app/api/api";
 
 const BlockTargetUsers = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
-  const { data = [] } = useQuery({
+  const { data = [] }: UseQueryResult<BlockedUserInfo[], Error> = useQuery({
     queryKey: ["blockTargetUsers"],
     queryFn: () => getBlockTargetUsers()
   });
@@ -63,10 +64,10 @@ const BlockTargetUsers = () => {
                 </td>
               </tr>
             ) : (
-              data.map((target, index) => (
-                <tr key={target.target_id} className="border-b hover:bg-gray-50">
+              currentUsers.map((target, index) => (
+                <tr key={target.id} className="border-b hover:bg-gray-50">
                   <td>{indexOfFirstUser + index + 1}</td>
-                  <td className="p-3 max-w-[150px] overflow-x-auto ">{target.target_id}</td>
+                  <td className="p-3 max-w-[150px] overflow-x-auto ">{target.id}</td>
                   <td className="p-3 max-w-[200px] overflow-x-auto">{target.user_info.nickname}</td>
 
                   <td className="p-3 ">{target.count}</td>
@@ -77,7 +78,7 @@ const BlockTargetUsers = () => {
                       <button
                         className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
                         onClick={() => {
-                          const formatedTarget = { ...target, id: target.target_id };
+                          const formatedTarget = { ...target, id: target.id };
                           unblockUser.mutate(formatedTarget);
                         }}
                       >
@@ -87,7 +88,7 @@ const BlockTargetUsers = () => {
                       <button
                         className="px-3 py-1 text-white bg-orange-500 rounded hover:bg-red-600"
                         onClick={() => {
-                          const formatedTarget = { ...target, id: target.target_id };
+                          const formatedTarget = { ...target, id: target.id };
                           blockUser.mutate(formatedTarget);
                         }}
                       >

@@ -1,11 +1,11 @@
 import React from "react";
-import { UserInfo } from "@/type";
+import { BlockedUserInfo, UserInfo } from "@/type";
 
 interface PageNationUIProps {
   handlePageChange: (pageNumber: number) => void;
   currentPage: number;
   totalPages: number;
-  usersInfo: UserInfo[];
+  usersInfo: UserInfo[] | BlockedUserInfo[];
 }
 
 const PageNationUI: React.FC<PageNationUIProps> = ({ handlePageChange, currentPage, totalPages, usersInfo }) => {

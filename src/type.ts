@@ -16,7 +16,7 @@ export type UserInfo = {
 
 export type BlockedUserInfo = {
   id: UUID;
-  score: number;
+  count: number;
   user_info: { is_blocked: boolean; nickname: string };
 };
 

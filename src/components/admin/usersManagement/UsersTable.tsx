@@ -3,7 +3,7 @@ import { UserInfo } from "@/type";
 
 interface UsersTableProps {
   currentUsers: UserInfo[];
-  currentPage: number;
+
   indexOfFirstUser: number;
   unblockUser: (userInfo: UserInfo) => void;
   blockUser: (userInfo: UserInfo) => void;
@@ -13,7 +13,7 @@ interface UsersTableProps {
 
 const UsersTable: React.FC<UsersTableProps> = ({
   currentUsers,
-  currentPage,
+
   indexOfFirstUser,
   unblockUser,
   blockUser,

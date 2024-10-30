@@ -1,6 +1,5 @@
 "use client";
 
-import { block, cancle, getUsersInfo, unblock, uncancle } from "@/api/api";
 import { UserInfo } from "@/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -9,6 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
 import PageNationUI from "../PageNationUI";
+import { block, cancle, getUsersInfo, unblock, uncancle } from "@/app/api/api";
 
 const searchNicknameShema = z.object({
   theNickname: z.string().min(1, {
