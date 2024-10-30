@@ -43,10 +43,7 @@ const VideoChat = () => {
         .subscribe((status) => {
           if (status === "SUBSCRIBED") {
             console.log("Connected to signaling channel");
-            initWebRTC();
-            if (userId === roomId) {
-              createOffer();
-            }
+            initWebRTC(userId);
           } else if (status === "CHANNEL_ERROR") {
             console.log("CHANNEL_ERROR");
           }
@@ -60,7 +57,7 @@ const VideoChat = () => {
     };
   }, [roomId]);
 
-  const initWebRTC = async () => {
+  const initWebRTC = async (userId: string | undefined) => {
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
     const peerConnection = new RTCPeerConnection(config);
     peerConnectionRef.current = peerConnection;
@@ -107,6 +104,10 @@ const VideoChat = () => {
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
     });
+
+    if (userId === roomId) {
+      await createOffer();
+    }
   };
 
   const handleSignalData = async (payload: SignalData) => {
@@ -140,6 +141,7 @@ const VideoChat = () => {
   };
 
   const createOffer = async () => {
+    console.log("createOffer");
     if (!peerConnectionRef.current) {
       console.log("not found peerConnectionRef");
       return;
