@@ -13,3 +13,13 @@ export type UserInfo = {
   created_at: Date;
   email: EmailOtpType;
 };
+
+export type BlockedUserInfo = {
+  id: UUID;
+  score: number;
+  user_info: { is_blocked: boolean; nickname: string };
+};
+
+export type formatedTarget = {
+  id: UUID;
+};

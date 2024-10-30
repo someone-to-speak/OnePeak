@@ -8,7 +8,7 @@ export default function DesktopLayout({
 }>) {
   return (
     <div className="">
-      <div className="w-full  mx-auto my-0  min-full">
+      <div className="w-full  mx-auto my-0  min-h-full">
         <Providers>{children}</Providers>
       </div>
     </div>

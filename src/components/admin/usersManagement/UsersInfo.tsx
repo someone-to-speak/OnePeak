@@ -8,6 +8,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
+import PageNationUI from "../PageNationUI";
 
 const searchNicknameShema = z.object({
   theNickname: z.string().min(1, {
@@ -25,16 +26,28 @@ const UsersInfo = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 15;
+  const usersPerPage = 10;
 
   const [type, setType] = useState<string>("");
   const [theNickname, setTheNickname] = useState<string>("");
 
   // 유저들 정보 가져오기
-  const { data: usersInfo } = useQuery({
+  const {
+    data: usersInfo = []
+    // isPending,
+    // isError
+  } = useQuery({
     queryKey: ["usersInfo", type, theNickname],
     queryFn: () => getUsersInfo(type, theNickname)
   });
+
+  // if (isPending) {
+  //   return <div>로딩중..</div>;
+  // }
+
+  // if (isError) {
+  //   return <div>회원 목록을 불러우는데 실패하였습니다</div>;
+  // }
 
   // 페이지네이션 계산
   const totalPages = usersInfo ? Math.ceil(usersInfo.length / usersPerPage) : 0;
@@ -83,29 +96,6 @@ const UsersInfo = () => {
     }
   });
 
-  // 차단 회원 정렬
-  // const checkBlockedUser = useMutation({
-  //   mutationFn: checkBlocked,
-
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["usersInfo"] });
-  //   }
-  // });
-
-  // console.log(usersInfo);
-
-  // // 삭제 회원 정렬
-  // const cancledUsers = async () => {
-  //   const { data, error } = await browserClient.from("user_info").select().eq("is_deleted", true);
-
-  //   if (error) {
-  //     console.log("Error", error.message);
-  //     throw new Error("탈퇴한 회원들을 불러오는데 실패하였습니다");
-  //   } else {
-  //     setUsersInfo(data);
-  //   }
-  // };
-
   const onSubmit = (value: FieldValues) => {
     searchNicknameShema.parse(value);
     setType("searchNickname");
@@ -114,72 +104,56 @@ const UsersInfo = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" placeholder="search nickname" {...register("theNickname")} />
-        <button>검색</button>
-      </form>
+    <div className="flex flex-col p-4">
+      <div className="flex gap-16 px-auto py-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-4">
+          <input
+            type="text"
+            placeholder="search nickname"
+            {...register("theNickname")}
+            className="p-2 border border-gray-300 rounded w-64"
+          />
+          <button type="submit" className="ml-2 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+            검색
+          </button>
+        </form>
 
-      <div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 mb-4">
           <button
-            onClick={() => {
-              setType("isBlocked");
-            }}
+            onClick={() => setType("isBlocked")}
+            className="px-4 py-2 text-white bg-orange-500 rounded hover:bg-yellow-600"
           >
             차단회원
           </button>
           <button
-            onClick={() => {
-              setType("isDeleted");
-            }}
+            onClick={() => setType("isDeleted")}
+            className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
           >
             탈퇴회원
           </button>
           <button
-            onClick={() => {
-              setType("isAll");
-            }}
+            onClick={() => setType("isAll")}
+            className="px-4 py-2 text-white bg-gray-500 rounded hover:bg-gray-600"
           >
             모든회원
           </button>
         </div>
-        <UsersTable
-          currentUsers={currentUsers}
-          currentPage={currentPage}
-          indexOfFirstUser={indexOfFirstUser}
-          unblockUser={unblockUser.mutate}
-          blockUser={blockUser.mutate}
-          cancleUser={cancleUser.mutate}
-          uncancleUser={uncancleUser.mutate}
-        />
-        {/* 페이지네이션 UI */}
-        <div className=" flex items-center justify-center gap-2 mt-4">
-          <button
-            className="px-3 py-1 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            이전
-          </button>
-
-          <div className="px-3 py-1 rounded ">
-            {currentPage} / {totalPages}
-          </div>
-
-          <button
-            className="px-3 py-1  text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            다음
-          </button>
-        </div>
-
-        <div className="text-center text-gray-600 mt-2">
-          총 {usersInfo?.length}명, 총 {totalPages}페이지
-        </div>
       </div>
+      <UsersTable
+        currentUsers={currentUsers}
+        currentPage={currentPage}
+        indexOfFirstUser={indexOfFirstUser}
+        unblockUser={unblockUser.mutate}
+        blockUser={blockUser.mutate}
+        cancleUser={cancleUser.mutate}
+        uncancleUser={uncancleUser.mutate}
+      />
+      <PageNationUI
+        handlePageChange={handlePageChange}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        usersInfo={usersInfo}
+      />
     </div>
   );
 };

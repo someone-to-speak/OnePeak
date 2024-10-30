@@ -64,7 +64,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     </button>
                   ) : (
                     <button
-                      className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                      className="px-3 py-1 text-white bg-orange-500 rounded hover:bg-red-600"
                       onClick={() => blockUser(userInfo)}
                     >
                       차단하기
@@ -82,7 +82,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     </button>
                   ) : (
                     <button
-                      className="px-3 py-1 text-white bg-gray-500 rounded hover:bg-gray-600"
+                      className="px-3 py-1 text-white bg-red-500 rounded hover:bg-gray-600"
                       onClick={() => cancleUser(userInfo)}
                     >
                       탈퇴하기
