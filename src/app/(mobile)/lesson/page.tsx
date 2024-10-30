@@ -2,82 +2,21 @@
 
 import Agreement from "@/components/lessonPage/Agreement";
 import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
-import { useUserInfoForMatching } from "@/hooks/getUser/getUser";
-import { createClient } from "@/utils/supabase/client";
-import { RealtimeChannel } from "@supabase/supabase-js";
-import { match } from "assert";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+import { useMatching } from "@/hooks/useMatching";
+import { redirect } from "next/navigation";
 
 const LessonPage = () => {
   const [firstLanguage, setfirstLanguage] = useState("");
   const [secondLanguage, setsecondLanguage] = useState("");
 
-  const router = useRouter();
-  const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
-  const machingChannelRef = useRef<RealtimeChannel | null>(null);
-
-  useEffect(() => {
-    return () => {
-      machingChannelRef.current?.unsubscribe();
-    };
-  }, []);
-
-  const handleMatching = async () => {
-    const supabase = createClient();
-
-    const { data: existingQueue } = await supabase
-      .from("matches")
-      .select("*")
-      .eq("user_id", userInfo?.id)
-      .is("match_id", null);
-
-    // 기존 대기열에 없을 때만 추가
-    if (!existingQueue || existingQueue.length === 0) {
-      await supabase.from("matches").insert({
-        user_id: userInfo?.id,
-        match_id: null,
-        my_language: userInfo?.my_language,
-        learn_language: userInfo?.learn_language
-      });
+  const { handleMatching, userInfo, isLoading, isError } = useMatching();
+  const handleClickMachingButton = () => {
+    if (!userInfo) {
+      alert("로그인 후 이용이 가능합니다.");
     }
 
-    const matchingChannel = supabase.channel("matches");
-    machingChannelRef.current = matchingChannel;
-
-    matchingChannel
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
-        console.log("payload: ", payload);
-        const { new: updatedMatchQueue } = payload;
-
-        if (updatedMatchQueue.match_id === userInfo?.id) {
-          router.push(`/chat?room=${updatedMatchQueue.roomId}`);
-        }
-      })
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("Connected to signaling channel");
-
-          const { data: matchQueue } = await supabase
-            .from("matches")
-            .select("*")
-            .eq("match_id", null)
-            .eq("my_language", userInfo?.learn_language)
-            .neq("user_id", userInfo?.id);
-
-          if (matchQueue && matchQueue.length > 0) {
-            const matchPartner = matchQueue[0];
-            const roomId = `${userInfo?.id}-${matchPartner.user_id as string}`;
-
-            await supabase
-              .from("matches")
-              .update({ match_id: userInfo?.id, room_id: roomId })
-              .eq("user_id", matchPartner.user_id);
-
-            router.push(`/chat?room=${roomId}`);
-          }
-        }
-      });
+    handleMatching();
   };
 
   const isSelected = firstLanguage && secondLanguage;
@@ -91,11 +30,12 @@ const LessonPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div>
-        <p>잠시만 기다려주세요...</p>
-      </div>
-    );
+    return <div>잠시만 기다려주세요...</div>;
+  }
+
+  if (isError) {
+    alert("예기치 못한 오류가 발생하였습니다.");
+    redirect("/");
   }
 
   return (
@@ -124,7 +64,7 @@ const LessonPage = () => {
         <Agreement />
         <button>시작하기</button>
       </form>
-      <button onClick={handleMatching}>매칭하기</button>
+      <button onClick={handleClickMachingButton}>매칭하기</button>
     </>
   );
 };

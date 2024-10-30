@@ -1,10 +1,10 @@
-import { getUser } from "@/api/supabase/getUser";
+import { getUserForMatching } from "@/repositories/matchingRepository";
 import { UserInfoForMatching } from "@/types/UserInfo";
 import { useQuery } from "@tanstack/react-query";
 
 export const useUserInfoForMatching = () => {
-  return useQuery<UserInfoForMatching | null>({
+  return useQuery<UserInfoForMatching>({
     queryKey: ["userInfoForMatching"],
-    queryFn: () => getUser()
+    queryFn: () => getUserForMatching()
   });
 };
