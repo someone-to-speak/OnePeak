@@ -1,599 +1,581 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   public: {
     Tables: {
       answers: {
         Row: {
-          content: string
-          created_at: string
-          id: number
-          is_correct: boolean | null
-          question_id: number
-          user_id: string
-        }
+          content: string;
+          created_at: string;
+          id: number;
+          is_correct: boolean | null;
+          question_id: number;
+          user_id: string;
+        };
         Insert: {
-          content: string
-          created_at?: string
-          id: number
-          is_correct?: boolean | null
-          question_id: number
-          user_id?: string
-        }
+          content: string;
+          created_at?: string;
+          id: number;
+          is_correct?: boolean | null;
+          question_id: number;
+          user_id?: string;
+        };
         Update: {
-          content?: string
-          created_at?: string
-          id?: number
-          is_correct?: boolean | null
-          question_id?: number
-          user_id?: string
-        }
+          content?: string;
+          created_at?: string;
+          id?: number;
+          is_correct?: boolean | null;
+          question_id?: number;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
+            foreignKeyName: "answers_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "answers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "answers_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       block: {
         Row: {
-          created_at: string | null
-          id: number
-          reason: string
-          reason_img_url: string | null
-          target_id: string | null
-          user_info_id: string | null
-        }
+          created_at: string | null;
+          id: number;
+          reason: string;
+          reason_img_url: string | null;
+          target_id: string | null;
+          user_info_id: string | null;
+        };
         Insert: {
-          created_at?: string | null
-          id?: number
-          reason?: string
-          reason_img_url?: string | null
-          target_id?: string | null
-          user_info_id?: string | null
-        }
+          created_at?: string | null;
+          id?: number;
+          reason?: string;
+          reason_img_url?: string | null;
+          target_id?: string | null;
+          user_info_id?: string | null;
+        };
         Update: {
-          created_at?: string | null
-          id?: number
-          reason?: string
-          reason_img_url?: string | null
-          target_id?: string | null
-          user_info_id?: string | null
-        }
+          created_at?: string | null;
+          id?: number;
+          reason?: string;
+          reason_img_url?: string | null;
+          target_id?: string | null;
+          user_info_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "block_target_id_fkey1"
-            columns: ["target_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
+            foreignKeyName: "block_target_id_fkey1";
+            columns: ["target_id"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "block_user_info_id_fkey"
-            columns: ["user_info_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "block_user_info_id_fkey";
+            columns: ["user_info_id"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       categories: {
         Row: {
-          depth: string | null
-          id: number
-          level: number | null
-          name: string
-        }
+          depth: string | null;
+          id: number;
+          level: number | null;
+          name: string;
+        };
         Insert: {
-          depth?: string | null
-          id?: number
-          level?: number | null
-          name: string
-        }
+          depth?: string | null;
+          id?: number;
+          level?: number | null;
+          name: string;
+        };
         Update: {
-          depth?: string | null
-          id?: number
-          level?: number | null
-          name?: string
-        }
-        Relationships: []
-      }
+          depth?: string | null;
+          id?: number;
+          level?: number | null;
+          name?: string;
+        };
+        Relationships: [];
+      };
       chatrooms: {
         Row: {
-          created_at: string
-          id: number
-          participants: string | null
-          room_name: string | null
-        }
+          created_at: string;
+          id: number;
+          participants: string | null;
+          room_name: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: number
-          participants?: string | null
-          room_name?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          participants?: string | null;
+          room_name?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: number
-          participants?: string | null
-          room_name?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          participants?: string | null;
+          room_name?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "chatrooms_participants_fkey"
-            columns: ["participants"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "chatrooms_participants_fkey";
+            columns: ["participants"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       chats: {
         Row: {
-          comment: string | null
-          created_at: string
-          id: number
-          room_title: number | null
-          user_nickname: string | null
-        }
+          comment: string | null;
+          created_at: string;
+          id: number;
+          room_title: number | null;
+          user_nickname: string | null;
+        };
         Insert: {
-          comment?: string | null
-          created_at: string
-          id?: number
-          room_title?: number | null
-          user_nickname?: string | null
-        }
+          comment?: string | null;
+          created_at: string;
+          id?: number;
+          room_title?: number | null;
+          user_nickname?: string | null;
+        };
         Update: {
-          comment?: string | null
-          created_at?: string
-          id?: number
-          room_title?: number | null
-          user_nickname?: string | null
-        }
+          comment?: string | null;
+          created_at?: string;
+          id?: number;
+          room_title?: number | null;
+          user_nickname?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "chats_room_fkey"
-            columns: ["room_title"]
-            isOneToOne: false
-            referencedRelation: "chatrooms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "chats_room_fkey";
+            columns: ["room_title"];
+            isOneToOne: false;
+            referencedRelation: "chatrooms";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       faq: {
         Row: {
-          category: string | null
-          comment: string
-          content: string | null
-          created_at: string
-          id: string
-          title: string | null
-          user_id: string | null
-        }
+          category: string | null;
+          comment: string;
+          content: string | null;
+          created_at: string;
+          id: string;
+          title: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          category?: string | null
-          comment: string
-          content?: string | null
-          created_at?: string
-          id?: string
-          title?: string | null
-          user_id?: string | null
-        }
+          category?: string | null;
+          comment: string;
+          content?: string | null;
+          created_at?: string;
+          id?: string;
+          title?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          category?: string | null
-          comment?: string
-          content?: string | null
-          created_at?: string
-          id?: string
-          title?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+          category?: string | null;
+          comment?: string;
+          content?: string | null;
+          created_at?: string;
+          id?: string;
+          title?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       matches: {
         Row: {
-          created_at: string
-          id: number
-          learn_language: string | null
-          match_id: string | null
-          my_language: string | null
-          room_id: string | null
-          user_id: string | null
-        }
+          created_at: string;
+          id: number;
+          learn_language: string | null;
+          match_id: string | null;
+          my_language: string | null;
+          room_id: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: number
-          learn_language?: string | null
-          match_id?: string | null
-          my_language?: string | null
-          room_id?: string | null
-          user_id?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          learn_language?: string | null;
+          match_id?: string | null;
+          my_language?: string | null;
+          room_id?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: number
-          learn_language?: string | null
-          match_id?: string | null
-          my_language?: string | null
-          room_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          id?: number;
+          learn_language?: string | null;
+          match_id?: string | null;
+          my_language?: string | null;
+          room_id?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
-          gender: string | null
-          grammerChal_level: number | null
-          id: string
-          language: string | null
-          nickname: string | null
-          profile_url: string | null
-          state_msg: string | null
-          study_lang: string | null
-          user_id: string | null
-        }
+          gender: string | null;
+          grammerChal_level: number | null;
+          id: string;
+          language: string | null;
+          nickname: string | null;
+          profile_url: string | null;
+          state_msg: string | null;
+          study_lang: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          gender?: string | null
-          grammerChal_level?: number | null
-          id: string
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-          study_lang?: string | null
-          user_id?: string | null
-        }
+          gender?: string | null;
+          grammerChal_level?: number | null;
+          id: string;
+          language?: string | null;
+          nickname?: string | null;
+          profile_url?: string | null;
+          state_msg?: string | null;
+          study_lang?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          gender?: string | null
-          grammerChal_level?: number | null
-          id?: string
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-          study_lang?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+          gender?: string | null;
+          grammerChal_level?: number | null;
+          id?: string;
+          language?: string | null;
+          nickname?: string | null;
+          profile_url?: string | null;
+          state_msg?: string | null;
+          study_lang?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       questions: {
         Row: {
-          answer: string | null
-          content: string
-          created_at: string | null
-          id: number
-          language: string | null
-          level: number | null
-          reason: string | null
-          type: string | null
-          wrong_answer: string | null
-        }
+          answer: string | null;
+          content: string;
+          created_at: string | null;
+          id: number;
+          language: string | null;
+          level: number | null;
+          reason: string | null;
+          type: string | null;
+          wrong_answer: string | null;
+        };
         Insert: {
-          answer?: string | null
-          content: string
-          created_at?: string | null
-          id?: number
-          language?: string | null
-          level?: number | null
-          reason?: string | null
-          type?: string | null
-          wrong_answer?: string | null
-        }
+          answer?: string | null;
+          content: string;
+          created_at?: string | null;
+          id?: number;
+          language?: string | null;
+          level?: number | null;
+          reason?: string | null;
+          type?: string | null;
+          wrong_answer?: string | null;
+        };
         Update: {
-          answer?: string | null
-          content?: string
-          created_at?: string | null
-          id?: number
-          language?: string | null
-          level?: number | null
-          reason?: string | null
-          type?: string | null
-          wrong_answer?: string | null
-        }
-        Relationships: []
-      }
+          answer?: string | null;
+          content?: string;
+          created_at?: string | null;
+          id?: number;
+          language?: string | null;
+          level?: number | null;
+          reason?: string | null;
+          type?: string | null;
+          wrong_answer?: string | null;
+        };
+        Relationships: [];
+      };
       review: {
         Row: {
-          created_at: string
-          id: number
-          level: number | null
-          situation: string | null
-          user_id: string | null
-        }
+          created_at: string;
+          id: number;
+          level: number | null;
+          situation: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: number
-          level?: number | null
-          situation?: string | null
-          user_id?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          level?: number | null;
+          situation?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: number
-          level?: number | null
-          situation?: string | null
-          user_id?: string | null
-        }
+          created_at?: string;
+          id?: number;
+          level?: number | null;
+          situation?: string | null;
+          user_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "review_level_fkey"
-            columns: ["level"]
-            isOneToOne: false
-            referencedRelation: "situation"
-            referencedColumns: ["level"]
+            foreignKeyName: "review_level_fkey";
+            columns: ["level"];
+            isOneToOne: false;
+            referencedRelation: "situation";
+            referencedColumns: ["level"];
           },
           {
-            foreignKeyName: "review_situation_fkey"
-            columns: ["situation"]
-            isOneToOne: false
-            referencedRelation: "situation"
-            referencedColumns: ["situation"]
+            foreignKeyName: "review_situation_fkey";
+            columns: ["situation"];
+            isOneToOne: false;
+            referencedRelation: "situation";
+            referencedColumns: ["situation"];
           },
           {
-            foreignKeyName: "review_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "review_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       situation: {
         Row: {
-          id: number
-          level: number
-          situation: string
-        }
+          id: number;
+          level: number;
+          situation: string;
+        };
         Insert: {
-          id?: number
-          level: number
-          situation: string
-        }
+          id?: number;
+          level: number;
+          situation: string;
+        };
         Update: {
-          id?: number
-          level?: number
-          situation?: string
-        }
-        Relationships: []
-      }
+          id?: number;
+          level?: number;
+          situation?: string;
+        };
+        Relationships: [];
+      };
       test_result: {
         Row: {
-          category_id: number | null
-          collect: number | null
-          created_at: string
-          id: number
-          total: number | null
-          user_id: string | null
-        }
+          category_id: number | null;
+          collect: number | null;
+          created_at: string;
+          id: number;
+          total: number | null;
+          user_id: string | null;
+        };
         Insert: {
-          category_id?: number | null
-          collect?: number | null
-          created_at?: string
-          id?: number
-          total?: number | null
-          user_id?: string | null
-        }
+          category_id?: number | null;
+          collect?: number | null;
+          created_at?: string;
+          id?: number;
+          total?: number | null;
+          user_id?: string | null;
+        };
         Update: {
-          category_id?: number | null
-          collect?: number | null
-          created_at?: string
-          id?: number
-          total?: number | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+          category_id?: number | null;
+          collect?: number | null;
+          created_at?: string;
+          id?: number;
+          total?: number | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       user_answer: {
         Row: {
-          created_at: string | null
-          id: number
-          is_corrected: boolean
-          is_reviewed: boolean
-          question_id: number
-          selected_answer: string
-          user_id: string
-        }
+          created_at: string | null;
+          id: number;
+          is_corrected: boolean;
+          is_reviewed: boolean;
+          question_id: number;
+          selected_answer: string;
+          user_id: string;
+        };
         Insert: {
-          created_at?: string | null
-          id?: number
-          is_corrected: boolean
-          is_reviewed: boolean
-          question_id: number
-          selected_answer?: string
-          user_id: string
-        }
+          created_at?: string | null;
+          id?: number;
+          is_corrected: boolean;
+          is_reviewed: boolean;
+          question_id: number;
+          selected_answer?: string;
+          user_id: string;
+        };
         Update: {
-          created_at?: string | null
-          id?: number
-          is_corrected?: boolean
-          is_reviewed?: boolean
-          question_id?: number
-          selected_answer?: string
-          user_id?: string
-        }
+          created_at?: string | null;
+          id?: number;
+          is_corrected?: boolean;
+          is_reviewed?: boolean;
+          question_id?: number;
+          selected_answer?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "user_answer_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
+            foreignKeyName: "user_answer_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "user_answer_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+            foreignKeyName: "user_answer_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       user_info: {
         Row: {
-          created_at: string | null
-          email: string | null
-          gender: string | null
-          id: string
-          is_blocked: boolean | null
-          is_deleted: boolean | null
-          learn_language: string | null
-          my_language: string | null
-          nickname: string | null
-          profile_url: string | null
-          state_msg: string | null
-        }
+          created_at: string | null;
+          email: string | null;
+          gender: string | null;
+          id: string;
+          is_blocked: boolean | null;
+          is_deleted: boolean | null;
+          learn_language: string | null;
+          my_language: string | null;
+          nickname: string | null;
+          profile_url: string | null;
+          state_msg: string | null;
+        };
         Insert: {
-          created_at?: string | null
-          email?: string | null
-          gender?: string | null
-          id?: string
-          is_blocked?: boolean | null
-          is_deleted?: boolean | null
-          learn_language?: string | null
-          my_language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-        }
+          created_at?: string | null;
+          email?: string | null;
+          gender?: string | null;
+          id?: string;
+          is_blocked?: boolean | null;
+          is_deleted?: boolean | null;
+          learn_language?: string | null;
+          my_language?: string | null;
+          nickname?: string | null;
+          profile_url?: string | null;
+          state_msg?: string | null;
+        };
         Update: {
-          created_at?: string | null
-          email?: string | null
-          gender?: string | null
-          id?: string
-          is_blocked?: boolean | null
-          is_deleted?: boolean | null
-          learn_language?: string | null
-          my_language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-        }
-        Relationships: []
-      }
-    }
+          created_at?: string | null;
+          email?: string | null;
+          gender?: string | null;
+          id?: string;
+          is_blocked?: boolean | null;
+          is_deleted?: boolean | null;
+          learn_language?: string | null;
+          my_language?: string | null;
+          nickname?: string | null;
+          profile_url?: string | null;
+          state_msg?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">];
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] & PublicSchema["Views"]) | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  ? (PublicSchema["Tables"] & PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R;
+    }
+    ? R
     : never
+  : never;
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema["Tables"] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+      Insert: infer I;
+    }
+    ? I
     : never
+  : never;
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema["Tables"] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+      Update: infer U;
+    }
+    ? U
     : never
+  : never;
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
-    | { schema: keyof Database },
+  PublicEnumNameOrOptions extends keyof PublicSchema["Enums"] | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never = never
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  : never;
 
 export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
-    | { schema: keyof Database },
+  PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"] | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never = never
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never;
