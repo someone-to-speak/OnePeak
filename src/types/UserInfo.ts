@@ -1,4 +1,4 @@
-export type userInfo = {
+export type UserInfo = {
   id: string;
   profile_url: string;
   nickname: string;
@@ -11,4 +11,4 @@ export type userInfo = {
   created_at: Date;
 };
 
-export type userInfoForMatching = Pick<userInfo, "id" | "my_language" | "learn_language">;
+export type UserInfoForMatching = Pick<UserInfo, "id" | "my_language" | "learn_language">;

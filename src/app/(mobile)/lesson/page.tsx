@@ -5,16 +5,25 @@ import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import { useUserInfoForMatching } from "@/hooks/getUser/getUser";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import React, { useRef, useState } from "react";
+import { match } from "assert";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 
 const LessonPage = () => {
   const [firstLanguage, setfirstLanguage] = useState("");
   const [secondLanguage, setsecondLanguage] = useState("");
 
-  const { data: userInfo } = useUserInfoForMatching();
+  const router = useRouter();
+  const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
   const machingChannelRef = useRef<RealtimeChannel | null>(null);
 
-  const handleMatching = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  useEffect(() => {
+    return () => {
+      machingChannelRef.current?.unsubscribe();
+    };
+  }, []);
+
+  const handleMatching = async () => {
     const supabase = createClient();
 
     const { data: existingQueue } = await supabase
@@ -33,12 +42,42 @@ const LessonPage = () => {
       });
     }
 
-    const matchingChannel = supabase
-      .channel("matches")
+    const matchingChannel = supabase.channel("matches");
+    machingChannelRef.current = matchingChannel;
+
+    matchingChannel
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
         console.log("payload: ", payload);
+        const { new: updatedMatchQueue } = payload;
+
+        if (updatedMatchQueue.match_id === userInfo?.id) {
+          router.push(`/chat?room=${updatedMatchQueue.roomId}`);
+        }
       })
-      .subscribe();
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          console.log("Connected to signaling channel");
+
+          const { data: matchQueue } = await supabase
+            .from("matches")
+            .select("*")
+            .eq("match_id", null)
+            .eq("my_language", userInfo?.learn_language)
+            .neq("user_id", userInfo?.id);
+
+          if (matchQueue && matchQueue.length > 0) {
+            const matchPartner = matchQueue[0];
+            const roomId = `${userInfo?.id}-${matchPartner.user_id as string}`;
+
+            await supabase
+              .from("matches")
+              .update({ match_id: userInfo?.id, room_id: roomId })
+              .eq("user_id", matchPartner.user_id);
+
+            router.push(`/chat?room=${roomId}`);
+          }
+        }
+      });
   };
 
   const isSelected = firstLanguage && secondLanguage;
@@ -50,6 +89,14 @@ const LessonPage = () => {
       console.log("Form Submitted:", { firstLanguage, secondLanguage });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <p>잠시만 기다려주세요...</p>
+      </div>
+    );
+  }
 
   return (
     <>
