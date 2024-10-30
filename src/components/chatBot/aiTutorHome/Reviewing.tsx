@@ -3,11 +3,13 @@
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { Tables } from "../../../../database.types";
+import { useRouter } from "next/navigation";
 
 type ReviewType = Tables<"review">;
 
 const Reviewing = () => {
   const supabase = createClient();
+  const router = useRouter();
   const [reviews, setReviews] = useState<ReviewType[]>([]);
 
   // TODO: 내 id랑 같은 것만 가져오기
@@ -31,16 +33,30 @@ const Reviewing = () => {
     getReview();
   }, []);
 
+  // 버튼 핸들러
+  const handleReviewClick = (review: ReviewType) => {
+    router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold">복습하기</h1>
-      <div>
+      <h1 className="text-3xl font-bold mt-5">복습하기</h1>
+      <div className="">
         {reviews.map((review) => {
           return (
             <div key={review.id}>
-              <p>{review.situation}</p>
-              <p>{review.level}</p>
-              <button>복습하기</button>
+              <div className="flex flex-row justify-between my-5">
+                <p>{review.situation}</p>
+                <p>{review.level}</p>
+              </div>
+              <button
+                onClick={() => {
+                  handleReviewClick(review);
+                }}
+                className="w-full p-2 border border-spacing-2"
+              >
+                복습하기
+              </button>
             </div>
           );
         })}
