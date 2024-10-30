@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate";
@@ -13,6 +13,7 @@ type SignalData = {
 
 const VideoChat = () => {
   const supabase = createClient();
+  const router = useRouter();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -20,35 +21,44 @@ const VideoChat = () => {
 
   const channel = useRef<RealtimeChannel | null>(null);
   const searchParams = useSearchParams();
-  const roomId = searchParams.get("room")?.split(",")[0];
+  const roomId = searchParams?.get("room")?.split(",")[0];
 
   useEffect(() => {
-    const signalingChannel = supabase.channel(`video-chat-${roomId}`);
-    channel.current = signalingChannel;
+    if (!roomId) return;
 
-    signalingChannel
-      .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) => handleSignalData(payload))
-      .on("broadcast", { event: "offer" }, (payload: SignalData) => handleSignalData(payload))
-      .on("broadcast", { event: "answer" }, (payload: SignalData) => handleSignalData(payload))
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("Connected to signaling channel");
+    const init = async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser();
+      const userId = user?.id;
 
-          initWebRTC();
-        } else if (status === "CHANNEL_ERROR") {
-          console.log("CHANNEL_ERROR");
-        } else if (status === "CLOSED") {
-          console.log("CLOSED");
-        } else if (status === "TIMED_OUT") {
-          console.log("TIMED_OUT");
-        }
-      });
+      const signalingChannel = supabase.channel(`video-chat-${roomId}`);
+      channel.current = signalingChannel;
+
+      signalingChannel
+        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) => handleSignalData(payload))
+        .on("broadcast", { event: "offer" }, (payload: SignalData) => handleSignalData(payload))
+        .on("broadcast", { event: "answer" }, (payload: SignalData) => handleSignalData(payload))
+        .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            console.log("Connected to signaling channel");
+            initWebRTC();
+            if (userId === roomId) {
+              createOffer();
+            }
+          } else if (status === "CHANNEL_ERROR") {
+            console.log("CHANNEL_ERROR");
+          }
+        });
+    };
+
+    init();
 
     return () => {
-      channel.current?.unsubscribe();
-      peerConnectionRef.current?.close();
+      handleLeave();
     };
-  }, []);
+  }, [roomId]);
 
   const initWebRTC = async () => {
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
@@ -144,11 +154,25 @@ const VideoChat = () => {
     });
   };
 
+  const handleLeave = () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "leave"
+    });
+    channel.current?.unsubscribe();
+    peerConnectionRef.current?.close();
+    router.push("/"); // 홈으로 라우트
+  };
+
+  const handleLeaveSignal = () => {
+    console.log("The other user has left the chat.");
+    router.push("/"); // 상대방이 나가면 홈으로 이동
+  };
+
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={createOffer}>Start Call</button>
-
+      <button onClick={handleLeave}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
