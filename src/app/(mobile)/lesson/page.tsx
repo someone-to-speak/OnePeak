@@ -5,8 +5,8 @@ import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import React, { useState } from "react";
 
 const LessonPage = () => {
-  const [firstLanguage, setfirstLanguage] = useState("");
-  const [secondLanguage, setsecondLanguage] = useState("");
+  const [firstLanguage, setFirstLanguage] = useState("");
+  const [secondLanguage, setSecondLanguage] = useState("");
 
   const isSelected = firstLanguage && secondLanguage;
 
@@ -26,7 +26,7 @@ const LessonPage = () => {
         <div className="flex">
           <div className="flex flex-col">
             <label>1 사용 언어</label>
-            <select value={firstLanguage} onChange={(e) => setfirstLanguage(e.target.value)}>
+            <select value={firstLanguage} onChange={(e) => setFirstLanguage(e.target.value)}>
               <option value="">-- 첫 번째로 시작할 언어 선택 --</option>
               <option value="English">영어</option>
               <option value="Korean">한국어</option>
@@ -34,7 +34,7 @@ const LessonPage = () => {
           </div>
           <div className="flex flex-col">
             <label>2 사용 언어</label>
-            <select value={secondLanguage} onChange={(e) => setsecondLanguage(e.target.value)}>
+            <select value={secondLanguage} onChange={(e) => setSecondLanguage(e.target.value)}>
               <option value="">-- 두 번째로 시작할 언어 선택 --</option>
               <option value="English">영어</option>
               <option value="Korean">한국어</option>
