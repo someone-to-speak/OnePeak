@@ -42,8 +42,11 @@ const TodayLearn = () => {
       <div className="flex flex-row">
         {situations.map((situation) => {
           return (
-            <Link href={{ pathname: "/chatbot", query: { situation: situation.situation, level: situation.level } }}>
-              <div key={situation.id} className="w-60 h-60 border border-spacing-2">
+            <Link
+              key={situation.id}
+              href={{ pathname: "/chatbot", query: { situation: situation.situation, level: situation.level } }}
+            >
+              <div className="w-60 h-60 border border-spacing-2">
                 <p>{situation.situation}</p>
                 <p>난이도: {situation.level}</p>
               </div>
