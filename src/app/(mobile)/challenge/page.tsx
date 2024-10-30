@@ -1,5 +1,7 @@
-const page = () => {
-  return <div>page</div>;
+import FetchQuizButton from "@/components/challenge/(grammar)/fetchQuizButton";
+
+const ChalPage = () => {
+  return <FetchQuizButton />;
 };
 
-export default page;
+export default ChalPage;
