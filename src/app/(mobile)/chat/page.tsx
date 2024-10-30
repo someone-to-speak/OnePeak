@@ -38,11 +38,12 @@ const VideoChat = () => {
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
-        .subscribe((status) => {
+        .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
             webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
             if (userId === roomId) {
-              webrtcServiceRef.current.createOffer();
+              console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
+              await webrtcServiceRef.current.createOffer();
             }
           }
         });
