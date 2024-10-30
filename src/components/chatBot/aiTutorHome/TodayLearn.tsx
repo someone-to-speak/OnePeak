@@ -80,7 +80,7 @@ const TodayLearn = () => {
     <div className="h-64">
       <h1 className="text-3xl font-bold">오늘의 학습</h1>
       <p>매일 업데이트 되는 맞춤 커리큘럼 {situations.length}</p>
-      <div className="flex flex-row">
+      <div className="flex overflow-x-auto">
         {situations.map((situation) => {
           return (
             <Link
