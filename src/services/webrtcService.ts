@@ -20,10 +20,9 @@ export class WebRTCService {
     this.localVideoRef = localVideoRef;
     this.remoteVideoRef = remoteVideoRef;
     this.channel = channel;
-    this.init();
   }
 
-  private async init() {
+  async init() {
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
     this.peerConnection = new RTCPeerConnection(config);
 
