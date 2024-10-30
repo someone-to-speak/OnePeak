@@ -15,7 +15,7 @@ interface UserAnswer {
   created_at: Date;
 }
 interface Questions {
-  id: UUID;
+  id: number;
   type: string;
   content: string;
   question_id: number;
@@ -78,12 +78,23 @@ const WrongWordPage = () => {
   if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
   if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
 
+  const wrongAnswers = userAnswers
+    ?.filter((answer) => !answer.is_corrected)
+    .map((answer) => {
+      const matchedQuestion = questions?.find((question) => question.id === answer.question_id);
+      return matchedQuestion ? matchedQuestion.answer : null;
+    })
+    .filter((answer) => answer !== null);
+
+  console.log("wrongAnswers", wrongAnswers);
+
   return (
     <div>
       <h1>User Answers</h1>
       <div>
-        {userAnswers &&
-          userAnswers.map((answer) => (!answer.is_corrected ? <div key={answer.id}>{answer.question_id}</div> : null))}
+        {wrongAnswers?.map((answer, index) => (
+          <div key={index}>{answer}</div>
+        ))}
       </div>
     </div>
   );
