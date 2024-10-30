@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/client";
 
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPEN_AI_KEY;
+const OPENAI_API_KEY = process.env.OPEN_AI_KEY;
 
 const openai = new OpenAI({
   apiKey: OPENAI_API_KEY
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       model: "gpt-4o",
       messages: [
         {
-          role: "user",
+          role: "system",
           content: `다음의 요구 사항을 충족하는 빈칸 문제를 만들어줘:
           - 문제 개수: ${length}
           - 문제 유형: ${type}
@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       ]
     });
 
-    // 응답 검증
     if (!completion.choices.length) {
       throw new Error("응답이 없습니다.");
     }

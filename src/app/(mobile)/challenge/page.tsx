@@ -1,7 +1,7 @@
-import GrammarQuiz from "@/components/challenge/(grammar)/grammarQuiz";
+import FetchQuizButton from "@/components/challenge/(grammar)/fetchQuizButton";
 
 const ChalPage = () => {
-  return <GrammarQuiz />;
+  return <FetchQuizButton />;
 };
 
 export default ChalPage;
