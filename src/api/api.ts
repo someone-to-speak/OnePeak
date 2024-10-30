@@ -92,8 +92,8 @@ export const getBlockDetail = async (targetId: string) => {
   const filteredTargetIds = data
     ? Object.entries(targetIdsCount)
 
-        .filter((count) => {
-          return count[1] >= 2;
+        .filter(([id, count]) => {
+          return count >= 3;
         })
         .map(([id]) => id)
     : [];
