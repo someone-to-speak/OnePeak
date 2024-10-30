@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { RealtimeChannel } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
+import { WebRTCService } from "@/services/webRTCService";
+import { createChannel, getUserId } from "@/repositories/clientRepository";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate" | "leave";
@@ -12,40 +12,38 @@ type SignalData = {
 };
 
 const VideoChat = () => {
-  const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const roomId = searchParams?.get("room")?.split(",")[0];
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-
-  const channel = useRef<RealtimeChannel | null>(null);
-  const searchParams = useSearchParams();
-  const roomId = searchParams?.get("room")?.split(",")[0];
+  const webrtcServiceRef = useRef<WebRTCService | null>(null);
+  const channel = useRef(createChannel(roomId || ""));
 
   useEffect(() => {
     if (!roomId) return;
 
     const init = async () => {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
-      const userId = user?.id;
+      const userId = await getUserId();
 
-      const signalingChannel = supabase.channel(`video-chat-${roomId}`);
-      channel.current = signalingChannel;
-
-      signalingChannel
-        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) => handleSignalData(payload))
-        .on("broadcast", { event: "offer" }, (payload: SignalData) => handleSignalData(payload))
-        .on("broadcast", { event: "answer" }, (payload: SignalData) => handleSignalData(payload))
+      channel.current
+        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
+        .on("broadcast", { event: "offer" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
+        .on("broadcast", { event: "answer" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
         .subscribe((status) => {
           if (status === "SUBSCRIBED") {
-            console.log("Connected to signaling channel");
-            initWebRTC(userId);
-          } else if (status === "CHANNEL_ERROR") {
-            console.log("CHANNEL_ERROR");
+            webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
+            if (userId === roomId) {
+              webrtcServiceRef.current.createOffer();
+            }
           }
         });
     };
@@ -57,118 +55,18 @@ const VideoChat = () => {
     };
   }, [roomId]);
 
-  const initWebRTC = async (userId: string | undefined) => {
-    const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
-    const peerConnection = new RTCPeerConnection(config);
-    peerConnectionRef.current = peerConnection;
-
-    peerConnection.onicecandidate = (event) => {
-      // console.log("onicecandidate event: :", event);
-      if (event.candidate) {
-        // console.log("send candidate");
-        channel.current?.send({
-          type: "broadcast",
-          event: "ice-candidate",
-          candidate: event.candidate
-        });
-      }
-    };
-
-    peerConnection.ontrack = (event) => {
-      // console.log("ontrack");
-      if (remoteVideoRef.current) {
-        // console.log("peerConnection: ", peerConnection);
-        remoteVideoRef.current.srcObject = event.streams[0];
-      }
-    };
-
-    peerConnection.onconnectionstatechange = () => {
-      console.log("Connection State:", peerConnection.connectionState);
-    };
-
-    peerConnection.oniceconnectionstatechange = () => {
-      console.log("ICE Connection State:", peerConnection.iceConnectionState);
-    };
-
-    peerConnection.onicegatheringstatechange = () => {
-      console.log("ICE Gathering State:", peerConnection.iceGatheringState);
-    };
-
-    const localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    });
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = localStream;
-    }
-    localStream.getTracks().forEach((track) => {
-      peerConnection.addTrack(track, localStream);
-    });
-
-    if (userId === roomId) {
-      await createOffer();
-    }
-  };
-
-  const handleSignalData = async (payload: SignalData) => {
-    try {
-      if (!peerConnectionRef.current) return;
-      console.log("payload: ", payload);
-      const { event, sdp, candidate } = payload;
-      console.log("sdp: ", sdp);
-      if (event === "offer" && sdp) {
-        await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
-        const answer = await peerConnectionRef.current.createAnswer();
-        await peerConnectionRef.current.setLocalDescription(answer);
-        // console.log("channel: ", channel);
-        const serverResponse = channel.current?.send({
-          type: "broadcast",
-          event: "answer",
-          sdp: answer
-        });
-        console.log("serverResponse: ", serverResponse);
-      } else if (event === "answer" && sdp) {
-        console.log("answer");
-        await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
-      } else if (event === "ice-candidate" && candidate) {
-        console.log("candidate");
-        await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
-      }
-      console.log("end");
-    } catch (error) {
-      console.error("Error handling signal data:", error);
-    }
-  };
-
-  const createOffer = async () => {
-    console.log("createOffer");
-    if (!peerConnectionRef.current) {
-      console.log("not found peerConnectionRef");
-      return;
-    }
-
-    const offer = await peerConnectionRef.current.createOffer();
-    await peerConnectionRef.current.setLocalDescription(offer);
-    channel.current?.send({
-      type: "broadcast",
-      event: "offer",
-      sdp: offer
-    });
-  };
-
   const handleLeave = () => {
     channel.current?.send({
       type: "broadcast",
       event: "leave"
     });
     channel.current?.unsubscribe();
-    peerConnectionRef.current?.close();
-    router.push("/"); // 홈으로 라우트
+    webrtcServiceRef.current?.closeConnection();
+    router.push("/");
   };
 
   const handleLeaveSignal = () => {
-    console.log("The other user has left the chat.");
-    router.push("/"); // 상대방이 나가면 홈으로 이동
+    router.push("/");
   };
 
   return (
