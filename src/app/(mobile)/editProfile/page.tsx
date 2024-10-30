@@ -3,17 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { userProfile } from "@/types/userProfile";
+import { UserProfile } from "@/types/user/UserProfile";
 import Image from "next/image";
-import { uploadImage } from "@/utils/imageUpload";
+import { uploadImage } from "@/utils/myPage/imageUpload";
 
 const EditProfile = () => {
   const router = useRouter();
-  const [profile, setProfile] = useState<userProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -52,8 +53,7 @@ const EditProfile = () => {
     if (selectedFile) {
       setFile(selectedFile);
       const objectUrl = URL.createObjectURL(selectedFile);
-      setPreviewUrl(objectUrl); // 선택한 파일의 미리보기 설정
-      console.log("Selected file for preview:", objectUrl); // 디버그 로그 추가
+      setPreviewUrl(objectUrl);
       setError(null);
     }
   };
