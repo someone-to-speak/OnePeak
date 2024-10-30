@@ -23,11 +23,12 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: `다음의 요구 사항을 충족하는 빈칸 문제를 만들어줘:
-          - 문제 개수: ${length}
-          - 문제 유형: ${type}
-          - 난이도: ${level}
-          - 언어: ${language}
+          content: `Create a fill-in-the-blank problem that meets the following requirements:
+          - Note: The problem must be a logically sound and indisputable question. The 'content' should only contain the fill-in-the-blank problem. It should be a blank-fill question that does not include any hints or meanings of the answer within the sentence. Generate a one-line fill-in-the-blank question. The sentence should not hint at the answer. It should be a problem that can only be inferred in one line, without any context. Do not include any multiple-choice expressions that could provide hints within the sentence. Example: Yesterday, I went to the library and _____ read a book.
+          - 문제 개수: 4
+          - 문제 유형: grammar, word,
+          - 난이도: 1
+          - 언어: korean. english
           - 응답 형식: [ { "content": {문제}, "answer": {정답}, "wrong_answer": {틀린 정답}, "reason": {문제 정답의 이유}, "language": {언어}, "level": {난이도}, "type": {문제 유형} }]`
         }
       ]
