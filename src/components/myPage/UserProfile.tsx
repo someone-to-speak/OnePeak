@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserPen } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-import { userProfile } from "@/types/userProfile";
+import { UserProfile } from "@/types/user/UserProfile";
 
-const UserProfile = () => {
+const UserProfilePage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<userProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -117,4 +117,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfilePage;

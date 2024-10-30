@@ -1,5 +1,7 @@
-const page = () => {
-  return <div>page</div>;
+import GrammarQuiz from "@/components/challenge/(grammar)/grammarQuiz";
+
+const ChalPage = () => {
+  return <GrammarQuiz />;
 };
 
-export default page;
+export default ChalPage;
