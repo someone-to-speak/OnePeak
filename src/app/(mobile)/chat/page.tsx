@@ -6,7 +6,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type SignalData = {
-  event: "offer" | "answer" | "ice-candidate";
+  event: "offer" | "answer" | "ice-candidate" | "leave";
   sdp?: RTCSessionDescriptionInit;
   candidate?: RTCIceCandidateInit;
 };
