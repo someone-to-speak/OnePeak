@@ -1,27 +1,13 @@
 "use client";
+import { UserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 
-import { error } from "console";
-import { UUID } from "crypto";
-
 import React, { useEffect, useState } from "react";
-
-type userInfo = {
-  id: UUID;
-  profile_url: string;
-  nickname: string;
-  gender: string;
-  language: string;
-  state_msg: string;
-  is_deleted: boolean;
-  is_blocked: boolean;
-  created_at: Date;
-};
 
 const UsersInfo = () => {
   //이게 서버컴포넌트인지 클라이언트컴포넌트인지 명시적으로 알게하기 위해서 매번 이렇게 씀. 그래서 creatClient도 서버or클라이언트 import 주의
   const browserClient = createClient();
-  const [usersInfo, setUsersInfo] = useState<userInfo[]>([]);
+  const [usersInfo, setUsersInfo] = useState<UserInfo[]>([]);
   const [theNickname, setTheNickname] = useState<string>("");
 
   useEffect(() => {
@@ -40,7 +26,7 @@ const UsersInfo = () => {
   }, []);
 
   // 차단 해제
-  const unblockUser = async (targetUser: userInfo) => {
+  const unblockUser = async (targetUser: UserInfo) => {
     alert("정말 차단을 해제 하시겠습니까?");
     const { error } = await browserClient.from("user_info").update({ is_blocked: false }).eq("id", targetUser.id);
 
@@ -61,7 +47,7 @@ const UsersInfo = () => {
   };
 
   //차단
-  const blockUser = async (targetUser: userInfo) => {
+  const blockUser = async (targetUser: UserInfo) => {
     alert("정말 차단하시겠습니까?");
     const { error } = await browserClient.from("user_info").update({ is_blocked: true }).eq("id", targetUser.id);
 
@@ -82,7 +68,7 @@ const UsersInfo = () => {
   };
 
   // 회원탈퇴
-  const cancleAccount = async (targetUser: userInfo) => {
+  const cancleAccount = async (targetUser: UserInfo) => {
     alert("정말 회원 계정을 탈퇴시키겠습니까?");
     const { error } = await browserClient.from("user_info").update({ is_deleted: true }).eq("id", targetUser.id);
 
@@ -103,7 +89,7 @@ const UsersInfo = () => {
   };
 
   // 회원 탈퇴 취소
-  const uncancleAccount = async (targetUser: userInfo) => {
+  const uncancleAccount = async (targetUser: UserInfo) => {
     alert("정말 해당 회원 계정을 복구시키겠습니까?");
     const { error } = await browserClient.from("user_info").update({ is_deleted: false }).eq("id", targetUser.id);
 

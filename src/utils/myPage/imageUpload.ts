@@ -24,8 +24,7 @@ export const uploadImage = async (file: File) => {
       encodedFileName = `${uuidv4()}_${encodedFileName}`;
     }
 
-    const { data, error } = await supabase.storage.from("Profile_url").upload(encodedFileName, file); // 슈파베이스 테이블 경로
-    console.log(data);
+    const { data, error } = await supabase.storage.from("Profile_url").upload(encodedFileName, file);
     if (error) throw error;
     return data;
   } catch (error) {

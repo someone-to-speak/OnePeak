@@ -1,12 +1,12 @@
 "use client";
 
-import UserProfile from "@/components/profile/UserProfile";
+import UserProfilePage from "@/components/myPage/UserProfile";
 import Link from "next/link";
 
 const MyPage = () => {
   return (
     <div className="flex flex-col">
-      <UserProfile />
+      <UserProfilePage />
       <Link href="/myPage/faq">1:1 문의하기</Link>
       <Link href="/myPage/subscription">구독관리</Link>
       <Link href="/myPage/settings">설정</Link>
