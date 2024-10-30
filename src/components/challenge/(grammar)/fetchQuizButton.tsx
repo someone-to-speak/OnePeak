@@ -45,7 +45,7 @@ const FetchQuizButton = () => {
 
   return (
     <div>
-      <button onClick={fetchQuiz} className="bg-gray-500"></button>
+      <button onClick={fetchQuiz}></button>
       {error && <p>{error}</p>}
       {quiz && (
         <div>
