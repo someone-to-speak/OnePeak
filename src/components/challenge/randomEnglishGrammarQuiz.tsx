@@ -12,6 +12,8 @@ type QuestionType = Tables<"questions">;
 const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
+  const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
+  const [reason, setReason] = useState<{ [key: number]: string | null }>({});
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -34,37 +36,47 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
       ...prevAnswers,
       [questionId]: answer
     }));
-  };
 
-  const saveAllAnswers = async () => {
-    const unanswered = questions.filter((q) => !selectedAnswers[q.id]);
-    if (unanswered.length > 0) {
-      setMessage("모든 질문에 답변해 주세요.");
-      // TODO: 선택안하면 못넘어가게 바꾸어야함
-      return;
+    // 정답 확인
+    const question = questions.find((q) => q.id === questionId);
+    const isCorrect = answer === question?.answer;
+    setCorrectAnswers((prev) => ({
+      ...prev,
+      [questionId]: isCorrect
+    }));
+
+    // 오답일 경우 이유 설정
+    if (!isCorrect && question) {
+      setReason((prev) => ({
+        ...prev,
+        [questionId]: question.reason // 오답일 경우 reason 설정
+      }));
+    } else {
+      setReason((prev) => ({
+        ...prev,
+        [questionId]: null // 정답일 경우 reason 초기화
+      }));
     }
 
+    // 자동으로 답변을 저장하고 서버에 보낼 수도 있습니다.
+    saveAnswer(questionId, answer);
+  };
+
+  const saveAnswer = async (questionId: number, answer: string) => {
     try {
-      const responses = await Promise.all(
-        questions.map((question) =>
-          fetch("/api/saveUserAnswer", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              questionId: question.id,
-              userId,
-              selectedAnswer: selectedAnswers[question.id]
-            })
-          })
-        )
-      );
+      const response = await fetch("/api/saveUserAnswer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          questionId,
+          userId,
+          selectedAnswer: answer
+        })
+      });
 
-      const errors = responses.filter((res) => !res.ok);
-      if (errors.length > 0) throw new Error("일부 답변 저장 실패");
-
-      setMessage("모든 답변이 저장되었습니다!");
+      if (!response.ok) throw new Error("답변 저장 실패");
     } catch (error) {
       console.error("답안 저장 실패:", error);
       setMessage("답안 저장 실패");
@@ -82,7 +94,11 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
             <button
               onClick={() => handleAnswerSelect(question.id, question.answer)}
               className={`p-2 rounded ${
-                selectedAnswers[question.id] === question.answer ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
+                selectedAnswers[question.id] === question.answer
+                  ? "bg-yellow-400 text-black" // 정답일 때 노란색
+                  : selectedAnswers[question.id] === question.wrong_answer
+                  ? "bg-red-500 text-white" // 오답일 때 빨간색
+                  : "bg-gray-200 text-black"
               }`}
             >
               {question.answer}
@@ -91,18 +107,29 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
               onClick={() => handleAnswerSelect(question.id, question.wrong_answer)}
               className={`p-2 rounded ${
                 selectedAnswers[question.id] === question.wrong_answer
-                  ? "bg-blue-500 text-white"
+                  ? "bg-yellow-400 text-black" // 정답일 때 노란색
+                  : selectedAnswers[question.id] === question.answer
+                  ? "bg-red-500 text-white" // 오답일 때 빨간색
                   : "bg-gray-200 text-black"
               }`}
             >
               {question.wrong_answer}
             </button>
           </div>
+          {/* 정답 여부 및 이유 표시 */}
+          {selectedAnswers[question.id] && (
+            <div>
+              <p className={correctAnswers[question.id] ? "text-green-500" : "text-red-500"}>
+                {correctAnswers[question.id] ? "정답!" : "오답!"}
+              </p>
+              {!correctAnswers[question.id] && reason[question.id] && (
+                <p className="text-gray-500">{reason[question.id]}</p>
+              )}
+            </div>
+          )}
         </div>
       ))}
-      <button onClick={saveAllAnswers} className="mt-4 p-2 bg-gray-800 text-white">
-        답변 제출
-      </button>
+      {/* 여기는 제출 버튼이 필요 없으므로 삭제 */}
       {message && <p>{message}</p>}
     </div>
   );

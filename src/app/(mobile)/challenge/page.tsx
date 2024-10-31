@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import FetchQuestionsButton from "@/components/challenge/fetchQuizButton";
+import FetchGrammarQuizButton from "@/components/challenge/fetchGrammarQuizButton";
 import RandomKoreanGrammarQuiz from "@/components/challenge/randomKoreanGrammarQuiz";
 import RandomEnglishWordQuiz from "@/components/challenge/randomEnglishWordQuiz";
 import RandomKoreanWordQuiz from "@/components/challenge/randomKoreanWordQuiz";
 import RandomEnglishGrammarQuiz from "@/components/challenge/randomEnglishGrammarQuiz";
 import Slider from "react-slick";
+import FetchWordQuizButton from "@/components/challenge/fetchWordQuizButton";
 
 const ChalPage = () => {
   const settings = {
@@ -62,7 +63,8 @@ const ChalPage = () => {
         </div>
       </Slider>
 
-      <FetchQuestionsButton />
+      <FetchGrammarQuizButton />
+      <FetchWordQuizButton />
     </>
   );
 };

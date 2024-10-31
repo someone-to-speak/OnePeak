@@ -4,7 +4,6 @@ import { createClient } from "@/utils/supabase/client";
 const supabase = createClient();
 
 export async function GET(request: NextRequest) {
-  // request의 타입을 명시
   const { searchParams } = new URL(request.url);
   const language = searchParams.get("language");
   const type = searchParams.get("type");

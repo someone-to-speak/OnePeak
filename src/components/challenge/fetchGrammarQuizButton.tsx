@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const FetchQuestionsButton = () => {
+const FetchGrammarQuizButton = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -13,7 +13,7 @@ const FetchQuestionsButton = () => {
     setSuccess(false);
 
     try {
-      const response = await fetch("/api/fetchQrammarQuiz", {
+      const response = await fetch("/api/fetchGrammarQuiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -42,7 +42,7 @@ const FetchQuestionsButton = () => {
   return (
     <div>
       <button onClick={fetchQuiz} disabled={loading} className="bg-gray-800 text-white py-2 px-4">
-        {loading ? "생성 중..." : "퀴즈 데이터 추가하기"}
+        {loading ? "생성 중..." : "grammar 퀴즈 추가하기"}
       </button>
       {error && <p>{error}</p>}
       {success && <p>퀴즈가 성공적으로 생성되었습니다!</p>}
@@ -51,4 +51,4 @@ const FetchQuestionsButton = () => {
   );
 };
 
-export default FetchQuestionsButton;
+export default FetchGrammarQuizButton;
