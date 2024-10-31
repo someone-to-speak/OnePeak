@@ -1,31 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import FetchGrammarQuizButton from "@/components/challenge/fetchGrammarQuizButton";
-import RandomKoreanGrammarQuiz from "@/components/challenge/randomKoreanGrammarQuiz";
-import RandomEnglishWordQuiz from "@/components/challenge/randomEnglishWordQuiz";
-import RandomKoreanWordQuiz from "@/components/challenge/randomKoreanWordQuiz";
-import RandomEnglishGrammarQuiz from "@/components/challenge/randomEnglishGrammarQuiz";
 import Slider from "react-slick";
 import FetchWordQuizButton from "@/components/challenge/fetchWordQuizButton";
+import Link from "next/link";
 
 const ChalPage = () => {
   const settings = {
-    dots: true, // 페이지네이션 점 표시
-    infinite: false, // 무한 스크롤
-    speed: 500, // 슬라이드 전환 속도
-    slidesToShow: 1, // 한 번에 보이는 슬라이드 수
-    slidesToScroll: 1, // 슬라이드 스크롤 수
-    autoplay: false, // 자동 재생
-    autoplaySpeed: 2000 // 자동 재생 속도
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 2000,
+    draggable: true,
+    swipe: true,
+    centerMode: true, // 센터 모드 활성화
+    centerPadding: "40px", // 슬라이드 사이의 패딩 조정
+    arrows: false
   };
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const supabase = createClient();
+  const sliderRef = useRef<Slider | null>(null);
 
   useEffect(() => {
     const fetchUserId = async () => {
+      setLoading(true);
       const {
         data: { session },
         error
@@ -35,31 +40,80 @@ const ChalPage = () => {
       } else if (session) {
         setUserId(session.user.id);
       }
+      setLoading(false);
     };
 
     fetchUserId();
   }, [supabase]);
 
-  if (!userId) return null;
+  if (loading) return <p>로딩 중...</p>;
+
+  if (!userId) return <p>사용자 정보를 찾을 수 없습니다.</p>;
+
+  const goToSlide = (index: number) => {
+    sliderRef.current?.slickGoTo(index);
+  };
 
   return (
     <>
-      <Slider {...settings}>
-        <div>
-          <p>한국어 문법 문제</p>
-          <RandomKoreanGrammarQuiz userId={userId} />
+      <div className="flex flex-row gap-4 mb-4">
+        <p
+          onClick={() => goToSlide(0)}
+          className="bg-blue-500 text-white p-2 cursor-pointer rounded-md transition duration-200 hover:bg-blue-600"
+        >
+          한국어 문법 문제
+        </p>
+        <p
+          onClick={() => goToSlide(1)}
+          className="bg-blue-500 text-white p-2 cursor-pointer rounded-md transition duration-200 hover:bg-blue-600"
+        >
+          영어 문법 문제
+        </p>
+        <p
+          onClick={() => goToSlide(2)}
+          className="bg-blue-500 text-white p-2 cursor-pointer rounded-md transition duration-200 hover:bg-blue-600"
+        >
+          한국어 단어 문제
+        </p>
+        <p
+          onClick={() => goToSlide(3)}
+          className="bg-blue-500 text-white p-2 cursor-pointer rounded-md transition duration-200 hover:bg-blue-600"
+        >
+          영어 단어 문제
+        </p>
+      </div>
+      <Slider ref={sliderRef} {...settings}>
+        <div className="bg-gray-200 p-4 rounded-lg shadow-lg h-[300px]">
+          <Link
+            href={`/challenge/grammar/korean?userId=${userId}`}
+            className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200"
+          >
+            한국어 문법 문제 풀러가기
+          </Link>
         </div>
-        <div>
-          <p>영어 문법 문제</p>
-          <RandomEnglishGrammarQuiz userId={userId} />
+        <div className="bg-gray-200 p-4 rounded-lg shadow-lg h-[300px]">
+          <Link
+            href={`/challenge/grammar/english?userId=${userId}`}
+            className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200"
+          >
+            영어 문법 문제 풀러가기
+          </Link>
         </div>
-        <div>
-          <p>한국어 단어 문제</p>
-          <RandomKoreanWordQuiz userId={userId} />
+        <div className="bg-gray-200 p-4 rounded-lg shadow-lg h-[300px]">
+          <Link
+            href={`/challenge/word/korean?userId=${userId}`}
+            className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200"
+          >
+            한국어 단어 문제 풀러가기
+          </Link>
         </div>
-        <div>
-          <p>영어 단어 문제</p>
-          <RandomEnglishWordQuiz userId={userId} />
+        <div className="bg-gray-200 p-4 rounded-lg shadow-lg h-[300px]">
+          <Link
+            href={`/challenge/word/english?userId=${userId}`}
+            className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200"
+          >
+            영어 단어 문제 풀러가기
+          </Link>
         </div>
       </Slider>
 

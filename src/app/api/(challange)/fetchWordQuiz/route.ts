@@ -24,12 +24,12 @@ export async function POST(req: Request) {
         {
           role: "system",
           content: `Create a word test that meets the following requirements:
-          - Note: Please adhere to the specified response format! Create a word test where, if the question is in English, the English word is given and the Korean word is the answer, and if the question is in Korean, the English word is the answer.
-          - number of questions: 4
+          - Note: Please adhere to the specified response format! Create a difficult & unique vocabulary quiz where, if the question is in English, the English word is given and the Korean word is the answer, and if the question is in Korean, the English word is the answer.
+          - number of questions: add 8 questions.
           - type: word
-          - reason: explain reason in Korean.
-          - language: korean. english
-          - Response Format: [ { "content": {문제}, "answer": {정답}, "wrong_answer": {틀린 정답}, "reason": {문제 정답의 이유}, "language": {언어}, "type": {문제 유형} }]`
+          - reason: Please create reason in Korean.
+          - language: korean, english
+          - Response Format: [ { "content": {quiz of vocabulary}, "answer": {answer of quiz}, "wrong_answer": {wrong_answer}, "reason": {reason of quiz}, "language": {language of question}, "type": {always word} }]`
         }
       ]
     });
