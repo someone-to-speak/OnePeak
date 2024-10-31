@@ -27,6 +27,17 @@ interface Questions {
 }
 const supabase = createClient();
 
+// user_info 데이터 가져오는 함수 정의
+const fetchUserInfo = async (userId: UUID) => {
+  const { data, error } = await supabase.from("user_info").select("id").eq("id", userId).single(); // single()을 사용하여 단일 사용자 정보 가져오기
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 // user_answer 데이터 가져오는 함수 정의
 const fetchUserAnswers = async (): Promise<UserAnswer[]> => {
   const { data, error } = await supabase.from("user_answer").select("*");
@@ -50,6 +61,18 @@ const fetchQuestions = async (): Promise<Questions[]> => {
 };
 
 const WrongWordPage = () => {
+  const userId = "사용자의 UUID"; // 사용자의 UUID를 설정해야 합니다.
+
+  // 사용자 정보를 가져오는 쿼리
+  const {
+    data: userInfo,
+    error: userInfoError,
+    isLoading: userInfoLoading
+  } = useQuery({
+    queryKey: ["userInfo", userId],
+    queryFn: () => fetchUserInfo(userId)
+  });
+
   // TanStack Query로 데이터 가져오기
   const {
     data: userAnswers,
@@ -73,8 +96,9 @@ const WrongWordPage = () => {
   console.log("questions", questions);
 
   // 로딩 상태
-  if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
+  if (userInfoLoading || userAnswersLoading || questionsLoading) return <p>Loading...</p>;
   // 오류 상태
+  if (userInfoError) return <p>Error loading user info: {userInfoError.message}</p>;
   if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
   if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
 
