@@ -1,6 +1,6 @@
 "use server";
 
-import { UserInfoForMatching } from "@/types/UserInfo";
+import { UserInfoForMatching } from "@/types/user/UserInfo";
 import { createClient } from "@/utils/supabase/server";
 
 export const getUserForMatching = async () => {
