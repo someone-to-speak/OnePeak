@@ -2,33 +2,16 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { UUID } from "crypto";
 import React, { useState } from "react";
+import { Tables } from "../../../database.types";
 
-interface UserAnswer {
-  id: UUID;
-  user_id: UUID;
-  question_id: number;
-  selected_answer: string;
-  is_corrected: boolean;
-  is_reviewed: boolean;
-  created_at: Date;
-}
-interface Questions {
-  id: number;
-  type: string;
-  content: string;
-  question_id: number;
-  answer: string;
-  language: string;
-  reason: string;
-  wrong_answer: string;
-  created_at: Date;
-}
+type UserAnswerType = Tables<"user_answer">;
+type QuestionsType = Tables<"questions">;
+
 const supabase = createClient();
 
 // 'user_answer' 테이블에서 틀린문제만 가져오는 함수 정의
-const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswer[]> => {
+const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswerType[]> => {
   const { data, error } = await supabase
     .from("user_answer")
     .select("*")
@@ -42,7 +25,7 @@ const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswer[]> => {
 };
 
 // 'questions' 테이블에서 문법문제만 가져오는 함수
-const fetchGrammarQuestions = async (): Promise<Questions[]> => {
+const fetchGrammarQuestions = async (): Promise<QuestionsType[]> => {
   const { data, error } = await supabase.from("questions").select("*").eq("type", "grammar");
   if (error) {
     throw new Error(error.message);
@@ -83,7 +66,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   // 'user_answer'테이블에서 is_reviewed를 업데이트하는 Mutation
   const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: string; currentReviewed: boolean }) => {
+    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
       const { error } = await supabase
         .from("user_answer")
         .update({ is_reviewed: !currentReviewed }) // 기존 값 반대로 업데이트
