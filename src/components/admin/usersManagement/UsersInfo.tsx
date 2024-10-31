@@ -141,7 +141,6 @@ const UsersInfo = () => {
       </div>
       <UsersTable
         currentUsers={currentUsers}
-        currentPage={currentPage}
         indexOfFirstUser={indexOfFirstUser}
         unblockUser={unblockUser.mutate}
         blockUser={blockUser.mutate}
