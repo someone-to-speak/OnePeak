@@ -32,7 +32,9 @@ const TodayLearn = () => {
       }
 
       if (data) {
-        setSituations(data);
+        // 데이터가 3개 이상일 경우 랜덤으로 3개 선택
+        const randomSiuations = data.sort(() => 0.5 - Math.random()).slice(0, 3);
+        setSituations(randomSiuations);
       }
     } catch (error) {
       console.log("situation을 가져오는 데에 실패하였습니다!", error);
@@ -51,7 +53,7 @@ const TodayLearn = () => {
       .from("review")
       .select("*")
       .eq("user_id", userId)
-      .eq("level", level)
+      .eq("situation", situation)
       .gte("created_at", `${todayString}T00:00:00Z`) // 오늘 시작 시간
       .lt("created_at", `${todayString}T23:59:59Z`); // 오늘 종료 시간
 
@@ -60,7 +62,7 @@ const TodayLearn = () => {
       return;
     }
 
-    // 중복 데잍터가 없을 때만 추가
+    // 중복 데이터가 없을 때만 추가
     if (existingReviews?.length === 0) {
       const { data, error } = await supabase
         .from("review")
