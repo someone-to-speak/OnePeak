@@ -43,7 +43,8 @@ const TodayLearn = () => {
   // review 테이블에 유저가 선택한 학습 추가
   const addReview = async (userId: string, situation: string, level: number) => {
     // 오늘 날짜 생성
-    const today = format(new Date(), "yyyy-MM-dd");
+    const today = new Date();
+    const todayString = format(today, "yyyy-MM-dd");
 
     // 중복 데이터확인
     const { data: existingReviews, error: checkError } = await supabase
@@ -51,8 +52,8 @@ const TodayLearn = () => {
       .select("*")
       .eq("user_id", userId)
       .eq("level", level)
-      .gte("created_at", `${today}T00:00:00`)
-      .lte("created_at", `${today}T23:59:59`);
+      .gte("created_at", `${todayString}T00:00:00Z`) // 오늘 시작 시간
+      .lt("created_at", `${todayString}T23:59:59Z`); // 오늘 종료 시간
 
     if (checkError) {
       console.error("중복 확인 오류: ", checkError);
