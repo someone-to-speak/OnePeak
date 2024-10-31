@@ -27,6 +27,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
     "tailwindcss-safe-area": "^0.6.0",
     "zod": "^3.23.8",
     "zustand": "^5.0.0"
@@ -44,6 +46,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-slick": "^0",
+    "@types/slick-carousel": "^1",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "eslint-plugin-storybook": "^0.10.1",

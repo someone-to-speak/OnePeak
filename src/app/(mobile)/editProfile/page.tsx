@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { UserProfile } from "@/types/user/UserProfile";
 import Image from "next/image";
 import { uploadImage } from "@/utils/myPage/imageUpload";
+import { UserProfileType } from "@/app/types/user/userProfileType";
 
 const EditProfile = () => {
   const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
