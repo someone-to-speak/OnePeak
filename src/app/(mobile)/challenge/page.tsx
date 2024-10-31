@@ -10,9 +10,6 @@ import RandomEnglishGrammarQuiz from "@/components/challenge/randomEnglishGramma
 import Slider from "react-slick";
 
 const ChalPage = () => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const supabase = createClient();
-
   const settings = {
     dots: true, // 페이지네이션 점 표시
     infinite: false, // 무한 스크롤
@@ -22,6 +19,9 @@ const ChalPage = () => {
     autoplay: false, // 자동 재생
     autoplaySpeed: 2000 // 자동 재생 속도
   };
+
+  const [userId, setUserId] = useState<string | null>(null);
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchUserId = async () => {

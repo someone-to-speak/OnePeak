@@ -13,13 +13,13 @@ const FetchQuestionsButton = () => {
     setSuccess(false);
 
     try {
-      const response = await fetch("/api/fetchQuiz", {
+      const response = await fetch("/api/fetchQrammarQuiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          type: "grammar, word",
+          type: "grammar",
           language: "korean, english",
           length: 4
         })
