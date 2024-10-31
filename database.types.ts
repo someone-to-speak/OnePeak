@@ -11,25 +11,28 @@ export type Database = {
     Tables: {
       answers: {
         Row: {
-          correct_answer: string
-          created_at: string | null
+          content: string
+          created_at: string
           id: number
-          question_id: number | null
-          user_id: string | null
+          is_correct: boolean | null
+          question_id: number
+          user_id: string
         }
         Insert: {
-          correct_answer: string
-          created_at?: string | null
-          id?: number
-          question_id?: number | null
-          user_id?: string | null
+          content: string
+          created_at?: string
+          id: number
+          is_correct?: boolean | null
+          question_id: number
+          user_id?: string
         }
         Update: {
-          correct_answer?: string
-          created_at?: string | null
+          content?: string
+          created_at?: string
           id?: number
-          question_id?: number | null
-          user_id?: string | null
+          is_correct?: boolean | null
+          question_id?: number
+          user_id?: string
         }
         Relationships: [
           {
@@ -55,7 +58,7 @@ export type Database = {
           reason: string
           reason_img_url: string | null
           target_id: string | null
-          user_id: string | null
+          user_info_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -63,7 +66,7 @@ export type Database = {
           reason?: string
           reason_img_url?: string | null
           target_id?: string | null
-          user_id?: string | null
+          user_info_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -71,12 +74,19 @@ export type Database = {
           reason?: string
           reason_img_url?: string | null
           target_id?: string | null
-          user_id?: string | null
+          user_info_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "block_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "block_target_id_fkey1"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "block_user_info_id_fkey"
+            columns: ["user_info_id"]
             isOneToOne: false
             referencedRelation: "user_info"
             referencedColumns: ["id"]
@@ -195,77 +205,147 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
+      language: {
         Row: {
-          gender: string | null
-          grammerChal_level: number | null
-          id: string
-          language: string | null
-          nickname: string | null
-          profile_url: string | null
-          state_msg: string | null
-          study_lang: string | null
+          id: number
+          language: string
+          language_img_url: string
+        }
+        Insert: {
+          id?: number
+          language: string
+          language_img_url: string
+        }
+        Update: {
+          id?: number
+          language?: string
+          language_img_url?: string
+        }
+        Relationships: []
+      }
+      matches: {
+        Row: {
+          created_at: string
+          id: number
+          learn_language: string | null
+          match_id: string | null
+          my_language: string | null
+          room_id: string | null
           user_id: string | null
         }
         Insert: {
-          gender?: string | null
-          grammerChal_level?: number | null
-          id: string
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-          study_lang?: string | null
+          created_at?: string
+          id?: number
+          learn_language?: string | null
+          match_id?: string | null
+          my_language?: string | null
+          room_id?: string | null
           user_id?: string | null
         }
         Update: {
-          gender?: string | null
-          grammerChal_level?: number | null
-          id?: string
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-          study_lang?: string | null
+          created_at?: string
+          id?: number
+          learn_language?: string | null
+          match_id?: string | null
+          my_language?: string | null
+          room_id?: string | null
           user_id?: string | null
         }
         Relationships: []
       }
       questions: {
         Row: {
-          difficulty_level: number
+          answer: string
+          content: string
+          created_at: string
           id: number
-          question_text: string
+          language: string
+          reason: string
           type: string
+          wrong_answer: string
         }
         Insert: {
-          difficulty_level: number
+          answer: string
+          content: string
+          created_at?: string
           id?: number
-          question_text: string
+          language: string
+          reason: string
           type: string
+          wrong_answer: string
         }
         Update: {
-          difficulty_level?: number
+          answer?: string
+          content?: string
+          created_at?: string
           id?: number
-          question_text?: string
+          language?: string
+          reason?: string
           type?: string
+          wrong_answer?: string
         }
         Relationships: []
+      }
+      review: {
+        Row: {
+          created_at: string
+          id: number
+          level: number | null
+          situation: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          level?: number | null
+          situation?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          level?: number | null
+          situation?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_level_fkey"
+            columns: ["level"]
+            isOneToOne: false
+            referencedRelation: "situation"
+            referencedColumns: ["level"]
+          },
+          {
+            foreignKeyName: "review_situation_fkey"
+            columns: ["situation"]
+            isOneToOne: false
+            referencedRelation: "situation"
+            referencedColumns: ["situation"]
+          },
+          {
+            foreignKeyName: "review_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       situation: {
         Row: {
           id: number
-          level: number | null
+          level: number
           situation: string
         }
         Insert: {
           id?: number
-          level?: number | null
+          level: number
           situation: string
         }
         Update: {
           id?: number
-          level?: number | null
+          level?: number
           situation?: string
         }
         Relationships: []
@@ -297,108 +377,102 @@ export type Database = {
         }
         Relationships: []
       }
-      user_info: {
-        Row: {
-          created_at: string | null
-          email: string | null
-          gender: string | null
-          id: string
-          is_blocked: boolean | null
-          is_deleted: boolean | null
-          language: string | null
-          nickname: string | null
-          profile_url: string | null
-          state_msg: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email?: string | null
-          gender?: string | null
-          id?: string
-          is_blocked?: boolean | null
-          is_deleted?: boolean | null
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string | null
-          gender?: string | null
-          id?: string
-          is_blocked?: boolean | null
-          is_deleted?: boolean | null
-          language?: string | null
-          nickname?: string | null
-          profile_url?: string | null
-          state_msg?: string | null
-        }
-        Relationships: []
-      }
-      wrong_answer_note: {
-        Row: {
-          category_id: number | null
-          created_at: string
-          id: number
-          total: number | null
-          user_id: string | null
-          wrong_list: string[] | null
-        }
-        Insert: {
-          category_id?: number | null
-          created_at?: string
-          id?: number
-          total?: number | null
-          user_id?: string | null
-          wrong_list?: string[] | null
-        }
-        Update: {
-          category_id?: number | null
-          created_at?: string
-          id?: number
-          total?: number | null
-          user_id?: string | null
-          wrong_list?: string[] | null
-        }
-        Relationships: []
-      }
-      wrong_answers: {
+      user_answer: {
         Row: {
           created_at: string | null
           id: number
-          question_id: number | null
-          user_id: string | null
-          wrong_answer: string
+          is_corrected: boolean
+          is_reviewed: boolean
+          question_id: number
+          selected_answer: string
+          user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: number
-          question_id?: number | null
-          user_id?: string | null
-          wrong_answer: string
+          is_corrected: boolean
+          is_reviewed: boolean
+          question_id: number
+          selected_answer?: string
+          user_id: string
         }
         Update: {
           created_at?: string | null
           id?: number
-          question_id?: number | null
-          user_id?: string | null
-          wrong_answer?: string
+          is_corrected?: boolean
+          is_reviewed?: boolean
+          question_id?: number
+          selected_answer?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "wrong_answers_question_id_fkey"
+            foreignKeyName: "user_answer_question_id_fkey"
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "wrong_answers_user_id_fkey"
+            foreignKeyName: "user_answer_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user_info"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_info: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          is_blocked: boolean | null
+          is_deleted: boolean | null
+          learn_language: string
+          my_language: string
+          nickname: string | null
+          profile_url: string
+          state_msg: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_blocked?: boolean | null
+          is_deleted?: boolean | null
+          learn_language: string
+          my_language?: string
+          nickname?: string | null
+          profile_url?: string
+          state_msg?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_blocked?: boolean | null
+          is_deleted?: boolean | null
+          learn_language?: string
+          my_language?: string
+          nickname?: string | null
+          profile_url?: string
+          state_msg?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_info_learn_language_fkey"
+            columns: ["learn_language"]
+            isOneToOne: false
+            referencedRelation: "language"
+            referencedColumns: ["language"]
+          },
+          {
+            foreignKeyName: "user_info_my_language_fkey"
+            columns: ["my_language"]
+            isOneToOne: false
+            referencedRelation: "language"
+            referencedColumns: ["language"]
           },
         ]
       }
@@ -407,7 +481,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_random_questions:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: {
+              answer: string
+              content: string
+              created_at: string
+              id: number
+              language: string
+              reason: string
+              type: string
+              wrong_answer: string
+            }[]
+          }
+        | {
+            Args: {
+              language: string
+              type: string
+            }
+            Returns: {
+              answer: string
+              content: string
+              created_at: string
+              id: number
+              language: string
+              reason: string
+              type: string
+              wrong_answer: string
+            }[]
+          }
     }
     Enums: {
       [_ in never]: never
