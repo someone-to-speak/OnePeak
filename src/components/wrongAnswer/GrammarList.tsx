@@ -3,35 +3,10 @@
 import { createClient } from "@/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { Tables } from "../../../database.types";
-
-type UserAnswerType = Tables<"user_answer">;
-type QuestionsType = Tables<"questions">;
+import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
+import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuestions";
 
 const supabase = createClient();
-
-// 'user_answer' 테이블에서 틀린문제만 가져오는 함수 정의
-const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswerType[]> => {
-  const { data, error } = await supabase
-    .from("user_answer")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("is_corrected", false);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
-};
-
-// 'questions' 테이블에서 문법문제만 가져오는 함수
-const fetchGrammarQuestions = async (): Promise<QuestionsType[]> => {
-  const { data, error } = await supabase.from("questions").select("*").eq("type", "grammar");
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
-};
 
 const GrammarList = ({ userId }: { userId: string }) => {
   //   console.log("유저아이디", userId);
