@@ -1,5 +1,5 @@
 import { getUserForMatching } from "@/repositories/matchingRepository";
-import { UserInfoForMatching } from "@/types/UserInfo";
+import { UserInfoForMatching } from "@/types/user/UserInfo";
 import { useQuery } from "@tanstack/react-query";
 
 export const useUserInfoForMatching = () => {
