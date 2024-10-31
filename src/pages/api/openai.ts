@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Message } from "@/app/types/chatBotType/chatBotType";
 
 // API KEY
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPEN_AI_KEY as string;
+const OPENAI_API_KEY = process.env.OPEN_AI_KEY as string;
 
 // open AI 통신
 const openai = new OpenAI({
