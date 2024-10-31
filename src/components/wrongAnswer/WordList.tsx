@@ -83,19 +83,21 @@ const WordList = ({ userId }: WordListProps) => {
   if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
   if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
 
-  const wrongAnswers = userAnswers
+  const wrongWordAnswers = userAnswers
     ?.filter((answer) => !answer.is_corrected)
     .map((answer) => {
-      const matchedQuestion = questions?.find((question) => question.id === answer.question_id);
-      return matchedQuestion ? matchedQuestion.answer : null;
+      const matchedWordQuestion = questions?.find(
+        (question) => question.type === "word" && question.id === answer.question_id
+      );
+      return matchedWordQuestion ? matchedWordQuestion.answer : null;
     })
     .filter((answer) => answer !== null);
 
-  console.log("wrongAnswers", wrongAnswers);
+  console.log("wrongWordAnswers", wrongWordAnswers);
 
   return (
     <div>
-      {wrongAnswers?.map((answer, index) => (
+      {wrongWordAnswers?.map((answer, index) => (
         <div key={index}>{answer}</div>
       ))}
     </div>
