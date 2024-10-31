@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Tables } from "../../../../database.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 type SituationType = Tables<"situation">;
 
@@ -41,19 +42,39 @@ const TodayLearn = () => {
 
   // review 테이블에 유저가 선택한 학습 추가
   const addReview = async (userId: string, situation: string, level: number) => {
-    const { data, error } = await supabase
-      .from("review")
-      .insert([
-        {
-          user_id: userId, // 외래키로 연결된 유저의 ID
-          situation,
-          level
-        }
-      ])
-      .select();
+    // 오늘 날짜 생성
+    const today = format(new Date(), "yyyy-MM-dd");
 
-    if (error) {
-      console.log("review 테이블 추가 오류: ", error);
+    // 중복 데이터확인
+    const { data: existingReviews, error: checkError } = await supabase
+      .from("review")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("level", level)
+      .gte("created_at", `${today}T00:00:00`)
+      .lte("created_at", `${today}T23:59:59`);
+
+    if (checkError) {
+      console.error("중복 확인 오류: ", checkError);
+      return;
+    }
+
+    // 중복 데잍터가 없을 때만 추가
+    if (existingReviews?.length === 0) {
+      const { data, error } = await supabase
+        .from("review")
+        .insert([
+          {
+            user_id: userId, // 외래키로 연결된 유저의 ID
+            situation,
+            level
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.log("review 테이블 추가 오류: ", error);
+      }
     }
   };
 
