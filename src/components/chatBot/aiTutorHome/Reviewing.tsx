@@ -43,6 +43,9 @@ const Reviewing = () => {
     getUserInfo();
   }, []);
 
+  // 필터링된 리뷰
+  const filterdReview = reviews.filter((review) => review.user_id === userId);
+
   // 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
     router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
@@ -52,9 +55,9 @@ const Reviewing = () => {
     <div>
       <h1 className="text-3xl font-bold mt-5">복습하기</h1>
       <div className="">
-        {reviews
-          .filter((review) => review.user_id === userId)
-          .map((review) => {
+        {
+          // 최대 3개까지만 노출
+          filterdReview.slice(0, 3).map((review) => {
             return (
               <div key={review.id}>
                 <div className="flex flex-row justify-between my-5">
@@ -71,7 +74,8 @@ const Reviewing = () => {
                 </button>
               </div>
             );
-          })}
+          })
+        }
       </div>
     </div>
   );
