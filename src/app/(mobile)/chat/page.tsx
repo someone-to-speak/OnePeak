@@ -14,7 +14,7 @@ type SignalData = {
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("room")?.split(",")[0];
+  const roomId = searchParams?.get("room");
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -44,8 +44,9 @@ const VideoChat = () => {
             await webrtcServiceRef.current.init();
             if (userId === roomId) {
               console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-              await webrtcServiceRef.current.createOffer();
+              // await webrtcServiceRef.current.createOffer();
             }
+            await webrtcServiceRef.current.createOffer();
           }
         });
     };
@@ -55,19 +56,21 @@ const VideoChat = () => {
     return () => {
       handleLeave();
     };
-  }, [roomId]);
+  }, []);
 
-  const handleLeave = () => {
+  const handleLeave = async () => {
     channel.current?.send({
       type: "broadcast",
       event: "leave"
     });
     channel.current?.unsubscribe();
-    webrtcServiceRef.current?.closeConnection();
+    await webrtcServiceRef.current?.closeConnection();
     router.push("/");
   };
 
-  const handleLeaveSignal = () => {
+  const handleLeaveSignal = async () => {
+    channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
     router.push("/");
   };
 

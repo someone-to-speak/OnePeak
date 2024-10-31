@@ -26,7 +26,7 @@ export class WebRTCService {
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
     this.peerConnection = new RTCPeerConnection(config);
 
-    this.peerConnection.onicecandidate = (event) => {
+    this.peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
         this.channel.send({
           type: "broadcast",
@@ -83,7 +83,7 @@ export class WebRTCService {
     }
   }
 
-  closeConnection() {
+  async closeConnection() {
     this.peerConnection?.close();
   }
 }

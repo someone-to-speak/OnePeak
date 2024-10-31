@@ -39,6 +39,7 @@ export const useMatching = () => {
 
       matchingChannel
         .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+          console.log("UPDATE");
           const { new: updatedMatchQueue } = payload;
           if (updatedMatchQueue.user_id === userInfo.id) {
             router.push(`/chat?room=${updatedMatchQueue.room_id}`);

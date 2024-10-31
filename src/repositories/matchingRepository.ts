@@ -17,7 +17,7 @@ export const getUserForMatching = async () => {
 export const addToQueue = async (userId: string, myLanguage: string, learnLanguage: string) => {
   const supabase = createClient();
 
-  return supabase
+  return await supabase
     .from("matches")
     .insert({ user_id: userId, match_id: null, my_language: myLanguage, learn_language: learnLanguage });
 };
@@ -25,13 +25,13 @@ export const addToQueue = async (userId: string, myLanguage: string, learnLangua
 export const getExistingQueue = async (userId: string) => {
   const supabase = createClient();
 
-  return supabase.from("matches").select("*").eq("user_id", userId).is("match_id", null);
+  return await supabase.from("matches").select("*").eq("user_id", userId).is("match_id", null);
 };
 
 export const findMatch = async (userId: string, learnLanguage: string) => {
   const supabase = createClient();
 
-  return supabase
+  return await supabase
     .from("matches")
     .select("*")
     .is("match_id", null)
@@ -42,11 +42,11 @@ export const findMatch = async (userId: string, learnLanguage: string) => {
 export const updateMatch = async (partnerUserId: string, matchId: string, roomId: string) => {
   const supabase = createClient();
 
-  return supabase.from("matches").update({ match_id: matchId, room_id: roomId }).eq("user_id", partnerUserId);
+  return await supabase.from("matches").update({ match_id: matchId, room_id: roomId }).eq("user_id", partnerUserId);
 };
 
 export const removeUserFromQueue = async (userId: string) => {
   const supabase = createClient();
 
-  return supabase.from("matches").delete().eq("user_id", userId);
+  return await supabase.from("matches").delete().eq("user_id", userId);
 };
