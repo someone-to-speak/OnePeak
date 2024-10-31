@@ -2,7 +2,7 @@
 
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const ChatMessage = () => {
@@ -13,6 +13,18 @@ const ChatMessage = () => {
   const searchParams = useSearchParams();
   const situation = searchParams?.get("situation") as string;
   const level = Number(searchParams?.get("level"));
+
+  // 챗봇의 첫 메세지 추가
+  const initiateChat = () => {
+    const initialMessage: Message = {
+      role: "system",
+      content: "안녕하세요! 준비가 되셨다면 start라고 입력해주세요!"
+    };
+    setMessages([initialMessage]);
+  };
+  useEffect(() => {
+    initiateChat();
+  }, []);
 
   // 챗봇과 대화하기
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,6 +57,7 @@ const ChatMessage = () => {
   return (
     <div className="flex flex-col h-screen w-full mx-auto bg-gray-100">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
+        <h1>{situation}</h1>
         {messages.map((msg, index) => (
           <div key={index} className={msg.role}>
             <strong>{msg.role === "user" ? "나" : "챗봇"}</strong>
