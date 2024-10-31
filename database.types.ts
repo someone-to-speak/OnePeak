@@ -305,9 +305,9 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
-          level: number | null;
-          situation: string | null;
-          user_id: string | null;
+          level: number;
+          situation: string;
+          user_id: string;
         };
         Insert: {
           created_at?: string;
