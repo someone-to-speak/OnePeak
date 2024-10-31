@@ -1,11 +1,11 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { UUID } from "crypto";
 import React from "react";
 
-interface WordListProps {
+interface GrammarListProps {
   userId: string;
 }
 
@@ -53,8 +53,7 @@ const fetchQuestions = async (): Promise<Questions[]> => {
   return data;
 };
 
-const WordList = ({ userId }: WordListProps) => {
-  const queryClient = useQueryClient();
+const GrammarList = ({ userId }: GrammarListProps) => {
   // TanStack Query로 사용자답변 데이터 가져오기
   const {
     data: userAnswers,
@@ -75,24 +74,8 @@ const WordList = ({ userId }: WordListProps) => {
     queryFn: () => fetchQuestions()
   });
 
-  //   console.log("userAnswers", userAnswers);
-  //   console.log("questions", questions);
-
-  // Supabase에서 is_reviewed를 업데이트하는 Mutation
-  const updateIsReviewed = useMutation(
-    async (questionId: number) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: true }).eq("id", questionId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["userAnswers", userId]); // 업데이트 후 데이터 새로고침
-      }
-    }
-  );
+  console.log("userAnswers", userAnswers);
+  console.log("questions", questions);
 
   // 로딩 상태
   if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
@@ -100,27 +83,24 @@ const WordList = ({ userId }: WordListProps) => {
   if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
   if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
 
-  const wrongWordAnswers = userAnswers
+  const wrongGrammarAnswers = userAnswers
     ?.filter((answer) => !answer.is_corrected)
     .map((answer) => {
       const matchedWordQuestion = questions?.find(
-        (question) => question.type === "word" && question.id === answer.question_id
+        (question) => question.type === "grammar" && question.id === answer.question_id
       );
       return matchedWordQuestion ? matchedWordQuestion.answer : null;
     })
     .filter((answer) => answer !== null);
 
-  //   console.log("wrongWordAnswers", wrongWordAnswers);
+  console.log("wrongGrammarAnswers", wrongGrammarAnswers);
 
   return (
     <div>
-      {wrongWordAnswers?.map((answer, index) => (
-        <div key={index} className="flex gap-7">
-          <h1>{answer}</h1>
-          <button onClick={() => updateIsReviewed.mutate(answer!.questionId)}>학습완료</button>
-        </div>
+      {wrongGrammarAnswers?.map((answer, index) => (
+        <div key={index}>{answer}</div>
       ))}
     </div>
   );
 };
-export default WordList;
+export default GrammarList;

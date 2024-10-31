@@ -30,7 +30,7 @@ const WrongWordPage = () => {
     queryFn: () => fetchUserInfo(userId)
   });
 
-  if (userInfoLoading) return <p>Loading user info...</p>;
+  if (userInfoLoading) return <p>사용자 정보에 로딩중입니다...</p>;
   if (userInfoError) return <p>Error loading user info: {userInfoError.message}</p>;
 
   return (
