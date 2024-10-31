@@ -1,13 +1,9 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UUID } from "crypto";
-import React from "react";
-
-interface GrammarListProps {
-  userId: string;
-}
+import React, { useState } from "react";
 
 interface UserAnswer {
   id: UUID;
@@ -31,51 +27,76 @@ interface Questions {
 }
 const supabase = createClient();
 
-// user_answer 데이터 가져오는 함수 정의
-const fetchUserAnswers = async (): Promise<UserAnswer[]> => {
-  const { data, error } = await supabase.from("user_answer").select("*");
+// 'user_answer' 테이블에서 틀린문제만 가져오는 함수 정의
+const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswer[]> => {
+  const { data, error } = await supabase
+    .from("user_answer")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("is_corrected", false);
 
   if (error) {
     throw new Error(error.message);
   }
-
   return data;
 };
 
-// questions 데이터 가져오는 함수 정의
-const fetchQuestions = async (): Promise<Questions[]> => {
-  const { data, error } = await supabase.from("questions").select("*");
-
+// 'questions' 테이블에서 문법문제만 가져오는 함수
+const fetchGrammarQuestions = async (): Promise<Questions[]> => {
+  const { data, error } = await supabase.from("questions").select("*").eq("type", "grammar");
   if (error) {
     throw new Error(error.message);
   }
-
   return data;
 };
 
-const GrammarList = ({ userId }: GrammarListProps) => {
-  // TanStack Query로 사용자답변 데이터 가져오기
+const GrammarList = ({ userId }: { userId: string }) => {
+  //   console.log("유저아이디", userId);
+
+  const queryClient = useQueryClient();
+
+  // 탭 상태 관리
+  const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
+
+  // TanStack Query - 유저의 오답 데이터 가져오기
   const {
     data: userAnswers,
     error: userAnswersError,
     isLoading: userAnswersLoading
   } = useQuery({
     queryKey: ["userAnswers", userId],
-    queryFn: () => fetchUserAnswers()
+    queryFn: () => fetchUserWrongAnswers(userId)
   });
 
-  // TanStack Query로 문제 데이터 가져오기
+  // TanStack Query로 문법문제 데이터 가져오기
   const {
     data: questions,
     error: questionsError,
     isLoading: questionsLoading
   } = useQuery({
     queryKey: ["questions"],
-    queryFn: () => fetchQuestions()
+    queryFn: () => fetchGrammarQuestions()
   });
 
-  console.log("userAnswers", userAnswers);
-  console.log("questions", questions);
+  //   console.log("userAnswers", userAnswers); // 오답
+  //   console.log("questions", questions); // 문법문제
+
+  // 'user_answer'테이블에서 is_reviewed를 업데이트하는 Mutation
+  const updateIsReviewed = useMutation({
+    mutationFn: async ({ answerId, currentReviewed }: { answerId: string; currentReviewed: boolean }) => {
+      const { error } = await supabase
+        .from("user_answer")
+        .update({ is_reviewed: !currentReviewed }) // 기존 값 반대로 업데이트
+        .eq("id", answerId);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
+    }
+  });
 
   // 로딩 상태
   if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
@@ -83,22 +104,44 @@ const GrammarList = ({ userId }: GrammarListProps) => {
   if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
   if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
 
+  // 변경된 부분: is_reviewed 상태에 따라 문법 오답만 필터링하는 로직 추가
   const wrongGrammarAnswers = userAnswers
-    ?.filter((answer) => !answer.is_corrected)
+    ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
-      const matchedWordQuestion = questions?.find(
-        (question) => question.type === "grammar" && question.id === answer.question_id
-      );
-      return matchedWordQuestion ? matchedWordQuestion.answer : null;
+      const matchedQuestion = questions?.find((question) => question.id === answer.question_id);
+      return matchedQuestion ? { ...matchedQuestion, answerId: answer.id, isReviewed: answer.is_reviewed } : null;
     })
-    .filter((answer) => answer !== null);
+    .filter((item) => item !== null);
 
-  console.log("wrongGrammarAnswers", wrongGrammarAnswers);
+  console.log("wrongWordAnswers", wrongGrammarAnswers);
 
   return (
     <div>
-      {wrongGrammarAnswers?.map((answer, index) => (
-        <div key={index}>{answer}</div>
+      {/* 탭 UI */}
+      <div className="flex space-x-4 mb-4">
+        <button onClick={() => setIsReviewed("미완료")} className={isReviewed === "미완료" ? "font-bold" : ""}>
+          미완료
+        </button>
+        <button onClick={() => setIsReviewed("완료")} className={isReviewed === "완료" ? "font-bold" : ""}>
+          완료
+        </button>
+      </div>
+      {/* '학습완료' 버튼클릭 시 각 탭에서의 효과 다르게 나타냄 */}
+      {wrongGrammarAnswers?.map((question, index) => (
+        <div key={index} className="flex gap-7">
+          <h1>{question?.answer}</h1>
+          <button
+            onClick={() =>
+              updateIsReviewed.mutate({
+                answerId: question!.answerId, // 전달할 answerId
+                currentReviewed: question!.isReviewed // 전달할 isReviewed 상태
+              })
+            }
+            className={isReviewed === "미완료" ? "text-gray-400" : "text-black"} // '미완료'일 땐 회색, '완료'일 땐 검정색
+          >
+            학습완료
+          </button>
+        </div>
       ))}
     </div>
   );

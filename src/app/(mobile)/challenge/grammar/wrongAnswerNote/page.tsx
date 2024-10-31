@@ -1,45 +1,26 @@
-"use client";
-
 import GrammarList from "@/components/wrongAnswer/GrammarList";
-import { createClient } from "@/utils/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { createClient } from "@/utils/supabase/server";
 
-const supabase = createClient();
+const WrongWordPage = async () => {
+  // supabase의 auth 데이터 가져오는 함수
+  const fetchUserInfo = async () => {
+    const supabase = createClient();
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
 
-// user_info 데이터 가져오는 함수 정의
-const fetchUserInfo = async (userId: string): Promise<{ id: string }> => {
-  const { data, error } = await supabase.from("user_info").select("id").eq("id", userId).single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data as { id: string };
-};
-
-const WrongGrammarPage = () => {
-  const userId = "88c8dc89-5035-48fb-8581-5334d2a81135";
-
-  const {
-    data: userInfo,
-    error: userInfoError,
-    isLoading: userInfoLoading
-  } = useQuery({
-    queryKey: ["userInfo", userId],
-    queryFn: () => fetchUserInfo(userId)
-  });
-
-  if (userInfoLoading) return <p>사용자 정보에 로딩중입니다...</p>;
-  if (userInfoError) return <p>Error loading user info: {userInfoError.message}</p>;
-  console.log("userInfoError", userInfoError);
+    // console.log("user", user);
+    return user?.id as string;
+  };
+  const userId = await fetchUserInfo();
+  // console.log("userId", userId);
 
   return (
     <div>
       <h1>문법 오답노트</h1>
-      {userInfo && <GrammarList userId={userInfo.id} />}
+      <GrammarList userId={userId} />
     </div>
   );
 };
 
-export default WrongGrammarPage;
+export default WrongWordPage;

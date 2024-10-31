@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-// import { useQuery } from "@tanstack/react-query";
 import WordList from "@/components/wrongAnswer/WordList";
 
 const WrongWordPage = async () => {
