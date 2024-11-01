@@ -32,11 +32,6 @@ const VideoChat = () => {
 
       webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
       await webrtcServiceRef.current.init();
-      if (userId === roomId) {
-        // console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-        await webrtcServiceRef.current.createOffer();
-      }
-      // await webrtcServiceRef.current.createOffer();
 
       channel.current
         .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
@@ -49,12 +44,15 @@ const VideoChat = () => {
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
-        .subscribe();
-      // .subscribe(async (status) => {
-      //   if (status === "SUBSCRIBED") {
-
-      //   }
-      // });
+        .subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            if (userId === roomId) {
+              console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
+              await webrtcServiceRef.current?.createOffer();
+            }
+            // await webrtcServiceRef.current.createOffer();
+          }
+        });
     };
 
     init();
