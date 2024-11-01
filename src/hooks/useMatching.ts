@@ -38,7 +38,7 @@ export const useMatching = () => {
 
   useEffect(() => {
     if (!userInfo) return;
-    setupMatchingChannel();
+    // setupMatchingChannel();
 
     const cleanUp = async () => {
       await matchingChannelRef.current?.unsubscribe();
