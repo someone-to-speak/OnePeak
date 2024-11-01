@@ -29,7 +29,6 @@ const ImageSelectorToggle: React.FC<ImageSelectorProps> = ({
               selectedLanguages.includes(lang.language_name) ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
           >
-            <img src={lang.language_url_img} alt={lang.language_name} className="inline-block w-6 h-6 mr-2" />
             {lang.language_name}
           </button>
         ))}
