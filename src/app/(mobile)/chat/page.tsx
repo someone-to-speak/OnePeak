@@ -28,13 +28,13 @@ const VideoChat = () => {
 
       channel.current
         .on("broadcast", { event: "ice-candidate" }, ({ payload }: { payload: SignalData }) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+          webrtcServiceRef.current?.handleSignalData({ payload })
         )
         .on("broadcast", { event: "offer" }, ({ payload }: { payload: SignalData }) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+          webrtcServiceRef.current?.handleSignalData({ payload })
         )
         .on("broadcast", { event: "answer" }, ({ payload }: { payload: SignalData }) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+          webrtcServiceRef.current?.handleSignalData({ payload })
         )
         .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal)
