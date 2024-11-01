@@ -1,5 +1,7 @@
 import React from "react";
-import { UserInfo } from "@/type";
+import { Tables } from "../../../../database.types";
+
+type UserInfo = Tables<"user_info">;
 
 interface UsersTableProps {
   currentUsers: UserInfo[];
@@ -28,8 +30,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
             <th className="p-3 "></th>
             <th className="p-3 ">닉네임</th>
             <th className="p-3 ">이메일</th>
-            <th className="p-3">성별</th>
-            <th className="p-3">언어</th>
+            <th className="p-3">사용언어</th>
+            <th className="p-3">베우는언어</th>
             <th className="p-3 ">가입날짜</th>
             <th className="p-3">차단여부</th>
             <th className="p-3 ">차단관리</th>
@@ -50,8 +52,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 <td>{indexOfFirstUser + index + 1}</td>
                 <td className="p-3 max-w-[150px] overflow-x-auto ">{userInfo.nickname}</td>
                 <td className="p-3 max-w-[200px] overflow-x-auto">{userInfo.email}</td>
-                <td className="p-3 ">{userInfo.gender}</td>
-                <td className="p-3 ">{userInfo.language}</td>
+                <td className="p-3 ">{userInfo.my_language}</td>
+                <td className="p-3 ">{userInfo.learn_language}</td>
                 <td className="p-3 ">{new Date(userInfo.created_at).toLocaleDateString()}</td>
                 <td className="p-3 ">{userInfo.is_blocked ? "차단회원" : "일반회원"}</td>
                 <td className="p-3 ">
