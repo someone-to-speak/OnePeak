@@ -27,13 +27,13 @@ const VideoChat = () => {
       if (!channel.current) return;
 
       channel.current
-        .on<SignalData>("broadcast", { event: "ice-candidate" }, async ({ payload }) =>
+        .on("broadcast", { event: "ice-candidate" }, async ({ payload }: { payload: SignalData }) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
-        .on<SignalData>("broadcast", { event: "offer" }, async ({ payload }) =>
+        .on("broadcast", { event: "offer" }, async ({ payload }: { payload: SignalData }) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
-        .on<SignalData>("broadcast", { event: "answer" }, async ({ payload }) =>
+        .on("broadcast", { event: "answer" }, async ({ payload }: { payload: SignalData }) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
