@@ -49,11 +49,11 @@ const VideoChat = () => {
           if (status === "SUBSCRIBED") {
             webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
             await webrtcServiceRef.current.init();
-            if (userId === roomId) {
-              console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-              await webrtcServiceRef.current.createOffer();
-            }
-            // await webrtcServiceRef.current.createOffer();
+            // if (userId === roomId) {
+            //   console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
+            //   await webrtcServiceRef.current.createOffer();
+            // }
+            await webrtcServiceRef.current.createOffer();
           }
         });
     };
