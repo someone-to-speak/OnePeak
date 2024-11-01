@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { createChannel, getUserId } from "@/repositories/clientRepository";
+import { uploadRecording } from "@/api/supabase/record";
+import { useUserInfo } from "@/hooks/getUserInfo";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate" | "leave";
@@ -15,6 +17,7 @@ const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("room");
+  const { userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -74,10 +77,25 @@ const VideoChat = () => {
     router.push("/");
   };
 
+  const handleClickStopButton = async () => {
+    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+
+    if (localAudioBlob && roomId) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileName = `${roomId}_${userId}_${timestamp}.webm`;
+
+      await uploadRecording(localAudioBlob, fileName, roomId);
+    } else {
+      console.error("Recording failed: No local blob available.");
+    }
+
+    await handleLeave();
+  };
+
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleLeave}>종료하기</button>
+      <button onClick={handleClickStopButton}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />

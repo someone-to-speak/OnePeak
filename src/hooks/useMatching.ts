@@ -12,20 +12,7 @@ export const useMatching = () => {
   const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const cleanUp = async () => {
-      matchingChannelRef.current?.unsubscribe();
-      await removeUserFromQueue(userInfo.id);
-    };
-
-    return () => {
-      cleanUp();
-    };
-  }, [userInfo]);
-
-  const handleMatching = async () => {
+  const setupMatchingChannel = async () => {
     if (!userInfo) return;
 
     const supabase = createClient();
@@ -48,6 +35,20 @@ export const useMatching = () => {
         .subscribe();
     }
   };
+
+  useEffect(() => {
+    if (!userInfo) return;
+    setupMatchingChannel();
+
+    const cleanUp = async () => {
+      await matchingChannelRef.current?.unsubscribe();
+      await removeUserFromQueue(userInfo.id);
+    };
+
+    return () => {
+      cleanUp();
+    };
+  }, [userInfo]);
 
   return { handleMatching, userInfo, isLoading, isError };
 };

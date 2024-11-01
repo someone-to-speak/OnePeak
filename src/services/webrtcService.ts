@@ -11,6 +11,8 @@ export class WebRTCService {
   private localVideoRef: React.RefObject<HTMLVideoElement>;
   private remoteVideoRef: React.RefObject<HTMLVideoElement>;
   private channel: RealtimeChannel;
+  private localMediaRecorder: MediaRecorder | null = null;
+  private localAudioChunks: Blob[] = [];
 
   constructor(
     localVideoRef: React.RefObject<HTMLVideoElement>,
@@ -49,6 +51,24 @@ export class WebRTCService {
     localStream.getTracks().forEach((track) => {
       this.peerConnection?.addTrack(track, localStream);
     });
+
+    this.startLocalRecording(localStream);
+  }
+
+  private startLocalRecording(stream: MediaStream) {
+    this.localMediaRecorder = new MediaRecorder(stream);
+    this.localMediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) this.localAudioChunks.push(event.data);
+    };
+    this.localMediaRecorder.start();
+  }
+
+  async stopRecording() {
+    this.localMediaRecorder?.stop();
+
+    const localAudioBlob = new Blob(this.localAudioChunks, { type: "audio/webm" });
+
+    return localAudioBlob;
   }
 
   async createOffer() {
