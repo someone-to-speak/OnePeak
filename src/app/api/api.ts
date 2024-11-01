@@ -1,6 +1,7 @@
-import { BlockedUserInfo, formatedTarget, UserInfo } from "@/type";
+import { formatedTarget, UserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
+// import { v4 as uuidv4 } from "uuid";
 
 const browserClient = createClient();
 
@@ -105,44 +106,40 @@ export const getBlockDetail = async (targetId: string) => {
   return filteredData || [];
 };
 
-// blockTable's target users
-export const getBlockTargetUsers = async () => {
-  const { data, error } = await browserClient
-    .from("block")
-    .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
-    .order("created_at", { ascending: false })
-    .returns<BlockedUserInfo>();
+// 언어 이미지 가져오기
+export const getLanguageImg = async () => {
+  const { data } = browserClient.storage.from("language-image").getPublicUrl("*");
 
-  if (error) {
-    errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
-    return [];
-  }
-
-  // targetIdsCount를 객체 배열로 만들기
-  const targetIdsCount = data?.reduce((acc, item) => {
-    const existingEntry = acc.find((entry) => entry.id === item.target_id);
-    if (existingEntry) {
-      existingEntry.count += 1; // 기존 항목의 카운트 증가
-    } else {
-      acc.push({ id: item.target_id, count: 1 }); // 새 항목 추가
-    }
-    return acc;
-  }, [] as Array<{ id: string; count: number }>); // 초기값을 객체 배열로 지정
-
-  // 필터링 및 데이터 매핑
-  const filteredData = targetIdsCount
-    ?.filter(({ count }) => count >= 2)
-    .map(({ id, count }) => {
-      const item = data.find((d) => d.target_id === id);
-      return {
-        ...item,
-        count, // 카운트 추가,
-        user_info: {
-          nickname: item.user_info.nickname,
-          is_blocked: item.user_info.is_blocked
-        }
-      };
-    });
-
-  return filteredData || [];
+  return data;
 };
+
+// 언어 가져오기
+export const getLanguage = async () => {
+  const { data, error } = await browserClient.from("language").select("langauge");
+  if (error) errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
+  return data;
+};
+
+// 언어 이미지 버켓에 추가하기
+
+// const checkFileExists = async (fileName: string) => {
+//   const { data, error } = await browserClient.storage.from("language-image").list("", { search: fileName });
+
+//   if (error) throw error;
+//   return data && data.length > 0; // 파일이 존재하면 true 반환
+// };
+
+// export uploadLanguageImage = async (file) => {
+
+//      // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
+//      const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
+//      let encodedFileName = `${uuidv4{}}.${fileExtension}`;
+
+//      // 파일이 이미 존재하는지 확인
+//      const fileExists = await checkFileExists(encodedFileName);
+//      if (fileExists) {
+//        // 중복 파일명이 있으면, 새로운 UUID를 추가하여 고유 이름 보장
+//        encodedFileName = `${uuidv4()}_${encodedFileName}`;
+//      }
+
+// }
