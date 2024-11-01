@@ -105,44 +105,16 @@ export const getBlockDetail = async (targetId: string) => {
   return filteredData || [];
 };
 
-// blockTable's target users
-export const getBlockTargetUsers = async () => {
-  const { data, error } = await browserClient
-    .from("block")
-    .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
-    .order("created_at", { ascending: false })
-    .returns<BlockedUserInfo>();
+// 언어 이미지 가져오기
+export const getLanguageImg = async () => {
+  const { data } = browserClient.storage.from("language-image").getPublicUrl("*");
 
-  if (error) {
-    errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
-    return [];
-  }
+  return data;
+};
 
-  // targetIdsCount를 객체 배열로 만들기
-  const targetIdsCount = data?.reduce((acc, item) => {
-    const existingEntry = acc.find((entry) => entry.id === item.target_id);
-    if (existingEntry) {
-      existingEntry.count += 1; // 기존 항목의 카운트 증가
-    } else {
-      acc.push({ id: item.target_id, count: 1 }); // 새 항목 추가
-    }
-    return acc;
-  }, [] as Array<{ id: string; count: number }>); // 초기값을 객체 배열로 지정
-
-  // 필터링 및 데이터 매핑
-  const filteredData = targetIdsCount
-    ?.filter(({ count }) => count >= 2)
-    .map(({ id, count }) => {
-      const item = data.find((d) => d.target_id === id);
-      return {
-        ...item,
-        count, // 카운트 추가,
-        user_info: {
-          nickname: item.user_info.nickname,
-          is_blocked: item.user_info.is_blocked
-        }
-      };
-    });
-
-  return filteredData || [];
+// 언어 가져오기
+export const getLanguage = async () => {
+  const { data, error } = await browserClient.from("language").select("langauge");
+  if (error) errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
+  return data;
 };
