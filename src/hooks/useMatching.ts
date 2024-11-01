@@ -50,5 +50,5 @@ export const useMatching = () => {
     };
   }, [userInfo]);
 
-  return { handleMatching, userInfo, isLoading, isError };
+  return { setupMatchingChannel, userInfo, isLoading, isError };
 };
