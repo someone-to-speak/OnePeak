@@ -32,9 +32,15 @@ const VideoChat = () => {
       // const userId = await getUserId();
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, async () => webrtcServiceRef.current?.handleSignalData)
-        .on("broadcast", { event: "offer" }, async () => webrtcServiceRef.current?.handleSignalData)
-        .on("broadcast", { event: "answer" }, async () => webrtcServiceRef.current?.handleSignalData)
+        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
+        .on("broadcast", { event: "offer" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
+        .on("broadcast", { event: "answer" }, (payload: SignalData) =>
+          webrtcServiceRef.current?.handleSignalData(payload)
+        )
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
