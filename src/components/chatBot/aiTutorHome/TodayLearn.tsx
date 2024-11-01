@@ -6,6 +6,7 @@ import { Tables } from "../../../../database.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type SituationType = Tables<"situation">;
 
@@ -19,8 +20,23 @@ const TodayLearn = () => {
     const {
       data: { user }
     } = await supabase.auth.getUser();
+    console.log("ㅇ저", user);
     return user;
   };
+
+  // const { data: user } = useQuery("userInfo", async () => {
+  //   const {
+  //     data: { user }
+  //   } = await supabase.auth.getUser();
+  //   return user;
+  // });
+
+  const { data } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: getUserInfo
+  });
+
+  console.log("테스트", data);
 
   // situation 조회
   const getSituations = async () => {
