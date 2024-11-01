@@ -1,5 +1,5 @@
 // /hooks/useMatching.ts
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { initiateMatching } from "@/services/matchingService";
