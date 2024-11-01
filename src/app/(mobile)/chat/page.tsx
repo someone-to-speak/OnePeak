@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
 import { useUserInfo } from "@/hooks/getUserInfo";
 import { SignalData } from "@/types/chatType/chatType";
-import { useRouter } from "next/router";
 
 const VideoChat = () => {
   const router = useRouter();
@@ -84,13 +83,13 @@ const VideoChat = () => {
     channel.current?.unsubscribe();
     await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
-    router.replace("/lesson");
+    router.push("/lesson");
   };
 
   const handleLeaveAloneSignal = async () => {
     channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
-    router.replace("/lesson");
+    router.push("/lesson");
   };
 
   const handleStopRecording = async () => {
