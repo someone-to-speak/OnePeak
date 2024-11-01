@@ -290,32 +290,25 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          level: number | null
+          level: number
           situation: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
-          level?: number | null
+          level: number
           situation?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
-          level?: number | null
+          level?: number
           situation?: string | null
           user_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "review_level_fkey"
-            columns: ["level"]
-            isOneToOne: false
-            referencedRelation: "situation"
-            referencedColumns: ["level"]
-          },
           {
             foreignKeyName: "review_situation_fkey"
             columns: ["situation"]
@@ -426,7 +419,6 @@ export type Database = {
         Row: {
           created_at: string | null
           email: string | null
-          gender: string | null
           id: string
           is_blocked: boolean | null
           is_deleted: boolean | null
@@ -439,7 +431,6 @@ export type Database = {
         Insert: {
           created_at?: string | null
           email?: string | null
-          gender?: string | null
           id?: string
           is_blocked?: boolean | null
           is_deleted?: boolean | null
@@ -452,7 +443,6 @@ export type Database = {
         Update: {
           created_at?: string | null
           email?: string | null
-          gender?: string | null
           id?: string
           is_blocked?: boolean | null
           is_deleted?: boolean | null

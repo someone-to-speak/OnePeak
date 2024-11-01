@@ -10,7 +10,7 @@ const nextConfig = {
       }
     ],
     formats: ["image/avif", "image/webp"],
-    domains: ["i.scdn.co", "hayfkffvhrshjassogbx.supabase.co", "lh3.googleusercontent.com"]
+    domains: ["i.scdn.co", "hayfkffvhrshjassogbx.supabase.co", "lh3.googleusercontent.com", "files.slack.com"]
   }
 };
 

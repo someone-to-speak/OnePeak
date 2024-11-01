@@ -4,7 +4,7 @@ import UserProfilePage from "@/components/myPage/UserProfile";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Next.js의 useRouter 훅을 임포트합니다.
+import { useRouter } from "next/navigation";
 
 const MyPage = () => {
   const [userId, setUserId] = useState<string | null>(null);

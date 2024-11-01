@@ -23,17 +23,13 @@ const UserProfilePage = ({ userId }: UserProfileProps) => {
     const fetchUserProfile = async () => {
       setLoading(true);
 
-      if (userId) {
-        const { data, error: profileError } = await supabase.from("user_info").select("*").eq("id", userId).single();
+      const { data, error } = await supabase.from("user_info").select("*").eq("id", userId).single();
 
-        if (profileError) {
-          console.error("프로필 오류", profileError);
-          setError("프로필 정보를 가져오는 데 실패했습니다.");
-        } else {
-          setProfile(data);
-        }
+      if (error) {
+        console.error("프로필 오류", error);
+        setError("프로필 정보를 가져오는 데 실패했습니다.");
       } else {
-        console.log("사용자가 로그인하지 않았습니다.");
+        setProfile(data);
       }
 
       setLoading(false);
