@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { createChannel } from "@/repositories/clientRepository";
@@ -16,6 +16,41 @@ const VideoChat = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
+
+  const handleCloseMatching = async () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "closeMatching"
+    });
+
+    await handleCloseMatchingSignal();
+  };
+
+  const handleLeaveAloneSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [router]);
+
+  const handleStopRecording = useCallback(async () => {
+    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+
+    if (localAudioBlob && roomId) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileName = `${roomId}_${timestamp}.webm`;
+
+      await uploadRecording(localAudioBlob, fileName);
+    } else {
+      console.error("Recording failed: No local blob available.");
+    }
+  }, [roomId]);
+
+  const handleCloseMatchingSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await handleStopRecording();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [handleStopRecording, router]);
 
   useEffect(() => {
     if (!roomId) return;
@@ -66,42 +101,7 @@ const VideoChat = () => {
     return () => {
       cleanUp();
     };
-  }, [roomId]);
-
-  const handleCloseMatching = async () => {
-    channel.current?.send({
-      type: "broadcast",
-      event: "closeMatching"
-    });
-
-    await handleCloseMatchingSignal();
-  };
-
-  const handleCloseMatchingSignal = async () => {
-    channel.current?.unsubscribe();
-    await handleStopRecording();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  };
-
-  const handleLeaveAloneSignal = async () => {
-    channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  };
-
-  const handleStopRecording = async () => {
-    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
-
-    if (localAudioBlob && roomId) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileName = `${roomId}_${timestamp}.webm`;
-
-      await uploadRecording(localAudioBlob, fileName);
-    } else {
-      console.error("Recording failed: No local blob available.");
-    }
-  };
+  }, [roomId, handleCloseMatchingSignal, handleLeaveAloneSignal]);
 
   return (
     <div>
