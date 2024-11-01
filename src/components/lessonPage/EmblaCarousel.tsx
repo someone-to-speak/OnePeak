@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import img1 from "../../../public/images/book.jpg";
-import img2 from "../../../public/images/diary.jpg";
-import img3 from "../../../public/images/studying.jpg";
+import img1 from "@/../public/images/book.jpg";
+import img2 from "@/../public/images/diary.jpg";
+import img3 from "@/../public/images/studying.jpg";
 import Image from "next/image";
 
 export function EmblaCarousel() {
