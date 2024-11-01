@@ -12,20 +12,7 @@ export const useMatching = () => {
   const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const cleanUp = async () => {
-      matchingChannelRef.current?.unsubscribe();
-      await removeUserFromQueue(userInfo.id);
-    };
-
-    return () => {
-      cleanUp();
-    };
-  }, [userInfo]);
-
-  const handleMatching = async () => {
+  const setupMatchingChannel = async () => {
     if (!userInfo) return;
 
     const supabase = createClient();
@@ -39,6 +26,7 @@ export const useMatching = () => {
 
       matchingChannel
         .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+          console.log("UPDATE");
           const { new: updatedMatchQueue } = payload;
           if (updatedMatchQueue.user_id === userInfo.id) {
             router.push(`/chat?room=${updatedMatchQueue.room_id}`);
@@ -48,5 +36,19 @@ export const useMatching = () => {
     }
   };
 
-  return { handleMatching, userInfo, isLoading, isError };
+  useEffect(() => {
+    if (!userInfo) return;
+    // setupMatchingChannel();
+
+    const cleanUp = async () => {
+      await matchingChannelRef.current?.unsubscribe();
+      await removeUserFromQueue(userInfo.id);
+    };
+
+    return () => {
+      cleanUp();
+    };
+  }, [userInfo]);
+
+  return { setupMatchingChannel, userInfo, isLoading, isError };
 };

@@ -10,13 +10,13 @@ const LessonPage = () => {
   const [firstLanguage, setFirstLanguage] = useState("");
   const [secondLanguage, setSecondLanguage] = useState("");
 
-  const { handleMatching, userInfo, isLoading, isError } = useMatching();
+  const { setupMatchingChannel, userInfo, isLoading, isError } = useMatching();
   const handleClickMachingButton = () => {
     if (!userInfo) {
       alert("로그인 후 이용이 가능합니다.");
     }
 
-    handleMatching();
+    setupMatchingChannel();
   };
 
   const isSelected = firstLanguage && secondLanguage;
