@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
-import { createChannel, getUserId } from "@/repositories/clientRepository";
+import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
 import { useUserInfo } from "@/hooks/getUserInfo";
 
@@ -29,8 +29,6 @@ const VideoChat = () => {
 
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      // const userId = await getUserId();
-
       channel.current
         .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
@@ -59,6 +57,16 @@ const VideoChat = () => {
     };
 
     init();
+
+    const cleanUp = async () => {
+      channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+      router.push("/lesson");
+    };
+
+    return () => {
+      cleanUp();
+    };
   }, []);
 
   const handleClickLeaveButton = async () => {
