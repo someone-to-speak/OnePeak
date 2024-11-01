@@ -33,10 +33,11 @@ export const getUser = async (): Promise<string> => {
   const supabase = createClient();
 
   const { data } = await supabase.auth.getUser();
-  console.log("get user data: ", data);
-  const { data: userData, error } = await supabase.from("user_info").select("*").eq("id", data.user?.id);
-  console.log("user data: ", userData);
-  console.log("user error: ", error);
+
+  const { data: userData, error } = await supabase
+    .from("user_info")
+    .select("*")
+    .eq("id", data.user?.id as string);
 
   return data.user?.user_metadata.name;
 };

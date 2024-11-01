@@ -1,6 +1,7 @@
 import { getUserId } from "@/repositories/clientRepository";
 import { getUserForMatching } from "@/repositories/matchingRepository";
-import { UserInfoForMatching } from "@/types/user/UserInfo";
+import { UserInfoForMatching } from "@/types/userType.ts/userType";
+
 import { useQuery } from "@tanstack/react-query";
 
 export const useUserInfoForMatching = () => {

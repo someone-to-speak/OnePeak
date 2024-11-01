@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser, signInWithProvider, signOut } from "@/app/services/supabaseAuth";
+import { getUser, signInWithProvider, signOut } from "@/services/supabaseAuth";
 import { useEffect, useState } from "react";
 
 const Header = () => {
