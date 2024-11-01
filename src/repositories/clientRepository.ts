@@ -1,5 +1,3 @@
-"use client";
-
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -9,7 +7,7 @@ export const getUserId = async () => {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  return user?.id;
+  return user?.id as string;
 };
 
 export const createChannel = (roomId: string): RealtimeChannel => {

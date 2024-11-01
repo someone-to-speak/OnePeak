@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { createChannel, getUserId } from "@/repositories/clientRepository";
+import { uploadRecording } from "@/api/supabase/record";
+import { useUserInfo } from "@/hooks/getUserInfo";
 
 type SignalData = {
   event: "offer" | "answer" | "ice-candidate" | "leave";
@@ -14,7 +16,8 @@ type SignalData = {
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("room")?.split(",")[0];
+  const roomId = searchParams?.get("room");
+  const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -24,57 +27,69 @@ const VideoChat = () => {
   useEffect(() => {
     if (!roomId) return;
 
+    // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      const userId = await getUserId();
+      // const userId = await getUserId();
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
-        )
-        .on("broadcast", { event: "offer" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
-        )
-        .on("broadcast", { event: "answer" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
-        )
+        .on("broadcast", { event: "ice-candidate" }, async () => webrtcServiceRef.current?.handleSignalData)
+        .on("broadcast", { event: "offer" }, async () => () => webrtcServiceRef.current?.handleSignalData)
+        .on("broadcast", { event: "answer" }, async () => await webrtcServiceRef.current?.handleSignalData)
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
+            // webrtc 연결을 위한 초기 설정
             webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
             await webrtcServiceRef.current.init();
-            if (userId === roomId) {
-              console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-              await webrtcServiceRef.current.createOffer();
-            }
+            // if (userId === roomId) {
+            //   console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
+            //   await webrtcServiceRef.current.createOffer();
+            // }
+
+            // sdp 정보 발신
+            await webrtcServiceRef.current.createOffer();
           }
         });
     };
 
     init();
+  }, []);
 
-    return () => {
-      handleLeave();
-    };
-  }, [roomId]);
-
-  const handleLeave = () => {
+  const handleClickLeaveButton = async () => {
     channel.current?.send({
       type: "broadcast",
       event: "leave"
     });
     channel.current?.unsubscribe();
-    webrtcServiceRef.current?.closeConnection();
-    router.push("/");
+    await handleStopRecording();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
   };
 
-  const handleLeaveSignal = () => {
-    router.push("/");
+  const handleLeaveSignal = async () => {
+    await handleStopRecording();
+    channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  };
+
+  const handleStopRecording = async () => {
+    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+
+    if (localAudioBlob && roomId) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileName = `${roomId}_${userId}_${timestamp}.webm`;
+
+      await uploadRecording(localAudioBlob, fileName, roomId);
+    } else {
+      console.error("Recording failed: No local blob available.");
+    }
   };
 
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleLeave}>종료하기</button>
+      <button onClick={handleClickLeaveButton}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
@@ -89,7 +104,7 @@ export default VideoChat;
 // import React from "react";
 
 // const openai = new OpenAI({
-//   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY
+//   apiKey: process.env.OPEN_AI_KEY
 // });
 
 // const Page = async () => {

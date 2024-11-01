@@ -114,63 +114,31 @@ export type Database = {
         }
         Relationships: []
       }
-      chatrooms: {
+      Conversations: {
         Row: {
           created_at: string
-          id: number
-          participants: string | null
-          room_name: string | null
+          id: string
+          last_message_id: string | null
+          updated_at: string | null
         }
         Insert: {
           created_at?: string
-          id?: number
-          participants?: string | null
-          room_name?: string | null
+          id?: string
+          last_message_id?: string | null
+          updated_at?: string | null
         }
         Update: {
           created_at?: string
-          id?: number
-          participants?: string | null
-          room_name?: string | null
+          id?: string
+          last_message_id?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "chatrooms_participants_fkey"
-            columns: ["participants"]
+            foreignKeyName: "Conversations_last_message_id_fkey"
+            columns: ["last_message_id"]
             isOneToOne: false
-            referencedRelation: "user_info"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      chats: {
-        Row: {
-          comment: string | null
-          created_at: string
-          id: number
-          room_title: number | null
-          user_nickname: string | null
-        }
-        Insert: {
-          comment?: string | null
-          created_at: string
-          id?: number
-          room_title?: number | null
-          user_nickname?: string | null
-        }
-        Update: {
-          comment?: string | null
-          created_at?: string
-          id?: number
-          room_title?: number | null
-          user_nickname?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "chats_room_fkey"
-            columns: ["room_title"]
-            isOneToOne: false
-            referencedRelation: "chatrooms"
+            referencedRelation: "Messages"
             referencedColumns: ["id"]
           },
         ]
@@ -208,18 +176,18 @@ export type Database = {
       language: {
         Row: {
           id: number
-          language: string
           language_img_url: string
+          language_name: string
         }
         Insert: {
           id?: number
-          language: string
           language_img_url: string
+          language_name: string
         }
         Update: {
           id?: number
-          language?: string
           language_img_url?: string
+          language_name?: string
         }
         Relationships: []
       }
@@ -252,6 +220,81 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      Messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "Conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Participants: {
+        Row: {
+          conversation_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Update: {
+          conversation_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Participants_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "Conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       questions: {
         Row: {
@@ -458,14 +501,14 @@ export type Database = {
             columns: ["learn_language"]
             isOneToOne: false
             referencedRelation: "language"
-            referencedColumns: ["language"]
+            referencedColumns: ["language_name"]
           },
           {
             foreignKeyName: "user_info_my_language_fkey"
             columns: ["my_language"]
             isOneToOne: false
             referencedRelation: "language"
-            referencedColumns: ["language"]
+            referencedColumns: ["language_name"]
           },
         ]
       }

@@ -1,6 +1,5 @@
 import { EmailOtpType } from "@supabase/supabase-js";
 import { UUID } from "crypto";
-import { number, string } from "zod";
 
 export type UserInfo = {
   id: UUID;

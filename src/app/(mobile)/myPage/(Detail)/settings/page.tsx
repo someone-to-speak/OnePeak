@@ -10,7 +10,7 @@ import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown"
 type LanguageType = {
   id: number;
   language_name: string;
-  language_url_img: string;
+  language_img_url: string;
 };
 const supabase = createClient();
 
@@ -81,7 +81,7 @@ const SettingsPage = () => {
 
   const cancelAccount = async () => {
     const confirmation = confirm("정말 회원 계정을 탈퇴하시겠습니까?");
-    if (!confirmation) return;
+    if (!confirmation || !userId) return;
 
     try {
       const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userId);

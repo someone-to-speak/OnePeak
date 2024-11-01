@@ -1,32 +1,20 @@
 "use client";
 
-import Agreement from "@/components/lessonPage/Agreement";
-import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
 import React, { useState } from "react";
 import { useMatching } from "@/hooks/useMatching";
 import { redirect } from "next/navigation";
+import img1 from "@/../public/images/book.jpg";
+import Image from "next/image";
 
 const LessonPage = () => {
-  const [firstLanguage, setfirstLanguage] = useState("");
-  const [secondLanguage, setsecondLanguage] = useState("");
+  const { setupMatchingChannel, userInfo, isLoading, isError, isMatching } = useMatching();
 
-  const { handleMatching, userInfo, isLoading, isError } = useMatching();
-  const handleClickMachingButton = () => {
+  const handleClickMachingButton = async () => {
     if (!userInfo) {
       alert("로그인 후 이용이 가능합니다.");
+      return;
     }
-
-    handleMatching();
-  };
-
-  const isSelected = firstLanguage && secondLanguage;
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (isSelected) {
-      console.log("Form Submitted:", { firstLanguage, secondLanguage });
-    }
+    await setupMatchingChannel();
   };
 
   if (isLoading) {
@@ -40,31 +28,36 @@ const LessonPage = () => {
 
   return (
     <>
-      <h1>언어수업</h1>
-      <EmblaCarousel />
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <div className="flex">
-          <div className="flex flex-col">
-            <label>1 사용 언어</label>
-            <select value={firstLanguage} onChange={(e) => setfirstLanguage(e.target.value)}>
-              <option value="">-- 첫 번째로 시작할 언어 선택 --</option>
-              <option value="English">영어</option>
-              <option value="Korean">한국어</option>
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label>2 사용 언어</label>
-            <select value={secondLanguage} onChange={(e) => setsecondLanguage(e.target.value)}>
-              <option value="">-- 두 번째로 시작할 언어 선택 --</option>
-              <option value="English">영어</option>
-              <option value="Korean">한국어</option>
-            </select>
-          </div>
+      {/* 매칭 중일 때 오버레이와 로딩 스피너 버튼 표시 */}
+      {isMatching && (
+        <div className=" bg-black bg-opacity-50 flex items-center justify-center">
+          <button
+            type="button"
+            className="bg-indigo-500 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+            disabled
+          >
+            <svg
+              className="animate-spin h-5 w-5 mr-3 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+            </svg>
+            Processing...
+          </button>
         </div>
-        <Agreement />
-        <button>시작하기</button>
-      </form>
-      <button onClick={handleClickMachingButton}>매칭하기</button>
+      )}
+
+      {/* 기존 페이지 내용 */}
+      <div className={isMatching ? "opacity-50 pointer-events-none" : ""}>
+        <h1>언어수업</h1>
+        <Image src={img1} alt={"Image1"} />
+        <p>학습언어 : {userInfo?.learn_language}</p>
+
+        <button onClick={handleClickMachingButton}>매칭하기</button>
+      </div>
     </>
   );
 };

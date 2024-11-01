@@ -3,7 +3,7 @@ import React from "react";
 type LanguageType = {
   id: number;
   language_name: string;
-  language_url_img: string;
+  language_img_url: string;
 };
 
 interface ImageSelectorDropDownProps {
