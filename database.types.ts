@@ -199,6 +199,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      language: {
+        Row: {
+          id: number;
+          language: string;
+          language_img_url: string;
+        };
+        Insert: {
+          id?: number;
+          language: string;
+          language_img_url: string;
+        };
+        Update: {
+          id?: number;
+          language?: string;
+          language_img_url?: string;
+        };
+        Relationships: [];
+      };
       matches: {
         Row: {
           created_at: string;
@@ -229,75 +247,36 @@ export type Database = {
         };
         Relationships: [];
       };
-      profiles: {
-        Row: {
-          gender: string | null;
-          grammerChal_level: number | null;
-          id: string;
-          language: string | null;
-          nickname: string | null;
-          profile_url: string | null;
-          state_msg: string | null;
-          study_lang: string | null;
-          user_id: string | null;
-        };
-        Insert: {
-          gender?: string | null;
-          grammerChal_level?: number | null;
-          id: string;
-          language?: string | null;
-          nickname?: string | null;
-          profile_url?: string | null;
-          state_msg?: string | null;
-          study_lang?: string | null;
-          user_id?: string | null;
-        };
-        Update: {
-          gender?: string | null;
-          grammerChal_level?: number | null;
-          id?: string;
-          language?: string | null;
-          nickname?: string | null;
-          profile_url?: string | null;
-          state_msg?: string | null;
-          study_lang?: string | null;
-          user_id?: string | null;
-        };
-        Relationships: [];
-      };
       questions: {
         Row: {
-          answer: string | null;
+          answer: string;
           content: string;
-          created_at: string | null;
+          created_at: string;
           id: number;
-          language: string | null;
-          level: number | null;
-          reason: string | null;
-          type: string | null;
-          wrong_answer: string | null;
+          language: string;
+          reason: string;
+          type: string;
+          wrong_answer: string;
         };
         Insert: {
-          answer?: string | null;
+          answer: string;
           content: string;
-          created_at?: string | null;
+          created_at?: string;
           id?: number;
-          language?: string | null;
-          level?: number | null;
-          reason?: string | null;
-          type?: string | null;
-          wrong_answer?: string | null;
+          language: string;
+          reason: string;
+          type: string;
+          wrong_answer: string;
         };
         Update: {
-          answer?: string | null;
+          answer?: string;
           content?: string;
-          created_at?: string | null;
+          created_at?: string;
           id?: number;
-          language?: string | null;
-          level?: number | null;
-          reason?: string | null;
-          type?: string | null;
-          wrong_answer?: string | null;
+          language?: string;
+          reason?: string;
+          type?: string;
+          wrong_answer?: string;
         };
         Relationships: [];
       };
@@ -305,9 +284,9 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
-          level: number;
-          situation: string;
-          user_id: string;
+          level: number | null;
+          situation: string | null;
+          user_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -367,19 +346,17 @@ export type Database = {
       };
       test_result: {
         Row: {
-          category_id: number | null;
-          collect: number | null;
           created_at: string;
           id: number;
-          total: number | null;
-          user_id: string | null;
+          level: number;
+          situation: string;
+          user_id: string;
         };
         Insert: {
-          category_id?: number | null;
-          collect?: number | null;
           created_at?: string;
           id?: number;
-          total?: number | null;
+          level?: number | null;
+          situation?: string | null;
           user_id?: string | null;
         };
         Update: {
@@ -441,50 +418,91 @@ export type Database = {
         Row: {
           created_at: string | null;
           email: string | null;
-          gender: string | null;
           id: string;
           is_blocked: boolean | null;
           is_deleted: boolean | null;
-          learn_language: string | null;
-          my_language: string | null;
+          learn_language: string;
+          my_language: string;
           nickname: string | null;
-          profile_url: string | null;
+          profile_url: string;
           state_msg: string | null;
         };
         Insert: {
           created_at?: string | null;
           email?: string | null;
-          gender?: string | null;
           id?: string;
           is_blocked?: boolean | null;
           is_deleted?: boolean | null;
-          learn_language?: string | null;
-          my_language?: string | null;
+          learn_language: string;
+          my_language?: string;
           nickname?: string | null;
-          profile_url?: string | null;
+          profile_url?: string;
           state_msg?: string | null;
         };
         Update: {
           created_at?: string | null;
           email?: string | null;
-          gender?: string | null;
           id?: string;
           is_blocked?: boolean | null;
           is_deleted?: boolean | null;
-          learn_language?: string | null;
-          my_language?: string | null;
+          learn_language?: string;
+          my_language?: string;
           nickname?: string | null;
-          profile_url?: string | null;
+          profile_url?: string;
           state_msg?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "user_info_learn_language_fkey";
+            columns: ["learn_language"];
+            isOneToOne: false;
+            referencedRelation: "language";
+            referencedColumns: ["language"];
+          },
+          {
+            foreignKeyName: "user_info_my_language_fkey";
+            columns: ["my_language"];
+            isOneToOne: false;
+            referencedRelation: "language";
+            referencedColumns: ["language"];
+          }
+        ];
       };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_random_questions:
+        | {
+            Args: Record<PropertyKey, never>;
+            Returns: {
+              answer: string;
+              content: string;
+              created_at: string;
+              id: number;
+              language: string;
+              reason: string;
+              type: string;
+              wrong_answer: string;
+            }[];
+          }
+        | {
+            Args: {
+              language: string;
+              type: string;
+            };
+            Returns: {
+              answer: string;
+              content: string;
+              created_at: string;
+              id: number;
+              language: string;
+              reason: string;
+              type: string;
+              wrong_answer: string;
+            }[];
+          };
     };
     Enums: {
       [_ in never]: never;

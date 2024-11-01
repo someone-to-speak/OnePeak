@@ -11,6 +11,9 @@ export class WebRTCService {
   private localVideoRef: React.RefObject<HTMLVideoElement>;
   private remoteVideoRef: React.RefObject<HTMLVideoElement>;
   private channel: RealtimeChannel;
+  private localStream: MediaStream | null = null;
+  private localMediaRecorder: MediaRecorder | null = null;
+  private localAudioChunks: Blob[] = [];
 
   constructor(
     localVideoRef: React.RefObject<HTMLVideoElement>,
@@ -26,7 +29,7 @@ export class WebRTCService {
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
     this.peerConnection = new RTCPeerConnection(config);
 
-    this.peerConnection.onicecandidate = (event) => {
+    this.peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
         this.channel.send({
           type: "broadcast",
@@ -43,11 +46,43 @@ export class WebRTCService {
     };
 
     const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
     }
     localStream.getTracks().forEach((track) => {
       this.peerConnection?.addTrack(track, localStream);
+    });
+
+    this.startLocalRecording(localStream);
+  }
+
+  private startLocalRecording(stream: MediaStream) {
+    this.localMediaRecorder = new MediaRecorder(stream);
+    this.localMediaRecorder.ondataavailable = (event) => {
+      console.log("event: ", event);
+      if (event.data.size > 0) this.localAudioChunks.push(event.data);
+    };
+    this.localMediaRecorder.start();
+  }
+
+  async stopRecording() {
+    return new Promise<Blob>((resolve, reject) => {
+      if (!this.localMediaRecorder) {
+        reject("No media recorder available");
+        return;
+      }
+
+      this.localMediaRecorder.onstop = () => {
+        if (this.localAudioChunks.length > 0) {
+          const localAudioBlob = new Blob(this.localAudioChunks, { type: "audio/webm" });
+          resolve(localAudioBlob);
+        } else {
+          reject("No audio data captured");
+        }
+      };
+
+      this.localMediaRecorder.stop();
     });
   }
 
@@ -83,7 +118,8 @@ export class WebRTCService {
     }
   }
 
-  closeConnection() {
+  async closeConnection() {
     this.peerConnection?.close();
+    this.localStream?.getTracks().forEach((track) => track.stop());
   }
 }
