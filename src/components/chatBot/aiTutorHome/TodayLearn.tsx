@@ -1,6 +1,8 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import { useCallback } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -24,7 +26,7 @@ const TodayLearn = () => {
   });
 
   // situation 조회
-  const getSituations = async () => {
+  const getSituations = useCallback(async () => {
     try {
       const { data, error } = await supabase.from("situation").select("*");
 
@@ -41,7 +43,7 @@ const TodayLearn = () => {
       console.log("situation을 가져오는 데에 실패하였습니다!", error);
       throw error;
     }
-  };
+  }, [supabase]);
 
   const { data: situations } = useQuery({
     queryKey: ["situations"],
@@ -99,6 +101,10 @@ const TodayLearn = () => {
       router.push(`/chatbot?situation=${situation}&level=${level}`);
     }
   };
+
+  // useEffect(() => {
+  //   getSituations();
+  // }, [getSituations]);
 
   // TODO: 기능 구현 후 캐러셀 적용
   return (
