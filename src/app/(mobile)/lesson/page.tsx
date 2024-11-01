@@ -1,15 +1,12 @@
 "use client";
 
-import Agreement from "@/components/lessonPage/Agreement";
-import { EmblaCarousel } from "@/components/lessonPage/EmblaCarousel";
-import React, { useState } from "react";
+import React from "react";
 import { useMatching } from "@/hooks/useMatching";
 import { redirect } from "next/navigation";
+import img1 from "@/../public/images/book.jpg";
+import Image from "next/image";
 
-// const LessonPage = () => {
-//   const [firstLanguage, setFirstLanguage] = useState("");
-//   const [secondLanguage, setSecondLanguage] = useState("");
-
+const LessonPage = () => {
   const { setupMatchingChannel, userInfo, isLoading, isError } = useMatching();
   const handleClickMachingButton = () => {
     if (!userInfo) {
@@ -18,16 +15,6 @@ import { redirect } from "next/navigation";
 
     setupMatchingChannel();
   };
-
-  // const isSelected = firstLanguage && secondLanguage;
-
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (isSelected) {
-  //     console.log("Form Submitted:", { firstLanguage, secondLanguage });
-  //   }
-  // };
 
   if (isLoading) {
     return <div>잠시만 기다려주세요...</div>;
@@ -41,29 +28,8 @@ import { redirect } from "next/navigation";
   return (
     <>
       <h1>언어수업</h1>
-      <EmblaCarousel />
-      
-      {/* <form onSubmit={handleSubmit} className="flex flex-col">
-        <div className="flex">
-          <div className="flex flex-col">
-            <label>1 사용 언어</label>
-            <select value={firstLanguage} onChange={(e) => setFirstLanguage(e.target.value)}>
-              <option value="">-- 첫 번째로 시작할 언어 선택 --</option>
-              <option value="English">영어</option>
-              <option value="Korean">한국어</option>
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label>2 사용 언어</label>
-            <select value={secondLanguage} onChange={(e) => setSecondLanguage(e.target.value)}>
-              <option value="">-- 두 번째로 시작할 언어 선택 --</option>
-              <option value="English">영어</option>
-              <option value="Korean">한국어</option>
-            </select>
-          </div>
-        </div>
-        <button>시작하기</button>
-      </form> */}
+      <Image src={img1} alt={"Image1"} />
+      <p>학습언어 : {userInfo?.learn_language}</p>
       <button onClick={handleClickMachingButton}>매칭하기</button>
     </>
   );
