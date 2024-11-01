@@ -1,8 +1,10 @@
-import { formatedTarget, UserInfo } from "@/type";
+import { BlockedUserInfo, formatedTarget } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
+import { Tables } from "../../../database.types";
 // import { v4 as uuidv4 } from "uuid";
 
+type UserInfo = Tables<"user_info">;
 const browserClient = createClient();
 
 const errorFn = (error: PostgrestError | null, msg: string) => {
@@ -51,16 +53,16 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
 };
 
 // 특정 회원 차단 해제
-export const unblock = async (targetUser: UserInfo | formatedTarget) => {
-  const { error } = await browserClient.from("user_info").update({ is_blocked: false }).eq("id", targetUser.id);
+export const unblock = async (targetUser: string) => {
+  const { error } = await browserClient.from("user_info").update({ is_blocked: false }).eq("id", targetUser);
   if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
 };
 
 // 특정 회원 차단
-export const block = async (targetUser: UserInfo | formatedTarget) => {
+export const block = async (targetUser: string) => {
   console.log("aaa");
   console.log(targetUser);
-  const { error } = await browserClient.from("user_info").update({ is_blocked: true }).eq("id", targetUser.id);
+  const { error } = await browserClient.from("user_info").update({ is_blocked: true }).eq("id", targetUser);
   if (error) errorFn(error, "해당 유저를 차단하는데 실패하였습니다");
 };
 
@@ -84,10 +86,13 @@ export const getBlockDetail = async (targetId: string) => {
     .order("created_at", { ascending: false });
   if (error) errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
 
-  const targetIdsCount: Record<string, number> = data?.reduce((acc, item) => {
-    acc[item.target_id] = (acc[item.target_id] || 0) + 1;
-    return acc;
-  }, {});
+  // data가 존재할 경우에만 count를 계산
+  const targetIdsCount: Record<string, number> = data
+    ? data.reduce((acc, item) => {
+        acc[item.target_id!] = (acc[item.target_id!] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) // 초기값을 지정
+    : {};
   // console.log(taregetIdsCount) // targetIdsCount={A:3, B:2, C:3,}
 
   const filteredTargetIds = data
@@ -102,6 +107,48 @@ export const getBlockDetail = async (targetId: string) => {
   const filteredData = data?.filter((item) => {
     return item.target_id === targetId && filteredTargetIds.includes(item.target_id);
   });
+
+  return filteredData || [];
+};
+
+export const getBlockTargetUsers = async () => {
+  const { data, error } = await browserClient
+    .from("block")
+    .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
+    .order("created_at", { ascending: false })
+    .returns<BlockedUserInfo[]>();
+
+  if (error) {
+    errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
+    return [];
+  }
+
+  // targetIdsCount를 객체 배열로 만들기
+  const targetIdsCount = data?.reduce((acc, item) => {
+    const existingEntry = acc.find((entry) => entry.id === item.target_id);
+    if (existingEntry) {
+      existingEntry.count += 1; // 기존 항목의 카운트 증가
+    } else {
+      acc.push({ id: item.target_id, count: 1 }); // 새 항목 추가
+    }
+    return acc;
+  }, [] as Array<{ id: string; count: number }>); // 초기값을 객체 배열로 지정
+
+  // 필터링 및 데이터 매핑
+  const filteredData = targetIdsCount
+    ?.filter(({ count }) => count >= 2)
+    .map(({ id, count }) => {
+      const item = data.find((d) => d.target_id === id);
+      if (!item) return null;
+      return {
+        ...item,
+        count, // 카운트 추가,
+        user_info: {
+          nickname: item.user_info.nickname,
+          is_blocked: item.user_info.is_blocked
+        }
+      };
+    });
 
   return filteredData || [];
 };
