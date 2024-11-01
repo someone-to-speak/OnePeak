@@ -20,7 +20,7 @@ const Page = () => {
   console.log("data", data);
 
   const blockUser = useMutation({
-    mutationFn: (target: BlockedUserInfo) => block(target),
+    mutationFn: (target: BlockedUserInfo) => block(target.target_id),
     onSuccess: () => {
       alert("해당 유저를 차단 하였습니다");
       queryClient.invalidateQueries({ queryKey: ["blockTargetUsers"] });
@@ -28,7 +28,7 @@ const Page = () => {
   });
 
   const unblockUser = useMutation({
-    mutationFn: (target: BlockedUserInfo) => unblock(target),
+    mutationFn: (target: BlockedUserInfo) => unblock(target.target_id),
     onSuccess: () => {
       alert("해당 유저를 차단 해제 하였습니다");
       queryClient.invalidateQueries({ queryKey: ["blockTargetUsers"] });

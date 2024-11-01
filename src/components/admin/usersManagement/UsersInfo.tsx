@@ -1,6 +1,5 @@
 "use client";
 
-import { UserInfo } from "@/type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -9,6 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
 import PageNationUI from "../PageNationUI";
 import { block, cancle, getUsersInfo, unblock, uncancle } from "@/app/api/api";
+import { Tables } from "../../../../database.types";
+
+type UserInfo = Tables<"user_info">;
 
 const searchNicknameShema = z.object({
   theNickname: z.string().min(1, {
@@ -54,7 +56,7 @@ const UsersInfo = () => {
 
   // 차단 해제
   const unblockUser = useMutation({
-    mutationFn: (userInfo: UserInfo) => unblock(userInfo),
+    mutationFn: (userInfo: UserInfo) => unblock(userInfo.id),
     onSuccess: () => {
       alert("해당 유저를 차단 해제 하였습니다");
       queryClient.invalidateQueries({ queryKey: ["usersInfo"] });
@@ -63,7 +65,7 @@ const UsersInfo = () => {
 
   //차단
   const blockUser = useMutation({
-    mutationFn: (userInfo: UserInfo) => block(userInfo),
+    mutationFn: (userInfo: UserInfo) => block(userInfo.id),
     onSuccess: () => {
       alert("해당 유저를 차단 하였습니다");
       queryClient.invalidateQueries({ queryKey: ["usersInfo"] });
