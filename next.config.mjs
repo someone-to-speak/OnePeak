@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -10,7 +10,7 @@ const nextConfig = {
       }
     ],
     formats: ["image/avif", "image/webp"],
-    domains: ["i.scdn.co", "hayfkffvhrshjassogbx.supabase.co"]
+    domains: ["i.scdn.co", "hayfkffvhrshjassogbx.supabase.co", "lh3.googleusercontent.com", "files.slack.com"]
   }
 };
 

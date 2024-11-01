@@ -5,52 +5,38 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserPen } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-import { UserProfile } from "@/types/user/UserProfile";
+import { Tables } from "../../../database.types";
 
-const UserProfilePage = () => {
+type UserProfileProps = {
+  userId: string; // userId의 UUID 타입
+};
+type UserProfileType = Tables<"user_info">;
+
+const UserProfilePage = ({ userId }: UserProfileProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoading(true);
-      const {
-        data: { session },
-        error: sessionError
-      } = await supabase.auth.getSession();
 
-      if (sessionError) {
-        console.error("유저 오류", sessionError);
-        setError("유저 정보를 가져오는 데 실패했습니다.");
-        setLoading(false);
-        return;
-      }
+      const { data, error } = await supabase.from("user_info").select("*").eq("id", userId).single();
 
-      if (session) {
-        const { data, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .single();
-
-        if (profileError) {
-          console.error("프로필 오류", profileError);
-          setError("프로필 정보를 가져오는 데 실패했습니다.");
-        } else {
-          setProfile(data);
-        }
+      if (error) {
+        console.error("프로필 오류", error);
+        setError("프로필 정보를 가져오는 데 실패했습니다.");
       } else {
-        console.log("사용자가 로그인하지 않았습니다.");
+        setProfile(data);
       }
 
       setLoading(false);
     };
 
     fetchUserProfile();
-  }, [supabase]);
+  }, [supabase, userId]);
 
   if (loading) {
     return <p className="text-center text-lg font-semibold">로딩 중...</p>;
@@ -61,7 +47,7 @@ const UserProfilePage = () => {
   }
 
   const handleEditProfile = () => {
-    router.push("/editProfile");
+    router.push("/myPage/editProfile");
   };
   console.log(profile?.profile_url);
 
@@ -83,7 +69,7 @@ const UserProfilePage = () => {
             <div>
               <div className="flex flex-row items-center gap-2">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  {profile.language} {profile.nickname}
+                  {profile.my_language} {profile.nickname}
                 </h2>
                 <UserPen
                   size={34}
@@ -98,15 +84,7 @@ const UserProfilePage = () => {
           <div className="flex flex-row items-center gap-2">
             <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
               <p className="text-gray-600 text-sm">배우고싶은 언어</p>
-              <p className="text-2xl">{profile.study_lang}</p>
-            </div>
-            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
-              <p className="text-gray-600 text-sm">챌린지 단어</p>
-              <p className="text-gray-600 text-2xl">1</p>
-            </div>
-            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
-              <p className="text-gray-600 text-sm">챌린지 문법</p>
-              <p className="text-gray-600 text-2xl">1</p>
+              <p className="text-2xl">{profile.learn_language}</p>
             </div>
           </div>
         </div>

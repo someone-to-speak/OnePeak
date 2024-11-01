@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { UserProfile } from "@/types/user/UserProfile";
 import Image from "next/image";
 import { uploadImage } from "@/utils/myPage/imageUpload";
+import { Tables } from "../../../../../database.types";
 
-const EditProfile = () => {
+type UserProfileProps = {
+  userId: string; // userId의 UUID 타입
+};
+
+type UserInfoType = Tables<"user_info">;
+
+const EditProfile = ({ userId }: UserProfileProps) => {
   const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserInfoType | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,34 +25,20 @@ const EditProfile = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const {
-        data: { user },
-        error: userError
-      } = await supabase.auth.getUser();
-
-      if (userError) {
-        console.error("유저 오류", userError);
-        return;
-      }
-
-      if (user) {
-        const { data, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", user.id)
-          .single();
+      if (userId) {
+        const { data, error: profileError } = await supabase.from("user_info").select("*").eq("id", userId).single();
 
         if (profileError) {
           console.error("프로필 오류", profileError);
         } else {
           setProfile(data);
-          setPreviewUrl(data.profile_url); // 기존 프로필 URL을 미리보기로 설정
+          setPreviewUrl(data.profile_url);
         }
       }
     };
 
     fetchUserProfile();
-  }, [supabase]);
+  }, [supabase, userId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -66,7 +58,7 @@ const EditProfile = () => {
 
     setLoading(true);
     try {
-      const data = await uploadImage(file); // file을 그대로 전달
+      const data = await uploadImage(file);
       const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`;
 
       // 기존 프로필 URL을 유지하되, 업로드한 이미지 URL을 프로필에 업데이트
@@ -90,13 +82,13 @@ const EditProfile = () => {
 
     if (profile) {
       const { error } = await supabase
-        .from("profiles")
+        .from("user_info")
         .update({
           nickname: profile.nickname,
           profile_url: profile.profile_url,
           state_msg: profile.state_msg
         })
-        .eq("user_id", profile.user_id);
+        .eq("id", profile.id);
 
       if (error) {
         alert("프로필 업데이트에 실패했습니다.");
