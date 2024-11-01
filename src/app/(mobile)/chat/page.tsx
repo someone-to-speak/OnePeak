@@ -27,6 +27,7 @@ const VideoChat = () => {
   useEffect(() => {
     if (!roomId) return;
 
+    // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
       const userId = await getUserId();
 
@@ -47,12 +48,15 @@ const VideoChat = () => {
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
+            // webrtc 연결을 위한 초기 설정
             webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
             await webrtcServiceRef.current.init();
             // if (userId === roomId) {
             //   console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
             //   await webrtcServiceRef.current.createOffer();
             // }
+
+            // sdp 정보 발신
             await webrtcServiceRef.current.createOffer();
           }
         });
