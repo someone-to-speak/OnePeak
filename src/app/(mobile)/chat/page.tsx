@@ -68,7 +68,7 @@ const VideoChat = () => {
     return () => {
       cleanUp();
     };
-  }, []);
+  }, [roomId]);
 
   const handleCloseMatching = async () => {
     channel.current?.send({
@@ -97,9 +97,9 @@ const VideoChat = () => {
 
     if (localAudioBlob && roomId) {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileName = `${roomId}_${userId}_${timestamp}.webm`;
+      const fileName = `${roomId}_${timestamp}.webm`;
 
-      await uploadRecording(localAudioBlob, fileName, roomId);
+      await uploadRecording(localAudioBlob, fileName);
     } else {
       console.error("Recording failed: No local blob available.");
     }
