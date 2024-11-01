@@ -19,7 +19,6 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
 }) => {
   return (
     <div className="p-4">
-      내 언어 설정:
       <label className="text-gray-700">
         <select value={selectedLanguage} onChange={onLanguageChange} className="ml-2 p-2 rounded bg-gray-200">
           {languageOptions.map((lang) => (
