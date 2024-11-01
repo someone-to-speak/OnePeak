@@ -41,14 +41,6 @@ const UsersInfo = () => {
     queryFn: () => getUsersInfo(type, theNickname)
   });
 
-  if (isPending) {
-    return <div>로딩중..</div>;
-  }
-
-  if (isError) {
-    return <div>회원 목록을 불러우는데 실패하였습니다</div>;
-  }
-
   // 페이지네이션 계산
   const totalPages = usersInfo ? Math.ceil(usersInfo.length / usersPerPage) : 0;
   const indexOfLastUser = currentPage * usersPerPage;
@@ -102,6 +94,14 @@ const UsersInfo = () => {
     setTheNickname(value.theNickname);
     reset();
   };
+
+  if (isPending) {
+    return <div>로딩중..</div>;
+  }
+
+  if (isError) {
+    return <div>회원 목록을 불러우는데 실패하였습니다</div>;
+  }
 
   return (
     <div className="flex flex-col p-4">

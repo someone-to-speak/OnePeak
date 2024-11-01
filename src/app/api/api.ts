@@ -1,6 +1,7 @@
-import { BlockedUserInfo, formatedTarget, UserInfo } from "@/type";
+import { formatedTarget, UserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
+// import { v4 as uuidv4 } from "uuid";
 
 const browserClient = createClient();
 
@@ -118,3 +119,27 @@ export const getLanguage = async () => {
   if (error) errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
   return data;
 };
+
+// 언어 이미지 버켓에 추가하기
+
+// const checkFileExists = async (fileName: string) => {
+//   const { data, error } = await browserClient.storage.from("language-image").list("", { search: fileName });
+
+//   if (error) throw error;
+//   return data && data.length > 0; // 파일이 존재하면 true 반환
+// };
+
+// export uploadLanguageImage = async (file) => {
+
+//      // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
+//      const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
+//      let encodedFileName = `${uuidv4{}}.${fileExtension}`;
+
+//      // 파일이 이미 존재하는지 확인
+//      const fileExists = await checkFileExists(encodedFileName);
+//      if (fileExists) {
+//        // 중복 파일명이 있으면, 새로운 UUID를 추가하여 고유 이름 보장
+//        encodedFileName = `${uuidv4()}_${encodedFileName}`;
+//      }
+
+// }
