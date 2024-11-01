@@ -58,6 +58,7 @@ export class WebRTCService {
   private startLocalRecording(stream: MediaStream) {
     this.localMediaRecorder = new MediaRecorder(stream);
     this.localMediaRecorder.ondataavailable = (event) => {
+      console.log("event: ", event);
       if (event.data.size > 0) this.localAudioChunks.push(event.data);
     };
     this.localMediaRecorder.start();

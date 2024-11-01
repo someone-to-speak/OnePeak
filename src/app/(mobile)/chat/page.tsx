@@ -17,7 +17,7 @@ const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("room");
-  const { userId } = useUserInfo();
+  const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -30,6 +30,14 @@ const VideoChat = () => {
     const init = async () => {
       const userId = await getUserId();
 
+      webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
+      await webrtcServiceRef.current.init();
+      if (userId === roomId) {
+        // console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
+        await webrtcServiceRef.current.createOffer();
+      }
+      // await webrtcServiceRef.current.createOffer();
+
       channel.current
         .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
@@ -41,17 +49,12 @@ const VideoChat = () => {
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
-        .subscribe(async (status) => {
-          if (status === "SUBSCRIBED") {
-            webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-            await webrtcServiceRef.current.init();
-            if (userId === roomId) {
-              console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-              // await webrtcServiceRef.current.createOffer();
-            }
-            await webrtcServiceRef.current.createOffer();
-          }
-        });
+        .subscribe();
+      // .subscribe(async (status) => {
+      //   if (status === "SUBSCRIBED") {
+
+      //   }
+      // });
     };
 
     init();

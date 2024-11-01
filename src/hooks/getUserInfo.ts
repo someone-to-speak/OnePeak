@@ -6,13 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 export const useUserInfoForMatching = () => {
   return useQuery<UserInfoForMatching>({
     queryKey: ["userInfoForMatching"],
-    queryFn: async () => getUserForMatching()
+    queryFn: () => getUserForMatching()
   });
 };
 
 export const useUserInfo = () => {
   return useQuery<string>({
-    queryKey: ["userInfoFo"],
-    queryFn: async () => getUserId()
+    queryKey: ["userInfo"],
+    queryFn: () => getUserId()
   });
 };
