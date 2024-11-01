@@ -11,6 +11,7 @@ export class WebRTCService {
   private localVideoRef: React.RefObject<HTMLVideoElement>;
   private remoteVideoRef: React.RefObject<HTMLVideoElement>;
   private channel: RealtimeChannel;
+  private localStream: MediaStream | null = null;
   private localMediaRecorder: MediaRecorder | null = null;
   private localAudioChunks: Blob[] = [];
 
@@ -45,6 +46,7 @@ export class WebRTCService {
     };
 
     const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
     }
@@ -118,5 +120,6 @@ export class WebRTCService {
 
   async closeConnection() {
     this.peerConnection?.close();
+    this.localStream?.getTracks().forEach((track) => track.stop());
   }
 }
