@@ -1,41 +1,76 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
-import { createChannel, getUserId } from "@/repositories/clientRepository";
+import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
-import { useUserInfo } from "@/hooks/getUserInfo";
-
-type SignalData = {
-  event: "offer" | "answer" | "ice-candidate" | "leave";
-  sdp?: RTCSessionDescriptionInit;
-  candidate?: RTCIceCandidateInit;
-};
+import { SignalData } from "@/types/chatType/chatType";
 
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("room");
-  const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
 
+  const handleCloseMatching = async () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "closeMatching"
+    });
+
+    await handleCloseMatchingSignal();
+  };
+
+  const handleLeaveAloneSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [router]);
+
+  const handleStopRecording = useCallback(async () => {
+    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+
+    if (localAudioBlob && roomId) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileName = `${roomId}_${timestamp}.webm`;
+
+      await uploadRecording(localAudioBlob, fileName);
+    } else {
+      console.error("Recording failed: No local blob available.");
+    }
+  }, [roomId]);
+
+  const handleCloseMatchingSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await handleStopRecording();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [handleStopRecording, router]);
+
   useEffect(() => {
     if (!roomId) return;
 
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      // const userId = await getUserId();
+      // if (!channel.current) return;
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, async () => webrtcServiceRef.current?.handleSignalData)
-        .on("broadcast", { event: "offer" }, async () => () => webrtcServiceRef.current?.handleSignalData)
-        .on("broadcast", { event: "answer" }, async () => await webrtcServiceRef.current?.handleSignalData)
-        .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
+        .on("broadcast", { event: "ice-candidate" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        )
+        .on("broadcast", { event: "offer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        )
+        .on("broadcast", { event: "answer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        )
+        .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
+        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal)
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
             // webrtc 연결을 위한 초기 설정
@@ -53,43 +88,25 @@ const VideoChat = () => {
     };
 
     init();
-  }, []);
 
-  const handleClickLeaveButton = async () => {
-    channel.current?.send({
-      type: "broadcast",
-      event: "leave"
-    });
-    channel.current?.unsubscribe();
-    await handleStopRecording();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  };
+    const cleanUp = async () => {
+      channel.current?.send({
+        type: "broadcast",
+        event: "leaveAlone"
+      });
 
-  const handleLeaveSignal = async () => {
-    await handleStopRecording();
-    channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  };
+      await handleLeaveAloneSignal();
+    };
 
-  const handleStopRecording = async () => {
-    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
-
-    if (localAudioBlob && roomId) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileName = `${roomId}_${userId}_${timestamp}.webm`;
-
-      await uploadRecording(localAudioBlob, fileName, roomId);
-    } else {
-      console.error("Recording failed: No local blob available.");
-    }
-  };
+    return () => {
+      cleanUp();
+    };
+  }, [roomId, handleCloseMatchingSignal, handleLeaveAloneSignal]);
 
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleClickLeaveButton}>종료하기</button>
+      <button onClick={handleCloseMatching}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
