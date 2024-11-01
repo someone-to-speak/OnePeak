@@ -12,7 +12,7 @@ export const initiateMatching = async (userId: string, myLanguage: string, learn
   if (matchQueue && matchQueue.length > 0) {
     const matchPartner = matchQueue[0];
     const roomId = `${userId},${matchPartner.user_id as string}`;
-    await updateMatch(matchPartner.user_id, userId, roomId);
+    await updateMatch(matchPartner.user_id as string, userId, roomId);
     return roomId;
   }
 

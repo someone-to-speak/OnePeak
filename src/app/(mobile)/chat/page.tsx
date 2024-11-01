@@ -6,12 +6,7 @@ import { WebRTCService } from "@/services/webrtcService";
 import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
 import { useUserInfo } from "@/hooks/getUserInfo";
-
-type SignalData = {
-  event: "offer" | "answer" | "ice-candidate" | "leave";
-  sdp?: RTCSessionDescriptionInit;
-  candidate?: RTCIceCandidateInit;
-};
+import { SignalData } from "@/types/chatType/chatType";
 
 const VideoChat = () => {
   const router = useRouter();
@@ -29,17 +24,20 @@ const VideoChat = () => {
 
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
+      if (!channel.current) return;
+
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+        .on<SignalData>("broadcast", { event: "ice-candidate" }, async (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload.payload)
         )
-        .on("broadcast", { event: "offer" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+        .on<SignalData>("broadcast", { event: "offer" }, async (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload.payload)
         )
-        .on("broadcast", { event: "answer" }, (payload: SignalData) =>
-          webrtcServiceRef.current?.handleSignalData(payload)
+        .on<SignalData>("broadcast", { event: "answer" }, async (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload.payload)
         )
-        .on("broadcast", { event: "leave" }, handleLeaveSignal) // "leave" 이벤트 핸들러 추가
+        .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
+        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal)
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
             // webrtc 연결을 위한 초기 설정
@@ -59,32 +57,39 @@ const VideoChat = () => {
     init();
 
     const cleanUp = async () => {
-      channel.current?.unsubscribe();
-      await webrtcServiceRef.current?.closeConnection();
-      router.push("/lesson");
+      channel.current?.send({
+        type: "broadcast",
+        event: "leaveAlone"
+      });
+
+      await handleLeaveAloneSignal();
     };
 
     return () => {
       cleanUp();
     };
-  }, []);
+  });
 
-  const handleClickLeaveButton = async () => {
+  const handleCloseMatching = async () => {
     channel.current?.send({
       type: "broadcast",
-      event: "leave"
+      event: "closeMatching"
     });
-    channel.current?.unsubscribe();
-    await handleStopRecording();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
+
+    await handleCloseMatchingSignal();
   };
 
-  const handleLeaveSignal = async () => {
+  const handleCloseMatchingSignal = async () => {
+    channel.current?.unsubscribe();
     await handleStopRecording();
+    await webrtcServiceRef.current?.closeConnection();
+    router.replace("/lesson");
+  };
+
+  const handleLeaveAloneSignal = async () => {
     channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
+    router.replace("/lesson");
   };
 
   const handleStopRecording = async () => {
@@ -103,7 +108,7 @@ const VideoChat = () => {
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleClickLeaveButton}>종료하기</button>
+      <button onClick={handleCloseMatching}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />

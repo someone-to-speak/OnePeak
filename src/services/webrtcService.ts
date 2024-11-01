@@ -1,10 +1,5 @@
+import { SignalData } from "@/types/chatType/chatType";
 import { RealtimeChannel } from "@supabase/supabase-js";
-
-export type SignalData = {
-  event: "offer" | "answer" | "ice-candidate" | "leave";
-  sdp?: RTCSessionDescriptionInit;
-  candidate?: RTCIceCandidateInit;
-};
 
 export class WebRTCService {
   private peerConnection: RTCPeerConnection | null = null;
