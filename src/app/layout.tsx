@@ -23,14 +23,12 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body>
-        <Providers>
-          <div className="h-full">
-            <div className="w-full mx-auto my-0  min-h-full">
-              {children}
-              <Navibar />
-            </div>
+        <div className="h-full">
+          <div className="w-full mx-auto my-0  min-h-full">
+            <Providers>{children}</Providers>
+            <Navibar />
           </div>
-        </Providers>
+        </div>
       </body>
     </html>
   );

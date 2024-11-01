@@ -1,4 +1,3 @@
-// app/providers.tsx
 "use client";
 // QueryClientProvider가 내부적으로 useContext를 사용하기 때문에
 // 이 파일 맨 위에 'use client' 지시어를 추가해야 합니다.
