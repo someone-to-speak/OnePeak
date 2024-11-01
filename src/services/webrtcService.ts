@@ -65,11 +65,23 @@ export class WebRTCService {
   }
 
   async stopRecording() {
-    this.localMediaRecorder?.stop();
+    return new Promise<Blob>((resolve, reject) => {
+      if (!this.localMediaRecorder) {
+        reject("No media recorder available");
+        return;
+      }
 
-    const localAudioBlob = new Blob(this.localAudioChunks, { type: "audio/webm" });
+      this.localMediaRecorder.onstop = () => {
+        if (this.localAudioChunks.length > 0) {
+          const localAudioBlob = new Blob(this.localAudioChunks, { type: "audio/webm" });
+          resolve(localAudioBlob);
+        } else {
+          reject("No audio data captured");
+        }
+      };
 
-    return localAudioBlob;
+      this.localMediaRecorder.stop();
+    });
   }
 
   async createOffer() {
