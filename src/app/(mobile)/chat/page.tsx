@@ -29,19 +29,19 @@ const VideoChat = () => {
 
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      const userId = await getUserId();
+      // const userId = await getUserId();
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
+        .on("system", { event: "ice-candidate" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on(
-          "broadcast",
+          "system",
           { event: "offer" },
           async (payload: SignalData) => await webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on(
-          "broadcast",
+          "system",
           { event: "answer" },
           async (payload: SignalData) => await webrtcServiceRef.current?.handleSignalData(payload)
         )
