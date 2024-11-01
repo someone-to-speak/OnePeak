@@ -24,16 +24,16 @@ const VideoChat = () => {
 
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      if (!channel.current) return;
+      // if (!channel.current) return;
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, async ({ payload }: { payload: SignalData }) =>
+        .on("broadcast", { event: "ice-candidate" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
-        .on("broadcast", { event: "offer" }, async ({ payload }: { payload: SignalData }) =>
+        .on("broadcast", { event: "offer" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
-        .on("broadcast", { event: "answer" }, async ({ payload }: { payload: SignalData }) =>
+        .on("broadcast", { event: "answer" }, (payload: SignalData) =>
           webrtcServiceRef.current?.handleSignalData(payload)
         )
         .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
