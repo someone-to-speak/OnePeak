@@ -67,13 +67,13 @@ const VideoChat = () => {
       event: "leave"
     });
     channel.current?.unsubscribe();
-    // await handleStopRecording();
+    await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
     router.push("/lesson");
   };
 
   const handleLeaveSignal = async () => {
-    // await handleStopRecording();
+    await handleStopRecording();
     channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
     router.push("/lesson");
