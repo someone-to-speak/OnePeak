@@ -5,14 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
-import { useUserInfo } from "@/hooks/getUserInfo";
 import { SignalData } from "@/types/chatType/chatType";
 
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("room");
-  const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
