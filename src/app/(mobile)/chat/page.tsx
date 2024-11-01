@@ -65,23 +65,25 @@ const VideoChat = () => {
     };
   }, []);
 
-  const handleLeave = async () => {
+  const handleClickLeaveButton = async () => {
     channel.current?.send({
       type: "broadcast",
       event: "leave"
     });
     channel.current?.unsubscribe();
+    await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/");
+    router.push("/chat");
   };
 
   const handleLeaveSignal = async () => {
+    await handleStopRecording();
     channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/");
+    router.push("/chat");
   };
 
-  const handleClickStopButton = async () => {
+  const handleStopRecording = async () => {
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
     if (localAudioBlob && roomId) {
@@ -92,14 +94,12 @@ const VideoChat = () => {
     } else {
       console.error("Recording failed: No local blob available.");
     }
-
-    await handleLeave();
   };
 
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleClickStopButton}>종료하기</button>
+      <button onClick={handleClickLeaveButton}>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
