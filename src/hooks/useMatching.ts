@@ -1,6 +1,6 @@
 // /hooks/useMatching.ts
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { initiateMatching } from "@/services/matchingService";
 import { removeUserFromQueue } from "@/repositories/matchingRepository";
@@ -8,6 +8,7 @@ import { useUserInfoForMatching } from "@/hooks/getUserInfo";
 import { createClient } from "@/utils/supabase/client";
 
 export const useMatching = () => {
+  const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
   const router = useRouter();
   const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
@@ -15,11 +16,14 @@ export const useMatching = () => {
   const setupMatchingChannel = async () => {
     if (!userInfo) return;
 
+    setIsMatching(true);
+
     const supabase = createClient();
     const roomId = await initiateMatching(userInfo.id, userInfo.my_language, userInfo.learn_language);
 
     if (roomId) {
       router.push(`/chat?room=${roomId}`);
+      setIsMatching(false);
     } else {
       const matchingChannel = supabase.channel("matches");
       matchingChannelRef.current = matchingChannel;
@@ -30,6 +34,7 @@ export const useMatching = () => {
           const { new: updatedMatchQueue } = payload;
           if (updatedMatchQueue.user_id === userInfo.id) {
             router.push(`/chat?room=${updatedMatchQueue.room_id}`);
+            setIsMatching(false);
           }
         })
         .subscribe();
@@ -50,5 +55,5 @@ export const useMatching = () => {
     };
   }, [userInfo]);
 
-  return { setupMatchingChannel, userInfo, isLoading, isError };
+  return { setupMatchingChannel, userInfo, isLoading, isError, isMatching };
 };
