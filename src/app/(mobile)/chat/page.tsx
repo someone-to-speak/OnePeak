@@ -59,10 +59,6 @@ const VideoChat = () => {
     };
 
     init();
-
-    return () => {
-      handleLeave();
-    };
   }, []);
 
   const handleClickLeaveButton = async () => {
