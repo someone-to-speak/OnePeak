@@ -93,7 +93,7 @@ export class WebRTCService {
     });
   }
 
-  async handleSignalData(payload: SignalData) {
+  async handleSignalData({ payload }: { payload: SignalData }) {
     if (!this.peerConnection) return;
     console.log("payload ", payload);
     const { event, sdp, candidate } = payload;
