@@ -6,9 +6,9 @@ import React, { useState } from "react";
 import { useMatching } from "@/hooks/useMatching";
 import { redirect } from "next/navigation";
 
-const LessonPage = () => {
-  const [firstLanguage, setFirstLanguage] = useState("");
-  const [secondLanguage, setSecondLanguage] = useState("");
+// const LessonPage = () => {
+//   const [firstLanguage, setFirstLanguage] = useState("");
+//   const [secondLanguage, setSecondLanguage] = useState("");
 
   const { setupMatchingChannel, userInfo, isLoading, isError } = useMatching();
   const handleClickMachingButton = () => {
@@ -19,15 +19,15 @@ const LessonPage = () => {
     setupMatchingChannel();
   };
 
-  const isSelected = firstLanguage && secondLanguage;
+  // const isSelected = firstLanguage && secondLanguage;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (isSelected) {
-      console.log("Form Submitted:", { firstLanguage, secondLanguage });
-    }
-  };
+  //   if (isSelected) {
+  //     console.log("Form Submitted:", { firstLanguage, secondLanguage });
+  //   }
+  // };
 
   if (isLoading) {
     return <div>잠시만 기다려주세요...</div>;
@@ -42,7 +42,8 @@ const LessonPage = () => {
     <>
       <h1>언어수업</h1>
       <EmblaCarousel />
-      <form onSubmit={handleSubmit} className="flex flex-col">
+      
+      {/* <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="flex">
           <div className="flex flex-col">
             <label>1 사용 언어</label>
@@ -61,9 +62,8 @@ const LessonPage = () => {
             </select>
           </div>
         </div>
-        <Agreement />
         <button>시작하기</button>
-      </form>
+      </form> */}
       <button onClick={handleClickMachingButton}>매칭하기</button>
     </>
   );
