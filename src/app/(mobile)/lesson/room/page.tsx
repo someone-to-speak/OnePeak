@@ -75,7 +75,7 @@ const VideoChat = () => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-          webrtcServiceRef.current.init();
+          await webrtcServiceRef.current.init();
           // if (userId === roomId) {
           //   console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
           //   await webrtcServiceRef.current.createOffer();
