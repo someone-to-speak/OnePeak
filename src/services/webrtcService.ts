@@ -26,7 +26,7 @@ export class WebRTCService {
 
     this.peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        this.channel.send({
+        await this.channel.send({
           type: "broadcast",
           event: "ice-candidate",
           candidate: event.candidate
@@ -86,7 +86,7 @@ export class WebRTCService {
 
     const offer = await this.peerConnection.createOffer();
     await this.peerConnection.setLocalDescription(offer);
-    this.channel.send({
+    await this.channel.send({
       type: "broadcast",
       event: "offer",
       sdp: offer
@@ -102,7 +102,7 @@ export class WebRTCService {
       await this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
       const answer = await this.peerConnection.createAnswer();
       await this.peerConnection.setLocalDescription(answer);
-      this.channel.send({
+      await this.channel.send({
         type: "broadcast",
         event: "answer",
         sdp: answer
