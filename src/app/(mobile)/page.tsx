@@ -30,9 +30,10 @@ export default function Home() {
           .single();
 
         // userInfo가 null인지 확인한 후, 초기 정보가 없을 경우 설정 페이지로 이동
-        if (userInfo && !userInfo.nickname && !userInfo.my_language && !userInfo.learn_language) {
+        if (!userInfo || !userInfo.nickname || !userInfo.my_language || !userInfo.learn_language) {
           router.push("/loginInfo/setNickname");
         }
+        console.log("userInfo", userInfo);
       } else {
         setShowModal(true); // 세션이 없으면 모달을 표시
       }
