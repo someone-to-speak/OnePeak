@@ -1,15 +1,21 @@
 import { dateUtils } from "@/utils/chatbot/date";
 import { useState } from "react";
+import { CalendarHeader } from "./CalendarHeader";
+import { DayHeader } from "./DayHeader";
+import { DateGrid } from "./DateGrid";
 
-const Calendar: React.FC<{ onSelectDate: (date: Date) => void }> = ({ onSelectDate }) => {
-  const [currentDate, setCurrentDate] = useState(dateUtils.getToday());
+type CalendarProps = {
+  onSelectDate: (date: Date) => void;
+  className?: string;
+};
+
+const Calendar: React.FC<CalendarProps> = ({ onSelectDate, className = "" }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(dateUtils.getToday());
   const today = dateUtils.getToday();
 
-  // 날짜 클릭 핸들러
   const handleDateClick = (date: Date) => {
     const newDate = dateUtils.getStartOfDay(date);
-
     setSelectedDate(newDate);
     onSelectDate(newDate);
   };
@@ -25,45 +31,17 @@ const Calendar: React.FC<{ onSelectDate: (date: Date) => void }> = ({ onSelectDa
   const dates = dateUtils.generateCalendarDates(currentDate);
 
   return (
-    <div className="my-1 p-5">
-      {/* 월 변경 버튼 및 현재 년/월 표시 */}
-      <div className="flex justify-center mb-4">
-        <button onClick={handlePrevMonth} className="px-3 py-1 bg-gray-200 rounded">
-          이전
-        </button>
-        <span className="text-lg font-semibold mx-10">
-          {currentDate.getFullYear()}.{currentDate.getMonth() + 1}
-        </span>
-        <button onClick={handleNextMonth} className="px-3 py-1 bg-gray-200 rounded">
-          다음
-        </button>
-      </div>
+    <div className={`my-1 p-5 ${className}`}>
+      <CalendarHeader currentDate={currentDate} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
       <div className="border p-5">
-        {/* 요일 헤더 */}
-        <div className="grid grid-cols-7 text-center font-medium">
-          {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-            <div key={day} className="py-2">
-              {day}
-            </div>
-          ))}
-        </div>
-
-        {/* 날짜 그리드 */}
-        <div className="grid grid-cols-7 text-center">
-          {dates.map((date, index) => (
-            <div
-              key={index}
-              onClick={() => handleDateClick(date)}
-              className={`py-2 cursor-pointer ${
-                dateUtils.isSameMonth(date, currentDate) ? "text-black" : "text-gray-300"
-              }
-              ${dateUtils.isSameDay(date, today) ? "bg-blue-100 font-bold rounded-lg" : ""}
-              ${dateUtils.isSameDay(date, selectedDate) ? "bg-blue-300 text-white font-bold rounded-lg" : ""}`}
-            >
-              {date.getDate()}
-            </div>
-          ))}
-        </div>
+        <DayHeader />
+        <DateGrid
+          dates={dates}
+          selectedDate={selectedDate}
+          currentDate={currentDate}
+          today={today}
+          onDateClick={handleDateClick}
+        />
       </div>
     </div>
   );
