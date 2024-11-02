@@ -60,28 +60,34 @@ const VideoChat = () => {
       // if (!channel.current) return;
 
       channel.current
-        .on("broadcast", { event: "ice-candidate" }, (payload) =>
-          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on(
+          "broadcast",
+          { event: "ice-candidate" },
+          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "offer" }, (payload) =>
-          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on(
+          "broadcast",
+          { event: "offer" },
+          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "answer" }, (payload) =>
-          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on(
+          "broadcast",
+          { event: "answer" },
+          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
         .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
-      channel.current.subscribe(async (status) => {
+      channel.current.subscribe((status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-          await webrtcServiceRef.current.init();
+          webrtcServiceRef.current.init();
           // if (userId === roomId) {
           //   await webrtcServiceRef.current.createOffer();
           // }
 
           // sdp 정보 발신
-          await webrtcServiceRef.current.createOffer();
+          webrtcServiceRef.current.createOffer();
         }
       });
     };
