@@ -26,7 +26,7 @@ export default function Home() {
         const { data: userInfo } = await supabase
           .from("user_info")
           .select("nickname, my_language, learn_language")
-          .eq("user_id", data.session.user.id)
+          .eq("id", data.session.user.id)
           .single();
 
         // userInfo가 null인지 확인한 후, 초기 정보가 없을 경우 설정 페이지로 이동

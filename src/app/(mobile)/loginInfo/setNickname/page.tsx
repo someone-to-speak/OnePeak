@@ -18,7 +18,7 @@ export default function SetNickname() {
       console.log("Nickname to update:", nickname); // 업데이트할 닉네임 확인
 
       if (userId) {
-        const { error } = await supabase.from("user_info").update({ nickname }).eq("user_id", userId);
+        const { error } = await supabase.from("user_info").update({ nickname }).eq("id", userId);
 
         if (!error) {
           router.push("/loginInfo/setMyLanguage");
