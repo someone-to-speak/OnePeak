@@ -10,7 +10,7 @@ import { SignalData } from "@/types/chatType/chatType";
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("room");
+  const roomId = searchParams?.get("id");
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);

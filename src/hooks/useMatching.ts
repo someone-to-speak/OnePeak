@@ -27,7 +27,7 @@ export const useMatching = () => {
 
     if (roomId) {
       setIsMatching(false);
-      router.push(`/lesson/room=${roomId}`);
+      router.push(`/lesson/room?id=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
       matchingChannelRef.current = matchingChannel;
@@ -38,7 +38,7 @@ export const useMatching = () => {
           const { new: updatedMatchQueue } = payload;
           if (updatedMatchQueue.user_id === userInfo.id) {
             setIsMatching(false);
-            router.push(`/lesson/room=${updatedMatchQueue.room_id}`);
+            router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
           }
         })
         .subscribe((status) => {
