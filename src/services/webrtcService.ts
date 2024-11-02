@@ -86,7 +86,7 @@ export class WebRTCService {
 
     const offer = await this.peerConnection.createOffer();
     await this.peerConnection.setLocalDescription(offer);
-    await this.channel.send({
+    this.channel.send({
       type: "broadcast",
       event: "offer",
       sdp: offer
@@ -102,7 +102,7 @@ export class WebRTCService {
       await this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
       const answer = await this.peerConnection.createAnswer();
       await this.peerConnection.setLocalDescription(answer);
-      await this.channel.send({
+      this.channel.send({
         type: "broadcast",
         event: "answer",
         sdp: answer
