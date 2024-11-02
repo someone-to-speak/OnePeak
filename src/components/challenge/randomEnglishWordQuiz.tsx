@@ -86,10 +86,10 @@ const RandomEnglishWordQuiz = ({ userId }: RandomQuizProps) => {
         )
       );
       // 점수를 쿼리 파라미터로 설정하여 결과 페이지로 이동
-      router.push(`/challenge/grammar/result?message=${encodeURIComponent(scoreMessage)}`); // 메시지를 쿼리 파라미터로 전달
+      router.push(`/challenge/word/result?message=${encodeURIComponent(scoreMessage)}`); // 메시지를 쿼리 파라미터로 전달
     } catch (error) {
       console.error("답안 저장 실패:", error);
-      router.push(`/challenge/grammar/result?message=${encodeURIComponent("답안 저장 실패")}`); // 오류 메시지도 전달
+      router.push(`/challenge/word/result?message=${encodeURIComponent("답안 저장 실패")}`); // 오류 메시지도 전달
     }
   };
 
