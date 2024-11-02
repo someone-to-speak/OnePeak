@@ -70,21 +70,20 @@ const VideoChat = () => {
           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
         .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
-        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
-      channel.current.subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          // webrtc 연결을 위한 초기 설정
-          webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-          await webrtcServiceRef.current.init();
-          // if (userId === roomId) {
-          //   console.log("webrtcServiceRef.current: ", webrtcServiceRef.current);
-          //   await webrtcServiceRef.current.createOffer();
-          // }
+        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal)
+        .subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            // webrtc 연결을 위한 초기 설정
+            webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
+            await webrtcServiceRef.current.init();
+            // if (userId === roomId) {
+            //   await webrtcServiceRef.current.createOffer();
+            // }
 
-          // sdp 정보 발신
-          await webrtcServiceRef.current.createOffer();
-        }
-      });
+            // sdp 정보 발신
+            await webrtcServiceRef.current.createOffer();
+          }
+        });
     };
 
     init();
