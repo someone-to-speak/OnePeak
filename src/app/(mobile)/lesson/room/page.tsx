@@ -75,8 +75,8 @@ const VideoChat = () => {
           { event: "answer" },
           async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
-        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
+        .on("broadcast", { event: "leaveAlone" }, async () => handleLeaveAloneSignal())
+        .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal());
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
