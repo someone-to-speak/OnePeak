@@ -26,7 +26,7 @@ export default function RootLayout({
         <div className="h-full">
           <div className="w-full mx-auto my-0  min-h-full">
             <Providers>{children}</Providers>
-            <Navibar />
+            {/* <Navibar /> */}
           </div>
         </div>
       </body>

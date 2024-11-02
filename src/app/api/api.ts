@@ -5,6 +5,7 @@ import { Tables } from "../../../database.types";
 import { v4 as uuidv4 } from "uuid";
 
 type UserInfo = Tables<"user_info">;
+type Language = Tables<"language">;
 const browserClient = createClient();
 
 const errorFn = (error: PostgrestError | null, msg: string) => {
@@ -197,23 +198,27 @@ export const uploadLanguageImage = async (file: File) => {
 };
 
 // bucket으로부터 받은 이미지 주소 language 테이블에 넣기
-export const insertLanguageImg = async (imgUrl: string, language: string) => {
-  const { data, error } = await browserClient
+export const insertLanguageImg = async ({ imageUrl, language }: { imageUrl: string; language: string }) => {
+  const { error } = await browserClient
     .from("language")
-    .insert({ language_img_url: imgUrl, language_name: language });
+    .insert({ language_img_url: imageUrl, language_name: language, status: true });
   if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
 };
 
 // language 테이블 정보 가져오기
 export const getLanguageList = async () => {
-  const { data, error } = await browserClient.from("language").select();
+  const { data, error } = await browserClient.from("language").select().order("created_at", { ascending: false });
   if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
   return data || [];
 };
 
 // 특정 언어 사용으로 변경
 export const changeToUse = async (targetLanguage: number) => {
-  const { error } = await browserClient.from("language").update({ status: true }).eq("id", targetLanguage);
+  const { error } = await browserClient
+    .from("language")
+    .update({ status: true })
+    .eq("id", targetLanguage)
+    .order("created_at", { ascending: false });
   if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
 };
 

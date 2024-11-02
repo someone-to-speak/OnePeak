@@ -4,19 +4,19 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 const AddLanguageForm = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
 
-   const {mutate} = useMutation({
-      mutationFn:  insertLanguageImg,
-      onSuccess: () => {
-        alert("해당 언어를 활성화하였습니다");
-        queryClient.invalidateQueries({ queryKey: ["languagesInfo"] });
-      };
-    });
-    
+  const { mutate } = useMutation({
+    mutationFn: ({ imageUrl, language }: { imageUrl: string; language: string }) =>
+      insertLanguageImg({ imageUrl, language }),
+    onSuccess: () => {
+      alert("해당 언어를 활성화하였습니다");
+      queryClient.invalidateQueries({ queryKey: ["languagesInfo"] });
+    }
+  });
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -49,8 +49,9 @@ const AddLanguageForm = () => {
     //   console.error("Error inserting language image:", error);
     //   alert("이미지 삽입 중 오류가 발생했습니다.");
     // }
-
- 
+    mutate({ imageUrl, language });
+    setPreviewUrl("");
+    setLanguage("");
   };
   return (
     <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">

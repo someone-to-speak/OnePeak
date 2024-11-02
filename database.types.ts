@@ -175,18 +175,21 @@ export type Database = {
       }
       language: {
         Row: {
+          created_at: string
           id: number
           language_img_url: string
           language_name: string
           status: boolean
         }
         Insert: {
+          created_at: string
           id?: number
           language_img_url: string
           language_name: string
           status?: boolean
         }
         Update: {
+          created_at?: string
           id?: number
           language_img_url?: string
           language_name?: string
@@ -468,9 +471,9 @@ export type Database = {
           id: string
           is_blocked: boolean
           is_deleted: boolean
-          learn_language: string
-          my_language: string
-          nickname: string
+          learn_language: string | null
+          my_language: string | null
+          nickname: string | null
           profile_url: string
           state_msg: string
         }
@@ -480,11 +483,11 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
-          learn_language: string
-          my_language?: string
-          nickname?: string
-          profile_url?: string
-          state_msg?: string
+          learn_language?: string | null
+          my_language?: string | null
+          nickname?: string | null
+          profile_url: string
+          state_msg: string
         }
         Update: {
           created_at?: string
@@ -492,9 +495,9 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
-          learn_language?: string
-          my_language?: string
-          nickname?: string
+          learn_language?: string | null
+          my_language?: string | null
+          nickname?: string | null
           profile_url?: string
           state_msg?: string
         }
