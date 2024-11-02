@@ -10,8 +10,8 @@ import { SignalData } from "@/types/chatType/chatType";
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("id")?.[0];
-
+  const roomId = searchParams?.get("id")?.split(",")[0];
+  console.log("roomId: ", roomId);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
@@ -87,7 +87,7 @@ const VideoChat = () => {
           }
 
           // sdp 정보 발신
-          await webrtcServiceRef.current.createOffer();
+          // await webrtcServiceRef.current.createOffer();
         }
       });
     };
