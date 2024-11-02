@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const MyPage = () => {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>();
   const supabase = createClient();
   const router = useRouter();
 
@@ -28,7 +28,7 @@ const MyPage = () => {
     };
 
     fetchUserId();
-  }, [supabase, router]);
+  }, []);
 
   if (!userId) return null;
 
