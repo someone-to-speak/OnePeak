@@ -101,7 +101,7 @@ const VideoChat = () => {
     return () => {
       cleanUp();
     };
-  }, [roomId, handleCloseMatchingSignal, handleLeaveAloneSignal]);
+  }, []);
 
   return (
     <div>
