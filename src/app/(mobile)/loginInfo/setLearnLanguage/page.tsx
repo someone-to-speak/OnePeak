@@ -15,6 +15,9 @@ export default function SetLearnLanguage() {
     const { data } = await supabase.auth.getSession();
     const userId = data?.session?.user?.id;
 
+    console.log("User ID:", userId); // 유저 ID 확인
+    console.log("learnLanguage to update:", selectedLearnLanguage); // 업데이트할 닉네임 확인
+
     if (userId && selectedLearnLanguage) {
       const { error } = await supabase
         .from("user_info")
@@ -29,13 +32,14 @@ export default function SetLearnLanguage() {
 
   return (
     <div>
-      <h2>Select the Language You Want to Learn</h2>
-      <div>
+      <h1>너의 학습언어 알려줘</h1>
+      <p>본인이 배우고 싶은 언어를 설정해주시면 됩니다.</p>
+      <div className="flex flex-col justify-center items-center">
         {learnLanguages.map((language) => (
           <button
             key={language}
             onClick={() => setSelectedLearnLanguage(language)}
-            className={`p-2 m-2 rounded ${selectedLearnLanguage === language ? "bg-green-500" : "bg-gray-300"}`}
+            className={`w-[50%] p-2 m-2 rounded ${selectedLearnLanguage === language ? "bg-green-500" : "bg-gray-300"}`}
           >
             {language}
           </button>
@@ -44,7 +48,7 @@ export default function SetLearnLanguage() {
       <button
         onClick={handleContinue}
         disabled={!selectedLearnLanguage}
-        className={`mt-4 p-2 rounded ${selectedLearnLanguage ? "bg-green-500" : "bg-gray-300"}`}
+        className={`w-full mt-4 p-2 rounded ${selectedLearnLanguage ? "bg-green-500" : "bg-gray-300"}`}
       >
         계속
       </button>
