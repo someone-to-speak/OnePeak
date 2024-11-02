@@ -2,7 +2,7 @@ import { BlockedUserInfo, formatedTarget } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "../../../database.types";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 type UserInfo = Tables<"user_info">;
 const browserClient = createClient();
@@ -168,25 +168,61 @@ export const getLanguage = async () => {
 };
 
 // 언어 이미지 버켓에 추가하기
+// 버켓에 같은 이름의 이미지가 있는지 체크
+const checkFileExists = async (fileName: string) => {
+  const { data, error } = await browserClient.storage.from("language-image").list("", { search: fileName });
 
-// const checkFileExists = async (fileName: string) => {
-//   const { data, error } = await browserClient.storage.from("language-image").list("", { search: fileName });
+  if (error) throw error;
+  return data && data.length > 0; // && 연산자는 두개의 조건이 참일때만 true
+};
 
-//   if (error) throw error;
-//   return data && data.length > 0; // 파일이 존재하면 true 반환
-// };
+export const uploadLanguageImage = async (file: File) => {
+  // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 어떠한 파일 이름이 들어와도 사용 할 수 있게 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
+  const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
+  let encodedFileName = `${uuidv4()}.${fileExtension}`;
 
-// export uploadLanguageImage = async (file) => {
+  // 파일이 이미 존재하는지 확인
+  const fileExists = await checkFileExists(encodedFileName);
+  if (fileExists) {
+    // 중복 파일명이 있으면, 새로운 UUID를 추가하여 고유 이름 보장
+    encodedFileName = `${uuidv4()}_${encodedFileName}`;
+  }
 
-//      // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
-//      const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
-//      let encodedFileName = `${uuidv4{}}.${fileExtension}`;
+  // bucket에 파일 추가
+  const { data, error } = await browserClient.storage.from("language-image").upload(encodedFileName, file);
+  if (error) {
+    throw error;
+  }
+  return data;
+};
 
-//      // 파일이 이미 존재하는지 확인
-//      const fileExists = await checkFileExists(encodedFileName);
-//      if (fileExists) {
-//        // 중복 파일명이 있으면, 새로운 UUID를 추가하여 고유 이름 보장
-//        encodedFileName = `${uuidv4()}_${encodedFileName}`;
-//      }
+// bucket으로부터 받은 이미지 주소 language 테이블에 넣기
+export const insertLanguageImg = async (imgUrl: string, language: string) => {
+  const { data, error } = await browserClient
+    .from("language")
+    .insert({ language_img_url: imgUrl, language_name: language });
+  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+};
 
-// }
+// language 테이블 정보 가져오기
+export const getLanguageList = async () => {
+  const { data, error } = await browserClient.from("language").select();
+  if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
+  return data || [];
+};
+
+// 특정 언어 사용으로 변경
+export const changeToUse = async (targetLanguage: number) => {
+  const { error } = await browserClient.from("language").update({ status: true }).eq("id", targetLanguage);
+  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
+};
+
+// 특정 언어 사용으로 변경
+export const changeToUnuse = async (targetLanguage: number) => {
+  const { error } = await browserClient
+    .from("language")
+    .update({ status: false })
+    .eq("id", targetLanguage)
+    .order("created_at", { ascending: false });
+  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
+};
