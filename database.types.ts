@@ -175,18 +175,21 @@ export type Database = {
       }
       language: {
         Row: {
+          created_at: string
           id: number
           language_img_url: string
           language_name: string
           status: boolean
         }
         Insert: {
+          created_at?: string
           id?: number
-          language_img_url: string
-          language_name: string
+          language_img_url?: string
+          language_name?: string
           status?: boolean
         }
         Update: {
+          created_at?: string
           id?: number
           language_img_url?: string
           language_name?: string
@@ -257,6 +260,41 @@ export type Database = {
           {
             foreignKeyName: "Messages_sender_id_fkey"
             columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: number
+          is_read: boolean | null
+          message: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          is_read?: boolean | null
+          message: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          is_read?: boolean | null
+          message?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user_info"
             referencedColumns: ["id"]
@@ -470,21 +508,21 @@ export type Database = {
           is_deleted: boolean
           learn_language: string | null
           my_language: string | null
-          nickname: string | null
+          nickname: string
           profile_url: string
           state_msg: string
         }
         Insert: {
           created_at?: string
-          email: string
+          email?: string
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
           learn_language?: string | null
           my_language?: string | null
-          nickname?: string | null
-          profile_url: string
-          state_msg: string
+          nickname?: string
+          profile_url?: string
+          state_msg?: string
         }
         Update: {
           created_at?: string
@@ -494,26 +532,11 @@ export type Database = {
           is_deleted?: boolean
           learn_language?: string | null
           my_language?: string | null
-          nickname?: string | null
+          nickname?: string
           profile_url?: string
           state_msg?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_info_learn_language_fkey"
-            columns: ["learn_language"]
-            isOneToOne: false
-            referencedRelation: "language"
-            referencedColumns: ["language_name"]
-          },
-          {
-            foreignKeyName: "user_info_my_language_fkey"
-            columns: ["my_language"]
-            isOneToOne: false
-            referencedRelation: "language"
-            referencedColumns: ["language_name"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
