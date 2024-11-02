@@ -12,14 +12,10 @@ const BottomSheetModal: React.FC<BottomSheetModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-12 bg-gray-500 bg-opacity-75 flex justify-center items-end z-20">
-      <div className="bg-white w-full max-w-md p-6 rounded-t-lg">
-        <button onClick={onClose} className="text-gray-500 float-right">
-          닫기
-        </button>
-        <h2 className="text-xl font-bold mb-4">로그인이 필요합니다</h2>
-        <p className="mb-4">서비스를 이용하려면 로그인이 필요합니다.</p>
-        <div className="flex gap-4">
+    <div className="fixed inset-12 bg-gray-500 bg-opacity-75 flex justify-center items-end z-1">
+      <div className="bg-white w-full max-w-md p-6 rounded-t-lg flex flex-col items-center">
+        <h2 className="text-xl font-bold mb-4">SNS 로그인</h2>
+        <div className="flex gap-10">
           <button onClick={handleSignInWithGoogle} className=" bg-blue-500 text-white py-2 rounded">
             구글
           </button>
