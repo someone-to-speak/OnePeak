@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
 const languages = ["한국어", "일본어", "스페인어", "영어"];

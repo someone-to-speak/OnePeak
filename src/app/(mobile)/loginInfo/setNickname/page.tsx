@@ -1,6 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/router";
-import { createClient } from "@/utils/supabase/server";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SetNickname() {
   const [nickname, setNickname] = useState("");
