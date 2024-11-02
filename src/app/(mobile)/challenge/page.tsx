@@ -41,7 +41,7 @@ const ChalPage = () => {
 
         if (langError) throw langError;
         if (languages) {
-          setLearnLanguage(languages.learn_language);
+          setLearnLanguage(languages.learn_language || "");
         }
       }
     };

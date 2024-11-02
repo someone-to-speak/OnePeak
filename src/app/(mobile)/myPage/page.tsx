@@ -4,12 +4,10 @@ import UserProfilePage from "@/components/myPage/UserProfile";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const MyPage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
-  const router = useRouter();
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -20,7 +18,7 @@ const MyPage = () => {
     };
 
     fetchUserId();
-  }, [supabase, router]);
+  }, [supabase]);
 
   if (!userId) return null;
 

@@ -47,8 +47,8 @@ const SettingsPage = () => {
         if (langError) throw langError;
 
         if (languages) {
-          setCurrentMyLanguage(languages.my_language.language_name);
-          setCurrentLearnLanguage(languages.learn_language.language_name);
+          setCurrentMyLanguage(languages.my_language?.language_name || "");
+          setCurrentLearnLanguage(languages.learn_language?.language_name || "");
           if (languages.my_language) {
             setMyLanguageUrl(languages.my_language.language_img_url);
           }
