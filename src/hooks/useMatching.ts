@@ -32,19 +32,20 @@ export const useMatching = () => {
       const matchingChannel = supabase.channel("matches");
       matchingChannelRef.current = matchingChannel;
 
-      matchingChannel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
-        console.log("UPDATE");
-        const { new: updatedMatchQueue } = payload;
-        if (updatedMatchQueue.user_id === userInfo.id) {
-          setIsMatching(false);
-          router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
-        }
-      });
-      matchingChannel.subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("SUBSCRIBED");
-        }
-      });
+      matchingChannel
+        .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+          console.log("UPDATE");
+          const { new: updatedMatchQueue } = payload;
+          if (updatedMatchQueue.user_id === userInfo.id) {
+            setIsMatching(false);
+            router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
+          }
+        })
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            console.log("SUBSCRIBED");
+          }
+        });
     }
   };
 
