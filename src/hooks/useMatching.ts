@@ -19,11 +19,15 @@ export const useMatching = () => {
     setIsMatching(true);
 
     const supabase = createClient();
-    const roomId = await initiateMatching(userInfo.id, userInfo.my_language, userInfo.learn_language);
+    const roomId = await initiateMatching(
+      userInfo.id,
+      userInfo.my_language as string,
+      userInfo.learn_language as string
+    );
 
     if (roomId) {
       setIsMatching(false);
-      router.push(`/chat?room=${roomId}`);
+      router.push(`/lesson/room=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
       matchingChannelRef.current = matchingChannel;
@@ -34,7 +38,7 @@ export const useMatching = () => {
           const { new: updatedMatchQueue } = payload;
           if (updatedMatchQueue.user_id === userInfo.id) {
             setIsMatching(false);
-            router.push(`/chat?room=${updatedMatchQueue.room_id}`);
+            router.push(`/lesson/room=${updatedMatchQueue.room_id}`);
           }
         })
         .subscribe((status) => {
