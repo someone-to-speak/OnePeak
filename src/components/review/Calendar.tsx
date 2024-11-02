@@ -105,7 +105,10 @@ const MiniCalendar: React.FC<{ onSelectDate: (date: Date) => void }> = ({ onSele
               className={`py-2 cursor-pointer ${
                 date.getMonth() === currentDate.getMonth() ? "text-black" : "text-gray-300"
               }
-              ${date.toDateString() === today.toDateString() ? "bg-blue-100 font-bold rounded-lg" : ""}`}
+              ${date.toDateString() === today.toDateString() ? "bg-blue-100 font-bold rounded-lg" : ""}
+              ${
+                selectedDate.toDateString() === date.toDateString() ? "bg-blue-300 text-white font-bold rounded-lg" : ""
+              }`}
             >
               {date.getDate()}
             </div>
