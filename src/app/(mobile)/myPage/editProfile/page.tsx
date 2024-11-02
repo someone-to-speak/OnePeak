@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../../../database.types";
 import { uploadImage } from "@/utils/myPage/imageUpload";
 import { Input, Button, Spinner } from "@nextui-org/react";
-import { Camera, Icon } from "lucide-react";
+import { Camera, Fullscreen } from "lucide-react";
 import Image from "next/image";
 
 type UserInfoType = Tables<"user_info">;
@@ -15,12 +15,11 @@ const EditProfile = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId");
-  const [profile, setProfile] = useState<UserInfoType | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<UserInfoType | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // 미리보기 URL 상태 추가
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -32,10 +31,8 @@ const EditProfile = () => {
       const { data, error } = await supabase.from("user_info").select("*").eq("id", userId).single();
 
       if (error) {
-        console.error("프로필 불러오기 오류", error);
         setError("프로필 정보를 가져오는 데 실패했습니다.");
       } else {
-        setProfile(data);
         setSelectedProfile(data);
         setPreviewUrl(data.profile_url);
       }
@@ -103,17 +100,20 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center h-screen">
-      <form onSubmit={handleSubmit} className="flex-grow flex flex-col items-center justify-center space-y-4">
-        <div className="flex flex-col items-center justify-center">
-          <div className="relative flex-shrink-0 mb-4">
-            <Image
-              src={previewUrl || "/images/profile.png"}
-              alt="프로필 이미지"
-              width={200}
-              height={200}
-              className="rounded-full border-2 border-gray-300 object-cover"
-            />
+    <div className="flex flex-col justify-center">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center mt-[100px]">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="relative">
+            <div className="w-[200px] h-[200px] overflow-hidden rounded-full shadow-md relative">
+              <Image
+                fill
+                src={previewUrl || "/images/profile.png"}
+                alt="프로필 이미지"
+                className="rounded-full object-cover h-[100px] w-[100px]"
+                priority
+                sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
+              />
+            </div>
             <label htmlFor="file-upload" className="absolute right-0 bottom-0 mb-1 mr-1 cursor-pointer">
               <input type="file" id="file-upload" onChange={handleFileChange} className="hidden" />
               <Button
@@ -125,28 +125,31 @@ const EditProfile = () => {
               </Button>
             </label>
           </div>
-          <Input
-            type="text"
-            label="닉네임"
-            value={selectedProfile?.nickname || ""}
-            onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, nickname: e.target.value }))}
-            required
-            className="max-w-xs text-center outline-none"
-            description={"최대 12 글자"}
-          />
-          <Input
-            type="text"
-            label="상태 메시지"
-            value={selectedProfile?.state_msg || ""}
-            onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, state_msg: e.target.value }))}
-            required
-            className="max-w-xs text-center outline-none"
-            description={"최대 12 글자"}
-          />
+          <div className="flex flex-col">
+            <Input
+              type="text"
+              value={selectedProfile?.nickname}
+              onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, nickname: e.target.value }))}
+              required
+              className="max-w-xs text-center"
+            />
+            <Input
+              type="text"
+              value={selectedProfile?.state_msg}
+              onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, state_msg: e.target.value }))}
+              required
+              className="max-w-xs text-center"
+            />
+          </div>
         </div>
-        <Button type="submit" disabled={loading} className="mt-auto w-full">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="absolute inset-x-0 bottom-[58px] h-16 bg-gray-200 w-full text-center p-2"
+        >
           {loading ? <Spinner size="sm" /> : "수정 완료"}
         </Button>
+
         {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </form>
     </div>

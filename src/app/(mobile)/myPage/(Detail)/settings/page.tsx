@@ -33,17 +33,15 @@ const SettingsPage = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw error;
-      if (data.user) {
-        setUserId(data.user.id);
-        console.log("User ID:", data.user.id);
+      const { data } = await supabase.auth.getSession();
+      if (data?.session?.user?.id) {
+        setUserId(data.session.user.id);
         const { data: languages, error: langError } = await supabase
           .from("user_info")
           .select(
             "my_language, learn_language, learn_language:language!user_info_learn_language_fkey(language_img_url, language_name), my_language:language!user_info_my_language_fkey(language_img_url, language_name)"
           )
-          .eq("id", data.user.id)
+          .eq("id", data.session.user.id)
           .single();
 
         if (langError) throw langError;
