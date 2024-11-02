@@ -53,8 +53,8 @@ const VideoChat = () => {
   }, [handleStopRecording, router]);
 
   useEffect(() => {
-    if (!roomId) return;
-
+    if (!channel.current) return;
+    console.log("useEffect");
     // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
       // if (!channel.current) return;
@@ -101,7 +101,7 @@ const VideoChat = () => {
     return () => {
       cleanUp();
     };
-  }, []);
+  }, [handleLeaveAloneSignal, handleCloseMatchingSignal, roomId]);
 
   return (
     <div>
