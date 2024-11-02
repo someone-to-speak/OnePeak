@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
-import Calendar from "@/components/review/Calendar";
+import Calendar from "@/components/calendar/Calendar";
 import { useState } from "react";
 import { reviewApi } from "@/app/services/supabaseChatbot";
 import { dateUtils } from "@/utils/chatbot/date";
@@ -20,8 +20,6 @@ const page = () => {
     queryKey: ["userInfo"],
     queryFn: reviewApi.getUserInfo
   });
-
-  console.log("user", user);
 
   // 리뷰 데이터 조회
   const {
