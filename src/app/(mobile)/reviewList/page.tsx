@@ -12,7 +12,10 @@ type ReviewType = Tables<"review">;
 const page = () => {
   const supabase = createClient();
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12);
+  });
 
   // 유저 정보 조회
   const getUserInfo = async () => {
