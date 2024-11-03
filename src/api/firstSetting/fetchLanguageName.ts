@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/client";
-import { Tables } from "../../../database.types";
 
 type LanguageName = { language_name: string };
 const supabase = createClient();
