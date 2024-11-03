@@ -24,7 +24,7 @@ const ChatMessage = () => {
   const initiateChat = () => {
     const initialMessage: Message = {
       role: "system",
-      content: "안녕하세요! 준비가 되셨다면 start라고 입력해주세요!"
+      content: "안녕하세요! 준비가 되셨다면 start라고 입력해주세요."
     };
     setMessages([initialMessage]);
   };
@@ -93,8 +93,56 @@ const ChatMessage = () => {
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(chuncksRef.current, { type: mimeType });
-        console.log("최종 오디오 타입: ", audioBlob.type); // 디버깅용
+        try {
+          const audioBlob = new Blob(chuncksRef.current, { type: mimeType });
+
+          // 오디오 길이/크기 체크
+          if (audioBlob.size < 1000) {
+            // 1KB 미만이면 무시
+            console.log("녹음된 내용이 너무 짧거나 없습니다.");
+            return;
+          }
+
+          const file = new File([audioBlob], "audio.webm", {
+            type: mimeType
+          });
+
+          const text = await convertSpeechToText(file);
+
+          if (text.includes("MBC 뉴스 이덕영입니다")) {
+            console.log("유효하지 않은 음성 인식 결과");
+            return; // 함수 종료
+          }
+
+          const trimmedText = text.trim();
+          if (!trimmedText || trimmedText.length < 2) {
+            return;
+          }
+          // 바로 채팅 전송
+          const userMessage: Message = {
+            role: "user",
+            content: text
+          };
+
+          const newMessages: Message[] = [...messages, userMessage];
+          setMessages(newMessages);
+
+          // 챗봇 응답 가져오기
+          if (situation && level !== undefined) {
+            const botResponse = await getChatResponse(newMessages, situation, level);
+
+            if (botResponse) {
+              const botMessage: Message = {
+                role: "system",
+                content: botResponse
+              };
+              setMessages((prevMessages) => [...prevMessages, botMessage]);
+              setUserInput("");
+            }
+          }
+        } catch (error) {
+          console.log("음성 변환 실패: ", error);
+        }
 
         try {
           const audioBlob = new Blob(chuncksRef.current, { type: "audio/webm" });
@@ -115,7 +163,7 @@ const ChatMessage = () => {
           }
 
           const text = await convertSpeechToText(audioFile);
-          setUserInput(text);
+          // setUserInput(text);
         } catch (error) {
           console.error("음성 변환 실패:", error);
           alert("음성을 텍스트로 변환하는데 실패했습니다. ");
@@ -172,7 +220,7 @@ const ChatMessage = () => {
           className={`ml-2 px-4 py-2 rounded ${isRecording ? "bg-red-500" : "bg-gray-500"} text-white`}
           onClick={isRecording ? stopRecording : startRecording}
         >
-          {isRecording ? "🎤 중지" : "🎤 음성입력"}
+          {isRecording ? "🎤 전송" : "🎤 음성입력"}
         </button>
         <button className="ml-2 px-4 py-2 bg-blue-500 text-white rounded" type="submit">
           전송
