@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Tables } from "../../../../database.types";
 
-type situationType = Tables<"situation">;
+type SituationType = Tables<"situation">;
 
 const TodayLearn = () => {
   const supabase = createClient();
@@ -66,7 +66,7 @@ const TodayLearn = () => {
     userId: string;
     situation: string;
     level: number;
-  }): Promise<situationType> => {
+  }): Promise<SituationType> => {
     // 오늘 날짜 생성
     const today = new Date();
     const todayString = format(today, "yyyy-MM-dd");
@@ -106,7 +106,7 @@ const TodayLearn = () => {
 
   const mutation = useMutation({
     mutationFn: addReview,
-    onSuccess: (data: situationType) => {
+    onSuccess: (data: SituationType) => {
       router.push(`/chatbot?situation=${data.situation}&level=${data.level}`);
     },
     onError: (error) => {

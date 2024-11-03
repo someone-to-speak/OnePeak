@@ -11,7 +11,7 @@ import { ReviewList } from "@/components/chatBot/review/ReviewList";
 
 type ReviewType = Tables<"review">;
 
-const page = () => {
+const ReviewDetail = () => {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState<Date>(dateUtils.getToday());
 
@@ -63,4 +63,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ReviewDetail;

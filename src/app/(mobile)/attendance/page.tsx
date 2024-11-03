@@ -4,7 +4,7 @@ import Calendar from "@/components/calendar/Calendar";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const page = () => {
+const AttendanceCheck = () => {
   const router = useRouter();
 
   const handleDateSelect = () => {};
@@ -21,4 +21,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AttendanceCheck;
