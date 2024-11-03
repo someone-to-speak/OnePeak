@@ -14,7 +14,7 @@ const VideoChat = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id");
   const { data: userId } = useUserInfo();
-  console.log("userId1: ", userId);
+
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
