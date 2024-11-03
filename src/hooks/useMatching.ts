@@ -16,7 +16,6 @@ export const useMatching = () => {
 
   const setupMatchingChannel = async () => {
     if (!userInfo) return;
-    const uuid = uuidv4();
 
     setIsMatching(true);
 
@@ -29,7 +28,7 @@ export const useMatching = () => {
 
     if (roomId) {
       setIsMatching(false);
-      router.push(`/lesson/room?id=${uuid}`);
+      router.push(`/lesson/room?id=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
 
@@ -37,7 +36,7 @@ export const useMatching = () => {
         const { new: updatedMatchQueue } = payload;
         if (updatedMatchQueue.user_id === userInfo.id) {
           setIsMatching(false);
-          router.push(`/lesson/room?id=${uuid}`);
+          router.push(`/lesson/room?id=${roomId}`);
         }
       });
       matchingChannel.subscribe();
