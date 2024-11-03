@@ -14,6 +14,7 @@ export const signInWithProvider = async (provider: Provider) => {
       redirectTo: "http://localhost:3000/auth/callback"
     }
   });
+  console.log(data); // build 오류 임시 해결
 };
 
 export const signOut = async () => {

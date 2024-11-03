@@ -6,6 +6,7 @@ import Image from "next/image";
 import { UserPen } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../database.types";
+import { PageProps } from "../../../.next/types/app/layout";
 
 type UserProfileProps = {
   userId: string; // userId의 UUID 타입

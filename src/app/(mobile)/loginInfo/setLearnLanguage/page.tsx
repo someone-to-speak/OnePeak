@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 
-const learnLanguages = ["영어", "일본어", "스페인어", "프랑스어"];
+// const learnLanguages = ["영어", "일본어", "스페인어", "프랑스어"];
 
 export default function SetLearnLanguage() {
   const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
