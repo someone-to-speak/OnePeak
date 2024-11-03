@@ -8,6 +8,7 @@ import { uploadRecording } from "@/api/supabase/record";
 import { SignalData } from "@/types/chatType/chatType";
 
 const VideoChat = () => {
+  console.log("videoCHat");
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id")?.split(",")[0];
@@ -17,48 +18,46 @@ const VideoChat = () => {
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
 
-  // const handleCloseMatching = async () => {
-  //   channel.current?.send({
-  //     type: "broadcast",
-  //     event: "closeMatching"
-  //   });
+  const handleCloseMatching = async () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "closeMatching"
+    });
 
-  //   await handleCloseMatchingSignal();
-  // };
+    await handleCloseMatchingSignal();
+  };
 
-  // const handleLeaveAloneSignal = useCallback(async () => {
-  //   channel.current?.unsubscribe();
-  //   await webrtcServiceRef.current?.closeConnection();
-  //   router.push("/lesson");
-  // }, [router]);
+  const handleLeaveAloneSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [router]);
 
-  // const handleStopRecording = useCallback(async () => {
-  //   const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+  const handleStopRecording = useCallback(async () => {
+    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
-  //   if (localAudioBlob && roomId) {
-  //     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  //     const fileName = `${roomId}_${timestamp}.webm`;
+    if (localAudioBlob && roomId) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const fileName = `${roomId}_${timestamp}.webm`;
 
-  //     await uploadRecording(localAudioBlob, fileName);
-  //   } else {
-  //     console.error("Recording failed: No local blob available.");
-  //   }
-  // }, [roomId]);
+      await uploadRecording(localAudioBlob, fileName);
+    } else {
+      console.error("Recording failed: No local blob available.");
+    }
+  }, [roomId]);
 
-  // const handleCloseMatchingSignal = useCallback(async () => {
-  //   channel.current?.unsubscribe();
-  //   await handleStopRecording();
-  //   await webrtcServiceRef.current?.closeConnection();
-  //   router.push("/lesson");
-  // }, [handleStopRecording, router]);
+  const handleCloseMatchingSignal = useCallback(async () => {
+    channel.current?.unsubscribe();
+    await handleStopRecording();
+    await webrtcServiceRef.current?.closeConnection();
+    router.push("/lesson");
+  }, [handleStopRecording, router]);
 
   useEffect(() => {
-    if (!channel.current || !roomId) return;
+    // if (!channel.current || !roomId) return;
     console.log("useEffect");
-    // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
+    // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
-      // if (!channel.current) return;
-
       channel.current
         .on(
           "broadcast",
@@ -85,27 +84,22 @@ const VideoChat = () => {
           if (roomId === "4617f0a7-db02-41ce-99ae-6b720bf6ce82") {
             await webrtcServiceRef.current.createOffer();
           }
-
           // sdp 정보 발신
           // await webrtcServiceRef.current.createOffer();
         }
       });
     };
-
     init();
-
-    // const cleanUp = async () => {
-    //   channel.current?.send({
-    //     type: "broadcast",
-    //     event: "leaveAlone"
-    //   });
-
-    //   await handleLeaveAloneSignal();
-    // };
-
-    // return () => {
-    // cleanUp();
-    // };
+    const cleanUp = async () => {
+      channel.current?.send({
+        type: "broadcast",
+        event: "leaveAlone"
+      });
+      await handleLeaveAloneSignal();
+    };
+    return () => {
+      cleanUp();
+    };
   }, []);
 
   return (
@@ -113,8 +107,8 @@ const VideoChat = () => {
       <h1>1:1 화상 채팅</h1>
       <button>종료하기</button>
       <div className="flex flex-col h-auto">
-        <video ref={remoteVideoRef} autoPlay />
-        <video ref={localVideoRef} autoPlay />
+        {/* <video ref={remoteVideoRef} autoPlay /> */}
+        {/* <video ref={localVideoRef} autoPlay /> */}
       </div>
     </div>
   );
