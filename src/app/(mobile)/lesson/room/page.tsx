@@ -81,11 +81,11 @@ const VideoChat = () => {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
           await webrtcServiceRef.current.init();
-          // if (roomId === "4617f0a7-db02-41ce-99ae-6b720bf6ce82") {
-          //   await webrtcServiceRef.current.createOffer();
-          // }
+          if (roomId === "4617f0a7-db02-41ce-99ae-6b720bf6ce82") {
+            await webrtcServiceRef.current.createOffer();
+          }
           // sdp 정보 발신
-          await webrtcServiceRef.current.createOffer();
+          // await webrtcServiceRef.current.createOffer();
         }
       });
     };
