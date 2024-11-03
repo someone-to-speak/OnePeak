@@ -17,7 +17,7 @@ const WrongGrammarPage = async () => {
 
   return (
     <div>
-      <h1>단어 오답노트</h1>
+      <h1>문법 오답노트</h1>
       <GrammarList userId={userId} />
     </div>
   );
