@@ -12,7 +12,7 @@ import { UUID } from "crypto";
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("id");
+  const roomId = searchParams?.get("id") as UUID;
   const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -43,7 +43,7 @@ const VideoChat = () => {
     const fileName = `${roomId}_${timestamp}.webm`;
 
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
-    await checkOrAddParticipant(roomId as UUID, userId as UUID);
+    await checkOrAddParticipant(roomId as UUID, userId as string);
     await insertMessage(roomId as UUID, url as string, "audio");
   }, []);
 

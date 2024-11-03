@@ -3,9 +3,9 @@ import { UUID } from "crypto";
 
 const supabase = createClient();
 
-export const getUserId = async (): Promise<UUID> => {
+export const getUserId = async () => {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  return user?.id as UUID;
+  return user?.id as string;
 };
