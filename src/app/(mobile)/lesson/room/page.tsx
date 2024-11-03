@@ -106,7 +106,7 @@ const VideoChat = () => {
     <div>
       <h1>1:1 화상 채팅</h1>
       <button>종료하기</button>
-      <div className="flex flex-col h-auto">
+      <div onClick={handleCloseMatching} className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
       </div>
