@@ -48,8 +48,8 @@ const VideoChat = () => {
   }, [userId]);
 
   const handleCloseMatchingSignal = useCallback(async () => {
+    await channel.current?.unsubscribe();
     await handleStopRecording();
-    channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
     router.push("/lesson");
   }, [handleStopRecording, router]);
