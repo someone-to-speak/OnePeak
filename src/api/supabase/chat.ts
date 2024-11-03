@@ -8,7 +8,7 @@ export const createChannel = (roomId: string): RealtimeChannel => {
   return supabase.channel(`video-chat-${roomId}`);
 };
 
-export const getOrCreateConversationId = async (conversationId: string): Promise<void> => {
+export const getOrCreateConversationId = async (conversationId: string) => {
   const { data: conversationData } = await supabase
     .from("conversations")
     .select("id")
@@ -18,7 +18,7 @@ export const getOrCreateConversationId = async (conversationId: string): Promise
   !conversationData && (await supabase.from("conversations").insert({ id: conversationId }));
 };
 
-export const checkOrAddParticipant = async (conversationId: string, participantId: string): Promise<void> => {
+export const checkOrAddParticipant = async (conversationId: string, participantId: string) => {
   const { data: existingParticipant } = await supabase
     .from("participants")
     .select("id")
@@ -33,12 +33,7 @@ export const checkOrAddParticipant = async (conversationId: string, participantI
     }));
 };
 
-export const insertMessage = async (
-  conversationId: string,
-  senderId: string,
-  content: string,
-  type: string
-): Promise<void> => {
+export const insertMessage = async (conversationId: string, senderId: string, content: string, type: string) => {
   await supabase.from("messages").insert({
     conversation_id: conversationId,
     sender_id: senderId,
