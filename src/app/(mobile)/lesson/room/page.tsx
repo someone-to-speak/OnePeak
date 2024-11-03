@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { use, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { uploadRecording } from "@/api/supabase/record";
@@ -14,7 +14,7 @@ const VideoChat = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id");
   const { data: userId } = useUserInfo();
-
+  console.log("userId1: ", userId);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
