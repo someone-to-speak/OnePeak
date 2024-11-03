@@ -30,13 +30,14 @@ export const useMatching = () => {
       router.push(`/lesson/room?id=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
-      matchingChannelRef.current = matchingChannel;
+      // matchingChannelRef.current = matchingChannel;
 
       matchingChannel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
         console.log("UPDATE");
         const { new: updatedMatchQueue } = payload;
         if (updatedMatchQueue.user_id === userInfo.id) {
           setIsMatching(false);
+          matchingChannel.unsubscribe();
           router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
         }
       });
@@ -53,7 +54,7 @@ export const useMatching = () => {
     // setupMatchingChannel();
 
     const cleanUp = async () => {
-      await matchingChannelRef.current?.unsubscribe();
+      // await matchingChannelRef.current?.unsubscribe();
       await removeUserFromQueue(userInfo.id);
     };
 
