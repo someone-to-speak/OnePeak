@@ -13,7 +13,7 @@ export const getOrCreateConversationId = async (conversationId: string) => {
     .from("conversations")
     .select("id")
     .eq("id", conversationId)
-    .single();
+    .maybeSingle();
 
   !conversationData && (await supabase.from("conversations").insert({ id: conversationId }));
 };
@@ -24,7 +24,7 @@ export const checkOrAddParticipant = async (conversationId: string, participantI
     .select("id")
     .eq("user_id", participantId)
     .eq("conversation_id", conversationId)
-    .single();
+    .maybeSingle();
 
   !existingParticipant &&
     (await supabase.from("participants").insert({
