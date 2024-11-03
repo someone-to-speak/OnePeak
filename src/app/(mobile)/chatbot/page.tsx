@@ -2,16 +2,17 @@
 
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { convertSpeechToText, getChatResponse } from "@/utils/chatbot/chatBotApi";
-import { useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useChatMessages } from "@/hooks/useChatMessages";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import ChatInput from "@/components/chatBot/chat/ChatInput";
+import ChatMessageList from "@/components/chatBot/chat/chatMessageList";
 
 const ChatMessage = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [userInput, setUserInput] = useState<string>("");
-
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chuncksRef = useRef<Blob[]>([]);
+  // const [isRecording, setIsRecording] = useState<boolean>(false);
+  // const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  // const chuncksRef = useRef<Blob[]>([]);
 
   const router = useRouter();
 
@@ -20,172 +21,30 @@ const ChatMessage = () => {
   const situation = searchParams?.get("situation") as string;
   const level = Number(searchParams?.get("level"));
 
-  // 챗봇의 첫 메세지 추가
-  const initiateChat = () => {
-    const initialMessage: Message = {
-      role: "system",
-      content: "안녕하세요! 준비가 되셨다면 start라고 입력해주세요."
-    };
-    setMessages([initialMessage]);
-  };
+  const [userInput, setUserInput] = useState<string>("");
+  const { messages, sendMessage } = useChatMessages(situation, level);
 
-  useEffect(() => {
-    initiateChat();
-  }, []);
-
-  // 챗봇과 대화하기
-  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // 사용자 메세지 추가
-    const userMessage: Message = {
-      role: "user",
-      content: userInput
-    };
-
-    const newMessages: Message[] = [...messages, userMessage];
-
-    setMessages(newMessages);
-    setUserInput("");
-
-    // 챗봇의 응답 가져오기
-    if (situation && level !== undefined) {
-      const botResponse = await getChatResponse(newMessages, situation, level);
-
-      if (botResponse) {
-        const botMessage: Message = { role: "assistant", content: botResponse };
-
-        // 챗봇 메세지 추가
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-      }
-    }
-  };
-
-  // 음성 녹음 시작
-  const startRecording = async () => {
+  const handleTranscribedText = async (text: string) => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          sampleRate: 16000
-        }
-      });
-
-      // 브라우저가 지원하는 mimeType 확인
-      let mimeType = "audio/webm";
-      if (MediaRecorder.isTypeSupported("audio/webm")) {
-        mimeType = "audio/webm";
-      } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
-        mimeType = "audio/ogg";
-      }
-      // 오디오 형식을 명시적으로 지정
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: mimeType
-      });
-
-      mediaRecorderRef.current = mediaRecorder;
-      chuncksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chuncksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        try {
-          const audioBlob = new Blob(chuncksRef.current, { type: mimeType });
-
-          // 오디오 길이/크기 체크
-          if (audioBlob.size < 1000) {
-            // 1KB 미만이면 무시
-            console.log("녹음된 내용이 너무 짧거나 없습니다.");
-            return;
-          }
-
-          const file = new File([audioBlob], "audio.webm", {
-            type: mimeType
-          });
-
-          const text = await convertSpeechToText(file);
-
-          if (text.includes("MBC 뉴스 이덕영입니다")) {
-            console.log("유효하지 않은 음성 인식 결과");
-            return; // 함수 종료
-          }
-
-          const trimmedText = text.trim();
-          if (!trimmedText || trimmedText.length < 2) {
-            return;
-          }
-          // 바로 채팅 전송
-          const userMessage: Message = {
-            role: "user",
-            content: text
-          };
-
-          const newMessages: Message[] = [...messages, userMessage];
-          setMessages(newMessages);
-
-          // 챗봇 응답 가져오기
-          if (situation && level !== undefined) {
-            const botResponse = await getChatResponse(newMessages, situation, level);
-
-            if (botResponse) {
-              const botMessage: Message = {
-                role: "system",
-                content: botResponse
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-              setUserInput("");
-            }
-          }
-        } catch (error) {
-          console.log("음성 변환 실패: ", error);
-        }
-
-        try {
-          const audioBlob = new Blob(chuncksRef.current, { type: "audio/webm" });
-          const audioFile = new File([audioBlob], "audio.webm", {
-            type: "audio/webm"
-          });
-
-          // 파일 크기와 형식 확인
-          console.log("녹음된 파일 정보:", {
-            size: audioFile.size,
-            type: audioFile.type,
-            name: audioFile.name
-          });
-
-          // 빈 파일인지 확인
-          if (audioFile.size === 0) {
-            throw new Error("녹음된 파일이 비어있습니다");
-          }
-
-          const text = await convertSpeechToText(audioFile);
-          // setUserInput(text);
-        } catch (error) {
-          console.error("음성 변환 실패:", error);
-          alert("음성을 텍스트로 변환하는데 실패했습니다. ");
-        }
-      };
-
-      mediaRecorder.start(1000);
-      setIsRecording(true);
+      // 음성으로 변환딘 텍스트를 메세지로 처리
+      await sendMessage(text);
     } catch (error) {
-      console.log("음성 변환 실패: ", error);
-      alert("마이크 접근에 실패하였습니다.");
+      console.log("메세지 전송 실패: ", error);
     }
   };
 
-  // 음성 녹음 중지
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
+  const { isRecording, startRecording, stopRecording } = useAudioRecorder(handleTranscribedText);
 
-      // 스트림 정지
-      mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
+  // 전송 버튼
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!userInput.trim()) return;
+
+    try {
+      await sendMessage(userInput);
+      setUserInput("");
+    } catch (error) {
+      console.log("메세지 전송 실패: ", error);
     }
   };
 
@@ -198,34 +57,18 @@ const ChatMessage = () => {
           </button>
           <h1 className="font-bold">{situation}</h1>
         </div>
-        {messages.map((msg, index) => (
-          <div key={index} className={msg.role}>
-            <strong>{msg.role === "user" ? "나" : "챗봇"}</strong>
-            <div className="border border-spacing-10 text-green-500 p-5">{msg.content}</div>
-          </div>
-        ))}
+        <div className="flex-grow overflow-y-auto p-4 mb-16">
+          <ChatMessageList messages={messages} />
+        </div>
       </div>
-      <div className="overflow-y-auto"></div>
-      <div></div>
-      <form className="sticky bottom-[55px] flex w-full bg-gray-200 p-4" onSubmit={sendMessage}>
-        <input
-          className="flex-grow p-2 rounded border border-gray-400"
-          type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="메세지를 입력해주세요."
-        />
-        <button
-          type="button"
-          className={`ml-2 px-4 py-2 rounded ${isRecording ? "bg-red-500" : "bg-gray-500"} text-white`}
-          onClick={isRecording ? stopRecording : startRecording}
-        >
-          {isRecording ? "🎤 전송" : "🎤 음성입력"}
-        </button>
-        <button className="ml-2 px-4 py-2 bg-blue-500 text-white rounded" type="submit">
-          전송
-        </button>
-      </form>
+      <ChatInput
+        userInput={userInput}
+        setUserInput={setUserInput}
+        isRecording={isRecording}
+        onSubmit={handleSubmit}
+        onStartRecording={startRecording}
+        onStopRecording={stopRecording}
+      />
     </div>
   );
 };
