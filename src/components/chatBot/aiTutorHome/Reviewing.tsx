@@ -26,13 +26,9 @@ const Reviewing = () => {
     try {
       const { data, error } = await supabase.from("review").select("*");
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
-      if (data) {
-        setReviews(data);
-      }
+      if (data) setReviews(data);
     } catch (error) {
       console.log("reviews를 가져오는 데에 실패하였습니다!", error);
     }
@@ -46,37 +42,43 @@ const Reviewing = () => {
   // 필터링된 리뷰
   const filterdReview = reviews.filter((review) => review.user_id === userId);
 
-  // 버튼 핸들러
+  // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
     router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
   };
 
+  // 더보기 버튼 핸들러
+  const handleReviewDetail = () => {
+    router.push("/reviewList");
+  };
+
   return (
-    <div>
+    <div className="relative">
       <h1 className="text-3xl font-bold mt-5">복습하기</h1>
-      <div className="">
-        {
-          // 최대 3개까지만 노출
-          filterdReview.slice(0, 3).map((review) => {
-            return (
-              <div key={review.id}>
-                <div className="flex flex-row justify-between my-5">
-                  <p>{review.situation}</p>
-                  <p>{review.level}</p>
-                </div>
-                <button
-                  onClick={() => {
-                    handleReviewClick(review);
-                  }}
-                  className="w-full p-2 border border-spacing-2"
-                >
-                  복습하기
-                </button>
+      <button onClick={handleReviewDetail} className="absolute right-0">
+        더보기
+      </button>
+      {
+        // 최대 3개까지만 노출
+        filterdReview.slice(0, 3).map((review) => {
+          return (
+            <div key={review.id}>
+              <div className="flex flex-row justify-between my-5">
+                <p>{review.situation}</p>
+                <p>{review.level}</p>
               </div>
-            );
-          })
-        }
-      </div>
+              <button
+                onClick={() => {
+                  handleReviewClick(review);
+                }}
+                className="w-full p-2 border border-spacing-2"
+              >
+                복습하기
+              </button>
+            </div>
+          );
+        })
+      }
     </div>
   );
 };

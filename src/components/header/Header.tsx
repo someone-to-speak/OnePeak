@@ -1,6 +1,7 @@
 "use client";
 
 import { getUser, signInWithProvider, signOut } from "@/app/services/supabaseAuth";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Header = () => {
@@ -32,7 +33,7 @@ const Header = () => {
           <span>{name}</span>
           <button onClick={handleSignInWithGoogle}>구글 로그인</button>
           <button onClick={handleSignOut}>로그아웃</button>
-          <>출석</>
+          <Link href="/attendance">출석</Link>
           <>알림</>
         </div>
       </div>
