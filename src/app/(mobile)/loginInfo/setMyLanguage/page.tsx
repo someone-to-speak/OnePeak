@@ -21,6 +21,8 @@ export default function SetMyLanguage() {
     queryFn: () => fetchLanguageName()
   });
 
+  const supportingLanguages = languages?.map((language) => language.language_name);
+
   // 로딩 상태
   if (languagesLoading) return <p>Loading...</p>;
   // 오류 상태
@@ -29,9 +31,6 @@ export default function SetMyLanguage() {
   const handleContinue = async () => {
     const { data } = await supabase.auth.getSession();
     const userId = data?.session?.user?.id;
-
-    console.log("User ID:", userId); // 유저 ID 확인
-    console.log("mylanguage to update:", selectedMyLanguage); // 업데이트할 닉네임 확인
 
     if (userId && selectedMyLanguage) {
       const { error } = await supabase.from("user_info").update({ my_language: selectedMyLanguage }).eq("id", userId);
@@ -47,15 +46,13 @@ export default function SetMyLanguage() {
       <h1>너의 모국어 알려줘</h1>
       <p>본인의 모국어를 설정해주시면 됩니다.</p>
       <div className="flex flex-col justify-center items-center">
-        {languages?.map((language, index) => (
+        {supportingLanguages?.map((language, index) => (
           <button
             key={index}
-            onClick={() => setSelectedMyLanguage(language.language_name)}
-            className={`w-[50%] p-2 m-2 rounded ${
-              selectedMyLanguage === language.language_name ? "bg-green-500" : "bg-gray-300"
-            }`}
+            onClick={() => setSelectedMyLanguage(language)}
+            className={`w-[50%] p-2 m-2 rounded ${selectedMyLanguage === language ? "bg-green-500" : "bg-gray-300"}`}
           >
-            {language.language_name}
+            {language}
           </button>
         ))}
       </div>
