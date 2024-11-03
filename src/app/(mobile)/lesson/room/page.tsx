@@ -103,9 +103,9 @@ const VideoChat = () => {
     //   await handleLeaveAloneSignal();
     // };
 
-    return () => {
-      // cleanUp();
-    };
+    // return () => {
+    // cleanUp();
+    // };
   }, []);
 
   return (
