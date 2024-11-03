@@ -1,4 +1,4 @@
-import { getUserId } from "@/repositories/clientRepository";
+import { getUserId } from "@/api/supabase/user";
 import { getUserForMatching } from "@/repositories/matchingRepository";
 import { UserInfoForMatching } from "@/types/userType.ts/userType";
 

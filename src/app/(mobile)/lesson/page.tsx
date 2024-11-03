@@ -6,7 +6,6 @@ import img1 from "@/../public/images/book.jpg";
 import Image from "next/image";
 
 const LessonPage = () => {
-  console.log("lesson");
   const { setupMatchingChannel, userInfo, isLoading, isError, isMatching } = useMatching();
 
   const handleClickMachingButton = async () => {

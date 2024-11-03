@@ -3,15 +3,16 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
-import { createChannel } from "@/repositories/clientRepository";
 import { uploadRecording } from "@/api/supabase/record";
 import { SignalData } from "@/types/chatType/chatType";
+import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
+import { useUserInfo } from "@/hooks/getUserInfo";
 
 const VideoChat = () => {
-  console.log("videoCHat");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const roomId = searchParams?.get("id")?.split(",")[0];
+  const roomId = searchParams?.get("id");
+  const { data: userId } = useUserInfo();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -24,6 +25,7 @@ const VideoChat = () => {
       event: "closeMatching"
     });
 
+    await getOrCreateConversationId(roomId as string);
     await handleCloseMatchingSignal();
   };
 
@@ -36,26 +38,24 @@ const VideoChat = () => {
   const handleStopRecording = useCallback(async () => {
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
-    if (localAudioBlob && roomId) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileName = `${roomId}_${timestamp}.webm`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const fileName = `${roomId}_${timestamp}.webm`;
 
-      await uploadRecording(localAudioBlob, fileName);
-    } else {
-      console.error("Recording failed: No local blob available.");
-    }
-  }, [roomId]);
+    const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
+    await checkOrAddParticipant(roomId as string, userId as string);
+    await insertMessage(roomId as string, userId as string, url as string, "audio");
+  }, []);
 
   const handleCloseMatchingSignal = useCallback(async () => {
-    channel.current?.unsubscribe();
     await handleStopRecording();
+    channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
     router.push("/lesson");
   }, [handleStopRecording, router]);
 
   useEffect(() => {
-    // if (!channel.current || !roomId) return;
-    console.log("useEffect");
+    if (!channel.current || !roomId) return;
+
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
       channel.current
@@ -81,15 +81,15 @@ const VideoChat = () => {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
           await webrtcServiceRef.current.init();
-          // if (roomId === "4617f0a7-db02-41ce-99ae-6b720bf6ce82") {
-          //   await webrtcServiceRef.current.createOffer();
-          // }
+
           // sdp 정보 발신
           await webrtcServiceRef.current.createOffer();
         }
       });
     };
+
     init();
+
     const cleanUp = async () => {
       channel.current?.send({
         type: "broadcast",
@@ -97,6 +97,7 @@ const VideoChat = () => {
       });
       await handleLeaveAloneSignal();
     };
+
     return () => {
       cleanUp();
     };
