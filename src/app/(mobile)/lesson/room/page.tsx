@@ -11,46 +11,46 @@ const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id")?.split(",")[0];
-  console.log("roomId: ", roomId);
+
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
 
-  const handleCloseMatching = async () => {
-    channel.current?.send({
-      type: "broadcast",
-      event: "closeMatching"
-    });
+  // const handleCloseMatching = async () => {
+  //   channel.current?.send({
+  //     type: "broadcast",
+  //     event: "closeMatching"
+  //   });
 
-    await handleCloseMatchingSignal();
-  };
+  //   await handleCloseMatchingSignal();
+  // };
 
-  const handleLeaveAloneSignal = useCallback(async () => {
-    channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  }, [router]);
+  // const handleLeaveAloneSignal = useCallback(async () => {
+  //   channel.current?.unsubscribe();
+  //   await webrtcServiceRef.current?.closeConnection();
+  //   router.push("/lesson");
+  // }, [router]);
 
-  const handleStopRecording = useCallback(async () => {
-    const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+  // const handleStopRecording = useCallback(async () => {
+  //   const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
-    if (localAudioBlob && roomId) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const fileName = `${roomId}_${timestamp}.webm`;
+  //   if (localAudioBlob && roomId) {
+  //     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  //     const fileName = `${roomId}_${timestamp}.webm`;
 
-      await uploadRecording(localAudioBlob, fileName);
-    } else {
-      console.error("Recording failed: No local blob available.");
-    }
-  }, [roomId]);
+  //     await uploadRecording(localAudioBlob, fileName);
+  //   } else {
+  //     console.error("Recording failed: No local blob available.");
+  //   }
+  // }, [roomId]);
 
-  const handleCloseMatchingSignal = useCallback(async () => {
-    channel.current?.unsubscribe();
-    await handleStopRecording();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  }, [handleStopRecording, router]);
+  // const handleCloseMatchingSignal = useCallback(async () => {
+  //   channel.current?.unsubscribe();
+  //   await handleStopRecording();
+  //   await webrtcServiceRef.current?.closeConnection();
+  //   router.push("/lesson");
+  // }, [handleStopRecording, router]);
 
   useEffect(() => {
     if (!channel.current || !roomId) return;
@@ -74,9 +74,9 @@ const VideoChat = () => {
           "broadcast",
           { event: "answer" },
           async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
-        )
-        .on("broadcast", { event: "leaveAlone" }, async () => handleLeaveAloneSignal())
-        .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal());
+        );
+      // .on("broadcast", { event: "leaveAlone" }, async () => await handleLeaveAloneSignal())
+      // .on("broadcast", { event: "closeMatching" }, async () => await handleCloseMatchingSignal());
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
@@ -94,24 +94,24 @@ const VideoChat = () => {
 
     init();
 
-    const cleanUp = async () => {
-      channel.current?.send({
-        type: "broadcast",
-        event: "leaveAlone"
-      });
+    // const cleanUp = async () => {
+    //   channel.current?.send({
+    //     type: "broadcast",
+    //     event: "leaveAlone"
+    //   });
 
-      await handleLeaveAloneSignal();
-    };
+    //   await handleLeaveAloneSignal();
+    // };
 
     return () => {
       // cleanUp();
     };
-  }, [handleLeaveAloneSignal, handleCloseMatchingSignal, roomId]);
+  }, []);
 
   return (
     <div>
       <h1>1:1 화상 채팅</h1>
-      <button onClick={handleCloseMatching}>종료하기</button>
+      <button>종료하기</button>
       <div className="flex flex-col h-auto">
         <video ref={remoteVideoRef} autoPlay />
         <video ref={localVideoRef} autoPlay />
