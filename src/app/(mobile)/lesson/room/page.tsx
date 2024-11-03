@@ -43,7 +43,7 @@ const VideoChat = () => {
     const fileName = `${roomId}_${timestamp}.webm`;
 
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
-    await checkOrAddParticipant(roomId as UUID, userId as string);
+    await checkOrAddParticipant(roomId as UUID, userId as UUID);
     await insertMessage(roomId as UUID, url as string, "audio");
   }, []);
 

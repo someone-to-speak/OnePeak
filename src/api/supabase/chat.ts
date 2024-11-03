@@ -19,7 +19,7 @@ export const getOrCreateConversationId = async (conversationId: UUID) => {
   !conversationData && (await supabase.from("conversations").insert({ id: conversationId }));
 };
 
-export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
+export const checkOrAddParticipant = async (conversationId: UUID, participantId: UUID) => {
   const { data: existingParticipant } = await supabase
     .from("participants")
     .select("id")
