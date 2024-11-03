@@ -14,7 +14,7 @@ const VideoChat = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as UUID;
   const { data: userId } = useUserInfo();
-
+  console.log("userId: ", userId);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
@@ -45,7 +45,7 @@ const VideoChat = () => {
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
     await checkOrAddParticipant(roomId as UUID, userId as string);
     await insertMessage(roomId as UUID, url as string, "audio");
-  }, []);
+  }, [userId]);
 
   const handleCloseMatchingSignal = useCallback(async () => {
     await handleStopRecording();
