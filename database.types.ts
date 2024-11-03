@@ -536,7 +536,22 @@ export type Database = {
           profile_url?: string
           state_msg?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_info_learn_language_fkey"
+            columns: ["learn_language"]
+            isOneToOne: false
+            referencedRelation: "language"
+            referencedColumns: ["language_name"]
+          },
+          {
+            foreignKeyName: "user_info_my_language_fkey"
+            columns: ["my_language"]
+            isOneToOne: false
+            referencedRelation: "language"
+            referencedColumns: ["language_name"]
+          },
+        ]
       }
     }
     Views: {
