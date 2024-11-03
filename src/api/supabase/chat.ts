@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { UUID } from "crypto";
 
 const supabase = createClient();
 
@@ -8,7 +9,7 @@ export const createChannel = (roomId: string): RealtimeChannel => {
   return supabase.channel(`video-chat-${roomId}`);
 };
 
-export const getOrCreateConversationId = async (conversationId: string) => {
+export const getOrCreateConversationId = async (conversationId: UUID) => {
   const { data: conversationData } = await supabase
     .from("conversations")
     .select("id")
@@ -18,7 +19,7 @@ export const getOrCreateConversationId = async (conversationId: string) => {
   !conversationData && (await supabase.from("conversations").insert({ id: conversationId }));
 };
 
-export const checkOrAddParticipant = async (conversationId: string, participantId: string) => {
+export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
   const { data: existingParticipant } = await supabase
     .from("participants")
     .select("id")
@@ -34,7 +35,7 @@ export const checkOrAddParticipant = async (conversationId: string, participantI
     }));
 };
 
-export const insertMessage = async (conversationId: string, content: string, type: string) => {
+export const insertMessage = async (conversationId: UUID, content: string, type: string) => {
   await supabase.from("messages").insert({
     conversation_id: conversationId,
     content,

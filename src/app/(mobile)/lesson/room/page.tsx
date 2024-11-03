@@ -7,6 +7,7 @@ import { uploadRecording } from "@/api/supabase/record";
 import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { useUserInfo } from "@/hooks/getUserInfo";
+import { UUID } from "crypto";
 
 const VideoChat = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const VideoChat = () => {
       event: "closeMatching"
     });
 
-    await getOrCreateConversationId(roomId as string);
+    await getOrCreateConversationId(roomId as UUID);
     await handleCloseMatchingSignal();
   };
 
@@ -42,8 +43,8 @@ const VideoChat = () => {
     const fileName = `${roomId}_${timestamp}.webm`;
 
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
-    await checkOrAddParticipant(roomId as string, userId as string);
-    await insertMessage(roomId as string, url as string, "audio");
+    await checkOrAddParticipant(roomId as UUID, userId as string);
+    await insertMessage(roomId as UUID, url as string, "audio");
   }, []);
 
   const handleCloseMatchingSignal = useCallback(async () => {
