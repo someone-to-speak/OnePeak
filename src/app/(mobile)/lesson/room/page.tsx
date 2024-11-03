@@ -43,7 +43,7 @@ const VideoChat = () => {
 
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
     await checkOrAddParticipant(roomId as string, userId as string);
-    await insertMessage(roomId as string, userId as string, url as string, "audio");
+    await insertMessage(roomId as string, url as string, "audio");
   }, []);
 
   const handleCloseMatchingSignal = useCallback(async () => {

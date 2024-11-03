@@ -28,15 +28,13 @@ export const checkOrAddParticipant = async (conversationId: string, participantI
 
   !existingParticipant &&
     (await supabase.from("participants").insert({
-      user_id: participantId,
       conversation_id: conversationId
     }));
 };
 
-export const insertMessage = async (conversationId: string, senderId: string, content: string, type: string) => {
+export const insertMessage = async (conversationId: string, content: string, type: string) => {
   await supabase.from("messages").insert({
     conversation_id: conversationId,
-    sender_id: senderId,
     content,
     type
   });
