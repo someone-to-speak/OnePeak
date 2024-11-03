@@ -26,6 +26,8 @@ export const checkOrAddParticipant = async (conversationId: string, participantI
     .eq("conversation_id", conversationId)
     .maybeSingle();
 
+  if (existingParticipant) return;
+
   !existingParticipant &&
     (await supabase.from("participants").insert({
       conversation_id: conversationId
