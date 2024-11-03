@@ -6,6 +6,7 @@ import { removeUserFromQueue } from "@/repositories/matchingRepository";
 import { useUserInfoForMatching } from "@/hooks/getUserInfo";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 export const useMatching = () => {
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
@@ -15,6 +16,7 @@ export const useMatching = () => {
 
   const setupMatchingChannel = async () => {
     if (!userInfo) return;
+    const uuid = uuidv4();
 
     setIsMatching(true);
 
@@ -27,7 +29,7 @@ export const useMatching = () => {
 
     if (roomId) {
       setIsMatching(false);
-      router.push(`/lesson/room?id=${roomId}`);
+      router.push(`/lesson/room?id=${uuid}`);
     } else {
       const matchingChannel = supabase.channel("matches");
 
@@ -35,7 +37,7 @@ export const useMatching = () => {
         const { new: updatedMatchQueue } = payload;
         if (updatedMatchQueue.user_id === userInfo.id) {
           setIsMatching(false);
-          router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
+          router.push(`/lesson/room?id=${uuid}`);
         }
       });
       matchingChannel.subscribe();
