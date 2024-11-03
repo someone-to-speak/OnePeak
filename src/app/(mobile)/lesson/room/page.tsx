@@ -8,13 +8,13 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { useUserInfo } from "@/hooks/getUserInfo";
 import { UUID } from "crypto";
+import { getUserId } from "@/api/supabase/user";
 
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as UUID;
-  const { data: userId } = useUserInfo();
-  console.log("userId: ", userId);
+
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
@@ -37,15 +37,16 @@ const VideoChat = () => {
   }, [router]);
 
   const handleStopRecording = useCallback(async () => {
+    const userId = await getUserId();
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `${roomId}_${timestamp}.webm`;
 
     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
-    await checkOrAddParticipant(roomId as UUID, userId as string);
+    await checkOrAddParticipant(roomId as UUID, userId);
     await insertMessage(roomId as UUID, url as string, "audio");
-  }, [userId]);
+  }, []);
 
   const handleCloseMatchingSignal = useCallback(async () => {
     await channel.current?.unsubscribe();
@@ -99,9 +100,9 @@ const VideoChat = () => {
       await handleLeaveAloneSignal();
     };
 
-    return () => {
-      cleanUp();
-    };
+    // return () => {
+    //   cleanUp();
+    // };
   }, []);
 
   return (
