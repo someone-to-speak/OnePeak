@@ -7,7 +7,11 @@ export const getUserForMatching = async () => {
   const { data: auth } = await supabase.auth.getUser();
 
   const userId = auth.user?.id;
-  const { data } = await supabase.from("user_info").select("id, my_language, learn_language").eq("id", userId).single();
+  const { data } = await supabase
+    .from("user_info")
+    .select("id, my_language, learn_language")
+    .eq("id", userId as string)
+    .single();
 
   return data as UserInfoForMatching;
 };

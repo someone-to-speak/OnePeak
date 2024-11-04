@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 
-export const uploadRecording = async (fileBlob: Blob, fileName: string, roomId: string) => {
+export const uploadRecording = async (fileBlob: Blob, fileName: string) => {
   const supabase = createClient();
 
   const { data: uploadData, error: uploadError } = await supabase.storage

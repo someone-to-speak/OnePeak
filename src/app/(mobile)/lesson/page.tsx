@@ -53,10 +53,9 @@ const LessonPage = () => {
       {/* 기존 페이지 내용 */}
       <div className={isMatching ? "opacity-50 pointer-events-none" : ""}>
         <h1>언어수업</h1>
+        <button onClick={handleClickMachingButton}>매칭하기</button>
         <Image src={img1} alt={"Image1"} />
         <p>학습언어 : {userInfo?.learn_language}</p>
-
-        <button onClick={handleClickMachingButton}>매칭하기</button>
       </div>
     </>
   );

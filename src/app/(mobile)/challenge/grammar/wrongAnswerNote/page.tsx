@@ -1,7 +1,7 @@
-import GrammarList from "@/components/wrongAnswer/GrammarList";
 import { createClient } from "@/utils/supabase/server";
+import GrammarList from "@/components/wrongAnswer/GrammarList";
 
-const WrongWordPage = async () => {
+const WrongGrammarPage = async () => {
   // supabase의 auth 데이터 가져오는 함수
   const fetchUserInfo = async () => {
     const supabase = createClient();
@@ -23,4 +23,4 @@ const WrongWordPage = async () => {
   );
 };
 
-export default WrongWordPage;
+export default WrongGrammarPage;
