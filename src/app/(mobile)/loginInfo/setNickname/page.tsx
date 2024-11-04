@@ -14,9 +14,6 @@ export default function SetNickname() {
       const { data } = await supabase.auth.getSession();
       const userId = data?.session?.user?.id;
 
-      console.log("User ID:", userId); // 유저 ID 확인
-      console.log("Nickname to update:", nickname); // 업데이트할 닉네임 확인
-
       if (userId) {
         const { error } = await supabase.from("user_info").update({ nickname }).eq("id", userId);
 
