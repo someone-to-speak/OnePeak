@@ -26,7 +26,7 @@ export class WebRTCService {
 
     this.peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        this.channel.send({
+        await this.channel.send({
           type: "broadcast",
           event: "ice-candidate",
           candidate: event.candidate
@@ -55,7 +55,6 @@ export class WebRTCService {
   private startLocalRecording(stream: MediaStream) {
     this.localMediaRecorder = new MediaRecorder(stream);
     this.localMediaRecorder.ondataavailable = (event) => {
-      console.log("event: ", event);
       if (event.data.size > 0) this.localAudioChunks.push(event.data);
     };
     this.localMediaRecorder.start();
@@ -86,7 +85,7 @@ export class WebRTCService {
 
     const offer = await this.peerConnection.createOffer();
     await this.peerConnection.setLocalDescription(offer);
-    this.channel.send({
+    await this.channel.send({
       type: "broadcast",
       event: "offer",
       sdp: offer
@@ -95,14 +94,14 @@ export class WebRTCService {
 
   async handleSignalData(payload: SignalData) {
     if (!this.peerConnection) return;
-    console.log("payload ", payload);
+
     const { event, sdp, candidate } = payload;
 
     if (event === "offer" && sdp) {
       await this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
       const answer = await this.peerConnection.createAnswer();
       await this.peerConnection.setLocalDescription(answer);
-      this.channel.send({
+      await this.channel.send({
         type: "broadcast",
         event: "answer",
         sdp: answer

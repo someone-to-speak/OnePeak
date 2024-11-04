@@ -1,18 +1,20 @@
-import { getUserId } from "@/repositories/clientRepository";
+import { getUserId } from "@/api/supabase/user";
 import { getUserForMatching } from "@/repositories/matchingRepository";
-import { UserInfoForMatching } from "@/types/user/UserInfo";
+import { UserInfoForMatching } from "@/types/userType/userType";
+
 import { useQuery } from "@tanstack/react-query";
+import { UUID } from "crypto";
 
 export const useUserInfoForMatching = () => {
   return useQuery<UserInfoForMatching>({
     queryKey: ["userInfoForMatching"],
-    queryFn: () => getUserForMatching()
+    queryFn: async () => await getUserForMatching()
   });
 };
 
 export const useUserInfo = () => {
   return useQuery<string>({
     queryKey: ["userInfo"],
-    queryFn: () => getUserId()
+    queryFn: async () => await getUserId()
   });
 };
