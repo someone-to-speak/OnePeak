@@ -1,12 +1,11 @@
 "use client";
 
-import { use, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { uploadRecording } from "@/api/supabase/record";
 import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
-import { useUserInfo } from "@/hooks/getUserInfo";
 import { UUID } from "crypto";
 import { getUserId } from "@/api/supabase/user";
 
@@ -92,13 +91,13 @@ const VideoChat = () => {
 
     init();
 
-    const cleanUp = async () => {
-      channel.current?.send({
-        type: "broadcast",
-        event: "leaveAlone"
-      });
-      await handleLeaveAloneSignal();
-    };
+    // const cleanUp = async () => {
+    //   channel.current?.send({
+    //     type: "broadcast",
+    //     event: "leaveAlone"
+    //   });
+    //   await handleLeaveAloneSignal();
+    // };
 
     // return () => {
     //   cleanUp();

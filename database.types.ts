@@ -136,6 +136,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "conversations_last_message_id_fkey"
+            foreignKeyName: "conversations_last_message_id_fkey"
             columns: ["last_message_id"]
             isOneToOne: false
             referencedRelation: "messages"
@@ -259,6 +260,7 @@ export type Database = {
           type?: string
         }
         Relationships: []
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -304,6 +306,7 @@ export type Database = {
         }
         Insert: {
           conversation_id: string
+          conversation_id: string
           id?: string
           joined_at?: string
           user_id?: string
@@ -317,12 +320,14 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "participants_conversation_id_fkey"
+            foreignKeyName: "participants_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "participants_user_id_fkey"
             foreignKeyName: "participants_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -430,6 +435,15 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          id: number
+          subscription: Json
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
           id?: number
           subscription: Json
           user_id?: string | null
@@ -439,7 +453,24 @@ export type Database = {
           id?: number
           subscription?: Json
           user_id?: string | null
+          subscription: Json
+          user_id?: string | null
         }
+        Update: {
+          created_at?: string | null
+          id?: number
+          subscription?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
         Relationships: [
           {
             foreignKeyName: "subscriptions_user_id_fkey"
@@ -634,6 +665,10 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
       Row: infer R
     }
     ? R

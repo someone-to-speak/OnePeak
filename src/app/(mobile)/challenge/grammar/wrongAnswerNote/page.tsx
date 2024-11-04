@@ -9,11 +9,9 @@ const WrongGrammarPage = async () => {
       data: { user }
     } = await supabase.auth.getUser();
 
-    // console.log("user", user);
     return user?.id as string;
   };
   const userId = await fetchUserInfo();
-  // console.log("userId", userId);
 
   return (
     <div>

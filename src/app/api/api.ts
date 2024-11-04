@@ -1,4 +1,4 @@
-import { BlockedUserInfo, formatedTarget } from "@/type";
+import { BlockedUserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "../../../database.types";

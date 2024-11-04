@@ -51,7 +51,6 @@ export async function POST(req: Request) {
       throw new Error("응답 형식이 올바르지 않습니다.");
     }
 
-    // Supabase에 데이터 삽입
     const { data, error } = await supabase.from("questions").insert(parsedResponse);
 
     if (error) {

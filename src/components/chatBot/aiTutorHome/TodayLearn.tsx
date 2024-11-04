@@ -87,7 +87,7 @@ const TodayLearn = () => {
 
     // 중복 데이터가 없을 때만 추가
     if (existingReviews?.length === 0) {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("review")
         .insert([{ user_id: userId, situation, level }])
         .select();
