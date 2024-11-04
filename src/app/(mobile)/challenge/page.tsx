@@ -76,12 +76,21 @@ const ChallengePage = () => {
       <Slider ref={sliderRef} {...settings}>
         {problems.map((problem) => (
           <div key={problem.type} className="flex justify-center items-center">
-            <div className="bg-gray-200 p-4 rounded-lg shadow-lg w-full max-w-[400px] h-[400px]">
+            <div className="bg-gray-200 p-4 rounded-lg shadow-lg w-full max-w-[400px] h-[400px] flex flex-col gap-4">
+              {/* 기존 문제 풀러가기 버튼 */}
               <Link
                 href={`${problem.url}?userId=${userId}`}
-                className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200"
+                className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200 text-center"
               >
                 {problem.label} 풀러가기
+              </Link>
+
+              {/* 추가된 오답노트 버튼 */}
+              <Link
+                href={`/challenge/${problem.type}/wrongAnswerNote`} // 오답노트 페이지로 이동하는 링크
+                className="bg-red-500 text-white p-4 rounded-lg hover:bg-red-600 transition duration-200 text-center"
+              >
+                {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
               </Link>
             </div>
           </div>
