@@ -32,6 +32,7 @@ export const useMatching = () => {
       const matchingChannel = supabase.channel("matches");
 
       matchingChannel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+        console.log("UPDATE");
         const { new: updatedMatchQueue } = payload;
         if (updatedMatchQueue.user_id === userInfo.id) {
           setIsMatching(false);

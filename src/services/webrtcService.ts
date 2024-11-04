@@ -40,7 +40,18 @@ export class WebRTCService {
       }
     };
 
-    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const videoConstraints = {
+      width: { ideal: 640 },
+      height: { ideal: 360 },
+      frameRate: { max: 20 }
+    };
+
+    const localStream = await navigator.mediaDevices.getUserMedia({
+      video: videoConstraints,
+      audio: {
+        sampleRate: 16000
+      }
+    });
     this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
