@@ -1,4 +1,4 @@
-import { EmailOtpType } from "@supabase/supabase-js";
+// import { EmailOtpType } from "@supabase/supabase-js";
 import { UUID } from "crypto";
 
 // export type UserInfo = {
