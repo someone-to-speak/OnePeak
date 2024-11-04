@@ -10,7 +10,7 @@ const BottomSheetModal: React.FC<BottomSheetModalProps> = ({ onClose }) => {
   const handleSignInWithGoogle = async () => {
     await signInWithProvider("google");
   };
-
+  console.log(onClose); // build 오류 임시 해결
   return (
     <div className="fixed inset-12 bg-gray-500 bg-opacity-75 flex justify-center items-end z-1">
       <div className="bg-white w-full max-w-md p-6 rounded-t-lg flex flex-col items-center">

@@ -3,7 +3,6 @@ import { getUserForMatching } from "@/repositories/matchingRepository";
 import { UserInfoForMatching } from "@/types/userType/userType";
 
 import { useQuery } from "@tanstack/react-query";
-import { UUID } from "crypto";
 
 export const useUserInfoForMatching = () => {
   return useQuery<UserInfoForMatching>({

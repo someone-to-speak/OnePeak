@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../../../database.types";
 import { uploadImage } from "@/utils/myPage/imageUpload";
 import { Input, Button, Spinner } from "@nextui-org/react";
-import { Camera, Fullscreen } from "lucide-react";
+import { Camera } from "lucide-react";
 import Image from "next/image";
 
 type UserInfoType = Tables<"user_info">;
