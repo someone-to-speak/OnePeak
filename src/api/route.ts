@@ -231,3 +231,9 @@ export const changeToUnuse = async (targetLanguage: number) => {
     .order("created_at", { ascending: false });
   if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
 };
+
+// bucket으로부터 받은 이미지 주소 language 테이블에 넣기
+export const insertAlarmInfo = async (selectedType: string, title: string, content: string) => {
+  const data = await browserClient.from("notifications").insert({ type: selectedType, title: title, message: content });
+  return data.status === 201;
+};

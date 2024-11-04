@@ -8,6 +8,7 @@ const userManagement = () => {
       <Link href={"/admin/userManagement"}>사용자관리</Link>
       <Link href={"/admin/blockManagement"}>차단관리</Link>
       <Link href={"/admin/languageManagement"}>언어관리</Link>
+      <Link href={"/admin/alarmManagement"}>알람관리</Link>
     </div>
   );
 };
