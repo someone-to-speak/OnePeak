@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../database.types";
-import { PageProps } from "../../../.next/types/app/layout";
 
 type UserProfileProps = {
   userId: string;

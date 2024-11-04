@@ -1,8 +1,6 @@
 "use client";
 
-import { Message } from "@/app/types/chatBotType/chatBotType";
-import { convertSpeechToText, getChatResponse } from "@/utils/chatbot/chatBotApi";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -22,7 +20,7 @@ const ChatMessage = () => {
 
   const handleTranscribedText = async (text: string) => {
     try {
-      // 음성으로 변환딘 텍스트를 메세지로 처리
+      // 음성으로 변환된 텍스트를 메세지로 처리
       await sendMessage(text);
     } catch (error) {
       console.log("메세지 전송 실패: ", error);
