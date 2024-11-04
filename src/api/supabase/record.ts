@@ -13,11 +13,3 @@ export const uploadRecording = async (fileBlob: Blob, fileName: string): Promise
 
   return publicUrl;
 };
-
-export const downloadFileData = async (url: string) => {
-  const { data: fileData, error } = await supabase.storage.from("recordings").download(url);
-  console.log("fileData:  ", fileData);
-  console.log("error: ", error);
-  const audioUrl = URL.createObjectURL(fileData as Blob);
-  return audioUrl as string;
-};
