@@ -3,7 +3,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState, useCallback } from "react";
 import { Tables } from "../../../../database.types";
-import NotificationSetupButton from "@/components/notification/NotificationSetupButton";
 
 type NotificationType = Tables<"notifications">;
 
@@ -111,14 +110,12 @@ const NotificationPage = () => {
 
   return (
     <div className="mt-4 space-y-4">
-      <NotificationSetupButton userId={userId} />
-
       {notifi && notifi.length > 0 ? (
         notifi
           .slice()
           .reverse()
           .map((noti) => (
-            <div key={noti.id} className="bg-white shadow-md rounded-lg p-4 border border-gray-200 cursor-pointer">
+            <div key={noti.id} className="bg-white shadow-md rounded-sm p-4">
               <h3 className="text-lg font-semibold">{noti.title}</h3>
               <p className="text-gray-700">{noti.message}</p>
               <p className="text-sm text-gray-500">{noti.created_at}</p>
