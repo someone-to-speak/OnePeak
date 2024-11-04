@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
 import Link from "next/link";
-import FetchGrammarQuizButton from "@/components/challenge/fetchGrammarQuizButton";
-import FetchWordQuizButton from "@/components/challenge/fetchWordQuizButton";
+import FetchGrammarQuizButton from "@/components/challenge/FetchGrammarQuizButton";
+import FetchWordQuizButton from "@/components/challenge/FetchWordQuizButton";
 
 const ChalPage = () => {
   const settings = {

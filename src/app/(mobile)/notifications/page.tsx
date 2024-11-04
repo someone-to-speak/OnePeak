@@ -1,9 +1,10 @@
 "use client";
 
-import AddNotifications from "@/components/notification/AddNotifications";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { Tables } from "../../../../database.types";
+import NotificationButton from "@/components/notification/NotificationButton";
+import { requestNotificationPermission } from "@/utils/notifications/pushSubscription";
 
 type NotificationType = Tables<"notifications">;
 
@@ -11,6 +12,22 @@ const NotificationPage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [notifi, setNotifi] = useState<NotificationType[] | null>(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then((registration) => {
+          console.log("Service Worker registered with scope:", registration.scope);
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    }
+
+    // 푸시 알림 권한 요청
+    if (userId) requestNotificationPermission(userId);
+  }, [userId, requestNotificationPermission]);
 
   useEffect(() => {
     const fetchUserNoti = async () => {
@@ -38,7 +55,7 @@ const NotificationPage = () => {
 
   return (
     <>
-      <AddNotifications userId={userId} />
+      <NotificationButton userId={userId} />
       <div className="mt-4 space-y-4">
         {Notifications && Notifications.length > 0 ? (
           Notifications.slice()
