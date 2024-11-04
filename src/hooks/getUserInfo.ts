@@ -1,6 +1,6 @@
 import { getUserId } from "@/api/supabase/user";
 import { getUserForMatching } from "@/repositories/matchingRepository";
-import { UserInfoForMatching } from "@/types/userType.ts/userType";
+import { UserInfoForMatching } from "@/types/userType/userType";
 
 import { useQuery } from "@tanstack/react-query";
 import { UUID } from "crypto";
