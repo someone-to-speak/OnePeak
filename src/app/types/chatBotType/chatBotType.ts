@@ -9,3 +9,9 @@ export type CalendarDate = {
   isToday: boolean;
   isSelected: boolean;
 };
+
+export type AudioRecorderState = {
+  isRecording: boolean;
+  mediaRecorder: MediaRecorder | null;
+  chunks: Blob[];
+};
