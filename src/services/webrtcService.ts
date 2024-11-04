@@ -44,7 +44,9 @@ export class WebRTCService {
     this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
+      this.localVideoRef.current.style.transform = "scaleX(-1)";
     }
+
     localStream.getTracks().forEach((track) => {
       this.peerConnection?.addTrack(track, localStream);
     });
@@ -53,7 +55,8 @@ export class WebRTCService {
   }
 
   private startLocalRecording(stream: MediaStream) {
-    this.localMediaRecorder = new MediaRecorder(stream);
+    const audioOnlyStream = new MediaStream(stream.getAudioTracks());
+    this.localMediaRecorder = new MediaRecorder(audioOnlyStream);
     this.localMediaRecorder.ondataavailable = (event) => {
       if (event.data.size > 0) this.localAudioChunks.push(event.data);
     };
