@@ -1,7 +1,7 @@
 import { BlockedUserInfo, formatedTarget } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
-import { Tables } from "../../../database.types";
+import { Tables } from "../../database.types";
 import { v4 as uuidv4 } from "uuid";
 
 type UserInfo = Tables<"user_info">;

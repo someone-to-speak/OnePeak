@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
 import PageNationUI from "../PageNationUI";
-import { block, cancle, getUsersInfo, unblock, uncancle } from "@/app/api/api";
+import { block, cancle, getUsersInfo, unblock, uncancle } from "@/api/api";
 import { Tables } from "../../../../database.types";
 
 type UserInfo = Tables<"user_info">;

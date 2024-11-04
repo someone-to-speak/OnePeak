@@ -2,14 +2,13 @@ import React from "react";
 import { Tables } from "../../../../database.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-
-type languageInfo = Tables<"language">;
+import { changeToUnuse, changeToUse, getLanguageList } from "@/api/api";
 
 const LanguageTable = () => {
   const queryClient = useQueryClient();
   const { data, isPending, isError } = useQuery({
     queryKey: ["languagesInfo"],
-    queryFn: () => getLanguageLis()
+    queryFn: () => getLanguageList()
   });
 
   const handleLanguagetoUse = useMutation({

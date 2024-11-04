@@ -1,4 +1,4 @@
-import { insertLanguageImg, uploadLanguageImage } from "@/app/api/api";
+import { insertLanguageImg, uploadLanguageImage } from "@/api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";

@@ -6,7 +6,7 @@ export type Props = {
   };
 };
 
-import { getBlockDetail } from "@/app/api/api";
+import { getBlockDetail } from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
