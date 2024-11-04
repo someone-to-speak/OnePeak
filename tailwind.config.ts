@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import safeArea from "tailwindcss-safe-area";
+import tailwindAnimate from "tailwindcss-animate";
 
 const config: Config = {
   darkMode: ["class"],
@@ -11,78 +12,43 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))"
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))"
-        },
+        white: "var(--white)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))"
+          50: "var(--primary-50)",
+          100: "var(--primary-100)",
+          200: "var(--primary-200)",
+          300: "var(--primary-300)",
+          400: "var(--primary-400)",
+          500: "var(--primary-500)",
+          600: "var(--primary-600)",
+          700: "var(--primary-700)",
+          800: "var(--primary-800)",
+          900: "var(--primary-900)"
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))"
+          50: "var(--secondary-50)",
+          100: "var(--secondary-100)",
+          200: "var(--secondary-200)",
+          300: "var(--secondary-300)",
+          400: "var(--secondary-400)",
+          500: "var(--secondary-500)",
+          600: "var(--secondary-600)",
+          700: "var(--secondary-700)",
+          800: "var(--secondary-800)",
+          900: "var(--secondary-900)"
         },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))"
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))"
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))"
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))"
-        },
-        // 추가된 figma
-        white: "var(--white)",
-        primary50: "var(--primary-50)",
-        primary100: "var(--primary-100)",
-        primary200: "var(--primary-200)",
-        primary300: "var(--primary-300)",
-        primary400: "var(--primary-400)",
-        primary500: "var(--primary-500)",
-        primary600: "var(--primary-600)",
-        primary700: "var(--primary-700)",
-        primary800: "var(--primary-800)",
-        primary900: "var(--primary-900)",
-        secondary50: "var(--secondary-50)",
-        secondary100: "var(--secondary-100)",
-        secondary200: "var(--secondary-200)",
-        secondary300: "var(--secondary-300)",
-        secondary400: "var(--secondary-400)",
-        secondary500: "var(--secondary-500)",
-        secondary600: "var(--secondary-600)",
-        secondary700: "var(--secondary-700)",
-        secondary800: "var(--secondary-800)",
-        secondary900: "var(--secondary-900)",
-        gray50: "var(--gray-50)",
-        gray100: "var(--gray-100)",
-        gray200: "var(--gray-200)",
-        gray300: "var(--gray-300)",
-        gray400: "var(--gray-400)",
-        gray500: "var(--gray-500)",
-        gray600: "var(--gray-600)",
-        gray700: "var(--gray-700)",
-        gray800: "var(--gray-800)",
-        gray900: "var(--gray-900)"
+        gray: {
+          50: "var(--gray-50)",
+          100: "var(--gray-100)",
+          200: "var(--gray-200)",
+          300: "var(--gray-300)",
+          400: "var(--gray-400)",
+          500: "var(--gray-500)",
+          600: "var(--gray-600)",
+          700: "var(--gray-700)",
+          800: "var(--gray-800)",
+          900: "var(--gray-900)"
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -113,6 +79,7 @@ const config: Config = {
       }
     }
   },
-  plugins: [safeArea, require("tailwindcss-animate")]
+  plugins: [safeArea, tailwindAnimate]
 };
+
 export default config;
