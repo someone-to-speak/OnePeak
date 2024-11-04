@@ -44,7 +44,6 @@ export class WebRTCService {
     this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
-      this.localVideoRef.current.style.transform = "scaleX(-1)";
     }
 
     localStream.getTracks().forEach((track) => {
