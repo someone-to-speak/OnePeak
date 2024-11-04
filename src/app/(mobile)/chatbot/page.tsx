@@ -7,13 +7,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
-import ChatMessageList from "@/components/chatBot/chat/chatMessageList";
+import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 
 const ChatMessage = () => {
-  // const [isRecording, setIsRecording] = useState<boolean>(false);
-  // const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  // const chuncksRef = useRef<Blob[]>([]);
-
   const router = useRouter();
 
   // 선택한 "오늘의 학습" 데이터 받아오기
@@ -36,12 +32,12 @@ const ChatMessage = () => {
   const { isRecording, startRecording, stopRecording } = useAudioRecorder(handleTranscribedText);
 
   // 전송 버튼
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!userInput.trim()) return;
 
     try {
-      await sendMessage(userInput);
+      sendMessage(userInput);
       setUserInput("");
     } catch (error) {
       console.log("메세지 전송 실패: ", error);
