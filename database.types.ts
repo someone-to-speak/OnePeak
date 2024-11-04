@@ -114,7 +114,7 @@ export type Database = {
         }
         Relationships: []
       }
-      Conversations: {
+      conversations: {
         Row: {
           created_at: string
           id: string
@@ -133,15 +133,7 @@ export type Database = {
           last_message_id?: string | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "Conversations_last_message_id_fkey"
-            columns: ["last_message_id"]
-            isOneToOne: false
-            referencedRelation: "Messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       faq: {
         Row: {
@@ -182,10 +174,10 @@ export type Database = {
           status: boolean
         }
         Insert: {
-          created_at: string
+          created_at?: string
           id?: number
-          language_img_url: string
-          language_name: string
+          language_img_url?: string
+          language_name?: string
           status?: boolean
         }
         Update: {
@@ -227,46 +219,75 @@ export type Database = {
         }
         Relationships: []
       }
-      Messages: {
+      messages: {
         Row: {
+          coach_content: string
           content: string
           conversation_id: string
           created_at: string
           id: string
           sender_id: string
+          stt_content: string
+          type: string
         }
         Insert: {
-          content: string
-          conversation_id?: string
-          created_at?: string
-          id?: string
-          sender_id?: string
-        }
-        Update: {
+          coach_content?: string
           content?: string
           conversation_id?: string
           created_at?: string
           id?: string
           sender_id?: string
+          stt_content?: string
+          type?: string
+        }
+        Update: {
+          coach_content?: string
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+          stt_content?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: number
+          is_read: boolean | null
+          message: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          is_read?: boolean | null
+          message: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          is_read?: boolean | null
+          message?: string
+          title?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Messages_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "Conversations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Messages_sender_id_fkey"
-            columns: ["sender_id"]
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user_info"
             referencedColumns: ["id"]
           },
         ]
       }
-      Participants: {
+      participants: {
         Row: {
           conversation_id: string
           id: string
@@ -274,7 +295,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          conversation_id?: string
+          conversation_id: string
           id?: string
           joined_at?: string
           user_id?: string
@@ -287,17 +308,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Participants_conversation_id_fkey"
+            foreignKeyName: "participants_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
-            referencedRelation: "Conversations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_info"
+            referencedRelation: "conversations"
             referencedColumns: ["id"]
           },
         ]
@@ -392,6 +406,35 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          id: number
+          subscription: Json
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          subscription: Json
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          subscription?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       test_result: {
         Row: {
           category_id: number | null
@@ -473,21 +516,21 @@ export type Database = {
           is_deleted: boolean
           learn_language: string | null
           my_language: string | null
-          nickname: string | null
+          nickname: string
           profile_url: string
           state_msg: string
         }
         Insert: {
           created_at?: string
-          email: string
+          email?: string
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
           learn_language?: string | null
           my_language?: string | null
-          nickname?: string | null
-          profile_url: string
-          state_msg: string
+          nickname?: string
+          profile_url?: string
+          state_msg?: string
         }
         Update: {
           created_at?: string
@@ -497,7 +540,7 @@ export type Database = {
           is_deleted?: boolean
           learn_language?: string | null
           my_language?: string | null
-          nickname?: string | null
+          nickname?: string
           profile_url?: string
           state_msg?: string
         }

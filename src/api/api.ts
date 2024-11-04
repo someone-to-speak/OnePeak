@@ -5,7 +5,7 @@ import { Tables } from "../../database.types";
 import { v4 as uuidv4 } from "uuid";
 
 type UserInfo = Tables<"user_info">;
-type Language = Tables<"language">;
+
 const browserClient = createClient();
 
 const errorFn = (error: PostgrestError | null, msg: string) => {
