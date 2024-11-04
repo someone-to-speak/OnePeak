@@ -6,7 +6,6 @@ import { removeUserFromQueue } from "@/repositories/matchingRepository";
 import { useUserInfoForMatching } from "@/hooks/getUserInfo";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 
 export const useMatching = () => {
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가

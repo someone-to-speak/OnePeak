@@ -20,7 +20,6 @@ export const getOrCreateConversationId = async (conversationId: UUID) => {
 };
 
 export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
-  console.log("participantId: ", participantId);
   const { data: existingParticipant } = await supabase
     .from("participants")
     .select("id")
