@@ -1,16 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: ".com",
+        hostname: "*",
         pathname: "/**"
       }
     ],
     formats: ["image/avif", "image/webp"],
-    domains: ["i.scdn.co", "hayfkffvhrshjassogbx.supabase.co", "lh3.googleusercontent.com", "files.slack.com"]
+    domains: ["hayfkffvhrshjassogbx.supabase.co", "lh3.googleusercontent.com", "files.slack.com"]
   }
 };
 

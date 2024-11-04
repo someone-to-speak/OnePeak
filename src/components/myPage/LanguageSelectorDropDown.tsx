@@ -1,4 +1,6 @@
-import React from "react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 type LanguageType = {
   id: number;
@@ -9,7 +11,7 @@ type LanguageType = {
 interface ImageSelectorDropDownProps {
   selectedLanguage: string;
   languageOptions: LanguageType[];
-  onLanguageChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onLanguageChange: (language: string) => void;
 }
 
 const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
@@ -17,18 +19,46 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
   languageOptions,
   onLanguageChange
 }) => {
+  const [selected, setSelected] = useState<string>("");
+
+  useEffect(() => {
+    setSelected(selectedLanguage || "언어를 선택해주세요");
+  }, [selectedLanguage]);
+
+  const handleSelectionChange = (key: React.Key) => {
+    const chosenLanguage = languageOptions.find((lang) => lang.language_name === key);
+    if (chosenLanguage) {
+      setSelected(chosenLanguage.language_name);
+      onLanguageChange(chosenLanguage.language_name);
+    }
+  };
+
   return (
-    <div className="p-4">
-      <label className="text-gray-700">
-        <select value={selectedLanguage} onChange={onLanguageChange} className="ml-2 p-2 rounded bg-gray-200">
-          {languageOptions.map((lang) => (
-            <option key={lang.id} value={lang.language_name}>
-              {lang.language_name}
-            </option>
-          ))}
-        </select>
-      </label>
-    </div>
+    <Dropdown>
+      <DropdownTrigger>
+        <Button className="flex items-center gap-2 bg-white hover:bg-gray-100 transition duration-200 ease-in-out shadow-md">
+          <span>{selected}</span>
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu onAction={handleSelectionChange} className="bg-white rounded-lg shadow-lg">
+        {languageOptions.map((lang) => (
+          <DropdownItem
+            key={lang.language_name}
+            startContent={
+              <Image
+                src={lang.language_img_url}
+                alt={lang.language_name}
+                width={100}
+                height={100}
+                className="w-6 h-6 rounded-full"
+              />
+            }
+          >
+            <span className="text-gray-800">{lang.language_name}</span>
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
   );
 };
 

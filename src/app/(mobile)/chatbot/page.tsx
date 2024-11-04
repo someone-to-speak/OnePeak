@@ -3,11 +3,13 @@
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ChatMessage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState<string>("");
+
+  const router = useRouter();
 
   // 선택한 "오늘의 학습" 데이터 받아오기
   const searchParams = useSearchParams();
@@ -57,7 +59,12 @@ const ChatMessage = () => {
   return (
     <div className="flex flex-col h-screen w-full mx-auto bg-gray-100">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
-        <h1>{situation}</h1>
+        <div className="flex">
+          <button onClick={() => router.back()} className="mr-5">
+            🔙
+          </button>
+          <h1 className="font-bold">{situation}</h1>
+        </div>
         {messages.map((msg, index) => (
           <div key={index} className={msg.role}>
             <strong>{msg.role === "user" ? "나" : "챗봇"}</strong>

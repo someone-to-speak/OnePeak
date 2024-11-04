@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf .next && next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
@@ -13,6 +13,8 @@
   "dependencies": {
     "@google-cloud/speech": "^6.7.0",
     "@hookform/resolvers": "^3.9.0",
+    "@nextui-org/dropdown": "^2.1.31",
+    "@nextui-org/react": "^2.4.8",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/ssr": "^0.5.1",
@@ -22,6 +24,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "framer-motion": "^11.11.11",
     "lucide-react": "^0.454.0",
     "next": "14.2.15",
     "next-pwa": "^5.6.0",
@@ -35,6 +38,8 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-safe-area": "^0.6.0",
+    "web-push": "^3.6.7",
+    "uuid": "^11.0.2",
     "zod": "^3.23.8",
     "zustand": "^5.0.0"
   },
@@ -53,6 +58,7 @@
     "@types/react-dom": "^18",
     "@types/react-slick": "^0",
     "@types/slick-carousel": "^1",
+    "@types/web-push": "^3",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "eslint-plugin-storybook": "^0.10.1",
@@ -60,5 +66,6 @@
     "storybook": "8.3.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
 }
