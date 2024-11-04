@@ -6,7 +6,6 @@ import OpenAI from "openai";
 export const config = {
   api: {
     bodyParser: false // 파일 업로드를 위해 기본 bodyParser 비활성화
-    // maxDuration: 30 // API 타임아웃을 30초로 설정
   }
 };
 
@@ -88,5 +87,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 }
-
-// handler();
