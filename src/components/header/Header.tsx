@@ -33,8 +33,8 @@ const Header = () => {
           <span>{name}</span>
           <button onClick={handleSignInWithGoogle}>구글 로그인</button>
           <button onClick={handleSignOut}>로그아웃</button>
+          <Link href="/notifications">알림</Link>
           <Link href="/attendance">출석</Link>
-          <>알림</>
         </div>
       </div>
     </header>

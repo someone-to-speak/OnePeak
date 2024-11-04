@@ -1,6 +1,6 @@
 "use client";
 
-import RandomKoreanWordQuiz from "@/components/challenge/randomKoreanWordQuiz";
+import RandomKoreanWordQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
 import { useSearchParams } from "next/navigation";
 
 const KoreanWordQuizPage = () => {

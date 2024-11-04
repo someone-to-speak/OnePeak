@@ -1,6 +1,6 @@
 // api/review.ts
 import { createClient } from "@/utils/supabase/client";
-import { Tables } from "../../../database.types";
+import { Tables } from "../../database.types";
 
 type ReviewType = Tables<"review">;
 
