@@ -9,8 +9,6 @@ import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuesti
 const supabase = createClient();
 
 const GrammarList = ({ userId }: { userId: string }) => {
-  //   console.log("유저아이디", userId);
-
   const queryClient = useQueryClient();
 
   // 탭 상태 관리
@@ -23,7 +21,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
     isLoading: userAnswersLoading
   } = useQuery({
     queryKey: ["userAnswers", userId],
-    queryFn: () => fetchUserWrongAnswers(userId)
+    queryFn: () => fetchUserWrongAnswers(userId),
+    staleTime: 0
   });
 
   // TanStack Query로 문법문제 데이터 가져오기
@@ -33,11 +32,9 @@ const GrammarList = ({ userId }: { userId: string }) => {
     isLoading: questionsLoading
   } = useQuery({
     queryKey: ["questions"],
-    queryFn: () => fetchGrammarQuestions()
+    queryFn: () => fetchGrammarQuestions(),
+    staleTime: 0
   });
-
-  //   console.log("userAnswers", userAnswers); // 오답
-  //   console.log("questions", questions); // 문법문제
 
   // 'user_answer'테이블에서 is_reviewed를 업데이트하는 Mutation
   const updateIsReviewed = useMutation({
@@ -70,8 +67,6 @@ const GrammarList = ({ userId }: { userId: string }) => {
       return matchedQuestion ? { ...matchedQuestion, answerId: answer.id, isReviewed: answer.is_reviewed } : null;
     })
     .filter((item) => item !== null);
-
-  console.log("wrongWordAnswers", wrongGrammarAnswers);
 
   return (
     <div>

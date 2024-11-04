@@ -6,8 +6,6 @@ import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 
-const learnLanguages = ["영어", "일본어", "스페인어", "프랑스어"];
-
 export default function SetLearnLanguage() {
   const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
   const router = useRouter();
@@ -23,6 +21,8 @@ export default function SetLearnLanguage() {
     queryFn: () => fetchLanguageName()
   });
 
+  const supportingLanguages = languages?.map((language) => language.language_name);
+
   // 로딩 상태
   if (languagesLoading) return <p>Loading...</p>;
   // 오류 상태
@@ -31,9 +31,6 @@ export default function SetLearnLanguage() {
   const handleContinue = async () => {
     const { data } = await supabase.auth.getSession();
     const userId = data?.session?.user?.id;
-
-    console.log("User ID:", userId); // 유저 ID 확인
-    console.log("learnLanguage to update:", selectedLearnLanguage); // 업데이트할 닉네임 확인
 
     if (userId && selectedLearnLanguage) {
       const { error } = await supabase
@@ -49,18 +46,24 @@ export default function SetLearnLanguage() {
 
   return (
     <div>
-      <h1>너의 학습언어 알려줘</h1>
-      <p>본인이 배우고 싶은 언어를 설정해주시면 됩니다.</p>
+      <button
+        onClick={() => router.back()} // 뒤로 가기 함수 호출
+        className="mb-4 font-bold"
+      >
+        ←
+      </button>
+      <div className="flex flex-col items-center">
+        <h1>학습언어를 선택해 주세요</h1>
+        <p>배우고 싶은 언어를 설정해 주세요</p>
+      </div>
       <div className="flex flex-col justify-center items-center">
-        {languages?.map((language, index) => (
+        {supportingLanguages?.map((language, index) => (
           <button
             key={index}
-            onClick={() => setSelectedLearnLanguage(language.language_name)}
-            className={`w-[50%] p-2 m-2 rounded ${
-              selectedLearnLanguage === language.language_name ? "bg-green-500" : "bg-gray-300"
-            }`}
+            onClick={() => setSelectedLearnLanguage(language)}
+            className={`w-[50%] p-2 m-2 rounded ${selectedLearnLanguage === language ? "bg-green-500" : "bg-gray-300"}`}
           >
-            {language.language_name}
+            {language}
           </button>
         ))}
       </div>
@@ -69,7 +72,7 @@ export default function SetLearnLanguage() {
         disabled={!selectedLearnLanguage}
         className={`w-full mt-4 p-2 rounded ${selectedLearnLanguage ? "bg-green-500" : "bg-gray-300"}`}
       >
-        계속
+        시작하기
       </button>
     </div>
   );

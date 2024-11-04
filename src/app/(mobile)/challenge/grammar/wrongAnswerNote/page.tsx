@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import GrammarList from "@/components/wrongAnswer/GrammarList";
+import Link from "next/link";
 
 const WrongGrammarPage = async () => {
   // supabase의 auth 데이터 가져오는 함수
@@ -9,15 +10,16 @@ const WrongGrammarPage = async () => {
       data: { user }
     } = await supabase.auth.getUser();
 
-    // console.log("user", user);
     return user?.id as string;
   };
   const userId = await fetchUserInfo();
-  // console.log("userId", userId);
 
   return (
     <div>
-      <h1>문법 오답노트</h1>
+      <div className="flex gap-4">
+        <Link href={"/challenge"}>🔙</Link>
+        <h1>문법 오답노트</h1>
+      </div>
       <GrammarList userId={userId} />
     </div>
   );

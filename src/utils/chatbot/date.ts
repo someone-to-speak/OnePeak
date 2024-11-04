@@ -35,6 +35,7 @@ export const dateUtils = {
   getMonthAndDay: (date: Date | string) => {
     const [year, month, day] = dateUtils.formatDate(date).split("-");
     return {
+      year: parseInt(year, 10),
       month: parseInt(month, 10),
       day: parseInt(day, 10)
     };
