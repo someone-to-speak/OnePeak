@@ -48,26 +48,6 @@ const ReviewDetail = () => {
   // 선택한 날짜의 리뷰 필터링
   const filteredReviews =
     reviews?.filter((review) => {
-      // 원본 값 확인
-      console.log("Original review:", {
-        id: review.id,
-        created_at_raw: review.created_at,
-        created_at_type: typeof review.created_at
-      });
-
-      // Date 객체로 변환 직후 확인
-      const reviewDate = new Date(review.created_at);
-      console.log("After Date conversion:", {
-        reviewDate_iso: reviewDate.toISOString(),
-        reviewDate_locale: reviewDate.toLocaleString("ko-KR")
-      });
-
-      // isSameDay 함수에 전달되기 직전 값
-      console.log("Before isSameDay:", {
-        date1: review.created_at,
-        date2: selectedDate
-      });
-
       return dateUtils.isSameDay(review.created_at, selectedDate);
     }) || [];
 
