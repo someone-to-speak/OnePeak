@@ -12,7 +12,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        white: "var(--white)",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))"
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))"
+        },
         primary: {
           50: "var(--primary-50)",
           100: "var(--primary-100)",
@@ -48,12 +57,26 @@ const config: Config = {
           700: "var(--gray-700)",
           800: "var(--gray-800)",
           900: "var(--gray-900)"
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))"
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))"
         }
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)"
+        lg: "var(--border-radius-37)",
+        md: "var(--border-radius-26)",
+        sm: "var(--border-radius-20)"
       },
       fontSize: {
         sm: "var(--font-sm)",

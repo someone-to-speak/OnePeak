@@ -9,7 +9,7 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return new Uint8Array(Array.from(rawData, (char) => char.charCodeAt(0)));
 }
 
-export async function requestNotificationPermission(userId: string) {
+export async function requestNotificationPermission(userId: string): Promise<boolean> {
   const permission = await Notification.requestPermission();
 
   if (permission === "granted") {
@@ -23,7 +23,7 @@ export async function requestNotificationPermission(userId: string) {
 
     if (subscriptionError) {
       console.error("Error fetching subscription:", subscriptionError);
-      return;
+      return false;
     }
 
     if (!existingSubscription) {
@@ -33,8 +33,10 @@ export async function requestNotificationPermission(userId: string) {
     }
 
     await subscribeToNotifications();
+    return true; // 권한 요청 성공 시 true 반환
   } else {
     console.error("Unable to get permission to notify.");
+    return false; // 권한 요청 실패 시 false 반환
   }
 }
 
