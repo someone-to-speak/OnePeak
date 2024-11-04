@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser, signInWithProvider, signOut } from "@/app/services/supabaseAuth";
+import { getUser, signInWithProvider, signOut } from "@/services/supabaseAuth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
     console.error("Error saving notification:", notificationError.message);
     return NextResponse.json({ message: "Error saving notification" }, { status: 500 });
   }
-
   console.log("Notification saved:", notificationData);
 
   // 사용자의 구독 정보를 가져오기
