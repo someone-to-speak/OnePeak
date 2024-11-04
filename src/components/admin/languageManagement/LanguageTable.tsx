@@ -1,7 +1,6 @@
 import React from "react";
 import { Tables } from "../../../../database.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { changeToUnuse, changeToUse, getLanguageList } from "@/app/api/api";
 import Image from "next/image";
 
 type languageInfo = Tables<"language">;
@@ -10,7 +9,7 @@ const LanguageTable = () => {
   const queryClient = useQueryClient();
   const { data, isPending, isError } = useQuery({
     queryKey: ["languagesInfo"],
-    queryFn: () => getLanguageList()
+    queryFn: () => getLanguageLis()
   });
 
   const handleLanguagetoUse = useMutation({
