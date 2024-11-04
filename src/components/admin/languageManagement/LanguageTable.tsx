@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { changeToUnuse, changeToUse, getLanguageList } from "@/api/api";
+import { changeToUnuse, changeToUse, getLanguageList } from "@/api/route";
 
 const LanguageTable = () => {
   const queryClient = useQueryClient();
