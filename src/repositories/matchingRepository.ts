@@ -1,4 +1,4 @@
-import { UserInfoForMatching } from "@/types/user/UserInfo";
+import { UserInfoForMatching } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();

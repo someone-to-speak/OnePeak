@@ -19,35 +19,31 @@ export const useMatching = () => {
     setIsMatching(true);
 
     const supabase = createClient();
-    const roomId = await initiateMatching(userInfo.id, userInfo.my_language, userInfo.learn_language);
+    const roomId = await initiateMatching(
+      userInfo.id,
+      userInfo.my_language as string,
+      userInfo.learn_language as string
+    );
 
     if (roomId) {
       setIsMatching(false);
-      router.push(`/chat?room=${roomId}`);
+      router.push(`/lesson/room?id=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
-      matchingChannelRef.current = matchingChannel;
 
-      matchingChannel
-        .on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
-          console.log("UPDATE");
-          const { new: updatedMatchQueue } = payload;
-          if (updatedMatchQueue.user_id === userInfo.id) {
-            setIsMatching(false);
-            router.push(`/chat?room=${updatedMatchQueue.room_id}`);
-          }
-        })
-        .subscribe((status) => {
-          if (status === "SUBSCRIBED") {
-            console.log("SUBSCRIBED");
-          }
-        });
+      matchingChannel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+        const { new: updatedMatchQueue } = payload;
+        if (updatedMatchQueue.user_id === userInfo.id) {
+          setIsMatching(false);
+          router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
+        }
+      });
+      matchingChannel.subscribe();
     }
   };
 
   useEffect(() => {
     if (!userInfo) return;
-    // setupMatchingChannel();
 
     const cleanUp = async () => {
       await matchingChannelRef.current?.unsubscribe();
