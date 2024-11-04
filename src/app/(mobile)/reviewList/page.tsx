@@ -5,9 +5,9 @@ import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
 import Calendar from "@/components/calendar/Calendar";
 import { useState } from "react";
-import { reviewApi } from "@/app/services/supabaseChatbot";
 import { dateUtils } from "@/utils/chatbot/date";
 import { ReviewList } from "@/components/chatBot/review/ReviewList";
+import { reviewApi } from "@/services/supabaseChatbot";
 
 type ReviewType = Tables<"review">;
 
