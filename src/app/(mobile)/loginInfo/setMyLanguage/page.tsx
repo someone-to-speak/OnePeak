@@ -43,8 +43,16 @@ export default function SetMyLanguage() {
 
   return (
     <div>
-      <h1>너의 모국어 알려줘</h1>
-      <p>본인의 모국어를 설정해주시면 됩니다.</p>
+      <button
+        onClick={() => router.back()} // 뒤로 가기 함수 호출
+        className="mb-4 font-bold"
+      >
+        ←
+      </button>
+      <div className="flex flex-col items-center">
+        <h1>모국어를 선택해 주세요</h1>
+        <p>모국어를 설정해 주세요</p>
+      </div>
       <div className="flex flex-col justify-center items-center">
         {supportingLanguages?.map((language, index) => (
           <button
