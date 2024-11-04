@@ -22,10 +22,10 @@ export const DateGrid: React.FC<DateGridProps> = ({
       <div
         key={index}
         onClick={() => onDateClick(date)}
-        className={`py-2 cursor-pointer ${dateUtils.isSameMonth(date, currentDate) ? "text-black" : "text-gray-300"} ${
-          dateUtils.isSameDay(date, today) ? "bg-blue-100 font-bold rounded-lg" : ""
-        }
-          ${dateUtils.isSameDay(date, selectedDate) ? "bg-blue-300 text-white font-bold rounded-lg" : ""}`}
+        className={`py-2 cursor-pointer ${
+          dateUtils.isSameMonth(date, currentDate) ? "cursor-pointer text-black" : "cursor-not-allowed text-gray-300"
+        } ${dateUtils.isSameDayForUI(date, today) ? "bg-blue-100 font-bold rounded-lg" : ""}
+          ${dateUtils.isSameDayForUI(date, selectedDate) ? "bg-blue-300 text-white font-bold rounded-lg" : ""}`}
       >
         {date.getDate()}
       </div>

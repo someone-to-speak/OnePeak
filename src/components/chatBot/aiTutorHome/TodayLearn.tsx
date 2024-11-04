@@ -37,7 +37,9 @@ const TodayLearn = () => {
   }): Promise<SituationType> => {
     // 오늘 날짜 생성
     const today = new Date();
-    const todayString = format(today, "yyyy-MM-dd");
+    // KST로 조정 (UTC+9)
+    const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
+    const todayString = format(kstToday, "yyyy-MM-dd");
 
     // 중복 데이터 확인
     const { data: existingReviews, error: checkError } = await supabase
@@ -45,8 +47,8 @@ const TodayLearn = () => {
       .select("*")
       .eq("user_id", userId)
       .eq("situation", situation)
-      .gte("created_at", `${todayString}T00:00:00Z`) // 오늘 시작 시간
-      .lt("created_at", `${todayString}T23:59:59Z`); // 오늘 종료 시간
+      .gte("created_at", `${todayString}T00:00:00+09:00`) // 오늘 시작 시간
+      .lt("created_at", `${todayString}T23:59:59+09:00`); // 오늘 종료 시간
 
     if (checkError) {
       console.error("중복 확인 오류: ", checkError);
