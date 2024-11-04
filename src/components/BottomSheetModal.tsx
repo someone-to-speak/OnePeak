@@ -1,4 +1,4 @@
-import { signInWithProvider } from "@/app/services/supabaseAuth";
+import { signInWithProvider } from "@/services/supabaseAuth";
 import React from "react";
 
 // 모달을 닫기 위한 콜백 함수 타입 정의

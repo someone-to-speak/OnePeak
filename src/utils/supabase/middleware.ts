@@ -23,7 +23,11 @@ export async function middleware(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/myPage")) {
+  if (
+    (!user && request.nextUrl.pathname.startsWith("/myPage")) ||
+    request.nextUrl.pathname.startsWith("/challenge") ||
+    request.nextUrl.pathname.startsWith("/lesson")
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
@@ -33,5 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/myPage/:path*"]
+  matcher: ["/myPage/:path*", "/challenge/:path*"]
 };

@@ -42,11 +42,10 @@ const FetchWordQuizButton = () => {
   return (
     <div>
       <button onClick={fetchQuiz} disabled={loading} className="bg-gray-800 text-white py-2 px-4">
-        {loading ? "생성 중..." : "word 퀴즈 추가하기"}
+        {loading ? "생성 중..." : "word 퀴즈 추가하기 {/* TODO: 관리자페이지에서 사용 */}"}
       </button>
       {error && <p>{error}</p>}
       {success && <p>퀴즈가 성공적으로 생성되었습니다!</p>}
-      {/* TODO: 관리자페이지에서 사용 */}
     </div>
   );
 };

@@ -3,89 +3,96 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { UserPen } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../database.types";
 import { PageProps } from "../../../.next/types/app/layout";
 
 type UserProfileProps = {
-  userId: string; // userId의 UUID 타입
+  userId: string;
 };
-type UserProfileType = Tables<"user_info">;
+
+type UserProfileType = Pick<Tables<"user_info">, "id" | "nickname" | "profile_url" | "state_msg">;
 
 const UserProfilePage = ({ userId }: UserProfileProps) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfileType | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [myLanguageUrl, setMyLanguageUrl] = useState<string>("");
+  const [learnLanguageUrl, setLearnLanguageUrl] = useState<string>("");
   const supabase = createClient();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      setLoading(true);
+      const { data } = await supabase
+        .from("user_info")
+        .select(
+          "id, nickname, profile_url, state_msg, my_language:language!user_info_my_language_fkey(language_img_url), learn_language:language!user_info_learn_language_fkey(language_img_url)"
+        )
+        .eq("id", userId)
+        .single();
 
-      const { data, error } = await supabase.from("user_info").select("*").eq("id", userId).single();
-
-      if (error) {
-        console.error("프로필 오류", error);
-        setError("프로필 정보를 가져오는 데 실패했습니다.");
-      } else {
+      if (data) {
         setProfile(data);
+        if (data.my_language) {
+          setMyLanguageUrl(data.my_language.language_img_url);
+        }
+        if (data.learn_language) {
+          setLearnLanguageUrl(data.learn_language.language_img_url);
+        }
       }
-
-      setLoading(false);
     };
-
     fetchUserProfile();
-  }, [supabase, userId]);
-
-  if (loading) {
-    return <p className="text-center text-lg font-semibold">로딩 중...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
+  }, [userId, supabase]);
 
   const handleEditProfile = () => {
-    router.push("/myPage/editProfile");
+    router.push(`/myPage/editProfile?userId=${userId}`);
   };
-  console.log(profile?.profile_url);
 
   return (
     <div className="flex flex-col items-center mt-10 space-y-6">
-      <h1 className="text-3xl font-bold text-gray-700">사용자 프로필</h1>
       {profile ? (
-        <div className="flex flex-col items-center p-6 border border-gray-200 rounded-lg shadow-md max-w-sm w-full bg-white">
+        <div className="flex flex-col items-start p-6 w-full">
           <div className="flex flex-row items-center gap-4">
-            <div className="w-[80px] h-[80px] overflow-hidden rounded-full shadow-md mb-4">
-              <Image
-                src={profile.profile_url}
-                alt="Profile Image"
-                width={128}
-                height={128}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <div>
-              <div className="flex flex-row items-center gap-2">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {profile.my_language} {profile.nickname}
-                </h2>
-                <UserPen
-                  size={34}
-                  strokeWidth={1.8}
-                  onClick={handleEditProfile}
-                  className="p-2 text-white bg-gray-500 hover:bg-gray-600 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            <div className="overflow-hidden rounded-xl shadow-md">
+              <div className="w-[80px] h-[80px] overflow-hidden shadow-md relative">
+                <Image
+                  src={profile.profile_url}
+                  alt="Profile Image"
+                  fill
+                  className="object-cover w-full h-full"
+                  priority
+                  sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-2">{profile.state_msg}</p>
             </div>
-          </div>
-          <div className="flex flex-row items-center gap-2">
-            <div className="flex flex-col w-[120px] h-[80px] bg-gray-100 p-2 rounded-xl">
-              <p className="text-gray-600 text-sm">배우고싶은 언어</p>
-              <p className="text-2xl">{profile.learn_language}</p>
+            <div className="flex flex-col items-start gap-1">
+              <div className="flex flex-row items-center gap-2">
+                <div className="w-[14px] h-[14px] overflow-hidden rounded-full shadow-md relative">
+                  <Image
+                    src={myLanguageUrl}
+                    alt="Languageurl"
+                    fill
+                    className="object-cover w-full h-full"
+                    sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
+                  />
+                </div>
+                <h2 className="text-xl font-semibold text-gray-800">{profile.nickname}</h2>
+                <button onClick={handleEditProfile} className="text-blue-600 hover:underline">
+                  프로필 수정하기
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">{profile.state_msg}</p>
+              <div className="flex flex-row items-center gap-2">
+                <p className="text-gray-600 text-sm">Learn</p>
+                <div className="w-[14px] h-[14px] overflow-hidden shadow-md rounded-full relative">
+                  <Image
+                    src={learnLanguageUrl}
+                    alt="Languageurl"
+                    fill
+                    className="object-cover w-full h-full"
+                    sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

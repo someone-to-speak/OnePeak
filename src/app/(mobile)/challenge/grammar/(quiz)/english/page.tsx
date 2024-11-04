@@ -1,6 +1,6 @@
 "use client";
 
-import RandomEnglishGrammarQuiz from "@/components/challenge/randomEnglishGrammarQuiz";
+import RandomEnglishGrammarQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
 import { useSearchParams } from "next/navigation";
 
 const EnglishGrammarQuizPage = () => {

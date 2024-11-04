@@ -6,8 +6,6 @@ import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 
-// const learnLanguages = ["영어", "일본어", "스페인어", "프랑스어"];
-
 export default function SetLearnLanguage() {
   const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
   const router = useRouter();
@@ -22,6 +20,8 @@ export default function SetLearnLanguage() {
     queryKey: ["language"],
     queryFn: () => fetchLanguageName()
   });
+
+  const supportingLanguages = languages?.map((language) => language.language_name);
 
   // 로딩 상태
   if (languagesLoading) return <p>Loading...</p>;
@@ -52,15 +52,13 @@ export default function SetLearnLanguage() {
       <h1>너의 학습언어 알려줘</h1>
       <p>본인이 배우고 싶은 언어를 설정해주시면 됩니다.</p>
       <div className="flex flex-col justify-center items-center">
-        {languages?.map((language, index) => (
+        {supportingLanguages?.map((language, index) => (
           <button
             key={index}
-            onClick={() => setSelectedLearnLanguage(language.language_name)}
-            className={`w-[50%] p-2 m-2 rounded ${
-              selectedLearnLanguage === language.language_name ? "bg-green-500" : "bg-gray-300"
-            }`}
+            onClick={() => setSelectedLearnLanguage(language)}
+            className={`w-[50%] p-2 m-2 rounded ${selectedLearnLanguage === language ? "bg-green-500" : "bg-gray-300"}`}
           >
-            {language.language_name}
+            {language}
           </button>
         ))}
       </div>
