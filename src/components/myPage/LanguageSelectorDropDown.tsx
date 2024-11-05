@@ -26,7 +26,7 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
 
   return (
     <div className="w-full">
-      <Accordion>
+      <Accordion isCompact className="border-b border-[#f3f3f3] py-[10px]">
         <AccordionItem
           key={1}
           title={
@@ -37,7 +37,6 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
               {subtitle}
             </p>
           }
-          className="flex flex-col border-b border-[#f3f3f3]"
         >
           <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-[#f3f3f3] rounded">
             {languageOptions.length > 0 ? (

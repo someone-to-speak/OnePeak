@@ -39,12 +39,12 @@ const SettingsPage = () => {
 
         if (langError) {
           console.error(langError);
-          return; // 오류가 발생하면 조기 종료
+          return;
         }
 
         if (languages) {
-          setMyLanguage(languages.my_language?.language_name || ""); // 객체에서 문자열로 설정
-          setLearnLanguage(languages.learn_language?.language_name || ""); // 객체에서 문자열로 설정
+          setMyLanguage(languages.my_language?.language_name || "");
+          setLearnLanguage(languages.learn_language?.language_name || "");
         }
 
         const { data: existingSubscription } = await supabase
@@ -78,7 +78,7 @@ const SettingsPage = () => {
 
     try {
       await updateMyLanguage(userId, language);
-      setMyLanguage(language); // 상태 업데이트
+      setMyLanguage(language);
     } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
       console.error(err);
@@ -90,7 +90,7 @@ const SettingsPage = () => {
 
     try {
       await updateLearnLanguage(userId, language);
-      setLearnLanguage(language); // 상태 업데이트
+      setLearnLanguage(language);
     } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
       console.error(err);
@@ -168,8 +168,8 @@ const SettingsPage = () => {
           onLanguageChange={handleUpdateLearnLanguage}
         />
       </div>
-      <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px]">
-        <h3 className="text-black text-base font-medium font-['Pretendard'] leading-normal px-2">알림 설정</h3>
+      <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
+        <h3 className="text-black text-base font-medium font-['Pretendard'] leading-normal">알림 설정</h3>
         <div
           onClick={handleNotificationToggle}
           className={`w-12 h-7 px-[3px] py-0.5 rounded-full flex justify-between items-center gap-2.5 cursor-pointer ${
