@@ -3,6 +3,10 @@
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState, useCallback } from "react";
 import { Tables } from "../../../../database.types";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import BackButton from "@/components/BackButton";
+import Image from "next/image";
+import stamp from "@/../public/images/Stamp.svg";
 
 type NotificationType = Tables<"notifications">;
 
@@ -78,10 +82,6 @@ const NotificationPage = () => {
         { event: "INSERT", schema: "public", table: "notifications" },
         async (payload: { new: { title: string; message: string } }) => {
           console.log("New notification received:", payload);
-
-          // 수신한 payload의 내용을 상세히 로그 출력
-          console.log("Received notification data:", JSON.stringify(payload.new, null, 2));
-
           const { title, message } = payload.new;
           const registration = await navigator.serviceWorker.ready;
           registration.showNotification(title, {
@@ -109,18 +109,36 @@ const NotificationPage = () => {
   if (!userId) return null;
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="bg-white px-[16px]">
+      <BackButton title="알림" />
       {notifi && notifi.length > 0 ? (
-        notifi
-          .slice()
-          .reverse()
-          .map((noti) => (
-            <div key={noti.id} className="bg-white shadow-md rounded-sm p-4">
-              <h3 className="text-lg font-semibold">{noti.title}</h3>
-              <p className="text-gray-700">{noti.message}</p>
-              <p className="text-sm text-gray-500">{noti.created_at}</p>
-            </div>
-          ))
+        <Accordion isCompact>
+          {notifi
+            .slice()
+            .reverse()
+            .map((noti) => (
+              <AccordionItem
+                key={noti.id}
+                title={
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="flex flex-row gap-[8px]">
+                      <Image src={stamp} alt={"Stamp"} width={18} height={18} />
+                      <p className="text-[#0c0c0c] text-base font-bold font-['SUIT'] leading-[27px]">{noti.title}</p>
+                    </div>
+                    <p className="text-[#3f3f3f] text-sm font-medium font-['Pretendard'] leading-[21px] text-right">
+                      {new Date(noti.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                }
+                aria-label={noti.title}
+                className="flex flex-col border-b border-[#f3f3f3] py-[20px]"
+              >
+                <p className="text-[#3f3f3f] text-sm font-medium font-['Pretendard'] leading-[21px] text-left">
+                  {noti.message}
+                </p>
+              </AccordionItem>
+            ))}
+        </Accordion>
       ) : (
         <div className="text-gray-500">알림없음</div>
       )}

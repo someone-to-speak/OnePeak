@@ -1,6 +1,5 @@
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 type LanguageType = {
   id: number;
@@ -9,56 +8,64 @@ type LanguageType = {
 };
 
 interface ImageSelectorDropDownProps {
-  selectedLanguage: string;
+  text: string;
+  subtitle: string;
   languageOptions: LanguageType[];
   onLanguageChange: (language: string) => void;
 }
 
 const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
-  selectedLanguage,
+  text,
+  subtitle,
   languageOptions,
   onLanguageChange
 }) => {
-  const [selected, setSelected] = useState<string>("");
-
-  useEffect(() => {
-    setSelected(selectedLanguage || "언어를 선택해주세요");
-  }, [selectedLanguage]);
-
-  const handleSelectionChange = (key: React.Key) => {
-    const chosenLanguage = languageOptions.find((lang) => lang.language_name === key);
-    if (chosenLanguage) {
-      setSelected(chosenLanguage.language_name);
-      onLanguageChange(chosenLanguage.language_name);
-    }
+  const handleSelectionChange = (language: LanguageType) => {
+    onLanguageChange(language.language_name);
   };
 
   return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button className="flex items-center gap-2 bg-white hover:bg-gray-100 transition duration-200 ease-in-out shadow-md">
-          <span>{selected}</span>
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu onAction={handleSelectionChange} className="bg-white rounded-lg shadow-lg">
-        {languageOptions.map((lang) => (
-          <DropdownItem
-            key={lang.language_name}
-            startContent={
-              <Image
-                src={lang.language_img_url}
-                alt={lang.language_name}
-                width={100}
-                height={100}
-                className="w-6 h-6 rounded-full"
-              />
-            }
-          >
-            <span className="text-gray-800">{lang.language_name}</span>
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
+    <div className="w-full">
+      <Accordion isCompact className="border-b border-[#f3f3f3] py-[10px]">
+        <AccordionItem
+          key={1}
+          title={
+            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal text-left">{text}</p>
+          }
+          subtitle={
+            <p className="text-gray-500 text-base font-medium font-['Pretendard'] leading-normal text-left">
+              {subtitle}
+            </p>
+          }
+        >
+          <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-[#f3f3f3] rounded">
+            {languageOptions.length > 0 ? (
+              languageOptions.map((lang) => (
+                <li key={lang.id}>
+                  <button
+                    onClick={() => handleSelectionChange(lang)}
+                    className="w-full h-20 px-5 bg-[#fcfcfc] rounded-[10px] border border-[#d9d9d9] flex justify-center items-center gap-2.5 hover:bg-[#e6f6d9] hover:border hover:border-[#d9d9d9]"
+                  >
+                    <Image
+                      src={lang.language_img_url}
+                      alt={lang.language_name}
+                      width={24}
+                      height={24}
+                      className="rounded-full"
+                    />
+                    <span className="text-[#020400] text-base font-bold font-['SUIT'] leading-normal">
+                      {lang.language_name}
+                    </span>
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="p-2 text-gray-500">결과가 없습니다.</li>
+            )}
+          </ul>
+        </AccordionItem>
+      </Accordion>
+    </div>
   );
 };
 
