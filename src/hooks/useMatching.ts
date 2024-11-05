@@ -66,5 +66,5 @@ export const useMatching = () => {
   //   };
   // }, [userInfo]);
 
-  return { setupMatchingChannel, userInfo, isLoading, isError, isMatching };
+  return { setupMatchingChannel, userInfo, isMatching };
 };
