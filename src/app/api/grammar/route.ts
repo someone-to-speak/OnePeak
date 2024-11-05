@@ -1,3 +1,5 @@
+"use server";
+
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
@@ -8,9 +10,8 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY
 });
 
-const supabase = createClient();
-
 export async function POST(req: Request) {
+  const supabase = createClient();
   const { type, level, language, length } = await req.json();
 
   if (!type || !level || !language || !length) {

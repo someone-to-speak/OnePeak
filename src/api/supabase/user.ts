@@ -1,9 +1,8 @@
 import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 export const getUser = async () => {
+  const supabase = createClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

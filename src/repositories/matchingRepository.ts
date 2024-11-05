@@ -1,9 +1,8 @@
 import { UserInfo, UserInfoForMatching } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 export const getUserForMatching = async () => {
+  const supabase = createClient();
   const { data: auth } = await supabase.auth.getUser();
 
   const userId = auth.user?.id;
@@ -17,6 +16,7 @@ export const getUserForMatching = async () => {
 };
 
 export const addToQueue = async (userInfo: UserInfo) => {
+  const supabase = createClient();
   return await supabase.from("matches").insert({
     user_id: userInfo.id,
     match_id: null,
@@ -26,10 +26,12 @@ export const addToQueue = async (userInfo: UserInfo) => {
 };
 
 export const getExistingQueue = async (userInfo: UserInfo) => {
+  const supabase = createClient();
   return await supabase.from("matches").select("*").eq("user_id", userInfo.id).is("match_id", null);
 };
 
 export const findMatch = async (userInfo: UserInfo) => {
+  const supabase = createClient();
   return await supabase
     .from("matches")
     .select("*")
@@ -39,9 +41,11 @@ export const findMatch = async (userInfo: UserInfo) => {
 };
 
 export const updateMatch = async (partnerUserId: string, matchId: string, roomId: string) => {
+  const supabase = createClient();
   return await supabase.from("matches").update({ match_id: matchId, room_id: roomId }).eq("user_id", partnerUserId);
 };
 
 export const removeUserFromQueue = async (userId: string) => {
+  const supabase = createClient();
   return await supabase.from("matches").delete().eq("user_id", userId);
 };

@@ -8,9 +8,8 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY
 });
 
-const supabase = createClient();
-
 export async function POST(req: Request) {
+  const supabase = createClient();
   const { type, language, length } = await req.json();
 
   if (!type || !language || !length) {

@@ -4,14 +4,13 @@ import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { UUID } from "crypto";
 
-const supabase = createClient();
-
 export const createChannel = (roomId: string): RealtimeChannel => {
   const supabase = createClient();
   return supabase.channel(`video-chat-${roomId}`);
 };
 
 export const getOrCreateConversationId = async (conversationId: UUID) => {
+  const supabase = createClient();
   const { data: conversationData } = await supabase
     .from("conversations")
     .select("id")
@@ -23,6 +22,7 @@ export const getOrCreateConversationId = async (conversationId: UUID) => {
 };
 
 export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
+  const supabase = createClient();
   const { data: existingParticipant } = await supabase
     .from("participants")
     .select("id")
@@ -37,6 +37,7 @@ export const checkOrAddParticipant = async (conversationId: UUID, participantId:
 };
 
 export const insertMessage = async (conversationId: UUID, content: string, type: string) => {
+  const supabase = createClient();
   await supabase.from("messages").insert({
     conversation_id: conversationId,
     content,
@@ -46,6 +47,7 @@ export const insertMessage = async (conversationId: UUID, content: string, type:
 
 // 채팅방 리스트 불러오기
 export const fetchConversationList = async (userId: string) => {
+  const supabase = createClient();
   const { data: participantData } = await supabase.from("participants").select("*").eq("user_id", userId);
 
   const conversationIds = participantData?.map((participant) => participant.conversation_id);
@@ -93,6 +95,7 @@ export const fetchConversationList = async (userId: string) => {
 
 // 메시지 불러오기
 export const fetchMessages = async (conversationId: UUID) => {
+  const supabase = createClient();
   const { data: Messages } = await supabase
     .from("messages")
     .select("*, user_info: sender_id(*)")

@@ -1,8 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 export const updateMyLanguage = async (userId: string, newLanguage: string) => {
+  const supabase = createClient();
   const { error } = await supabase.from("user_info").update({ my_language: newLanguage }).eq("id", userId);
 
   if (error) {
@@ -14,6 +13,7 @@ export const updateMyLanguage = async (userId: string, newLanguage: string) => {
 };
 
 export const updateLearnLanguage = async (userId: string, newLanguage: string) => {
+  const supabase = createClient();
   const { error } = await supabase.from("user_info").update({ learn_language: newLanguage }).eq("id", userId);
 
   if (error) {

@@ -3,10 +3,9 @@ import { Tables } from "../../../database.types";
 
 type UserAnswerType = Tables<"user_answer">;
 
-const supabase = createClient();
-
 // 'user_answer' 테이블에서 틀린문제만 가져오는 함수 정의
 export const fetchUserWrongAnswers = async (userId: string): Promise<UserAnswerType[]> => {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("user_answer")
     .select("*")
