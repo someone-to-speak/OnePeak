@@ -73,14 +73,14 @@ export const fetchConversationList = async (userId: string) => {
     .in("id", conversationIds as string[])
     .order("updated_at", { ascending: false });
 
-  const formattedConversationList = conversationList?.map((list) => ({
-    ...list,
-    last_message: list.last_message && list.last_message[0] ? (list.last_message[0] as Message) : null
-  }));
+  // const formattedConversationList = conversationList?.map((list) => ({
+  //   ...list,
+  //   last_message: list.last_message && list.last_message[0] ? (list.last_message[0] as Message) : null
+  // }));
   console.log("conversationList: ", conversationList);
-  console.log("formattedConversationList: ", formattedConversationList);
+  // console.log("formattedConversationList: ", formattedConversationList);
   const conversationListWithParticipants = await Promise.all(
-    formattedConversationList?.map(async (conversation) => {
+    conversationList?.map(async (conversation) => {
       const { data: participants } = await supabase
         .from("participants")
         .select("*, user_info: user_id(*, my_language(*), learn_language(*))")
@@ -88,17 +88,19 @@ export const fetchConversationList = async (userId: string) => {
         .neq("user_id", userId)
         .single();
 
+      console.log("participants: ", participants);
+
       return {
         ...conversation,
         participants: {
           ...participants,
-          user_info: (participants?.user_info[0] || {}) as UserInfoWithLanguage
+          user_info: (participants?.user_info || {}) as UserInfoWithLanguage
         }
       };
     }) || []
   );
-
-  return conversationListWithParticipants as ConversationWithParticipants[];
+  console.log("conversationListWithParticipants: ", conversationListWithParticipants);
+  return conversationListWithParticipants;
 };
 
 // 메시지 불러오기
