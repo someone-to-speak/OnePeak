@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 export async function POST(req: Request) {
+  const supabase = createClient();
   const { questionId, userId, selectedAnswer } = await req.json();
 
   if (!questionId || !userId || !selectedAnswer) {

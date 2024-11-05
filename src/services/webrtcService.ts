@@ -40,11 +40,23 @@ export class WebRTCService {
       }
     };
 
-    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const videoConstraints = {
+      width: { ideal: 640 },
+      height: { ideal: 360 },
+      frameRate: { max: 20 }
+    };
+
+    const localStream = await navigator.mediaDevices.getUserMedia({
+      video: videoConstraints,
+      audio: {
+        sampleRate: 16000
+      }
+    });
     this.localStream = localStream;
     if (this.localVideoRef.current) {
       this.localVideoRef.current.srcObject = localStream;
     }
+
     localStream.getTracks().forEach((track) => {
       this.peerConnection?.addTrack(track, localStream);
     });
@@ -53,7 +65,8 @@ export class WebRTCService {
   }
 
   private startLocalRecording(stream: MediaStream) {
-    this.localMediaRecorder = new MediaRecorder(stream);
+    const audioOnlyStream = new MediaStream(stream.getAudioTracks());
+    this.localMediaRecorder = new MediaRecorder(audioOnlyStream);
     this.localMediaRecorder.ondataavailable = (event) => {
       if (event.data.size > 0) this.localAudioChunks.push(event.data);
     };

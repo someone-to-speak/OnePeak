@@ -1,7 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -10,6 +8,7 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 export async function requestNotificationPermission(userId: string): Promise<boolean> {
+  const supabase = createClient();
   const permission = await Notification.requestPermission();
 
   if (permission === "granted") {
@@ -38,6 +37,7 @@ export async function requestNotificationPermission(userId: string): Promise<boo
 }
 
 export async function subscribeUserToPush(userId: string) {
+  const supabase = createClient();
   try {
     const registration = await navigator.serviceWorker.ready;
     const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -69,6 +69,7 @@ export async function subscribeUserToPush(userId: string) {
 }
 
 export async function subscribeToNotifications() {
+  const supabase = createClient();
   supabase
     .channel("notifications")
     .on(

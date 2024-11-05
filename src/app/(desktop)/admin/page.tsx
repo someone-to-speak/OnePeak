@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-const userManagement = () => {
+const UserManagementPage = () => {
   return (
     <div>
       <p>admin 페이지</p>
@@ -13,4 +13,4 @@ const userManagement = () => {
   );
 };
 
-export default userManagement;
+export default UserManagementPage;

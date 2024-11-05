@@ -65,8 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // console.log("initialResponse => ", initialResponse.choices[0].message.content);
     // console.log("followUpResponse => ", followUpResponse.choices[0].message.content);
 
-    // 두 응답 합치기
-
+    // 응답값
     const initialContent = initialResponse.choices[0].message.content;
     const followUpContent = followUpResponse.choices[0].message.content;
 

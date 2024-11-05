@@ -3,7 +3,7 @@
 import { insertAlarmInfo } from "@/api/route";
 import React, { useState } from "react";
 
-const AlarmManagePage = () => {
+const AlarmManagementPage = () => {
   const [selectedType, setSelectedType] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -60,4 +60,4 @@ const AlarmManagePage = () => {
   );
 };
 
-export default AlarmManagePage;
+export default AlarmManagementPage;
