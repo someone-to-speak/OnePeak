@@ -1,6 +1,4 @@
 import { fetchConversationList } from "@/api/supabase/chat";
-import { getUserId } from "@/api/supabase/user";
-import { Conversation } from "@/types/chatType/chatType";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "./useUser";
@@ -8,7 +6,7 @@ import { useUser } from "./useUser";
 const supabase = createClient();
 
 export const useConversation = () => {
-  const { userId } = useUser();
+  const { userInfo } = useUser();
 
   // 채팅방 리스트 불러오기
   const {
@@ -16,9 +14,9 @@ export const useConversation = () => {
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["conversation", userId],
-    queryFn: () => fetchConversationList(userId as string),
-    enabled: !!userId
+    queryKey: ["conversation", userInfo?.id],
+    queryFn: () => fetchConversationList(userInfo?.id as string),
+    enabled: !!userInfo?.id
   });
 
   return { conversationList, isLoading, isError };

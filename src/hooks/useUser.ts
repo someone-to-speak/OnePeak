@@ -1,15 +1,15 @@
-import { getUserId } from "@/api/supabase/user";
+import { getUser } from "@/api/supabase/user";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
 const supabase = createClient();
 
 export const useUser = () => {
-  const { data: userId } = useQuery({
+  const { data: userInfo } = useQuery({
     queryKey: ["userId"],
-    queryFn: () => getUserId(),
+    queryFn: () => getUser(),
     staleTime: Infinity
   });
 
-  return { userId };
+  return { userInfo };
 };

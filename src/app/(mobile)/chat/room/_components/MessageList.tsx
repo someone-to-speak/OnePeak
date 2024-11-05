@@ -7,7 +7,7 @@ import MyChat from "./MyChat";
 import OtherChat from "./OhterChat";
 
 export const MessageList = ({ conversationId }: { conversationId: UUID }) => {
-  const { userId } = useUser();
+  const { userInfo } = useUser();
   const { messages, isLoading, isError } = useMessage(conversationId);
 
   if (isLoading) {
@@ -21,7 +21,11 @@ export const MessageList = ({ conversationId }: { conversationId: UUID }) => {
   return (
     <div className="w-full">
       {messages?.map((msg) =>
-        msg.sender_id === userId ? <MyChat key={msg.id} message={msg} /> : <OtherChat key={msg.id} message={msg} />
+        msg.sender_id === userInfo?.id ? (
+          <MyChat key={msg.id} message={msg} />
+        ) : (
+          <OtherChat key={msg.id} message={msg} />
+        )
       )}
     </div>
   );

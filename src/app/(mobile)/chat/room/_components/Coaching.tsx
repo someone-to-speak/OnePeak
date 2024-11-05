@@ -1,24 +1,23 @@
 "use client";
 
-import { MessageWithUserInfo } from "@/types/chatType/chatType";
+import { generateAITuthorChat } from "@/api/openAI/gpt";
+import { convertSpeechToText } from "@/api/openAI/whisper";
+import { Message } from "@/types/chatType/chatType";
 import { useEffect, useState } from "react";
 
-const Coaching = ({ message }: { message: MessageWithUserInfo }) => {
+const Coaching = ({ message }: { message: Message }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sttText, setSttText] = useState<string>("");
+  const [tuthorText, setTuthorText] = useState<string>("");
 
   useEffect(() => {
     const handleSTT = async () => {
       setIsLoading(true);
-      const response = await fetch("/api/speechToText", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ url: message.content })
-      });
-      const _sttText = await response.json();
-      setSttText(_sttText.text);
+
+      const _sttText = await convertSpeechToText(message.content);
+      const _tuthorText = await generateAITuthorChat(_sttText);
+      setSttText(_sttText);
+      setTuthorText(_tuthorText as string);
       setIsLoading(false);
     };
 
@@ -29,7 +28,12 @@ const Coaching = ({ message }: { message: MessageWithUserInfo }) => {
     <div>잠시만 기다려주세요...</div>;
   }
 
-  return <div>{sttText}</div>;
+  return (
+    <div className="flex flex-col gap-2">
+      <p>{sttText}</p>
+      <p>{tuthorText}</p>
+    </div>
+  );
 };
 
 export default Coaching;

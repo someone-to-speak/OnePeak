@@ -1,4 +1,11 @@
-import { ConversationWithParticipants, MessageWithUserInfo } from "@/types/chatType/chatType";
+import {
+  ConversationWithParticipants,
+  Language,
+  Message,
+  MessageWithUserInfo,
+  UserInfoWithLanguage
+} from "@/types/chatType/chatType";
+import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { UUID } from "crypto";
@@ -61,16 +68,28 @@ export const fetchConversationList = async (userId: string) => {
     .in("id", conversationIds as string[])
     .order("updated_at", { ascending: false });
 
+  const formattedConversationList = conversationList?.map((list) => ({
+    ...list,
+    last_message: list.last_message && list.last_message[0] ? (list.last_message[0] as Message) : null
+  }));
+  console.log("conversationList: ", conversationList);
+  console.log("formattedConversationList: ", formattedConversationList);
   const conversationListWithParticipants = await Promise.all(
-    conversationList?.map(async (conversation) => {
+    formattedConversationList?.map(async (conversation) => {
       const { data: participants } = await supabase
         .from("participants")
-        .select("*, user_info: user_id(*, my_language(*))")
+        .select("*, user_info: user_id(*, my_language(*), learn_language(*))")
         .eq("conversation_id", conversation.id)
         .neq("user_id", userId)
-        .maybeSingle();
+        .single();
 
-      return { ...conversation, participants };
+      return {
+        ...conversation,
+        participants: {
+          ...participants,
+          user_info: (participants?.user_info[0] || {}) as UserInfoWithLanguage
+        }
+      };
     }) || []
   );
 
@@ -78,10 +97,16 @@ export const fetchConversationList = async (userId: string) => {
 };
 
 // 메시지 불러오기
-export const fetchMessages = async (conversationId: string) => {
+export const fetchMessages = async (conversationId: UUID) => {
   const { data: Messages } = await supabase
     .from("messages")
     .select("*, user_info: sender_id(*)")
     .eq("conversation_id", conversationId);
-  return Messages as MessageWithUserInfo[];
+
+  const formattedMessages = Messages?.map((message) => ({
+    ...message,
+    user_info: (message.user_info[0] || {}) as UserInfo
+  }));
+
+  return formattedMessages as MessageWithUserInfo[];
 };

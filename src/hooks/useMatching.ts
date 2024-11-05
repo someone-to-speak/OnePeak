@@ -1,16 +1,15 @@
-// /hooks/useMatching.ts
 import { useEffect, useRef, useState } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { initiateMatching } from "@/services/matchingService";
 import { removeUserFromQueue } from "@/repositories/matchingRepository";
-import { useUserInfoForMatching } from "@/hooks/getUserInfo";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { useUser } from "./useUser";
 
 export const useMatching = () => {
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
   const router = useRouter();
-  const { data: userInfo, isLoading, isError } = useUserInfoForMatching();
+  const { userInfo } = useUser();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
   const setupMatchingChannel = async () => {
@@ -27,34 +26,45 @@ export const useMatching = () => {
 
     if (roomId) {
       setIsMatching(false);
+      await cleanUp();
       router.push(`/lesson/room?id=${roomId}`);
     } else {
       const matchingChannel = supabase.channel("matches");
 
-      matchingChannel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
-        console.log("UPDATE");
-        const { new: updatedMatchQueue } = payload;
-        if (updatedMatchQueue.user_id === userInfo.id) {
-          setIsMatching(false);
-          router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
+      matchingChannel.on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "matches" },
+        async (payload) => {
+          console.log("UPDATE");
+          const { new: updatedMatchQueue } = payload;
+          if (updatedMatchQueue.user_id === userInfo.id) {
+            setIsMatching(false);
+            await cleanUp();
+            router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
+          }
         }
-      });
+      );
       matchingChannel.subscribe();
     }
   };
 
-  useEffect(() => {
-    if (!userInfo) return;
+  const cleanUp = async () => {
+    await matchingChannelRef.current?.unsubscribe();
+    await removeUserFromQueue(userInfo?.id as string);
+  };
 
-    const cleanUp = async () => {
-      await matchingChannelRef.current?.unsubscribe();
-      await removeUserFromQueue(userInfo.id);
-    };
+  // useEffect(() => {
+  //   if (!userInfo) return;
 
-    return () => {
-      cleanUp();
-    };
-  }, [userInfo]);
+  //   const cleanUp = async () => {
+  //     await matchingChannelRef.current?.unsubscribe();
+  //     await removeUserFromQueue(userInfo.id);
+  //   };
+
+  //   return () => {
+  //     cleanUp();
+  //   };
+  // }, [userInfo]);
 
   return { setupMatchingChannel, userInfo, isLoading, isError, isMatching };
 };
