@@ -23,12 +23,10 @@ export const useChatMessages = (situation: string, level: number) => {
         const botResponse = await getChatResponse([...messages, userMessage], situation, level);
 
         if (botResponse) {
-          // const botMessage: Message = { role: "assistant", content: botResponse };
-          const initialContentMessage: Message = { role: "assistant", content: botResponse.initialContent };
-          const followUpContentMessage: Message = { role: "assistant", content: botResponse.followUpContent };
-          // 챗봇 메세지 추가
-          // setMessages((prev) => [...prev, botMessage]);
-          setMessages((prev) => [...prev, initialContentMessage, followUpContentMessage]);
+          const botMessage: Message = { role: "assistant", content: botResponse };
+
+          //챗봇 메세지 추가
+          setMessages((prev) => [...prev, botMessage]);
         }
       } catch (error) {
         console.log("챗봇 응답 실패: ", error);
