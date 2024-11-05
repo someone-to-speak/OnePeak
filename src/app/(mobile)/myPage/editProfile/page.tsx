@@ -153,7 +153,7 @@ const EditProfile = () => {
         <Button
           type="submit"
           disabled={loading}
-          className="absolute inset-x-0 bottom-[58px] h-16 bg-gray-200 w-full text-center p-2"
+          className="absolute inset-x-0 bottom-[58px] h-16 bg--primary-500 w-full text-center p-2"
         >
           {loading ? <Spinner size="sm" /> : "수정 완료"}
         </Button>
