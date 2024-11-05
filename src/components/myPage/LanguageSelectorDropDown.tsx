@@ -1,6 +1,7 @@
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import caretUp from "@/../public/images/CaretUp.svg";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 type LanguageType = {
   id: number;
@@ -20,45 +21,70 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
   onLanguageChange
 }) => {
   const [selected, setSelected] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     setSelected(selectedLanguage || "언어를 선택해주세요");
   }, [selectedLanguage]);
 
-  const handleSelectionChange = (key: React.Key) => {
-    const chosenLanguage = languageOptions.find((lang) => lang.language_name === key);
-    if (chosenLanguage) {
-      setSelected(chosenLanguage.language_name);
-      onLanguageChange(chosenLanguage.language_name);
-    }
+  const handleSelectionChange = (language: LanguageType) => {
+    setSelected(language.language_name);
+    onLanguageChange(language.language_name);
   };
 
+  const filteredLanguages = languageOptions.filter((lang) =>
+    lang.language_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button className="flex items-center gap-2 bg-white hover:bg-gray-100 transition duration-200 ease-in-out shadow-md">
-          <span>{selected}</span>
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu onAction={handleSelectionChange} className="bg-white rounded-lg shadow-lg">
-        {languageOptions.map((lang) => (
-          <DropdownItem
-            key={lang.language_name}
-            startContent={
-              <Image
-                src={lang.language_img_url}
-                alt={lang.language_name}
-                width={100}
-                height={100}
-                className="w-6 h-6 rounded-full"
-              />
-            }
-          >
-            <span className="text-gray-800">{lang.language_name}</span>
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
+    <div className="relative">
+      <button
+        onClick={() => setSelected((prev) => (prev === selected ? "" : selected))}
+        className="flex items-center gap-2 bg-white hover:bg-gray-100 transition duration-200 ease-in-out shadow-md p-2 w-full text-left"
+      >
+        <span>{selected}</span>
+        <Image
+          src={caretUp}
+          alt={"CaretUp"}
+          className={`transform transition-transform duration-200 ${selected ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      <Accordion>
+        <AccordionItem title="언어 선택" className="p-2">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="검색..."
+            className="p-2 border-b border-gray-300 w-full"
+          />
+          <ul className="mt-2">
+            {filteredLanguages.length > 0 ? (
+              filteredLanguages.map((lang) => (
+                <li key={lang.id}>
+                  <button
+                    onClick={() => handleSelectionChange(lang)}
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-left"
+                  >
+                    <Image
+                      src={lang.language_img_url}
+                      alt={lang.language_name}
+                      width={24}
+                      height={24}
+                      className="rounded-full"
+                    />
+                    <span className="text-gray-800">{lang.language_name}</span>
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="p-2 text-gray-500">결과가 없습니다.</li>
+            )}
+          </ul>
+        </AccordionItem>
+      </Accordion>
+    </div>
   );
 };
 
