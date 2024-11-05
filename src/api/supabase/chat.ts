@@ -16,7 +16,9 @@ export const getOrCreateConversationId = async (conversationId: UUID) => {
     .eq("id", conversationId)
     .maybeSingle();
 
-  !conversationData && (await supabase.from("conversations").insert({ id: conversationId }));
+  if (!conversationData) {
+    await supabase.from("conversations").insert({ id: conversationId });
+  }
 };
 
 export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
@@ -29,10 +31,11 @@ export const checkOrAddParticipant = async (conversationId: UUID, participantId:
 
   if (existingParticipant) return;
 
-  !existingParticipant &&
-    (await supabase.from("participants").insert({
+  if (!existingParticipant) {
+    await supabase.from("participants").insert({
       conversation_id: conversationId
-    }));
+    });
+  }
 };
 
 export const insertMessage = async (conversationId: UUID, content: string, type: string) => {

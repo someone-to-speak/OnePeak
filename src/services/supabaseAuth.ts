@@ -27,7 +27,7 @@ export const getUser = async (): Promise<string> => {
 
   const { data } = await supabase.auth.getUser();
 
-  const { data: userData, error } = await supabase
+  const {} = await supabase
     .from("user_info")
     .select("*")
     .eq("id", data.user?.id as string);

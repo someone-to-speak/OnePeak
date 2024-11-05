@@ -1,7 +1,7 @@
 const CACHE_NAME = "pwa-cache-v1";
 
 // 설치 단계
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   console.log("Service Worker installing.");
 });
 
