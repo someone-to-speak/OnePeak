@@ -74,8 +74,8 @@ export default function SetLearnLanguage() {
               className={`"flex h-[64px] py-[10px] px-[20px] text-left gap-[10px] shrink-0 self-stretch rounded-[10px] "
       ${
         selectedLearnLanguage === language
-          ? "border border-[var(--Secondary-500, #FFA500)] bg-[var(--Secondary-900, #FFEDCC)]"
-          : "border border-[var(--Gray-800, #D9D9D9)] bg-[var(--White, #FDFDFD)]"
+          ? "border border-secondary-500 bg-secondary-900"
+          : "border border-gray-800 bg-white"
       }`}
             >
               <p>{language}</p>
