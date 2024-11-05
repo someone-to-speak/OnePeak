@@ -39,7 +39,7 @@ export default function SetLearnLanguage() {
         .eq("id", userId);
 
       if (!error) {
-        router.push("/"); // 홈화면으로 이동
+        router.push("/loginInfo/setIsMarketed");
       }
     }
   };
@@ -72,7 +72,7 @@ export default function SetLearnLanguage() {
         disabled={!selectedLearnLanguage}
         className={`w-full mt-4 p-2 rounded ${selectedLearnLanguage ? "bg-green-500" : "bg-gray-300"}`}
       >
-        시작하기
+        계속
       </button>
     </div>
   );

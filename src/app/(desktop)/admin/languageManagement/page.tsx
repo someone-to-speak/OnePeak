@@ -2,7 +2,7 @@
 import AddLanguageForm from "@/components/admin/languageManagement/AddLanguageForm";
 import LanguageTable from "@/components/admin/languageManagement/LanguageTable";
 
-const page = () => {
+const LanguageManagementPage = () => {
   return (
     <div className="flex flex-col items-center">
       <AddLanguageForm />
@@ -11,4 +11,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default LanguageManagementPage;
