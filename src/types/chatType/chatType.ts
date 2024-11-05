@@ -7,6 +7,7 @@ export type SignalData = {
   candidate?: RTCIceCandidateInit;
 };
 
+export type matche = Tables<"matches">;
 export type Conversation = Tables<"conversations">;
 export type Participant = Tables<"participants">;
 export type PartialMessage = Partial<Message>;

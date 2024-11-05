@@ -22,15 +22,15 @@ export const signOut = async () => {
   await supabase.auth.signOut();
 };
 
-export const getUser = async (): Promise<string> => {
-  const supabase = createClient();
+// export const getUser = async (): Promise<string> => {
+//   const supabase = createClient();
 
-  const { data } = await supabase.auth.getUser();
+//   const { data } = await supabase.auth.getUser();
 
-  const { data: userData, error } = await supabase
-    .from("user_info")
-    .select("*")
-    .eq("id", data.user?.id as string);
+//   const { data: userData } = await supabase
+//     .from("user_info")
+//     .select("*")
+//     .eq("id", data.user?.id as string);
 
-  return data.user?.user_metadata.name;
-};
+//   return userData.user?.user_metadata.name;
+// };

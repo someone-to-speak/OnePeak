@@ -1,4 +1,4 @@
-import { UserInfoForMatching } from "@/types/userType/userType";
+import { UserInfo, UserInfoForMatching } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
@@ -16,23 +16,26 @@ export const getUserForMatching = async () => {
   return data as UserInfoForMatching;
 };
 
-export const addToQueue = async (userId: string, myLanguage: string, learnLanguage: string) => {
-  return await supabase
-    .from("matches")
-    .insert({ user_id: userId, match_id: null, my_language: myLanguage, learn_language: learnLanguage });
+export const addToQueue = async (userInfo: UserInfo) => {
+  return await supabase.from("matches").insert({
+    user_id: userInfo.id,
+    match_id: null,
+    my_language: userInfo.my_language,
+    learn_language: userInfo.learn_language
+  });
 };
 
-export const getExistingQueue = async (userId: string) => {
-  return await supabase.from("matches").select("*").eq("user_id", userId).is("match_id", null);
+export const getExistingQueue = async (userInfo: UserInfo) => {
+  return await supabase.from("matches").select("*").eq("user_id", userInfo.id).is("match_id", null);
 };
 
-export const findMatch = async (userId: string, learnLanguage: string) => {
+export const findMatch = async (userInfo: UserInfo) => {
   return await supabase
     .from("matches")
     .select("*")
     .is("match_id", null)
-    .eq("my_language", learnLanguage)
-    .neq("user_id", userId);
+    .eq("my_language", userInfo.learn_language as string)
+    .neq("user_id", userInfo.id);
 };
 
 export const updateMatch = async (partnerUserId: string, matchId: string, roomId: string) => {
