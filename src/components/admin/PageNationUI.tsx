@@ -1,5 +1,6 @@
 import React from "react";
-import { BlockedUserInfo, UserInfo } from "@/type";
+import { BlockedUserInfo } from "@/type";
+import { Tables } from "../../../database.types";
 
 interface PageNationUIProps {
   handlePageChange: (pageNumber: number) => void;
@@ -7,6 +8,8 @@ interface PageNationUIProps {
   totalPages: number;
   usersInfo: UserInfo[] | BlockedUserInfo[];
 }
+
+type UserInfo = Tables<"user_info">;
 
 const PageNationUI: React.FC<PageNationUIProps> = ({ handlePageChange, currentPage, totalPages, usersInfo }) => {
   return (

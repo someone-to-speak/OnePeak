@@ -9,29 +9,57 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return new Uint8Array(Array.from(rawData, (char) => char.charCodeAt(0)));
 }
 
-export async function requestNotificationPermission(userId: string) {
+export async function requestNotificationPermission(userId: string): Promise<boolean> {
   const permission = await Notification.requestPermission();
+
   if (permission === "granted") {
     console.log("Notification permission granted.");
-    subscribeUserToPush(userId);
+
+    const { data: existingSubscription, error: subscriptionError } = await supabase
+      .from("subscriptions")
+      .select("subscription")
+      .eq("user_id", userId)
+      .single();
+
+    if (subscriptionError) {
+      console.error("Error fetching subscription:", subscriptionError);
+      return false;
+    }
+
+    if (!existingSubscription) {
+      await subscribeUserToPush(userId);
+    } else {
+      console.log("User is already subscribed.");
+    }
+
+    await subscribeToNotifications();
+    return true; // 권한 요청 성공 시 true 반환
   } else {
     console.error("Unable to get permission to notify.");
+    return false; // 권한 요청 실패 시 false 반환
   }
 }
 
 export async function subscribeUserToPush(userId: string) {
   try {
     const registration = await navigator.serviceWorker.ready;
+    const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+
+    if (!vapidPublicKey) {
+      console.error("VAPID Public Key is missing.");
+      return;
+    }
+
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
+      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
     });
 
     console.log("User is subscribed:", subscription);
 
     const { error } = await supabase
       .from("subscriptions")
-      .insert([{ user_id: userId, subscription: JSON.stringify(subscription) }]);
+      .upsert([{ user_id: userId, subscription: JSON.stringify(subscription) }]);
 
     if (error) {
       console.error("Error saving subscription to Supabase:", error);
@@ -41,4 +69,28 @@ export async function subscribeUserToPush(userId: string) {
   } catch (error) {
     console.error("Failed to subscribe user:", error);
   }
+}
+
+export async function subscribeToNotifications() {
+  supabase
+    .channel("notifications")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "notifications" },
+      async (payload: { new: { title: string; message: string } }) => {
+        console.log("New notification:", payload);
+
+        const { title, message } = payload.new;
+        const registration = await navigator.serviceWorker.ready;
+
+        registration.showNotification(title, {
+          body: message,
+          icon: "/icon-192x192.png",
+          badge: "/icon-192x192.png"
+        });
+      }
+    )
+    .subscribe();
+
+  console.log("Subscribed to notifications channel.");
 }

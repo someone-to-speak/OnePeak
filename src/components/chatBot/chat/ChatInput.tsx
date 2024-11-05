@@ -5,6 +5,7 @@ type ChatInputProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
+  onEndChat: () => void;
 };
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -13,7 +14,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isRecording,
   onSubmit,
   onStartRecording,
-  onStopRecording
+  onStopRecording,
+  onEndChat
 }) => {
   return (
     <form className="sticky bottom-[55px] flex w-full bg-gray-200 p-4" onSubmit={onSubmit}>
@@ -41,6 +43,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
         aria-label="메시지 전송"
       >
         전송
+      </button>
+
+      <button
+        type="button"
+        className="ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+        onClick={onEndChat}
+      >
+        대화 종료
       </button>
     </form>
   );

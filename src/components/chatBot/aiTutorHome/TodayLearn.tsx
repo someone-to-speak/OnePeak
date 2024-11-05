@@ -1,12 +1,11 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useCallback } from "react";
-
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Tables } from "../../../../database.types";
+import { reviewApi } from "@/services/supabaseChatbot";
 
 type SituationType = Tables<"situation">;
 
@@ -15,46 +14,15 @@ const TodayLearn = () => {
   const router = useRouter();
 
   // 유저 정보 조회
-  const getUserInfo = async () => {
-    const {
-      data: { user },
-      error
-    } = await supabase.auth.getUser();
-    if (error) {
-      console.log("유저 정보를 가져오는 데에 실패하였습니다! ", error);
-      return null;
-    }
-    return user;
-  };
-
   const { data: user } = useQuery({
     queryKey: ["userInfo"],
-    queryFn: getUserInfo
+    queryFn: reviewApi.getUserInfo
   });
 
   // situation 조회
-  const getSituations = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.from("situation").select("*");
-
-      if (error) {
-        throw error;
-      }
-
-      if (data) {
-        // 데이터가 3개 이상일 경우 랜덤으로 3개 선택
-        const randomSiuations = data.sort(() => 0.5 - Math.random()).slice(0, 3);
-        return randomSiuations;
-      }
-    } catch (error) {
-      console.log("situation을 가져오는 데에 실패하였습니다!", error);
-      throw error;
-    }
-  }, [supabase]);
-
   const { data: situations } = useQuery({
     queryKey: ["situations"],
-    queryFn: getSituations
+    queryFn: reviewApi.getEachLevel
   });
 
   // review 테이블에 유저가 선택한 학습 추가
@@ -69,24 +37,29 @@ const TodayLearn = () => {
   }): Promise<SituationType> => {
     // 오늘 날짜 생성
     const today = new Date();
-    const todayString = format(today, "yyyy-MM-dd");
+    // KST로 조정 (UTC+9)
+    const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
+    const todayString = format(kstToday, "yyyy-MM-dd");
 
     // 중복 데이터 확인
     const { data: existingReviews, error: checkError } = await supabase
       .from("review")
       .select("*")
       .eq("user_id", userId)
-      .eq("situation", situation)
-      .gte("created_at", `${todayString}T00:00:00Z`) // 오늘 시작 시간
-      .lt("created_at", `${todayString}T23:59:59Z`); // 오늘 종료 시간
+      .eq("situation", situation);
+
+    const todayReview = existingReviews?.filter((review) => {
+      const dateOnly = review.created_at.split("T")[0];
+      return dateOnly === todayString;
+    });
 
     if (checkError) {
       console.error("중복 확인 오류: ", checkError);
       throw checkError;
     }
-
+    console.log(existingReviews);
     // 중복 데이터가 없을 때만 추가
-    if (existingReviews?.length === 0) {
+    if (todayReview?.length === 0) {
       const { error } = await supabase
         .from("review")
         .insert([{ user_id: userId, situation, level }])
@@ -97,6 +70,7 @@ const TodayLearn = () => {
         throw error; // 에러 전파
       }
     }
+
     return {
       id: 0,
       situation,

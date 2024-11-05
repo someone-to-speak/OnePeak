@@ -38,7 +38,7 @@ const ReviewDetail = () => {
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}&id=${review.id}`);
   };
 
   if (isLoading) return <p>로딩 중...</p>;
@@ -46,7 +46,10 @@ const ReviewDetail = () => {
   if (isError) return <p>오류가 발생했습니다!</p>;
 
   // 선택한 날짜의 리뷰 필터링
-  const filteredReviews = reviews?.filter((review) => dateUtils.isSameDay(review.created_at, selectedDate)) || [];
+  const filteredReviews =
+    reviews?.filter((review) => {
+      return dateUtils.isSameDay(review.created_at, selectedDate);
+    }) || [];
 
   return (
     <div className="p-5">
@@ -57,7 +60,7 @@ const ReviewDetail = () => {
         <p>복습하기</p>
       </div>
 
-      <Calendar onSelectDate={setSelectedDate} />
+      <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
       <ReviewList reviews={filteredReviews} onReviewClick={handleReviewClick} />
     </div>
   );

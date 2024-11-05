@@ -1,50 +1,49 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
 import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { reviewApi } from "@/services/supabaseChatbot";
 
 type ReviewType = Tables<"review">;
 
 const Reviewing = () => {
-  const supabase = createClient();
   const router = useRouter();
-  const [reviews, setReviews] = useState<ReviewType[]>([]);
-  const [userId, setUserId] = useState<string | null>("");
 
   // 유저 정보 조회
-  const getUserInfo = async () => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-    setUserId(user?.id || null);
-  };
+  const { data: user } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: reviewApi.getUserInfo
+  });
 
-  // TODO: 내 id랑 같은 것만 가져오기
-  const getReview = async () => {
-    try {
-      const { data, error } = await supabase.from("review").select("*");
+  // 리뷰 데이터 조회
+  const {
+    data: reviews,
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ["reviewList", user?.id],
+    queryFn: () => (user ? reviewApi.getReviews(user.id) : Promise.resolve([])),
+    enabled: !!user
+  });
 
-      if (error) throw error;
+  if (isLoading) return <p>로딩 중...</p>;
 
-      if (data) setReviews(data);
-    } catch (error) {
-      console.log("reviews를 가져오는 데에 실패하였습니다!", error);
-    }
-  };
-
-  useEffect(() => {
-    getReview();
-    getUserInfo();
-  }, []);
+  if (isError) return <p>오류가 발생했습니다!</p>;
 
   // 필터링된 리뷰
-  const filterdReview = reviews.filter((review) => review.user_id === userId);
+  const filterdReview = reviews?.filter((review) => review.user_id === user?.id);
+
+  // 필터링된 리뷰 정렬
+  const sortedReview = filterdReview
+    ?.sort((a, b) => {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    })
+    .slice(0, 3);
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}`);
   };
 
   // 더보기 버튼 핸들러
@@ -60,7 +59,7 @@ const Reviewing = () => {
       </button>
       {
         // 최대 3개까지만 노출
-        filterdReview.slice(0, 3).map((review) => {
+        sortedReview?.map((review) => {
           return (
             <div key={review.id}>
               <div className="flex flex-row justify-between my-5">

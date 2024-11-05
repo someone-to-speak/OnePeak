@@ -21,7 +21,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
     isLoading: userAnswersLoading
   } = useQuery({
     queryKey: ["userAnswers", userId],
-    queryFn: () => fetchUserWrongAnswers(userId)
+    queryFn: () => fetchUserWrongAnswers(userId),
+    staleTime: 0
   });
 
   // TanStack Query로 문법문제 데이터 가져오기
@@ -31,7 +32,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
     isLoading: questionsLoading
   } = useQuery({
     queryKey: ["questions"],
-    queryFn: () => fetchGrammarQuestions()
+    queryFn: () => fetchGrammarQuestions(),
+    staleTime: 0
   });
 
   // 'user_answer'테이블에서 is_reviewed를 업데이트하는 Mutation

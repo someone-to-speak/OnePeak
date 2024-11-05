@@ -1,9 +1,4 @@
-import {
-  ConversationWithParticipants,
-  Message,
-  MessageWithUserInfo,
-  UserInfoWithLanguage
-} from "@/types/chatType/chatType";
+import { MessageWithUserInfo, UserInfoWithLanguage } from "@/types/chatType/chatType";
 import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
@@ -34,13 +29,6 @@ export const checkOrAddParticipant = async (conversationId: UUID, participantId:
     .eq("user_id", participantId)
     .eq("conversation_id", conversationId)
     .maybeSingle();
-
-  if (existingParticipant) return;
-
-  // !existingParticipant &&
-  //   (await supabase.from("participants").insert({
-  //     conversation_id: conversationId
-  //   }));
 
   if (!existingParticipant)
     await supabase.from("participants").insert({
