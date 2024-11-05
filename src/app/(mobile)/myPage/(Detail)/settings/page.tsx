@@ -6,7 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
-import Image from "next/image";
+import { requestNotificationPermission } from "@/utils/notifications/pushSubscription";
+import BackButton from "@/components/BackButton";
 
 type LanguageType = {
   id: number;
@@ -18,17 +19,10 @@ const SettingsPage = () => {
   const supabase = createClient();
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
-  const [selectedMyLanguage, setSelectedMyLanguage] = useState<string>("");
-  const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
   const [languageOptions, setLanguageOptions] = useState<LanguageType[]>([]);
-  const [currentMyLanguage, setCurrentMyLanguage] = useState<string>("");
-  const [currentLearnLanguage, setCurrentLearnLanguage] = useState<string>("");
-  const [learnLanguageUrl, setLearnLanguageUrl] = useState<string>("");
-  const [myLanguageUrl, setMyLanguageUrl] = useState<string>("");
-
-  console.log("learnLanguageUrl:", learnLanguageUrl);
-  console.log("myLanguageUrl:", myLanguageUrl);
-  console.log("languageOptions:", languageOptions);
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false);
+  const [myLanguage, setMyLanguage] = useState<string>("");
+  const [learnLanguage, setLearnLanguage] = useState<string>("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,18 +37,23 @@ const SettingsPage = () => {
           .eq("id", data.session.user.id)
           .single();
 
-        if (langError) throw langError;
+        if (langError) {
+          console.error(langError);
+          return;
+        }
 
         if (languages) {
-          setCurrentMyLanguage(languages.my_language?.language_name || "");
-          setCurrentLearnLanguage(languages.learn_language?.language_name || "");
-          if (languages.my_language) {
-            setMyLanguageUrl(languages.my_language.language_img_url);
-          }
-          if (languages.learn_language) {
-            setLearnLanguageUrl(languages.learn_language.language_img_url);
-          }
+          setMyLanguage(languages.my_language?.language_name || "");
+          setLearnLanguage(languages.learn_language?.language_name || "");
         }
+
+        const { data: existingSubscription } = await supabase
+          .from("subscriptions")
+          .select("subscription")
+          .eq("user_id", data.session.user.id)
+          .single();
+
+        setIsNotificationEnabled(!!existingSubscription);
       }
     };
 
@@ -64,52 +63,47 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchLanguages = async () => {
       const { data, error } = await supabase.from("language").select("*");
-      if (error) throw error;
+      if (error) {
+        console.error(error);
+        return;
+      }
       setLanguageOptions(data);
     };
 
     fetchLanguages();
   }, [supabase]);
 
-  const handleUpdateMyLanguage = async () => {
-    if (!userId || !selectedMyLanguage) return;
+  const handleUpdateMyLanguage = async (language: string) => {
+    if (!userId || !language) return;
 
     try {
-      await updateMyLanguage(userId, selectedMyLanguage);
-      setCurrentMyLanguage(
-        languageOptions.find((lang) => lang.language_name === selectedMyLanguage)?.language_name || ""
-      );
-      setMyLanguageUrl(
-        languageOptions.find((lang) => lang.language_name === selectedMyLanguage)?.language_img_url || ""
-      );
-    } catch {
+      await updateMyLanguage(userId, language);
+      setMyLanguage(language);
+    } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
+      console.error(err);
     }
   };
 
-  const handleUpdateLearnLanguage = async () => {
-    if (!userId || !selectedLearnLanguage) return;
+  const handleUpdateLearnLanguage = async (language: string) => {
+    if (!userId || !language) return;
 
     try {
-      await updateLearnLanguage(userId, selectedLearnLanguage);
-      setCurrentLearnLanguage(
-        languageOptions.find((lang) => lang.language_name === selectedLearnLanguage)?.language_name || ""
-      );
-      setLearnLanguageUrl(
-        languageOptions.find((lang) => lang.language_name === selectedLearnLanguage)?.language_img_url || ""
-      );
-    } catch {
+      await updateLearnLanguage(userId, language);
+      setLearnLanguage(language);
+    } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
+      console.error(err);
     }
   };
 
   const handleLogout = useCallback(async () => {
     try {
       await logout();
-      console.log("User logged out.");
       router.push("/");
-    } catch {
+    } catch (err) {
       alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+      console.error(err);
     }
   }, [router]);
 
@@ -122,62 +116,85 @@ const SettingsPage = () => {
       if (error) throw error;
       alert("회원 계정이 성공적으로 탈퇴되었습니다.");
       handleLogout();
-    } catch {
+    } catch (err) {
       alert("회원 탈퇴 중 오류가 발생했습니다.");
+      console.error(err);
+    }
+  };
+
+  const enableNotifications = async () => {
+    if (userId) {
+      const permissionResult = await requestNotificationPermission(userId);
+      if (permissionResult) {
+        setIsNotificationEnabled(true);
+      }
+    }
+  };
+
+  const disableNotifications = async () => {
+    if (userId) {
+      try {
+        await supabase.from("subscriptions").delete().eq("user_id", userId);
+        setIsNotificationEnabled(false);
+      } catch (err) {
+        alert("알림 비활성화 중 오류가 발생했습니다.");
+        console.error(err);
+      }
+    }
+  };
+
+  const handleNotificationToggle = async () => {
+    if (isNotificationEnabled) {
+      await disableNotifications();
+    } else {
+      await enableNotifications();
     }
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-row items-center justify-between">
-        <h3>내 언어</h3>
-        {currentMyLanguage}
-        {myLanguageUrl && <Image src={myLanguageUrl} alt="내 언어 이미지" width={32} height={32} className="rounded" />}
-        <div className="flex flex-row w-[50%]">
-          <ImageSelectorDropDown
-            selectedLanguage={selectedMyLanguage}
-            languageOptions={languageOptions}
-            onLanguageChange={(language) => {
-              setSelectedMyLanguage(language);
-            }}
+    <div className="bg-white px-[16px]">
+      <BackButton title="설정" />
+      <div className="flex flex-col">
+        <ImageSelectorDropDown
+          text="내 모국어 변경"
+          subtitle={myLanguage}
+          languageOptions={languageOptions}
+          onLanguageChange={handleUpdateMyLanguage}
+        />
+        <ImageSelectorDropDown
+          text="학습 언어 변경"
+          subtitle={learnLanguage}
+          languageOptions={languageOptions}
+          onLanguageChange={handleUpdateLearnLanguage}
+        />
+      </div>
+      <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
+        <h3 className="text-black text-base font-medium font-['Pretendard'] leading-normal">알림 설정</h3>
+        <div
+          onClick={handleNotificationToggle}
+          className={`w-12 h-7 px-[3px] py-0.5 rounded-full flex justify-between items-center gap-2.5 cursor-pointer ${
+            isNotificationEnabled ? "bg-[#96db5b]" : "bg-gray-300"
+          }`}
+        >
+          <div
+            className={`w-6 h-6 bg-white rounded-full shadow transform duration-300 ease-in-out ${
+              isNotificationEnabled ? "translate-x-5" : "translate-x-0"
+            }`}
           />
-          <button onClick={handleUpdateMyLanguage} className="hover:bg-blue-600 p-2">
-            수정하기
-          </button>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-between">
-        <h3>배우고 싶은 언어</h3>
-        {currentLearnLanguage}
-        {learnLanguageUrl && (
-          <Image src={learnLanguageUrl} alt="배우고 싶은 언어 이미지" width={32} height={32} className="rounded" />
-        )}
-        <div className="flex flex-row w-[50%]">
-          <ImageSelectorDropDown
-            selectedLanguage={selectedLearnLanguage}
-            languageOptions={languageOptions}
-            onLanguageChange={(language) => {
-              setSelectedLearnLanguage(language);
-            }}
-          />
-          <button onClick={handleUpdateLearnLanguage} className="hover:bg-blue-600 p-2">
-            수정하기
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-row items-center justify-between">
-        <h3>알림 설정</h3>
-      </div>
-      <div className="w-full">
-        <div className="flex flex-row items-center">
-          <button onClick={handleLogout} className="w-[50%] hover:bg-red-600 p-4">
-            로그아웃
-          </button>
-          <button onClick={cancelAccount} className="w-[50%] hover:bg-red-600 p-4">
-            회원 탈퇴
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={handleLogout}
+        className="border-b border-[#f3f3f3] text-left w-full py-[20px] text-black text-base font-medium font-['Pretendard'] leading-normal px-2"
+      >
+        로그아웃
+      </button>
+      <button
+        onClick={cancelAccount}
+        className="border-b border-[#f3f3f3] text-left w-full py-[20px]  text-black text-base font-medium font-['Pretendard'] leading-normal px-2"
+      >
+        회원 탈퇴
+      </button>
     </div>
   );
 };

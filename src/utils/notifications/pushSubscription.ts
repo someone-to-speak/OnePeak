@@ -14,28 +14,25 @@ export async function requestNotificationPermission(userId: string): Promise<boo
   if (permission === "granted") {
     console.log("Notification permission granted.");
 
-    const { data: existingSubscription, error: subscriptionError } = await supabase
+    const { data: existingSubscription } = await supabase
       .from("subscriptions")
       .select("subscription")
       .eq("user_id", userId)
       .single();
 
-    if (subscriptionError) {
-      console.error("Error fetching subscription:", subscriptionError);
-      return false;
-    }
-
     if (!existingSubscription) {
       await subscribeUserToPush(userId);
     } else {
-      console.log("User is already subscribed.");
+      alert("이미 알림을 허용하였습니다.");
+      return false; // 이미 구독된 경우
     }
 
+    // 알림 구독을 위한 설정
     await subscribeToNotifications();
-    return true; // 권한 요청 성공 시 true 반환
+    return true;
   } else {
     console.error("Unable to get permission to notify.");
-    return false; // 권한 요청 실패 시 false 반환
+    return false;
   }
 }
 
