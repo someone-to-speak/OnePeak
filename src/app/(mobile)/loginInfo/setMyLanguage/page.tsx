@@ -48,7 +48,7 @@ export default function SetMyLanguage() {
       <div className="px-4 py-3 mb-[10px] h-12 flex gap-[6px]">
         <button
           onClick={() => router.back()} // 뒤로 가기 함수 호출
-          className="mb-4 font-bold"
+          className="mb-4"
         >
           <Image src={caretleft} alt={"CaretLeft"} />
         </button>
