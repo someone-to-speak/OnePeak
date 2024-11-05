@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import caretUp from "@/../public/images/CaretUp.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 type LanguageType = {
@@ -10,62 +8,44 @@ type LanguageType = {
 };
 
 interface ImageSelectorDropDownProps {
-  selectedLanguage: string;
+  text: string;
+  subtitle: string;
   languageOptions: LanguageType[];
   onLanguageChange: (language: string) => void;
 }
 
 const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
-  selectedLanguage,
+  text,
+  subtitle,
   languageOptions,
   onLanguageChange
 }) => {
-  const [selected, setSelected] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  useEffect(() => {
-    setSelected(selectedLanguage || "언어를 선택해주세요");
-  }, [selectedLanguage]);
-
   const handleSelectionChange = (language: LanguageType) => {
-    setSelected(language.language_name);
     onLanguageChange(language.language_name);
   };
 
-  const filteredLanguages = languageOptions.filter((lang) =>
-    lang.language_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div className="relative">
-      <button
-        onClick={() => setSelected((prev) => (prev === selected ? "" : selected))}
-        className="flex items-center gap-2 bg-white hover:bg-gray-100 transition duration-200 ease-in-out shadow-md p-2 w-full text-left"
-      >
-        <span>{selected}</span>
-        <Image
-          src={caretUp}
-          alt={"CaretUp"}
-          className={`transform transition-transform duration-200 ${selected ? "rotate-180" : ""}`}
-        />
-      </button>
-
+    <div className="w-full">
       <Accordion>
-        <AccordionItem title="언어 선택" className="p-2">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="검색..."
-            className="p-2 border-b border-gray-300 w-full"
-          />
-          <ul className="mt-2">
-            {filteredLanguages.length > 0 ? (
-              filteredLanguages.map((lang) => (
+        <AccordionItem
+          key={1}
+          title={
+            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal text-left">{text}</p>
+          }
+          subtitle={
+            <p className="text-gray-500 text-base font-medium font-['Pretendard'] leading-normal text-left">
+              {subtitle}
+            </p>
+          }
+          className="flex flex-col border-b border-[#f3f3f3]"
+        >
+          <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-[#f3f3f3] rounded">
+            {languageOptions.length > 0 ? (
+              languageOptions.map((lang) => (
                 <li key={lang.id}>
                   <button
                     onClick={() => handleSelectionChange(lang)}
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-left"
+                    className="w-full h-20 px-5 bg-[#fcfcfc] rounded-[10px] border border-[#d9d9d9] flex justify-center items-center gap-2.5 hover:bg-[#e6f6d9] hover:border hover:border-[#d9d9d9]"
                   >
                     <Image
                       src={lang.language_img_url}
@@ -74,7 +54,9 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
                       height={24}
                       className="rounded-full"
                     />
-                    <span className="text-gray-800">{lang.language_name}</span>
+                    <span className="text-[#020400] text-base font-bold font-['SUIT'] leading-normal">
+                      {lang.language_name}
+                    </span>
                   </button>
                 </li>
               ))

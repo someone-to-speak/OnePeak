@@ -91,7 +91,7 @@ const config: Config = {
         }
       }
     },
-    plugins: [safeArea, require("tailwindcss-animate")]
+    plugins: [safeArea, import("tailwindcss-animate")]
   }
 };
 export default config;

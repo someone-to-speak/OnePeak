@@ -76,20 +76,34 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+@layer base {
   /* 모든 요소의 호버 상태에서 아웃라인 제거 */
   *:hover {
     outline: none;
   }
-}
-@layer base {
-  * {
+
+  /* 모든 요소의 포커스 상태에서 아웃라인 제거 */
+  *:focus {
+    outline: none; /* 포커스 상태에서 아웃라인 제거 */
   }
+
+  /* 스크롤바 스타일 */
+  *::-webkit-scrollbar {
+    width: 0; /* 스크롤바의 너비를 0으로 설정 */
+    background: transparent; /* 배경을 투명으로 설정 */
+  }
+
+  * {
+    scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+  }
+
   body {
-    @apply bg-background text-foreground;
     font-family: "Pretendard", sans-serif;
-    background-color: var(--gray-900);
+    background-color: white;
     color: var(--primary-50);
   }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -252,10 +266,5 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-  }
-  /* 모든 요소의 호버 상태에서 아웃라인 제거, 커서 I빔 없애기 */
-  *:hover {
-    outline: none;
-    cursor: default;
   }
 }
