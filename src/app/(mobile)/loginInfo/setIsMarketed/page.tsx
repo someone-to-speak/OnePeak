@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const page = () => {
+const IsMarketedPage = () => {
   const supabase = createClient();
   const router = useRouter();
   const [isMarketed, setIsMarketed] = useState<boolean>(false);
@@ -52,4 +52,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default IsMarketedPage;
