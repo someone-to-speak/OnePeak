@@ -45,12 +45,11 @@ export default function Home() {
     <div className="w-full h-[1000px] bg-gray-100 p-5">
       {showModal && <BottomSheetModal onClose={() => setShowModal(false)} />}
       {isLoggedIn && (
-        <>
-          <div className="h-10"></div>
+        <div className="flex flex-col gap-8">
           <TodayLearn />
           <CustomizedLearn />
           <Reviewing />
-        </>
+        </div>
       )}
     </div>
   );

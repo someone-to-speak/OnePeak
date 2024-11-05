@@ -96,17 +96,23 @@ const TodayLearn = () => {
   // TODO: 기능 구현 후 캐러셀 적용
   return (
     <div className="h-64">
-      <h1 className="text-3xl font-bold">오늘의 학습</h1>
-      <p>매일 업데이트 되는 맞춤 커리큘럼 {situations?.length}</p>
-      <div className="flex overflow-x-auto">
+      <div className="flex w-[343px] flex-col justify-end items-start">
+        <h1 className="self-stretch text-black font-suit text-[24px] font-bold leading-[36px] tracking-[-0.48px]">
+          오늘의 학습
+        </h1>
+        <p className="flex-1 text-[#5D5D5D] font-suit text-[14px] font-light leading-[21px] tracking-[-0.28px]">
+          매일 업데이트 되는 맞춤 커리큘럼 {situations?.length}
+        </p>
+      </div>
+      <div className="flex  overflow-x-auto">
         {situations?.map((situation) => {
           return (
             <div
               key={situation.id}
               onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}
-              className="cursor-pointer"
+              className="cursor-pointer "
             >
-              <div className="w-60 h-60 border border-spacing-2">
+              <div className="flex w-[244px] h-[320px] p-[12px] flex-col justify-between items-start border rounded-[12px]">
                 <p>{situation.situation}</p>
                 <p>난이도: {situation.level}</p>
               </div>
