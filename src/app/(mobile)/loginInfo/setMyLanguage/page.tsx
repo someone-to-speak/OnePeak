@@ -85,9 +85,7 @@ export default function SetMyLanguage() {
           onClick={handleContinue}
           disabled={!selectedMyLanguage}
           className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] ${
-            selectedMyLanguage
-              ? "opacity-100 bg-[var(--Primary-500,#7BD232)]"
-              : "opacity-40 bg-[var(--Primary-500,#7BD232)]"
+            selectedMyLanguage ? "opacity-100 bg-primary-500" : "opacity-40 bg-primary-500"
           }`}
         >
           계속

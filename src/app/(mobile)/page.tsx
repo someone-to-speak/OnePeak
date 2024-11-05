@@ -42,13 +42,18 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="w-full h-[1000px] bg-gray-100 p-5">
-      {showModal && <BottomSheetModal onClose={() => setShowModal(false)} />}
-      {isLoggedIn && (
-        <div className="flex flex-col gap-8">
+    <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
+      {isLoggedIn || (
+        <>
+          <div className="h-10"></div>
           <TodayLearn />
           <CustomizedLearn />
           <Reviewing />
+        </>
+      )}
+      {showModal && (
+        <div className="fixed py-[60px]  bg-white rounded-t-[30px]  bottom-0 flex justify-center items-end z-[300]">
+          <BottomSheetModal onClose={() => setShowModal(false)} />
         </div>
       )}
     </div>
