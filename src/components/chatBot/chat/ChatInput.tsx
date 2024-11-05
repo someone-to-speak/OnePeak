@@ -14,8 +14,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isRecording,
   onSubmit,
   onStartRecording,
-  onStopRecording,
-  onEndChat
+  onStopRecording
 }) => {
   return (
     <form className="sticky bottom-[55px] flex w-full bg-primary p-4" onSubmit={onSubmit}>
