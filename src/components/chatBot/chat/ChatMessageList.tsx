@@ -17,7 +17,7 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
   };
 
   return (
-    <div className="space-y-3 max-w-3xl mx-auto -z-50">
+    <div className="space-y-3 max-w-3xl mx-auto">
       {messages.map((message, index) => (
         <div
           key={index}
@@ -33,7 +33,7 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
           <div
             className={`
             relative py-2 px-3 rounded-2xl shadow-sm
-            max-w-[214px] text-justify text-sm mx-3 my-2
+            max-w-[214px] text-justify text-sm mx-3
             ${message.role === "user" ? "bg-primary-800 text-black rounded-br-none " : "bg-gray-900 rounded-tl-none"}
           `}
           >
