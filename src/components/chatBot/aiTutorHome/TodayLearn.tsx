@@ -46,17 +46,20 @@ const TodayLearn = () => {
       .from("review")
       .select("*")
       .eq("user_id", userId)
-      .eq("situation", situation)
-      .gte("created_at", `${todayString}T00:00:00+09:00`) // 오늘 시작 시간
-      .lt("created_at", `${todayString}T23:59:59+09:00`); // 오늘 종료 시간
+      .eq("situation", situation);
+
+    const todayReview = existingReviews?.filter((review) => {
+      const dateOnly = review.created_at.split("T")[0];
+      return dateOnly === todayString;
+    });
 
     if (checkError) {
       console.error("중복 확인 오류: ", checkError);
       throw checkError;
     }
-
+    console.log(existingReviews);
     // 중복 데이터가 없을 때만 추가
-    if (existingReviews?.length === 0) {
+    if (todayReview?.length === 0) {
       const { error } = await supabase
         .from("review")
         .insert([{ user_id: userId, situation, level }])
@@ -67,6 +70,7 @@ const TodayLearn = () => {
         throw error; // 에러 전파
       }
     }
+
     return {
       id: 0,
       situation,

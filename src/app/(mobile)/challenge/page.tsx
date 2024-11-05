@@ -3,9 +3,9 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
-import Link from "next/link";
 import FetchGrammarQuizButton from "@/components/challenge/FetchGrammarQuizButton";
 import FetchWordQuizButton from "@/components/challenge/FetchWordQuizButton";
+import Link from "next/link";
 
 const ChallengePage = () => {
   const settings = {
@@ -62,6 +62,7 @@ const ChallengePage = () => {
 
   return (
     <>
+      {" "}
       <div className="flex flex-row gap-4 mb-4">
         {problems.map((problem, index) => (
           <p
@@ -96,7 +97,6 @@ const ChallengePage = () => {
           </div>
         ))}
       </Slider>
-
       <FetchGrammarQuizButton />
       <FetchWordQuizButton />
     </>

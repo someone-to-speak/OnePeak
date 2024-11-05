@@ -6,8 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 
 type UserInfo = Tables<"user_info">;
 
-const browserClient = createClient();
-
 const errorFn = (error: PostgrestError | null, msg: string) => {
   console.log("Error", error?.message);
   throw new Error(msg);
@@ -15,6 +13,7 @@ const errorFn = (error: PostgrestError | null, msg: string) => {
 
 // 전체 회원 데이터 가져오기
 export const getUsersInfo = async (type: string, theNickname: string) => {
+  const browserClient = createClient();
   if (type === "isBlocked") {
     const { data, error } = await browserClient
       .from("user_info")
@@ -55,12 +54,14 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
 
 // 특정 회원 차단 해제
 export const unblock = async (targetUser: string) => {
+  const browserClient = createClient();
   const { error } = await browserClient.from("user_info").update({ is_blocked: false }).eq("id", targetUser);
   if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
 };
 
 // 특정 회원 차단
 export const block = async (targetUser: string) => {
+  const browserClient = createClient();
   console.log("aaa");
   console.log(targetUser);
   const { error } = await browserClient.from("user_info").update({ is_blocked: true }).eq("id", targetUser);
@@ -69,18 +70,21 @@ export const block = async (targetUser: string) => {
 
 // 특정 회원 탈퇴
 export const cancle = async (targetUser: UserInfo) => {
+  const browserClient = createClient();
   const { error } = await browserClient.from("user_info").update({ is_deleted: true }).eq("id", targetUser.id);
   if (error) errorFn(error, "해당 유저를 탈퇴시키는데 실패하였습니다");
 };
 
 // 특정 회원 재가입
 export const uncancle = async (targetUser: UserInfo) => {
+  const browserClient = createClient();
   const { error } = await browserClient.from("user_info").update({ is_deleted: false }).eq("id", targetUser.id);
   if (error) errorFn(error, "해당 유저를 재가입 시키는데 실패하였습니다");
 };
 
 // 블락 디테일
 export const getBlockDetail = async (targetId: string) => {
+  const browserClient = createClient();
   const { data, error } = await browserClient
     .from("block")
     .select(`*,user_info:user_info!block_target_id_fkey1(nickname)`)
@@ -113,6 +117,7 @@ export const getBlockDetail = async (targetId: string) => {
 };
 
 export const getBlockTargetUsers = async () => {
+  const browserClient = createClient();
   const { data, error } = await browserClient
     .from("block")
     .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
@@ -156,6 +161,7 @@ export const getBlockTargetUsers = async () => {
 
 // 언어 이미지 가져오기
 export const getLanguageImg = async () => {
+  const browserClient = createClient();
   const { data } = browserClient.storage.from("language-image").getPublicUrl("*");
 
   return data;
@@ -163,6 +169,7 @@ export const getLanguageImg = async () => {
 
 // 언어 가져오기
 export const getLanguage = async () => {
+  const browserClient = createClient();
   const { data, error } = await browserClient.from("language").select("langauge");
   if (error) errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
   return data;
@@ -171,6 +178,7 @@ export const getLanguage = async () => {
 // 언어 이미지 버켓에 추가하기
 // 버켓에 같은 이름의 이미지가 있는지 체크
 const checkFileExists = async (fileName: string) => {
+  const browserClient = createClient();
   const { data, error } = await browserClient.storage.from("language-image").list("", { search: fileName });
 
   if (error) throw error;
@@ -178,6 +186,7 @@ const checkFileExists = async (fileName: string) => {
 };
 
 export const uploadLanguageImage = async (file: File) => {
+  const browserClient = createClient();
   // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 어떠한 파일 이름이 들어와도 사용 할 수 있게 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
   const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
   let encodedFileName = `${uuidv4()}.${fileExtension}`;
@@ -199,6 +208,7 @@ export const uploadLanguageImage = async (file: File) => {
 
 // bucket으로부터 받은 이미지 주소 language 테이블에 넣기
 export const insertLanguageImg = async ({ imageUrl, language }: { imageUrl: string; language: string }) => {
+  const browserClient = createClient();
   const { error } = await browserClient
     .from("language")
     .insert({ language_img_url: imageUrl, language_name: language, status: true });
@@ -207,6 +217,7 @@ export const insertLanguageImg = async ({ imageUrl, language }: { imageUrl: stri
 
 // language 테이블 정보 가져오기
 export const getLanguageList = async () => {
+  const browserClient = createClient();
   const { data, error } = await browserClient.from("language").select().order("created_at", { ascending: false });
   if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
   return data || [];
@@ -214,6 +225,7 @@ export const getLanguageList = async () => {
 
 // 특정 언어 사용으로 변경
 export const changeToUse = async (targetLanguage: number) => {
+  const browserClient = createClient();
   const { error } = await browserClient
     .from("language")
     .update({ status: true })
@@ -224,6 +236,7 @@ export const changeToUse = async (targetLanguage: number) => {
 
 // 특정 언어 사용으로 변경
 export const changeToUnuse = async (targetLanguage: number) => {
+  const browserClient = createClient();
   const { error } = await browserClient
     .from("language")
     .update({ status: false })
@@ -234,6 +247,7 @@ export const changeToUnuse = async (targetLanguage: number) => {
 
 // bucket으로부터 받은 이미지 주소 language 테이블에 넣기
 export const insertAlarmInfo = async (selectedType: string, title: string, content: string) => {
+  const browserClient = createClient();
   const data = await browserClient.from("notifications").insert({ type: selectedType, title: title, message: content });
   return data.status === 201;
 };

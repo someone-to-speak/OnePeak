@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/client";
 
-const supabase = createClient();
-
 export async function GET(request: NextRequest) {
+  const supabase = createClient();
   const { searchParams } = new URL(request.url);
   const language = searchParams.get("language");
   const type = searchParams.get("type");

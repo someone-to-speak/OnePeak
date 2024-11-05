@@ -33,3 +33,8 @@ export type blockDetail = {
   nickname: string;
   user_info_id: string;
 };
+
+export type AiMessages = {
+  role: string;
+  content: string;
+};

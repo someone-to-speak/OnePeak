@@ -6,9 +6,8 @@ import React, { useState } from "react";
 import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
 import { fetchWordQuestions } from "@/api/wrongAnswersNote/fetchWordQuestions";
 
-const supabase = createClient();
-
 const WordList = ({ userId }: { userId: string }) => {
+  const supabase = createClient();
   const queryClient = useQueryClient();
 
   // 탭 상태 관리

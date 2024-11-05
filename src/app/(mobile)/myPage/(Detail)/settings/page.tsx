@@ -14,9 +14,8 @@ type LanguageType = {
   language_img_url: string;
 };
 
-const supabase = createClient();
-
 const SettingsPage = () => {
+  const supabase = createClient();
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
   const [selectedMyLanguage, setSelectedMyLanguage] = useState<string>("");
@@ -60,7 +59,7 @@ const SettingsPage = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -70,7 +69,7 @@ const SettingsPage = () => {
     };
 
     fetchLanguages();
-  }, []);
+  }, [supabase]);
 
   const handleUpdateMyLanguage = async () => {
     if (!userId || !selectedMyLanguage) return;
