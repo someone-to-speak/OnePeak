@@ -1,7 +1,6 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Router } from "next/router";
 import React, { useState } from "react";
 
 const page = () => {
@@ -27,7 +26,7 @@ const page = () => {
       <p className="text-lg font-semibold mb-4">각종 이벤트 소식 받으실래요?</p>
       <div className="flex justify-center space-x-4">
         <button
-          onClick={(e) => {
+          onClick={() => {
             setIsMarketed(true);
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
@@ -35,7 +34,7 @@ const page = () => {
           동의
         </button>
         <button
-          onClick={(e) => {
+          onClick={() => {
             setIsMarketed(false);
           }}
           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"

@@ -8,7 +8,7 @@ import { block, getBlockTargetUsers, unblock } from "@/api/route";
 import PageNationUI from "@/components/admin/PageNationUI";
 import BlcokedUserTable from "@/components/admin/blockManagement/BlcokedUserTable";
 
-const Page = () => {
+const BlockManagementPage = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
@@ -65,4 +65,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default BlockManagementPage;
