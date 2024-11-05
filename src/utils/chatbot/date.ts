@@ -2,38 +2,42 @@ export const dateUtils = {
   // 오늘 날짜의 자정을 기준으로 설정
   getToday: () => {
     const today = new Date();
-    return new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return today;
   },
 
   // 날짜 형식 통일 (YYYY-MM-DD)
   formatDate: (date: Date | string) => {
     const targetDate = new Date(date);
-    const year = targetDate.getFullYear();
-    const month = String(targetDate.getMonth() + 1).padStart(2, "0");
-    const day = String(targetDate.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  },
-  // supabase 날짜와 클라이언트 날짜를 비교
-  convertToKST: (date: Date | string) => {
-    const day = new Date(date);
-    day.setHours(day.getHours() - 9); // UTC - 9
-    return day;
+    return targetDate
+      .toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      })
+      .replace(/\. /g, "-")
+      .replace(".", "");
   },
 
-  // 두 날짜가 같은 날인지 비교
-  isSameDay: (date1: Date | string, date2: Date | string) => {
-    const d1 = new Date(date1);
-    d1.setHours(d1.getHours() + 9);
-
-    const d2 = new Date(date2);
-
-    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-  },
-
-  // 날짜에서 월과 일만 추출
   getMonthAndDay: (date: Date | string) => {
-    const [year, month, day] = dateUtils.formatDate(date).split("-");
+    // UTC 문자열에서 날짜 부분만 추출
+    const dateStr =
+      typeof date === "string"
+        ? date.split("T")[0] // ISO 문자열이면 T 이전의 날짜 부분만
+        : dateUtils.formatDate(date);
+
+    const [year, month, day] = dateStr.split("-");
+
+    console.log("Date parsing:", {
+      original: date,
+      extracted: dateStr,
+      result: {
+        year: parseInt(year, 10),
+        month: parseInt(month, 10),
+        day: parseInt(day, 10)
+      }
+    });
+
     return {
       year: parseInt(year, 10),
       month: parseInt(month, 10),
@@ -41,31 +45,55 @@ export const dateUtils = {
     };
   },
 
-  // 캘린더 컴포넌트
-  // 1. 년, 월 형식으로 포맷팅
+  // 년, 월 형식으로 포맷팅
   formatYearMonth: (date: Date) => {
     return `${date.getFullYear()}.${date.getMonth() + 1}`;
   },
 
-  // 2. 날짜의 시작(자정)을 반환
+  isSameDay: (date1: Date | string, date2: Date | string) => {
+    // 모든 날짜를 YYYY-MM-DD 형식으로 통일
+    const getDateOnly = (date: Date | string) => {
+      if (typeof date === "string") {
+        // UTC ISO 문자열인 경우
+        return date.split("T")[0];
+      }
+      // Date 객체인 경우
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    const d1Str = getDateOnly(date1);
+    const d2Str = getDateOnly(date2);
+
+    console.log("Comparing dates:", {
+      d1: d1Str,
+      d2: d2Str,
+      isEqual: d1Str === d2Str
+    });
+
+    return d1Str === d2Str;
+  },
+
+  // 날짜의 시작(자정)을 반환
   getStartOfDay: (date: Date) => {
-    // return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     return d;
   },
 
-  // 3. 월 조정
+  // 월 조정
   getAdjustedMonth: (date: Date, adjustment: number) => {
     return new Date(date.getFullYear(), date.getMonth() + adjustment, 1);
   },
 
-  // 4. 같은 월인지 확인
+  // 같은 월인지 확인
   isSameMonth: (date1: Date, date2: Date) => {
     return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
   },
 
-  // 5. 날짜 배열 생성 함수 (줄 수에 맞게 동적으로 조정)
+  // 날짜 배열 생성 함수 (줄 수에 맞게 동적으로 조정)
   generateCalendarDates: (currentDate: Date) => {
     const dates = [];
     const year = currentDate.getFullYear();
@@ -107,5 +135,10 @@ export const dateUtils = {
     }
 
     return dates;
+  },
+
+  // UI용 날짜 비교 (Date 객체끼리 비교)
+  isSameDayForUI: (date1: Date, date2: Date) => {
+    return date1.toLocaleDateString() === date2.toLocaleDateString();
   }
 };

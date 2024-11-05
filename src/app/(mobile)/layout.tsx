@@ -3,7 +3,6 @@ import "../globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Navibar from "@/components/nav/Navibar";
-import ServiceWorkerLoader from "@/components/serviceWorker/ServiceWorkerLoader";
 
 export default function MobileLayout({
   children
@@ -16,7 +15,6 @@ export default function MobileLayout({
         <Header />
         {children}
         <Navibar />
-        <ServiceWorkerLoader />
       </div>
     </div>
   );

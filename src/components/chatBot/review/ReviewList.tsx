@@ -10,19 +10,38 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
+  console.log("reviews", reviews);
   if (!reviews.length) return <p>학습 내역이 없습니다!</p>;
 
-  const { month, day } = dateUtils.getMonthAndDay(reviews[0].created_at);
+  // 리뷰들을 날짜별로 그룹화
+  const groupedReviews = reviews.reduce((acc, review) => {
+    const { month, day } = dateUtils.getMonthAndDay(review.created_at);
+    const dateKey = `${month}-${day}`;
+
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(review);
+    return acc;
+  }, {} as Record<string, ReviewType[]>);
 
   return (
     <div>
-      <div>
-        <p className="font-bold text-left">{month}월</p>
-        <p className="font-bold text-left">{day}일</p>
-      </div>
-      {reviews.map((review) => (
-        <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />
-      ))}
+      {Object.entries(groupedReviews).map(([dateKey, dateReviews]) => {
+        const [month, day] = dateKey.split("-");
+
+        return (
+          <div key={dateKey}>
+            <div>
+              <p className="font-bold text-left">{month}월</p>
+              <p className="font-bold text-left">{day}일</p>
+            </div>
+            {dateReviews.map((review) => (
+              <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 };

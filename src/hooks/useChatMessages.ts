@@ -6,7 +6,7 @@ export const useChatMessages = (situation: string, level: number) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
-      content: `안녕하세요! ${situation}에 대해 알려드리겠습니다. 준비가 되셨다면 start라고 입력해주세요.`
+      content: `안녕하세요! ${situation}에 대해 학습하러 오셨군요? 준비가 되셨다면 start라고 입력해주세요.`
     }
   ]);
 
@@ -23,10 +23,12 @@ export const useChatMessages = (situation: string, level: number) => {
         const botResponse = await getChatResponse([...messages, userMessage], situation, level);
 
         if (botResponse) {
-          const botMessage: Message = { role: "assistant", content: botResponse };
-
+          // const botMessage: Message = { role: "assistant", content: botResponse };
+          const initialContentMessage: Message = { role: "assistant", content: botResponse.initialContent };
+          const followUpContentMessage: Message = { role: "assistant", content: botResponse.followUpContent };
           // 챗봇 메세지 추가
-          setMessages((prev) => [...prev, botMessage]);
+          // setMessages((prev) => [...prev, botMessage]);
+          setMessages((prev) => [...prev, initialContentMessage, followUpContentMessage]);
         }
       } catch (error) {
         console.log("챗봇 응답 실패: ", error);
