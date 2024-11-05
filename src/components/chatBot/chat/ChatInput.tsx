@@ -17,25 +17,32 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onStopRecording
 }) => {
   return (
-    <form className="sticky bottom-[55px] flex w-full bg-primary p-4" onSubmit={onSubmit}>
-      <input
-        className="flex-grow w-[311px] p-2 rounded border border-gray-400"
-        type="text"
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        placeholder="메세지를 입력해주세요."
-        aria-label="메시지 입력"
-      />
-      <button className="ml-2 px-4 py-2" type="submit" aria-label="메시지 전송">
-        <img src="/images/send-icon.svg" alt="전송" />
-      </button>
+    <form className="sticky bottom-[55px] flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
+      <div className="flex-grow relative">
+        <input
+          className="w-full h-10 py-2 pl-5 pr-[46px] rounded-[50px] border border-gray-900 text-xs"
+          // type="text"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="메세지를 입력해주세요."
+          aria-label="메시지 입력"
+        />
+        <button
+          className="absolute h-[26px] right-2 top-1/2 -translate-y-1/2 pl-2 "
+          type="submit"
+          aria-label="메시지 전송"
+        >
+          <img src="/images/Send.svg" alt="전송" />
+        </button>
+      </div>
+      {/* 추후 녹음 진행 여부에 따라 아이콘 변경 예정 */}
       <button
         type="button"
-        className={`ml-2 px-4 py-2 rounded ${isRecording ? "bg-red-500" : "bg-gray-500"} text-white`}
+        className={`ml-2 ${isRecording ? "" : ""} text-white`}
         onClick={isRecording ? onStopRecording : onStartRecording}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
-        {isRecording ? "🎤 전송" : "🎤 음성입력"}
+        {isRecording ? <img src="/images/Mike.svg" alt="녹음 시작" /> : <img src="/images/Mike.svg" alt="녹음 중지" />}
       </button>
     </form>
   );
