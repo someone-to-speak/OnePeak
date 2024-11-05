@@ -1,4 +1,4 @@
-import { Conversation, ConversationWithParticipants } from "@/types/chatType/chatType";
+import { ConversationWithParticipants } from "@/types/chatType/chatType";
 import Image from "next/image";
 import DotsThree from "@/assets/DotsThree.svg";
 
@@ -24,7 +24,7 @@ export const Chat = ({ conversation }: { conversation: ConversationWithParticipa
           />
           <Image src={DotsThree} alt={""} />
         </div>
-        <p>{conversation.last_message.type}</p>
+        {/* <p>{conversation.last_message.type}</p> */}
         <div></div>
       </div>
     </div>
