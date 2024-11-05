@@ -1,3 +1,5 @@
+import { AiMessages } from "@/type";
+
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -390,6 +392,35 @@ export type Database = {
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "user_info";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      review_content: {
+        Row: {
+          created_at: string;
+          id: number;
+          messages: string[];
+          review_id: number;
+          user_id: string | null;
+        };
+        Insert: {
+          messages: AiMessages[];
+          review_id: number;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          messages?: string[];
+          review_id?: number;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "review_content_review_id_fkey";
+            columns: ["review_id"];
+            isOneToOne: false;
+            referencedRelation: "review";
             referencedColumns: ["id"];
           }
         ];

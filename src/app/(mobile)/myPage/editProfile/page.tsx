@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../../../database.types";
@@ -10,6 +10,14 @@ import { Camera } from "lucide-react";
 import Image from "next/image";
 
 type UserInfoType = Tables<"user_info">;
+
+const EditProfilePage = () => {
+  return (
+    <Suspense>
+      <EditProfile />
+    </Suspense>
+  );
+};
 
 const EditProfile = () => {
   const router = useRouter();
@@ -155,4 +163,4 @@ const EditProfile = () => {
     </div>
   );
 };
-export default EditProfile;
+export default EditProfilePage;

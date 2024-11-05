@@ -38,7 +38,7 @@ const ReviewDetail = () => {
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}&id=${review.id}`);
   };
 
   if (isLoading) return <p>로딩 중...</p>;

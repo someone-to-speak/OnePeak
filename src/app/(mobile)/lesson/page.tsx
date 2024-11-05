@@ -2,12 +2,12 @@
 
 import React from "react";
 import { useMatching } from "@/hooks/useMatching";
-import { redirect } from "next/navigation";
+
 import img1 from "@/../public/images/book.jpg";
 import Image from "next/image";
 
 const LessonPage = () => {
-  const { setupMatchingChannel, userInfo, isLoading, isError, isMatching } = useMatching();
+  const { setupMatchingChannel, userInfo, isMatching } = useMatching();
 
   const handleClickMachingButton = async () => {
     if (!userInfo) {
@@ -16,15 +16,6 @@ const LessonPage = () => {
     }
     await setupMatchingChannel();
   };
-
-  if (isLoading) {
-    return <div>잠시만 기다려주세요...</div>;
-  }
-
-  if (isError) {
-    alert("예기치 못한 오류가 발생하였습니다.");
-    redirect("/");
-  }
 
   return (
     <>
