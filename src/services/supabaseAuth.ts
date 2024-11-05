@@ -4,17 +4,17 @@ import { Provider } from "@supabase/supabase-js";
 export const signInWithProvider = async (provider: Provider) => {
   const supabase = createClient();
 
-  const { data } = await supabase.auth.signInWithOAuth({
+  await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
       queryParams: {
         access_type: "offline",
         prompt: "consent"
       },
-      redirectTo: "http://localhost:3000/auth/callback"
+      // redirectTo: "http://localhost:3000/auth/callback" // 데브 모드
+      redirectTo: "https://one-peak-dev.vercel.app/auth/callback" // 배포 모드
     }
   });
-  console.log(data); // build 오류 임시 해결
 };
 
 export const signOut = async () => {
