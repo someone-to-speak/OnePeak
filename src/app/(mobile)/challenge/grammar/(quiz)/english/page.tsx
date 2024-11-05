@@ -2,8 +2,17 @@
 
 import RandomEnglishGrammarQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const EnglishGrammarQuizPage = () => {
+  return (
+    <Suspense>
+      <EnglishGrammarQuiz />
+    </Suspense>
+  );
+};
+
+const EnglishGrammarQuiz = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId");
 

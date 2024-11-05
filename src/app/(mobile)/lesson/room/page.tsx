@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WebRTCService } from "@/services/webrtcService";
 import { uploadRecording } from "@/api/supabase/record";
@@ -8,6 +8,14 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 import { useUser } from "@/hooks/useUser";
+
+const VideoChatPage = () => {
+  return (
+    <Suspense>
+      <VideoChat />
+    </Suspense>
+  );
+};
 
 const VideoChat = () => {
   const router = useRouter();
@@ -116,4 +124,4 @@ const VideoChat = () => {
   );
 };
 
-export default VideoChat;
+export default VideoChatPage;

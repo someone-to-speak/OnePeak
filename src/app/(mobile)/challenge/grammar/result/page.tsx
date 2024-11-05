@@ -2,8 +2,17 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const ResultPage = () => {
+  return (
+    <Suspense>
+      <Result />
+    </Suspense>
+  );
+};
+
+const Result = () => {
   const searchParams = useSearchParams();
   const message = searchParams?.get("message");
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -16,6 +16,14 @@ import { Tables } from "../../../../database.types";
 import React from "react";
 
 type ReviewContentType = Tables<"review_content">;
+
+const ChatMessagePage = () => {
+  return (
+    <Suspense>
+      <ChatMessage />
+    </Suspense>
+  );
+};
 
 const ChatMessage = () => {
   const router = useRouter();
@@ -168,4 +176,4 @@ const ChatMessage = () => {
   );
 };
 
-export default ChatMessage;
+export default ChatMessagePage;

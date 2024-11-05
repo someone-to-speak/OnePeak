@@ -2,8 +2,17 @@
 
 import RandomKoreanWordQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const KoreanWordQuizPage = () => {
+  return (
+    <Suspense>
+      <KoreanWordQuiz />
+    </Suspense>
+  );
+};
+
+const KoreanWordQuiz = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId");
 

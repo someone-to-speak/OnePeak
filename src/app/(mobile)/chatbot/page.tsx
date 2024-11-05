@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -11,6 +11,14 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { format } from "date-fns";
+
+const ChatMessagePage = () => {
+  return (
+    <Suspense>
+      <ChatMessage />
+    </Suspense>
+  );
+};
 
 const ChatMessage = () => {
   const router = useRouter();
@@ -119,4 +127,4 @@ const ChatMessage = () => {
   );
 };
 
-export default ChatMessage;
+export default ChatMessagePage;

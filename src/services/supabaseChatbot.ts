@@ -7,11 +7,10 @@ type ReviewType = Tables<"review">;
 type SituationType = Tables<"situation">;
 type ReviewContentType = Tables<"review_content">;
 
-const supabase = createClient();
-
 export const reviewApi = {
   // 유저 정보 조회
   getUserInfo: async () => {
+    const supabase = createClient();
     const {
       data: { user },
       error
@@ -22,6 +21,7 @@ export const reviewApi = {
 
   // 리뷰 데이터 조회
   getReviews: async (userId: string) => {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("review")
       .select("*")
@@ -35,6 +35,7 @@ export const reviewApi = {
 
   // situation 조회
   getSituations: async () => {
+    const supabase = createClient();
     try {
       const { data, error } = await supabase.from("situation").select("*");
 
@@ -55,6 +56,7 @@ export const reviewApi = {
   },
   // 각 level별로 랜덤 situation 조회
   getEachLevel: async () => {
+    const supabase = createClient();
     try {
       const { data: allData, error } = await supabase.from("situation").select("*");
 
@@ -94,6 +96,7 @@ export const reviewApi = {
 
   // AI 튜터 학습 내용 저장
   postLearnMessage: async (messages: AiMessages[], review_id: number) => {
+    const supabase = createClient();
     const { data, error } = await supabase.from("review_content").insert({ messages, review_id }).select();
 
     if (error) {
@@ -105,6 +108,7 @@ export const reviewApi = {
 
   // AI 튜터 학습 내용 조회
   getLearnMessage: async (userId: string, reviewId: string): Promise<ReviewContentType[]> => {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("review_content")
       .select("*")
