@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
-import caretleft from "@/../public/images/CaretLeft.svg";
+import caretleft from "@/../public/images/caret-left.svg";
 import Image from "next/image";
 
 export default function SetLearnLanguage() {
@@ -53,7 +53,7 @@ export default function SetLearnLanguage() {
           onClick={() => router.back()} // 뒤로 가기 함수 호출
           className="mb-4"
         >
-          <Image src={caretleft} alt={"CaretLeft"} />
+          <Image src={caretleft} alt={"caret-left"} />
         </button>
         <></>
       </div>

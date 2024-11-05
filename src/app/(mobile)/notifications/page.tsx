@@ -6,7 +6,7 @@ import { Tables } from "../../../../database.types";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import BackButton from "@/components/BackButton";
 import Image from "next/image";
-import stamp from "@/../public/images/Stamp.svg";
+import stamp from "@/../public/images/stamp.svg";
 
 type NotificationType = Tables<"notifications">;
 
