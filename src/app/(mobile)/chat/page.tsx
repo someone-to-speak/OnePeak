@@ -1,6 +1,6 @@
 "use client";
 
-// import Chat from "@/components/chat/chat";
+import Chat from "@/components/chat/chat";
 import { useConversation } from "@/hooks/useConversation";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -21,7 +21,7 @@ const Page = () => {
       <div>
         {conversationList?.map((conversation) => (
           <Link key={conversation.id} href={`/chat/room?id=${conversation.id}`}>
-            {/* <Chat conversation={conversation} /> */}
+            <Chat conversation={conversation} />
           </Link>
         ))}
       </div>
