@@ -62,6 +62,7 @@ const ChallengePage = () => {
 
   return (
     <>
+      {" "}
       <div className="flex flex-row gap-4 mb-4">
         {problems.map((problem, index) => (
           <p
@@ -96,7 +97,6 @@ const ChallengePage = () => {
           </div>
         ))}
       </Slider>
-
       <FetchGrammarQuizButton />
       <FetchWordQuizButton />
     </>

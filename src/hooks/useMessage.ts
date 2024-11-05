@@ -6,10 +6,10 @@ import { fetchMessages } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 // import { v4 as uuidv4 } from "uuid";
 
-// const supabase = createClient();
 // const queryClient = new QueryClient();
 
 export const useMessage = (conversationId: UUID) => {
+  // const supabase = createClient();
   const { userInfo } = useUser();
 
   const {

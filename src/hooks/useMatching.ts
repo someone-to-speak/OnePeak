@@ -8,6 +8,7 @@ import { useUser } from "./useUser";
 import { matche } from "@/types/chatType/chatType";
 
 export const useMatching = () => {
+  const supabase = createClient();
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
   const router = useRouter();
   const { userInfo } = useUser();
@@ -17,8 +18,6 @@ export const useMatching = () => {
     if (!userInfo) return;
 
     setIsMatching(true);
-
-    const supabase = createClient();
 
     const matchingChannel = supabase.channel("matches");
     matchingChannelRef.current = matchingChannel;
