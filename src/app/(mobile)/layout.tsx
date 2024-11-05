@@ -14,15 +14,19 @@ export default function MobileLayout({
 }>) {
   const pathname = usePathname();
 
-  // pathname이 null이 아니면 특정 경로에서 헤더와 푸터 숨기기
-  const hideHeaderFooter = pathname !== null && pathname.startsWith("/loginInfo");
+  const showNavbar =
+    pathname === "/" ||
+    pathname === "/challenge" ||
+    pathname === "/myPage" ||
+    pathname === "/editProfile" ||
+    pathname === "/chat" ||
+    pathname === "/lesson";
 
   return (
     <div>
       <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
-        {!hideHeaderFooter && <Header />}
         {children}
-        {!hideHeaderFooter && <Navibar />}
+        {showNavbar && <Navibar />}
       </div>
     </div>
   );

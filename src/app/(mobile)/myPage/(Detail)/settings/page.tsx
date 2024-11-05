@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import { requestNotificationPermission } from "@/utils/notifications/pushSubscription";
-import BackButton from "@/components/BackButton";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type LanguageType = {
   id: number;
@@ -152,9 +152,9 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="bg-white px-[16px]">
-      <BackButton title="설정" />
-      <div className="flex flex-col">
+    <div className="bg-white">
+      <WithIconHeader title="설정" />
+      <div className="flex flex-col px-[16px]">
         <ImageSelectorDropDown
           text="내 모국어 변경"
           subtitle={myLanguage}
@@ -167,34 +167,34 @@ const SettingsPage = () => {
           languageOptions={languageOptions}
           onLanguageChange={handleUpdateLearnLanguage}
         />
-      </div>
-      <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-        <h3 className="text-black text-base font-medium font-['Pretendard'] leading-normal">알림 설정</h3>
-        <div
-          onClick={handleNotificationToggle}
-          className={`w-12 h-7 px-[3px] py-0.5 rounded-full flex justify-between items-center gap-2.5 cursor-pointer ${
-            isNotificationEnabled ? "bg-[#96db5b]" : "bg-gray-300"
-          }`}
-        >
+        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
+          <h3 className="text-black text-lg font-medium font-['Pretendard'] leading-normal">알림 설정</h3>
           <div
-            className={`w-6 h-6 bg-white rounded-full shadow transform duration-300 ease-in-out ${
-              isNotificationEnabled ? "translate-x-5" : "translate-x-0"
+            onClick={handleNotificationToggle}
+            className={`w-12 h-7 px-[3px] py-0.5 rounded-full flex justify-between items-center gap-2.5 cursor-pointer ${
+              isNotificationEnabled ? "bg-[#96db5b]" : "bg-gray-300"
             }`}
-          />
+          >
+            <div
+              className={`w-6 h-6 bg-white rounded-full shadow transform duration-300 ease-in-out ${
+                isNotificationEnabled ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </div>
         </div>
+        <button
+          onClick={handleLogout}
+          className="border-b border-[#f3f3f3] text-left w-full py-[20px] text-black text-lg font-medium font-['Pretendard'] leading-normal px-2"
+        >
+          로그아웃
+        </button>
+        <button
+          onClick={cancelAccount}
+          className="border-b border-[#f3f3f3] text-left w-full py-[20px]  text-black text-lg font-medium font-['Pretendard'] leading-normal px-2"
+        >
+          회원 탈퇴
+        </button>
       </div>
-      <button
-        onClick={handleLogout}
-        className="border-b border-[#f3f3f3] text-left w-full py-[20px] text-black text-base font-medium font-['Pretendard'] leading-normal px-2"
-      >
-        로그아웃
-      </button>
-      <button
-        onClick={cancelAccount}
-        className="border-b border-[#f3f3f3] text-left w-full py-[20px]  text-black text-base font-medium font-['Pretendard'] leading-normal px-2"
-      >
-        회원 탈퇴
-      </button>
     </div>
   );
 };

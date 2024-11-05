@@ -4,6 +4,7 @@ import BottomSheetModal from "@/components/BottomSheetModal";
 import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
 import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
 import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
+import Header from "@/components/header/Header";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,18 +43,21 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
-      <>
-        <div className="h-10"></div>
-        <TodayLearn />
-        <CustomizedLearn />
-        <Reviewing />
-      </>
-      {!isLoggedIn && showModal && (
-        <div className="fixed py-[60px]  bg-white rounded-t-[30px]  bottom-0 flex justify-center items-end z-[300]">
-          <BottomSheetModal onClose={() => setShowModal(false)} />
-        </div>
-      )}
-    </div>
+    <>
+      <Header />
+      <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
+        <>
+          <div className="h-10"></div>
+          <TodayLearn />
+          <CustomizedLearn />
+          <Reviewing />
+        </>
+        {!isLoggedIn && showModal && (
+          <div className="fixed py-[60px]  bg-white rounded-t-[30px]  bottom-0 flex justify-center items-end z-[300]">
+            <BottomSheetModal onClose={() => setShowModal(false)} />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

@@ -169,16 +169,14 @@ body {
     --gray-900: #f3f3f3;
 
     /* Font Sizes */
-    --font-sm: 0.625rem;
-    --font-base: 0.75rem;
-    --font-lg: 0.875rem;
-    --font-xl: 1rem;
-    --font-2xl: 1.125rem;
-    --font-3xl: 1.25rem;
-    --font-4xl: 1.375rem;
-    --font-5xl: 1.5rem;
-    --font-6xl: 1.625rem;
-    --font-7xl: 1.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.375rem;
+    --font-3xl: 1.5rem;
+    --font-4xl: 1.625rem;
+    --font-5xl: 1.75rem;
 
     /* Font Families */
     --font-family-suit: "SUIT", sans-serif;

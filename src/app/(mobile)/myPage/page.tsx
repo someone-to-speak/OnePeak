@@ -1,6 +1,7 @@
 "use client";
 
 import UserProfilePage from "@/components/myPage/UserProfile";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
@@ -24,6 +25,7 @@ const MyPage = () => {
 
   return (
     <Suspense>
+      <WithIconHeader title="내 정보" />
       <div className="flex flex-col">
         <UserProfilePage userId={userId} />
         <Link href="/myPage/faq">1:1 문의하기</Link>
