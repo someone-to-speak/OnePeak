@@ -25,6 +25,7 @@ const ChatMessage = () => {
   const supabase = createClient();
 
   // 유저 정보 조회
+
   const { data: user } = useQuery({
     queryKey: ["userInfo"],
     queryFn: reviewApi.getUserInfo
