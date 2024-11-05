@@ -13,11 +13,8 @@ export default function MobileLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  // 디버깅을 위해 pathname 값 확인
-  console.log("Current pathname:", pathname);
 
   // pathname이 null이 아니면 특정 경로에서 헤더와 푸터 숨기기
-  // const hideHeaderFooter = pathname !== null && ["/loginInfo/*"].includes(pathname);
   const hideHeaderFooter = pathname !== null && pathname.startsWith("/loginInfo");
 
   return (
