@@ -43,15 +43,13 @@ export default function Home() {
 
   return (
     <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
-      {isLoggedIn || (
-        <>
-          <div className="h-10"></div>
-          <TodayLearn />
-          <CustomizedLearn />
-          <Reviewing />
-        </>
-      )}
-      {showModal && (
+      <>
+        <div className="h-10"></div>
+        <TodayLearn />
+        <CustomizedLearn />
+        <Reviewing />
+      </>
+      {!isLoggedIn && showModal && (
         <div className="fixed py-[60px]  bg-white rounded-t-[30px]  bottom-0 flex justify-center items-end z-[300]">
           <BottomSheetModal onClose={() => setShowModal(false)} />
         </div>
