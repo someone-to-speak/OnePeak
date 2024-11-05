@@ -1,13 +1,13 @@
-import { createClient } from "@/utils/supabase/client";
+// import { createClient } from "@/utils/supabase/client";
 import { useUser } from "./useUser";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { fetchMessages, insertMessage } from "@/api/supabase/chat";
-import { MessageWithUserInfo } from "@/types/chatType/chatType";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMessages } from "@/api/supabase/chat";
+// import { MessageWithUserInfo } from "@/types/chatType/chatType";
 import { UUID } from "crypto";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
-const supabase = createClient();
-const queryClient = new QueryClient();
+// const supabase = createClient();
+// const queryClient = new QueryClient();
 
 export const useMessage = (conversationId: UUID) => {
   const { userInfo } = useUser();

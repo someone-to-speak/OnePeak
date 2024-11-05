@@ -9,7 +9,7 @@ type FormValues = {
 const InputField = () => {
   const { register, handleSubmit } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {};
+  const onSubmit: SubmitHandler<FormValues> = () => {};
 
   return (
     <form className="w-full px-4 py-[10px] bg-gray-400" onSubmit={handleSubmit(onSubmit)}>

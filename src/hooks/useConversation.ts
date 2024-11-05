@@ -1,9 +1,6 @@
 import { fetchConversationList } from "@/api/supabase/chat";
-import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "./useUser";
-
-const supabase = createClient();
 
 export const useConversation = () => {
   const { userInfo } = useUser();
