@@ -27,8 +27,8 @@ export type ParticipantWithUserInfo = Participant & {
   user_info: UserInfoWithLanguage;
 };
 
-export type ConversationWithLastMessage = Conversation & {
-  last_message: Message;
+export type ConversationWithLastMessage = Omit<Conversation, "last_message_id"> & {
+  last_message_id: Message;
 };
 
 export type ConversationWithParticipants = ConversationWithLastMessage & {

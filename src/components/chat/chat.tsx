@@ -3,7 +3,6 @@ import Image from "next/image";
 import DotsThree from "@/assets/DotsThree.svg";
 
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
-  console.log("conversation: ", conversation.last_message);
   return (
     <div className="w-full h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
       <Image
@@ -24,7 +23,7 @@ export const Chat = ({ conversation }: { conversation: ConversationWithParticipa
           />
           <Image src={DotsThree} alt={""} />
         </div>
-        <p>{conversation.last_message.type}</p>
+        <p>{conversation.last_message_id.type}</p>
         <div></div>
       </div>
     </div>
