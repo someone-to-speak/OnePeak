@@ -43,7 +43,7 @@ const Reviewing = () => {
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/chatbot/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}`);
   };
 
   // 더보기 버튼 핸들러
