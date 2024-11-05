@@ -18,16 +18,18 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onEndChat
 }) => {
   return (
-    <form className="sticky bottom-[55px] flex w-full bg-gray-200 p-4" onSubmit={onSubmit}>
+    <form className="sticky bottom-[55px] flex w-full bg-primary p-4" onSubmit={onSubmit}>
       <input
-        className="flex-grow p-2 rounded border border-gray-400"
+        className="flex-grow w-[311px] p-2 rounded border border-gray-400"
         type="text"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         placeholder="메세지를 입력해주세요."
         aria-label="메시지 입력"
       />
-
+      <button className="ml-2 px-4 py-2" type="submit" aria-label="메시지 전송">
+        <img src="/images/send-icon.svg" alt="전송" />
+      </button>
       <button
         type="button"
         className={`ml-2 px-4 py-2 rounded ${isRecording ? "bg-red-500" : "bg-gray-500"} text-white`}
@@ -35,22 +37,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
         {isRecording ? "🎤 전송" : "🎤 음성입력"}
-      </button>
-
-      <button
-        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-        type="submit"
-        aria-label="메시지 전송"
-      >
-        전송
-      </button>
-
-      <button
-        type="button"
-        className="ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-        onClick={onEndChat}
-      >
-        대화 종료
       </button>
     </form>
   );
