@@ -258,58 +258,55 @@ export type Database = {
           stt_content?: string
           type?: string
         }
-        Relationships: []
-      }
-      notifications: {
-        Row: {
-          created_at: string | null
-          id: number
-          is_read: boolean | null
-          message: string
-          title: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          is_read?: boolean | null
-          message: string
-          title: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          is_read?: boolean | null
-          message?: string
-          title?: string
-          user_id?: string
-        }
         Relationships: [
           {
-            foreignKeyName: "fk_user"
-            columns: ["user_id"]
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "user_info"
             referencedColumns: ["id"]
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: number
+          message: string
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          message: string
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          message?: string
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       participants: {
         Row: {
-          conversation_id: string
+          conversation_id: string | null
           id: string
           joined_at: string
           user_id: string
         }
         Insert: {
-          conversation_id: string
+          conversation_id?: string | null
           id?: string
           joined_at?: string
           user_id?: string
         }
         Update: {
-          conversation_id?: string
+          conversation_id?: string | null
           id?: string
           joined_at?: string
           user_id?: string
@@ -399,6 +396,38 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      review_content: {
+        Row: {
+          created_at: string
+          id: number
+          messages: string[]
+          review_id: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          messages: string[]
+          review_id: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          messages?: string[]
+          review_id?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_content_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "review"
             referencedColumns: ["id"]
           },
         ]
@@ -529,6 +558,7 @@ export type Database = {
           id: string
           is_blocked: boolean
           is_deleted: boolean
+          is_marketing: boolean
           learn_language: string | null
           my_language: string | null
           nickname: string
@@ -541,6 +571,7 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
+          is_marketing?: boolean
           learn_language?: string | null
           my_language?: string | null
           nickname?: string
@@ -553,6 +584,7 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           is_deleted?: boolean
+          is_marketing?: boolean
           learn_language?: string | null
           my_language?: string | null
           nickname?: string

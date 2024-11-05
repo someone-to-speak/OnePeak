@@ -2,7 +2,7 @@ import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
 import { useCallback, useState } from "react";
 
-export const useChatMessages = (situation: string, level: number) => {
+export const useChatMessages = (situation: string, level: number, myLanguage: string, learnLanguage: string) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
@@ -20,7 +20,13 @@ export const useChatMessages = (situation: string, level: number) => {
       setMessages((prev) => [...prev, userMessage]);
       try {
         // 챗봇의 응답 가져오기
-        const botResponse = await getChatResponse([...messages, userMessage], situation, level);
+        const botResponse = await getChatResponse(
+          [...messages, userMessage],
+          situation,
+          level,
+          myLanguage,
+          learnLanguage
+        );
 
         if (botResponse) {
           // const botMessage: Message = { role: "assistant", content: botResponse };
@@ -35,7 +41,7 @@ export const useChatMessages = (situation: string, level: number) => {
         throw error;
       }
     },
-    [messages, situation, level]
+    [messages, situation, level, myLanguage, learnLanguage]
   );
 
   return { messages, sendMessage };

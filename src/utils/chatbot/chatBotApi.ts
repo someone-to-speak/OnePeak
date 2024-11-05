@@ -1,13 +1,19 @@
 import { Message } from "@/app/types/chatBotType/chatBotType";
 
-export const getChatResponse = async (messages: Message[], situation: string, level: number) => {
+export const getChatResponse = async (
+  messages: Message[],
+  situation: string,
+  level: number,
+  myLanguage: string,
+  learnLanguage: string
+) => {
   try {
     const response = await fetch("/api/openai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ messages, situation, level }), // messages 배열을 JSON으로 변환
+      body: JSON.stringify({ messages, situation, level, myLanguage, learnLanguage }), // messages 배열을 JSON으로 변환
       next: {
         revalidate: 86400000 // 하루
       }

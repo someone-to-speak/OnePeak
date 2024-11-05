@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
+import { createClient } from "@/utils/supabase/client";
+
+const supabase = createClient();
 
 const ChatMessage = () => {
   const router = useRouter();
@@ -16,7 +19,34 @@ const ChatMessage = () => {
   const level = Number(searchParams?.get("level"));
 
   const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level);
+  const [myLanguage, setMyLanguage] = useState<string>("");
+  const [learnLanguage, setLearnLanguage] = useState<string>("");
+
+  // 사용자 언어 데이터 가져오기
+  useEffect(() => {
+    const fetchUserLanguages = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+
+      if (userId) {
+        const { data: userInfo } = await supabase
+          .from("user_info")
+          .select("my_language, learn_language")
+          .eq("id", userId)
+          .single();
+        console.log("userInfo", userInfo);
+
+        if (userInfo) {
+          setMyLanguage(userInfo.my_language ?? "english");
+          setLearnLanguage(userInfo.learn_language ?? "english");
+        }
+      }
+    };
+
+    fetchUserLanguages();
+  }, []);
+
+  const { messages, sendMessage } = useChatMessages(situation, level, myLanguage, learnLanguage);
 
   const handleTranscribedText = async (text: string) => {
     try {
