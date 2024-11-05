@@ -17,33 +17,31 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
   };
 
   return (
-    <div className="space-y-6 p-4 max-w-3xl mx-auto">
+    <div className="space-y-3 max-w-3xl mx-auto -z-50">
       {messages.map((message, index) => (
-        <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+        <div
+          key={index}
+          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} items-start gap-2`}
+        >
+          {/* user가 아닌 경우 앱아이콘 노출 */}
+          {message.role !== "user" && (
+            <div className="w-[30px] h-[30px] bg-primary-900 font-medium rounded-[25px] flex items-center justify-center">
+              <img src="/images/MainIcon.svg" alt="이미지" className="w-6 h-[26px]" />
+            </div>
+          )}
+          {/* 말풍선 */}
           <div
             className={`
-              relative p-4 rounded-2xl shadow-sm
-              max-w-[80%] 
-              ${
-                message.role === "user"
-                  ? "bg-blue-500 text-white rounded-br-none"
-                  : "bg-white border border-gray-200 rounded-bl-none"
-              }
-            `}
+            relative py-2 px-3 rounded-2xl shadow-sm
+            max-w-[214px] text-justify text-sm mx-3 my-2
+            ${message.role === "user" ? "bg-primary-800 text-black rounded-br-none " : "bg-gray-900 rounded-tl-none"}
+          `}
           >
             <div
               className={`
-              text-xs mb-1 font-medium
-              ${message.role === "user" ? "text-blue-100" : "text-gray-500"}
-            `}
-            >
-              {message.role === "user" ? "나" : "챗봇"}
-            </div>
-            <div
-              className={`
-              text-sm leading-relaxed whitespace-pre-wrap
-              ${message.role === "user" ? "text-white" : "text-gray-700"}
-            `}
+            text-sm leading-relaxed whitespace-pre-wrap text-black
+            ${message.role}
+          `}
             >
               {formatMessage(message.content)}
             </div>
