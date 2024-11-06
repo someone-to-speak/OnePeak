@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
 import caretleft from "@/../public/images/CaretLeft.svg";
-import greenhead from "@/../public/images/GreenHead.svg";
+import challIcon from "@/assets/chall-icon.svg";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -91,7 +91,7 @@ const ChallengePage = () => {
                   </p>
                 </div>
 
-                <Image src={greenhead} alt={"GreenHead"} />
+                <Image src={challIcon} alt={"chall-icon"} />
                 {/* 기존 문제 풀러가기 버튼 */}
                 <Link
                   href={`${problem.url}?userId=${userId}`}
