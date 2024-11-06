@@ -30,7 +30,7 @@ const ChallengePage = () => {
   const sliderRef = useRef<Slider | null>(null);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(0);
 
-  const handleClick = (index) => {
+  const handleClick = (index: number) => {
     setSelectedButtonIndex(index);
     goToSlide(index);
   };
