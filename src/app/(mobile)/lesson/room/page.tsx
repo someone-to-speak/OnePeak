@@ -107,14 +107,14 @@ const VideoChat = () => {
         .on("broadcast", { event: "refresh" }, handleRefreshSignal)
         .on("broadcast", { event: "back" }, handleBackSignal)
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
-      channel.current.subscribe(async (status) => {
+      channel.current.subscribe((status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-          await webrtcServiceRef.current.init();
+          webrtcServiceRef.current.init();
 
           // sdp 정보 발신
-          await webrtcServiceRef.current.createOffer();
+          webrtcServiceRef.current.createOffer();
         }
       });
     };
