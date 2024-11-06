@@ -42,10 +42,9 @@ export default function Home() {
   }, [router]);
 
   return (
-    // 디자인 시안 반영한 너비
-    <div className="relative w-[374px] h-[812px] bg-black/60 z-[9999]">
+    <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
       <>
-        <div className="h-10"></div>
+        <div className="h-10 p-4"></div>
         <TodayLearn />
         <CustomizedLearn />
         <Reviewing />

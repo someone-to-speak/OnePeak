@@ -21,7 +21,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <div className="flex-grow relative">
         <input
           className="w-full h-10 py-2 pl-5 pr-[46px] rounded-[50px] border border-gray-900 text-xs"
-          // type="text"
+          type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="메세지를 입력해주세요."
@@ -32,7 +32,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="submit"
           aria-label="메시지 전송"
         >
-          <img src="/images/Send.svg" alt="전송" />
+          <img src="/assets/send.svg" alt="전송" />
         </button>
       </div>
       {/* 추후 녹음 진행 여부에 따라 아이콘 변경 예정 */}
@@ -42,7 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         onClick={isRecording ? onStopRecording : onStartRecording}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
-        {isRecording ? <img src="/images/Mike.svg" alt="녹음 시작" /> : <img src="/images/Mike.svg" alt="녹음 중지" />}
+        {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />}
       </button>
     </form>
   );

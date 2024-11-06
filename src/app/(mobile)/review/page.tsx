@@ -141,7 +141,7 @@ const ChatMessage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full mx-auto bg-gray-100">
+    <div className="flex flex-col h-screen w-full mx-auto">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
           <button onClick={() => router.back()} className="mr-5">
@@ -163,7 +163,7 @@ const ChatMessage = () => {
             ))}
         </div>
       </div>
-      <ChatInput
+      {/* <ChatInput
         userInput={userInput}
         setUserInput={setUserInput}
         isRecording={isRecording}
@@ -171,7 +171,7 @@ const ChatMessage = () => {
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
         onEndChat={handleEndChat}
-      />
+      /> */}
     </div>
   );
 };
