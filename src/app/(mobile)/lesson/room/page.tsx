@@ -66,7 +66,7 @@ const VideoChat = () => {
     if (!channel.current || !roomId) return;
 
     const handleBackButton = async () => {
-      channel.current?.send({
+      await channel.current?.send({
         type: "broadcast",
         event: "back"
       });
@@ -129,7 +129,7 @@ const VideoChat = () => {
 
     init();
 
-    window.onpopstate = () => {
+    window.onpopstate = async () => {
       setTimeout(handleBackButton, 0);
     };
 
