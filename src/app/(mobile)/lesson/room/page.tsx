@@ -23,6 +23,7 @@ const VideoChatPage = () => {
 };
 
 const VideoChat = () => {
+  console.log("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as UUID;
