@@ -102,18 +102,26 @@ const ChatMessage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full mx-auto bg-gray-100">
+    <div className="flex flex-col h-screen w-full mx-auto bg-white">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
           <button onClick={() => router.back()} className="mr-5">
             🔙
           </button>
           <h1 className="font-bold">{situation}</h1>
+          <button
+            type="button"
+            className="ml-2 px-4 py-2 top-0 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            onClick={handleEndChat}
+          >
+            대화 종료
+          </button>
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
           <ChatMessageList messages={messages} />
         </div>
       </div>
+
       <ChatInput
         userInput={userInput}
         setUserInput={setUserInput}

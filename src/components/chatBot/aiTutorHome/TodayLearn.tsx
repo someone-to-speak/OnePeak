@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Tables } from "../../../../database.types";
 import { reviewApi } from "@/services/supabaseChatbot";
+import Slider from "react-slick";
 
 type SituationType = Tables<"situation">;
 
@@ -97,26 +98,43 @@ const TodayLearn = () => {
     }
   };
 
+  // 캐러셀
+  const settings = {
+    focusOnSelect: true,
+    infinite: false,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    speed: 500,
+    dots: true, // 하단 점 네비게이션
+    autoplay: true, // 자동 재생
+    autoplaySpeed: 3000, // 자동 재생 속도
+    pauseOnHover: true, // 호버시 일시정지
+    arrows: true, // 화살표 표시
+    centerMode: true, // 센터 모드
+    centerPadding: "60px" // 센터 모드 패딩
+  };
+
   // TODO: 기능 구현 후 캐러셀 적용
   return (
-    <div className="h-64">
-      <h1 className="text-3xl font-bold">오늘의 학습</h1>
-      <p>매일 업데이트 되는 맞춤 커리큘럼 {situations?.length}</p>
-      <div className="flex overflow-x-auto">
-        {situations?.map((situation) => {
-          return (
+    <div className="pl-4">
+      <h1 className="text-[24px] font-bold">오늘의 학습</h1>
+      <p className="text-[14px]">매일 업데이트 되는 추천 학습</p>
+
+      <div className="relative mt-2 w-full">
+        <Slider {...settings}>
+          {situations?.map((situation) => (
             <div
               key={situation.id}
               onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}
-              className="cursor-pointer"
+              style={{ width: "244px" }} // 슬라이드 너비 고정
             >
-              <div className="w-60 h-60 border border-spacing-2">
+              <div className="h-[320px] border border-spacing-2 p-3">
                 <p>{situation.situation}</p>
                 <p>난이도: {situation.level}</p>
               </div>
             </div>
-          );
-        })}
+          ))}
+        </Slider>
       </div>
     </div>
   );
