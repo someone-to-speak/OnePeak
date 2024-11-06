@@ -1,5 +1,5 @@
 import Image from "next/image";
-import caretleft from "@/../public/images/caret-left.svg";
+import caretleft from "@/assets/caret-left.svg";
 import { useRouter } from "next/navigation";
 
 interface BackButtonProps {
