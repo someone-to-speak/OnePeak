@@ -16,7 +16,7 @@ export default function MobileLayout({
 
   // pathname이 null이 아니면 특정 경로에서 헤더와 푸터 숨기기
   // const hideHeaderFooter = pathname !== null && ["/loginInfo/*"].includes(pathname);
-  const hideHeaderFooter = pathname === "/loginInfo" || "/leeson/room";
+  const hideHeaderFooter = pathname === "/loginInfo" || pathname?.startsWith("/lesson/room");
 
   return (
     <div>
