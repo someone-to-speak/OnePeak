@@ -32,18 +32,18 @@ export const useMatching = () => {
     );
     matchingChannel.subscribe(() => console.log("subscribe"));
 
-    const roomId = await initiateMatching(userInfo);
+    await initiateMatching(userInfo);
 
-    if (roomId) {
-      setIsMatching(false);
-      await cleanUp();
-      router.push(`/lesson/room?id=${roomId}`);
-    }
+    // if (roomId) {
+    //   setIsMatching(false);
+    //   await cleanUp();
+    //   router.push(`/lesson/room?id=${roomId}`);
+    // }
   };
 
   const handleUpdateSignal = async (payload: RealtimePostgresUpdatePayload<matche>) => {
     const updatedMatchQueue = payload;
-    if (updatedMatchQueue.new.user_id === userInfo?.id) {
+    if (updatedMatchQueue.new.user_id === userInfo?.id || updatedMatchQueue.new.match_id === userInfo?.id) {
       setIsMatching(false);
       await cleanUp();
       router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
