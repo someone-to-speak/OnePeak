@@ -1,16 +1,11 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
-import { useAudioRecorder } from "@/hooks/useAudioRecorder";
-import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
-import { AiMessages } from "@/type";
-import { createClient } from "@/utils/supabase/client";
-import { format } from "date-fns";
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { Tables } from "../../../../database.types";
 import React from "react";
@@ -27,7 +22,6 @@ const ChatMessagePage = () => {
 
 const ChatMessage = () => {
   const router = useRouter();
-  const supabase = createClient();
 
   // URL 파라미터 가져오기
   const searchParams = useSearchParams();
@@ -76,69 +70,7 @@ const ChatMessage = () => {
     return reviewMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   }, [reviewMessages]);
 
-  const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level);
-
-  const handleTranscribedText = async (text: string) => {
-    try {
-      await sendMessage(text);
-    } catch (error) {
-      console.log("메세지 전송 실패: ", error);
-    }
-  };
-
-  const { isRecording, startRecording, stopRecording } = useAudioRecorder(handleTranscribedText);
-
-  // 전송 버튼
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!userInput.trim()) return;
-
-    try {
-      sendMessage(userInput);
-      console.log("messages", messages);
-      setUserInput("");
-    } catch (error) {
-      console.log("메세지 전송 실패: ", error);
-    }
-  };
-
-  // 채팅 종료 버튼
-  const saveMessages = useMutation({
-    mutationFn: ({ messages, review_id }: { messages: AiMessages[]; review_id: number }) =>
-      reviewApi.postLearnMessage(messages, review_id),
-    onSuccess: () => {
-      alert("연결 확인");
-    }
-  });
-
-  // 오늘 날짜 생성
-  const today = new Date();
-  // KST로 조정 (UTC+9)
-  const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
-  const todayString = format(kstToday, "yyyy-MM-dd");
-
-  const handleEndChat = async () => {
-    if (user) {
-      const { data: existingReviews, error } = await supabase
-        .from("review")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("situation", situation);
-
-      const todayReview = existingReviews?.filter((review) => {
-        const dateOnly = review.created_at.split("T")[0];
-        return dateOnly === todayString;
-      });
-
-      if (todayReview && todayReview.length > 0) {
-        saveMessages.mutate({ messages: messages, review_id: todayReview[0].id });
-      }
-      if (error) {
-        console.log("대화 저장에 실패하였습니다.", error);
-      }
-    }
-  };
+  const { messages } = useChatMessages(situation, level);
 
   return (
     <div className="flex flex-col h-screen w-full mx-auto">
@@ -163,15 +95,6 @@ const ChatMessage = () => {
             ))}
         </div>
       </div>
-      {/* <ChatInput
-        userInput={userInput}
-        setUserInput={setUserInput}
-        isRecording={isRecording}
-        onSubmit={handleSubmit}
-        onStartRecording={startRecording}
-        onStopRecording={stopRecording}
-        onEndChat={handleEndChat}
-      /> */}
     </div>
   );
 };

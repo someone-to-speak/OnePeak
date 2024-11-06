@@ -1,5 +1,7 @@
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import React from "react";
+import mainIcon from "@/assets/main-icon.svg";
+import Image from "next/image";
 
 type ChatMessageListProps = {
   messages: Message[];
@@ -26,7 +28,8 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
           {/* user가 아닌 경우 앱아이콘 노출 */}
           {message.role !== "user" && (
             <div className="w-[30px] h-[30px] bg-primary-900 font-medium rounded-[25px] flex items-center justify-center">
-              <img src="/images/MainIcon.svg" alt="이미지" className="w-6 h-[26px]" />
+              {/* <img src="/images/MainIcon.svg" alt="이미지" className="w-6 h-[26px]" /> */}
+              <Image src={mainIcon} alt="메인아이콘" width={20} height={20} />
             </div>
           )}
           {/* 말풍선 */}

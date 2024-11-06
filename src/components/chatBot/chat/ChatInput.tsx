@@ -1,3 +1,7 @@
+import Image from "next/image";
+import sendIcon from "@/assets/send.svg";
+import mikeIcon from "@/assets/mike.svg";
+
 type ChatInputProps = {
   userInput: string;
   setUserInput: (input: string) => void;
@@ -32,7 +36,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="submit"
           aria-label="메시지 전송"
         >
-          <img src="/assets/send.svg" alt="전송" />
+          <Image src={sendIcon} alt="전송" width={20} height={20} />
         </button>
       </div>
       {/* 추후 녹음 진행 여부에 따라 아이콘 변경 예정 */}
@@ -42,7 +46,12 @@ const ChatInput: React.FC<ChatInputProps> = ({
         onClick={isRecording ? onStopRecording : onStartRecording}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
-        {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />}
+        {/* {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />} */}
+        {isRecording ? (
+          <Image src={mikeIcon} alt="녹음 시작" width={20} height={20} />
+        ) : (
+          <Image src={mikeIcon} alt="녹음 중지" width={20} height={20} />
+        )}
       </button>
     </form>
   );
