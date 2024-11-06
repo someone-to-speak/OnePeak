@@ -129,11 +129,15 @@ const VideoChat = () => {
 
     init();
 
-    window.addEventListener("popstate", handleBackButton);
+    window.onpopstate = () => {
+      setTimeout(handleBackButton, 0);
+    };
+
+    // window.addEventListener("popstate", handleBackButton);
     window.addEventListener("beforeunload", handleRefresh);
 
     return () => {
-      window.removeEventListener("popstate", handleBackButton);
+      // window.removeEventListener("popstate", handleBackButton);
       window.removeEventListener("beforeunload", handleRefresh);
     };
   }, [handleCloseMatchingSignal, roomId, router]);
