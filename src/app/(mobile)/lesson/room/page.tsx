@@ -62,42 +62,40 @@ const VideoChat = () => {
     router.back();
   }, [handleStopRecording, router]);
 
-  const handleBackButton = async () => {
-    channel.current?.send({
-      type: "broadcast",
-      event: "back"
-    });
-
-    await channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-  };
-
-  const handleBackSignal = useCallback(async () => {
-    await channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    alert("사용자와의 연길이 끊어졌습니다.");
-    router.back();
-  }, [router]);
-
-  const handleRefresh = async () => {
-    channel.current?.send({
-      type: "broadcast",
-      event: "refresh"
-    });
-
-    await handleRefreshSignal();
-  };
-
-  const handleRefreshSignal = async () => {
-    await webrtcServiceRef.current?.reset();
-    await webrtcServiceRef.current?.init();
-  };
-
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
-    window.addEventListener("popstate", handleBackButton);
-    window.addEventListener("beforeunload", handleRefresh);
+    const handleBackButton = async () => {
+      channel.current?.send({
+        type: "broadcast",
+        event: "back"
+      });
+
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+    };
+
+    const handleRefresh = async () => {
+      channel.current?.send({
+        type: "broadcast",
+        event: "refresh"
+      });
+
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+    };
+
+    const handleBackSignal = async () => {
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+      alert("사용자와의 연길이 끊어졌습니다.");
+      router.back();
+    };
+
+    const handleRefreshSignal = async () => {
+      await webrtcServiceRef.current?.reset();
+      await webrtcServiceRef.current?.init();
+    };
 
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
@@ -131,11 +129,14 @@ const VideoChat = () => {
 
     init();
 
+    window.addEventListener("popstate", handleBackButton);
+    window.addEventListener("beforeunload", handleRefresh);
+
     return () => {
       window.removeEventListener("popstate", handleBackButton);
       window.removeEventListener("beforeunload", handleRefresh);
     };
-  }, [handleBackSignal, handleCloseMatchingSignal, roomId]);
+  }, [handleCloseMatchingSignal, roomId, router]);
 
   return (
     <div className="relative h-auto">
