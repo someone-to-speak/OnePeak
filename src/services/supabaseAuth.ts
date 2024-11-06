@@ -10,9 +10,9 @@ export const signInWithProvider = async (provider: Provider) => {
       queryParams: {
         access_type: "offline",
         prompt: "consent"
-      },
+      }
       // redirectTo: "http://localhost:3000/auth/callback" // 데브 모드
-      redirectTo: "https://one-peak-dev.vercel.app/auth/callback" // 배포 모드
+      // redirectTo: "https://one-peak-dev.vercel.app/auth/callback" // 배포 모드
     }
   });
 };
