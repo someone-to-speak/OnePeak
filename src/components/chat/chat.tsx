@@ -1,6 +1,6 @@
 import { ConversationWithParticipants } from "@/types/chatType/chatType";
 import Image from "next/image";
-import DotsThree from "@/assets/chat/dots-three.svg";
+// import DotsThree from "@/assets/chat/dots-three.svg";
 
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
   return (
