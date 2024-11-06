@@ -6,6 +6,7 @@ import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 // import { useQuery } from "@tanstack/react-query";
 // import { reviewApi } from "@/services/supabaseChatbot";
 // import { AiMessages } from "@/type";
@@ -105,10 +106,11 @@ const ChatMessage = () => {
     <div className="flex flex-col h-screen w-full mx-auto bg-white">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
-          <button onClick={() => router.back()} className="mr-5">
+          {/* <button onClick={() => router.back()} className="mr-5">
             🔙
-          </button>
-          <h1 className="font-bold">{situation}</h1>
+          </button> */}
+          <WithIconHeader title={situation} />
+          {/* <h1 className="font-bold">{situation}</h1> */}
           {/* <button
             type="button"
             className="ml-2 px-4 py-2 top-0 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import sendIcon from "@/assets/send.svg";
 import mikeIcon from "@/assets/mike.svg";
+import returnIcon from "@/assets/chatbot/return.svg";
 
 type ChatInputProps = {
   userInput: string;
@@ -48,7 +49,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       >
         {/* {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />} */}
         {isRecording ? (
-          <Image src={mikeIcon} alt="녹음 시작" width={20} height={20} />
+          <Image src={returnIcon} alt="녹음 시작" width={20} height={20} />
         ) : (
           <Image src={mikeIcon} alt="녹음 중지" width={20} height={20} />
         )}
