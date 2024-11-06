@@ -28,6 +28,12 @@ const ChallengePage = () => {
   const [learnLanguage, setLearnLanguage] = useState<string>("");
   const supabase = createClient();
   const sliderRef = useRef<Slider | null>(null);
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(0);
+
+  const handleClick = (index) => {
+    setSelectedButtonIndex(index);
+    goToSlide(index);
+  };
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -62,64 +68,73 @@ const ChallengePage = () => {
   ];
 
   return (
-    <div className="">
-      <div className="flex flex-row gap-4 mb-4">
+    <div className="w-full">
+      <header className="h-[48px] p-4 bg-[#fcfcfc] text-[#0c0c0c] text-lg font-bold font-['SUIT']">챌린지</header>
+      <div className=" w-full h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex-row justify-center items-center inline-flex">
         {problems.map((problem, index) => (
-          <p
+          <div
             key={problem.type}
-            onClick={() => goToSlide(index)}
-            className="bg-blue-500 text-white p-2 cursor-pointer rounded-md transition duration-200 hover:bg-blue-600"
+            className={`w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
+              selectedButtonIndex === index ? "bg-[#b0e484]" : "bg-[#f3f3f3]"
+            }`}
           >
-            {problem.label}
-          </p>
+            <p
+              onClick={() => handleClick(index)}
+              className={` ${
+                selectedButtonIndex === index ? "text-[#325713]" : "text-[#a5a5a5]"
+              } text-base font-bold font-['SUIT'] leading-normal`}
+            >
+              {problem.label}
+            </p>
+          </div>
         ))}
       </div>
       <Slider ref={sliderRef} {...settings}>
         {problems.map((problem) => (
-          <div key={problem.type} className="mb-4 ">
+          <div key={problem.type} className="w-full ">
             <div
               key={problem.type}
-              className=" mb-4 mx-2 flex flex-col items-center justify-between px-4 py-8 relative bg-primary-900 rounded-xl"
+              className="flex-col h-[444px] mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
             >
-              <div className=" inline-flex gap-10 flex-col items-center relative ">
-                <div className="flex  gap-1 flex-col items-center relative ">
-                  <div className="self-stretch  text-black text-center font-suit text-[22px] font-bold ">
+              <div className="flex flex-col items-center">
+                <div className="mb-[40.5px]">
+                  <p className="mb-[4px] text-center text-black text-[22px] font-bold font-['SUIT']  ">
                     {problem.label} 챌린지
-                  </div>
-                  <p className="self-stretch text-[#595959] text-center font-pretendard text-[14px] font-medium ">
-                    {problem.label} 챌린지를 통해 실력을 확인해보세요!
+                  </p>
+                  <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
+                    {problem.label} 챌린지를 통해
+                  </p>
+                  <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
+                    실력을 확인해보세요!
                   </p>
                 </div>
-
-                <Image src={challIcon} alt={"chall-icon"} />
-                {/* 기존 문제 풀러가기 버튼 */}
-                <Link
-                  href={`${problem.url}?userId=${userId}`}
-                  className="flex  h-[50px] p-[10px] justify-center items-center gap-[10px]  self-stretch rounded-[10px] border border-[#96DB5C] bg-[#7BD232]"
-                >
-                  <p className="text-[#FDFDFD] text-center font-suit text-[18px] font-bold ">
-                    {problem.label} 풀러가기
-                  </p>
-                </Link>
+                <Image src={challIcon} alt={"chall-icon"} className="mb-[44px]" />
+                {/* 기존 문제 풀러가기 버튼 */}{" "}
               </div>
+              <Link
+                href={`${problem.url}?userId=${userId}`}
+                className="h-[50px] w-full bg-primary-500 p-[10px] justify-center rounded-[10px] "
+              >
+                <p className="text-[#FDFDFD] text-center font-suit text-[18px]  ">{problem.label} 풀러가기</p>
+              </Link>
             </div>
             {/* 추가된 오답노트 버튼 */}
             <Link
               href={`/challenge/${problem.type}/wrongAnswerNote`} // 오답노트 페이지로 이동하는 링크
-              className="w-full mx-2 h-20 p-4 bg-[#f3f3f3] rounded-xl justify-center items-center gap-5 inline-flex"
             >
-              <div className="grow  flex-col justify-center items-start inline-flex">
-                <p className="self-stretch text-black text-lg font-bold font-['SUIT'] ">
-                  {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
-                </p>
-                <p className=" text-[#8c8c8c] text-sm font-medium ">
-                  {problem.type === "grammar"
-                    ? "배운 문법을 잊어버리지 않게 복습해보세요"
-                    : "배운 단어를 잊어버리지 않게 복습해보세요"}
-                </p>
+              <div className="w-full h-[80px] gap-[20px] flex p-[16px] mt-[16px] justify-center items-center rounded-[12px] bg-gray-900 ">
+                <div>
+                  <p className="text-black text-lg font-bold font-['SUIT'] ">
+                    {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
+                  </p>
+                  <p className=" text-[#8c8c8c] text-sm font-medium font-['Pretendard'] ">
+                    {problem.type === "grammar"
+                      ? "배운 문법을 잊어버리지 않게 복습해보세요"
+                      : "배운 단어를 잊어버리지 않게 복습해보세요"}
+                  </p>
+                </div>
+                <Image className="rotate-180" src={caretLeft} alt={"caret-left"} />
               </div>
-
-              <Image className="rotate-180" src={caretLeft} alt={"caret-left"} />
             </Link>
           </div>
         ))}
