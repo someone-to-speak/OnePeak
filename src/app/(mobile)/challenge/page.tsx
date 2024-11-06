@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
-import caretleft from "@/../public/images/CaretLeft.svg";
+import caretleft from "@/../public/images/caret-left.svg";
 import challIcon from "@/assets/chall-icon.svg";
 import Link from "next/link";
 import Image from "next/image";
@@ -76,11 +76,8 @@ const ChallengePage = () => {
       </div>
       <Slider ref={sliderRef} {...settings}>
         {problems.map((problem) => (
-          <div>
-            <div
-              key={problem.type}
-              className="flex flex-col w-[343px] h-[444px] items-center justify-between px-4 py-8 relative bg-primary-900 rounded-xl"
-            >
+          <div key={problem.type}>
+            <div className="flex flex-col w-[343px] h-[444px] items-center justify-between px-4 py-8 relative bg-primary-900 rounded-xl">
               <div className=" inline-flex gap-10 flex-col items-center relative flex-[0_0_auto]">
                 <div className="flex w-[248px] gap-1 flex-col items-center relative flex-[0_0_auto]">
                   <div className="self-stretch text-black text-center font-suit text-[22px] font-bold leading-[33px] tracking-[-0.44px]">
