@@ -87,7 +87,7 @@ export default function SetLearnLanguage() {
         <button
           onClick={handleContinue}
           disabled={!selectedLearnLanguage}
-          className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] ${
+          className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px] ${
             selectedLearnLanguage
               ? "opacity-100 bg-[var(--Primary-500,#7BD232)]"
               : "opacity-40 bg-[var(--Primary-500,#7BD232)]"

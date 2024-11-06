@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/header/Header";
 import "../globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -18,13 +17,13 @@ export default function MobileLayout({
     pathname === "/" ||
     pathname === "/challenge" ||
     pathname === "/myPage" ||
-    pathname === "/editProfile" ||
     pathname === "/chat" ||
-    pathname === "/lesson";
+    pathname === "/lesson" ||
+    pathname === "/myPage/editProfile";
 
   return (
     <div>
-      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
+      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0 min-h-full">
         {children}
         {showNavbar && <Navibar />}
       </div>
