@@ -4,7 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
 import caretLeft from "@/assets/caret-left.svg";
-import challIcon from "@/assets/chall-icon.svg";
+import challIconWord from "@/assets/chall-icon-word.svg";
+import challIconGrammar from "@/assets/chall-icon-grammar.svg";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -74,8 +75,8 @@ const ChallengePage = () => {
         {problems.map((problem, index) => (
           <div
             key={problem.type}
-            className={`w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
-              selectedButtonIndex === index ? "bg-[#b0e484]" : "bg-[#f3f3f3]"
+            className={` cursor-default cursor-pointer w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
+              selectedButtonIndex === index ? "  bg-[#b0e484]" : "bg-[#f3f3f3]"
             }`}
           >
             <p
@@ -108,7 +109,11 @@ const ChallengePage = () => {
                     실력을 확인해보세요!
                   </p>
                 </div>
-                <Image src={challIcon} alt={"chall-icon"} className="mb-[44px]" />
+                {problem.type === "grammar" ? (
+                  <Image src={challIconGrammar} alt={"chall-icon-grammar"} className="mb-[44px]" />
+                ) : (
+                  <Image src={challIconWord} alt={"chall-icon-word"} className="mb-[44px]" />
+                )}
                 {/* 기존 문제 풀러가기 버튼 */}{" "}
               </div>
               <Link
@@ -133,6 +138,7 @@ const ChallengePage = () => {
                       : "배운 단어를 잊어버리지 않게 복습해보세요"}
                   </p>
                 </div>
+
                 <Image className="rotate-180" src={caretLeft} alt={"caret-left"} />
               </div>
             </Link>
