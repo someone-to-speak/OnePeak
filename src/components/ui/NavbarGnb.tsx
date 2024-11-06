@@ -19,8 +19,8 @@ const NavbarGnb = () => {
   ];
 
   return (
-    <div className="relative z-[200] w-full">
-      <div className="min-w-[320px] max-w-[600px] h-20 mx-auto my-0 px-4 pt-[11px] pb-safe-offset-0 fixed left-0 right-0 bottom-0 bg-[#fcfcfc] border-t border-[#f3f3f3] flex gap-[28px]">
+    <div className="relative z-[200]">
+      <div className="w-[375px] h-20 mx-auto my-0 px-[24px] pt-[11px] pb-safe-offset-0 fixed left-0 right-0 bottom-0 bg-[#fcfcfc] border-t border-[#f3f3f3] flex">
         {navItems.map((item) => (
           <Link
             key={item.label}
