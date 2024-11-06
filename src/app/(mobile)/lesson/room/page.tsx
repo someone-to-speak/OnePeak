@@ -45,7 +45,7 @@ const VideoChat = () => {
   };
 
   const handleLeaveAloneSignal = useCallback(async () => {
-    channel.current?.unsubscribe();
+    await channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
     router.push("/lesson");
   }, [router]);
@@ -105,17 +105,13 @@ const VideoChat = () => {
 
     init();
 
-    // const cleanUp = async () => {
-    //   channel.current?.send({
-    //     type: "broadcast",
-    //     event: "leaveAlone"
-    //   });
-    //   await handleLeaveAloneSignal();
-    // };
+    const cleanUp = async () => {
+      await handleLeaveAloneSignal();
+    };
 
-    // return () => {
-    //   cleanUp();
-    // };
+    return () => {
+      cleanUp();
+    };
   }, [handleCloseMatchingSignal, handleLeaveAloneSignal, roomId]);
 
   return (

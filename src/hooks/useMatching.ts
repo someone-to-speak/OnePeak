@@ -22,8 +22,13 @@ export const useMatching = () => {
     const matchingChannel = supabase.channel("matches");
     matchingChannelRef.current = matchingChannel;
 
-    matchingChannel.on<matche>("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) =>
-      handleUpdateSignal(payload)
+    matchingChannel.on<matche>(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "matches" },
+      (payload) => {
+        console.log("update");
+        handleUpdateSignal(payload);
+      }
     );
     matchingChannel.subscribe();
 
