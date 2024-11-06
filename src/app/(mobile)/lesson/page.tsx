@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useMatching } from "@/hooks/useMatching";
-// import img1 from "@/../public/images/book.jpg";
-// import Image from "next/image";
+import lessonBackground from "@/assets/iPhone-13-mini-124.svg";
+import Image from "next/image";
 
 const LessonPage = () => {
   const { setupMatchingChannel, userInfo, isMatching } = useMatching();
@@ -23,7 +23,7 @@ const LessonPage = () => {
           언어수업
         </h1>
       </div>
-      {/* 매칭 중일 때 오버레이와 로딩 스피너 버튼 표시 */}
+      {/* 매칭 중일 때 오버레이와 로딩 스피너 버튼 표시
       {isMatching && (
         <div className=" bg-black bg-opacity-50 flex items-center justify-center">
           <button
@@ -43,14 +43,16 @@ const LessonPage = () => {
             Processing...
           </button>
         </div>
-      )}
+      )} */}
 
       {/* 기존 페이지 내용 */}
       <div className={isMatching ? "opacity-50 pointer-events-none" : ""}>
-        <h1>언어수업</h1>
+        <div className="z-[200]">
+          <h1>1:1랜덤 영어수업</h1>
+          <p>학습언어 {userInfo?.learn_language}</p>
+        </div>
         <button onClick={handleClickMachingButton}>매칭하기</button>
-        {/* <Image src={img1} alt={"Image1"} /> */}
-        <p>학습언어 : {userInfo?.learn_language}</p>
+        <Image src={lessonBackground} alt={"레슨배경이미지"} width={375} height={812} className="z-[150]" />
       </div>
     </>
   );
