@@ -52,14 +52,10 @@ const Reviewing = () => {
   };
 
   return (
-    <div className=" flex w-[343px] flex-col justify-end items-start">
-      <h1 className="self-stretch text-black font-suit text-[24px] font-bold leading-[36px] tracking-[-0.48px]">
-        복습하기
-      </h1>
-      <button
-        onClick={handleReviewDetail}
-        className=" text-[var(--Gray-600, #A6A6A6)] text-right font-suit text-[14px] font-light leading-[21px] tracking-[-0.28px]"
-      >
+    <div className="relative">
+      <h1 className="text-[24px] font-bold">복습하기</h1>
+      <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
+      <button onClick={handleReviewDetail} className="absolute right-0">
         더보기
       </button>
       {
