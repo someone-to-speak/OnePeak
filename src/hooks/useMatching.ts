@@ -32,8 +32,10 @@ export const useMatching = () => {
     );
     matchingChannel.subscribe((status) => {
       if (status === "SUBSCRIBED") console.log("subscribe");
-      else if (status === "CHANNEL_ERROR") console.log("error");
-      else if (status === "TIMED_OUT") console.log("timeout");
+      else if (status === "CHANNEL_ERROR") {
+        console.log("error");
+        setupMatchingChannel();
+      } else if (status === "TIMED_OUT") console.log("timeout");
       else console.log("closed");
     });
 

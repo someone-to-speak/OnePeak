@@ -74,6 +74,7 @@ const VideoChat = () => {
     const roomSession = sessionStorage.getItem("session");
 
     if (roomSession) {
+      webrtcServiceRef.current?.createOffer();
       return;
     } else {
       sessionStorage.setItem("session", "subscribe");
