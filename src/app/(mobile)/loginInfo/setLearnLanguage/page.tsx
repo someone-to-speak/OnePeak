@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
-import caretleft from "@/../public/images/caret-left.svg";
-// import check from "@/../public/images/check.svg";
+import caretleft from "@/assets/caret-left.svg";
+import check from "@/assets/check.svg";
 import Image from "next/image";
 
 export default function SetLearnLanguage() {
@@ -80,7 +80,7 @@ export default function SetLearnLanguage() {
               }`}
             >
               <p className="flex-grow">{language}</p>
-              {/* {selectedLearnLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />} */}
+              {selectedLearnLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />}
             </button>
           ))}
         </div>

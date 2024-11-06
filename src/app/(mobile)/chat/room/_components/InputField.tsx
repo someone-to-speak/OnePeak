@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-// import ArrowUp from "@/assets/ArrowUp.svg";
+// import ArrowUp from "@/assets/arrow-Up.svg";
 // import Image from "next/image";
 
 type FormValues = {
@@ -7,6 +7,7 @@ type FormValues = {
 };
 
 const InputField = () => {
+  console.log("");
   const { register, handleSubmit } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = () => {};

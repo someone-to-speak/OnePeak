@@ -56,7 +56,7 @@ export default function Home() {
   }, [isLoggedIn, showModal]);
 
   return (
-    <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
+    <div className="relative w-full h-[812px] ">
       <div className={`relative w-full h-[812px] ${!isLoggedIn && showModal ? "bg-black/60 z-[300]" : "z-[100]"}`}>
         <>
           <div className="h-10 p-4"></div>
