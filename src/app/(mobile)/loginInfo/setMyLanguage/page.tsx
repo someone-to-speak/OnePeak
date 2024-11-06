@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 import caretleft from "@/assets/caret-left.svg";
-import check from "@/assets/Check.svg";
+import check from "@/assets/check.svg";
 import Image from "next/image";
 
 export default function SetMyLanguage() {
