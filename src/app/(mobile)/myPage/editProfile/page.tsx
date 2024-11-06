@@ -8,6 +8,7 @@ import { uploadImage } from "@/utils/myPage/imageUpload";
 import { Input, Button, Spinner } from "@nextui-org/react";
 import { Camera } from "lucide-react";
 import Image from "next/image";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type UserInfoType = Tables<"user_info">;
 
@@ -108,57 +109,74 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center">
-      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center mt-[100px]">
-        <div className="flex flex-col items-center justify-center gap-4">
+    <div className="w-full flex flex-col justify-center relative min-h-[calc(100vh-55px)]">
+      <div className="absolute top-0">
+        <WithIconHeader title="프로필 수정" />
+      </div>
+      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center pb-[24px]">
           <div className="relative">
-            <div className="w-[200px] h-[200px] overflow-hidden rounded-full shadow-md relative">
+            <div className="w-[100px] h-[100px] rounded-[54px] overflow-hidden shadow-md relative">
               <Image
                 fill
                 src={previewUrl || "/images/profile.png"}
                 alt="프로필 이미지"
-                className="rounded-full object-cover h-[100px] w-[100px]"
+                className="object-cover"
                 priority
                 sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
               />
             </div>
-            <label htmlFor="file-upload" className="absolute right-0 bottom-0 mb-1 mr-1 cursor-pointer">
+            <label htmlFor="file-upload" className="absolute right-0 bottom-0 mb-0 mr-0 cursor-pointer">
               <input type="file" id="file-upload" onChange={handleFileChange} className="hidden" />
               <Button
                 type="button"
                 onClick={() => document.getElementById("file-upload")?.click()}
-                className="bg-gray-500 w-[40px] h-[40px] text-white rounded-full p-1 shadow-md hover:bg-gray-600 transition duration-150"
+                className="w-[27.27px] h-[27.27px] p-[3.64px] bg-[#686868] rounded-full text-white shadow-md hover:bg-gray-600 transition duration-150"
               >
-                <Camera size={20} />
+                <Camera size={18} />
               </Button>
             </label>
           </div>
-          <div className="flex flex-col">
-            <Input
-              type="text"
-              value={selectedProfile?.nickname}
-              onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, nickname: e.target.value }))}
-              required
-              className="max-w-xs text-center"
-            />
-            <Input
-              type="text"
-              value={selectedProfile?.state_msg}
-              onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, state_msg: e.target.value }))}
-              required
-              className="max-w-xs text-center"
-            />
+        </div>
+        <div className="flex flex-col gap-[20px] w-full">
+          <div className="flex flex-col gap-[6px]">
+            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal">닉네임</p>
+            <div className="h-[50px] px-[20px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center gap-2.5 inline-flex hover:border hover:border-[#7bd232]">
+              <Input
+                type="text"
+                value={selectedProfile?.nickname}
+                onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, nickname: e.target.value }))}
+                required
+                placeholder="닉네임을 입력해주세요."
+                className="text-center text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col w-full gap-[6px]">
+            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal">상태 메세지</p>
+            <div className="h-[50px] px-[20px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center gap-2.5 inline-flex hover:border hover:border-[#7bd232]">
+              <Input
+                type="text"
+                value={selectedProfile?.state_msg}
+                onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, state_msg: e.target.value }))}
+                required
+                placeholder="상태 메세지를 입력해주세요."
+                className="text-center text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+              />
+            </div>
           </div>
         </div>
-        <Button
-          type="submit"
-          disabled={loading}
-          className="absolute inset-x-0 bottom-[58px] h-16 bg-gray-200 w-full text-center p-2"
-        >
-          {loading ? <Spinner size="sm" /> : "수정 완료"}
-        </Button>
-
         {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+
+        <div className="w-full absolute bottom-0">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full h-[54px] p-2.5 bg-[#7bd232] rounded-[10px] justify-center items-center gap-2.5 inline-flex text-center text-[#fcfcfc] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px]"
+          >
+            {loading ? <Spinner size="sm" /> : "완료"}
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -86,8 +86,7 @@ const config: Config = {
         "3xl": "var(--font-3xl)",
         "4xl": "var(--font-4xl)",
         "5xl": "var(--font-5xl)",
-        "6xl": "var(--font-6xl)",
-        "7xl": "var(--font-7xl)"
+        "6xl": "var(--font-6xl)"
       },
       fontFamily: {
         suit: "var(--font-family-suit)",
