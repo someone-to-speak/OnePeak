@@ -26,7 +26,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
     <div className="w-full text-center">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100 font-semibold">
+          <tr className="bg-gray-800 font-semibold">
             <th className="p-3 "></th>
             <th className="p-3 ">닉네임</th>
             <th className="p-3 ">이메일</th>
@@ -48,7 +48,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
             </tr>
           ) : (
             currentUsers.map((userInfo, index) => (
-              <tr key={userInfo.id} className="border-b hover:bg-gray-50">
+              <tr key={userInfo.id} className="border-b hover:bg-gray-900">
                 <td>{indexOfFirstUser + index + 1}</td>
                 <td className="p-3 max-w-[150px] overflow-x-auto ">{userInfo.nickname}</td>
                 <td className="p-3 max-w-[200px] overflow-x-auto">{userInfo.email}</td>
