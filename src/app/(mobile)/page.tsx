@@ -4,7 +4,6 @@ import BottomSheetModal from "@/components/BottomSheetModal";
 import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
 import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
 import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
-import Header from "@/components/header/Header";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,22 +41,39 @@ export default function Home() {
     checkLoginStatus();
   }, [router]);
 
+  useEffect(() => {
+    // 로그인되지 않았고 모달이 표시되는 상태일 때 스크롤 비활성화
+    if (!isLoggedIn && showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = ""; // 모달이 닫히면 스크롤 복구
+    }
+
+    // 컴포넌트가 언마운트될 때 스크롤 상태 복구
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isLoggedIn, showModal]);
+
   return (
-    <>
-      <Header />
-      <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
+    <div className="relative w-full h-[812px] ">
+      <div className={`relative w-full h-[812px] ${!isLoggedIn && showModal ? "bg-black/60 z-[300]" : "z-[100]"}`}>
         <>
+          <div className="h-10 p-4"></div>
+          {/* 홈 화면 콘텐츠 */}
           <div className="h-10"></div>
           <TodayLearn />
           <CustomizedLearn />
           <Reviewing />
         </>
+
+        {/* 로그인되지 않았을 때 모달 표시 */}
         {!isLoggedIn && showModal && (
-          <div className="fixed py-[60px]  bg-white rounded-t-[30px]  bottom-0 flex justify-center items-end z-[300]">
+          <div className="fixed py-[60px] bg-white rounded-t-[30px] bottom-0 flex justify-center items-end z-[400]">
             <BottomSheetModal onClose={() => setShowModal(false)} />
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

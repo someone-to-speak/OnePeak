@@ -1,8 +1,8 @@
 import { signInWithProvider } from "@/services/supabaseAuth";
 import React from "react";
-import naver from "@/../public/images/Rectangle 120.svg";
-import kakao from "@/../public/images/Rectangle 123.svg";
-import google from "@/../public/images/Rectangle 125.svg";
+import naver from "@/assets/rectangle-120.svg";
+import kakao from "@/assets/rectangle-123.svg";
+import google from "@/assets/rectangle-125.svg";
 import Image from "next/image";
 
 // 모달을 닫기 위한 콜백 함수 타입 정의

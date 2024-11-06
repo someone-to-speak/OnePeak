@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import home from "@/../public/images/home-icon.svg";
-import lesson from "@/../public/images/lesson-icon.svg";
-import chat from "@/../public/images/chat-icon.svg";
-import chal from "@/../public/images/chal-icon.svg";
-import mypage from "@/../public/images/mypage-icon.svg";
+import home from "@/assets/home-icon.svg";
+import lesson from "@/assets/lesson-icon.svg";
+import chat from "@/assets/chat-icon.svg";
+import chal from "@/assets/chal-icon.svg";
+import mypage from "@/assets/mypage-icon.svg";
 import Image from "next/image";
 
 const NavbarGnb = () => {
@@ -19,7 +19,7 @@ const NavbarGnb = () => {
   ];
 
   return (
-    <div className="absolute bottom-0 w-full">
+    <div className="relative z-[200] w-full">
       <div className="min-w-[320px] max-w-[600px] h-20 mx-auto my-0 px-4 pt-[11px] pb-safe-offset-0 fixed left-0 right-0 bottom-0 bg-[#fcfcfc] border-t border-[#f3f3f3] flex gap-[28px]">
         {navItems.map((item) => (
           <Link
