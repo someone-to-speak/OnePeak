@@ -23,7 +23,7 @@ export default function MobileLayout({
 
   return (
     <div>
-      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0 min-h-full">
+      <div className="w-[375px] flex flex-col px-4 mx-auto my-0 min-h-full">
         {children}
         {showNavbar && <NavbarGnb />}
       </div>

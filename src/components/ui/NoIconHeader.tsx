@@ -8,7 +8,7 @@ const NoIconHeader: React.FC<BackButtonProps> = ({ title }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full h-12 justify-start inline-flex px-[16px]">
+    <div className="w-full h-12 justify-start inline-flex">
       <button onClick={() => router.back()} className="text-gray-50 text-xl font-bold font-['SUIT'] leading-[27px]">
         <div className="flex flex-row items-center gap-1.5">{title}</div>
       </button>
