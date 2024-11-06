@@ -195,9 +195,9 @@ const RandomKoreanGrammarQuiz = ({ userId }: RandomQuizProps) => {
         ) : (
           <button
             onClick={saveAllAnswers}
-            className={`mt-4 p-2 w-full ${
-              selectedCount === questions.length ? "bg-gray-800 text-white" : "bg-gray-400 text-gray-200 cursor-default"
-            }`}
+            className={
+              "bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center gap-2.5 inline-flex text-center text-[#fcfcfc] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px]"
+            }
             disabled={selectedCount !== questions.length}
           >
             답변 제출

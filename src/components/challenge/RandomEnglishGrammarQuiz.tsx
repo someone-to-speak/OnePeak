@@ -14,7 +14,7 @@ type RandomQuizProps = {
 
 type QuestionType = Tables<"questions">;
 
-const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
+const RandomKoreanWordQuiz = ({ userId }: RandomQuizProps) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
   const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
@@ -23,9 +23,9 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchEnglishGrammarQuestions = async () => {
+    const fetchKoreanWordQuizQuestions = async () => {
       try {
-        const response = await fetch(`/api/getRandomQuiz?language=english&type=grammar`);
+        const response = await fetch(`/api/getRandomQuiz?language=korean&type=word`);
         const data = await response.json();
         if (data.error) throw new Error(data.error.message);
         setQuestions(data.questions);
@@ -33,7 +33,7 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
         console.error("문제 로드 오류:", error);
       }
     };
-    fetchEnglishGrammarQuestions();
+    fetchKoreanWordQuizQuestions();
   }, []);
 
   const handleAnswerSelect = (questionId: number, answer: string) => {
@@ -195,9 +195,9 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
         ) : (
           <button
             onClick={saveAllAnswers}
-            className={`mt-4 p-2 w-full ${
-              selectedCount === questions.length ? "bg-gray-800 text-white" : "bg-gray-400 text-gray-200 cursor-default"
-            }`}
+            className={
+              "bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center gap-2.5 inline-flex text-center text-[#fcfcfc] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px]"
+            }
             disabled={selectedCount !== questions.length}
           >
             답변 제출
@@ -208,4 +208,4 @@ const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
   );
 };
 
-export default RandomEnglishGrammarQuiz;
+export default RandomKoreanWordQuiz;
