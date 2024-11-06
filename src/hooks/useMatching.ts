@@ -25,12 +25,14 @@ export const useMatching = () => {
     matchingChannel.on<matche>(
       "postgres_changes",
       { event: "UPDATE", schema: "public", table: "matches" },
-      (payload) => {
+      async (payload) => {
         console.log("update");
-        handleUpdateSignal(payload);
+        await handleUpdateSignal(payload);
       }
     );
-    matchingChannel.subscribe(async () => await initiateMatching(userInfo));
+    matchingChannel.subscribe((status) => {
+      if (status === "SUBSCRIBED") initiateMatching(userInfo);
+    });
 
     // if (roomId) {
     //   setIsMatching(false);
@@ -42,7 +44,6 @@ export const useMatching = () => {
   const handleUpdateSignal = async (payload: RealtimePostgresUpdatePayload<matche>) => {
     const updatedMatchQueue = payload;
     if (updatedMatchQueue.new.user_id === userInfo?.id || updatedMatchQueue.new.match_id === userInfo?.id) {
-      setIsMatching(false);
       await cleanUp();
       router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
     }
