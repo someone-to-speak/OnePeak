@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Tables } from "../../../../database.types";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import Image from "next/image";
-import stamp from "@/../public/images/Stamp.svg";
+import stamp from "@/assets/stamp.svg";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type NotificationType = Tables<"notifications">;
