@@ -1,6 +1,5 @@
 import { ConversationWithParticipants } from "@/types/chatType/chatType";
 import Image from "next/image";
-import DotsThree from "@/assets/DotsThree.svg";
 
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
   return (
@@ -21,7 +20,7 @@ export const Chat = ({ conversation }: { conversation: ConversationWithParticipa
             width={14}
             height={14}
           />
-          <Image src={DotsThree} alt={""} />
+          {/* <Image src={DotsThree} alt={""} /> */}
         </div>
         <p>{conversation.last_message_id.type}</p>
         <div></div>
