@@ -75,6 +75,7 @@ const VideoChat = () => {
     await channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
     router.back();
+    alert("사용자와의 연길이 끊어졌습니다.");
   }, [router]);
 
   const handleRefresh = async () => {
@@ -107,14 +108,14 @@ const VideoChat = () => {
         .on("broadcast", { event: "refresh" }, handleRefreshSignal)
         .on("broadcast", { event: "back" }, handleBackSignal)
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
-      channel.current.subscribe((status) => {
+      channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-          webrtcServiceRef.current.init();
+          await webrtcServiceRef.current.init();
 
           // sdp 정보 발신
-          webrtcServiceRef.current.createOffer();
+          await webrtcServiceRef.current.createOffer();
         }
       });
     };
