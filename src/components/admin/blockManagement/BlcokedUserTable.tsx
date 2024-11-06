@@ -22,7 +22,7 @@ const BlcokedUserTable: React.FC<BlcokedUserTableProps> = ({
     <div className="w-full text-center">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100 font-semibold">
+          <tr className="bg-gray-800 font-semibold">
             <th className="p-3 "></th>
             <th className="p-3 ">id</th>
             <th className="p-3 ">닉네임</th>
@@ -41,7 +41,7 @@ const BlcokedUserTable: React.FC<BlcokedUserTableProps> = ({
             </tr>
           ) : (
             currentUsers.map((target, index) => (
-              <tr key={target.target_id} className="border-b hover:bg-gray-50">
+              <tr key={target.target_id} className="border-b hover:bg-gray-900">
                 <td>{indexOfFirstUser + index + 1}</td>
                 <td className="p-3 max-w-[150px] overflow-x-auto">{target.target_id}</td>
                 <td className="p-3 max-w-[200px] overflow-x-auto">{target.user_info.nickname}</td>
