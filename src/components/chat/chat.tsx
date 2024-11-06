@@ -21,7 +21,7 @@ export const Chat = ({ conversation }: { conversation: ConversationWithParticipa
             width={14}
             height={14}
           />
-          <Image src={DotsThree} alt={""} />
+          {/* <Image src={DotsThree} alt={""} /> */}
         </div>
         <p>{conversation.last_message_id.type}</p>
         <div></div>
