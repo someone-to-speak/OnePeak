@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const NoticePage = () => {
+const IsNotificated = () => {
   const supabase = createClient();
   const router = useRouter();
   const [isNotice, setIsNotice] = useState<boolean | null>(null);
@@ -60,4 +60,4 @@ const NoticePage = () => {
   );
 };
 
-export default NoticePage;
+export default IsNotificated;
