@@ -17,7 +17,7 @@ const LessonPage = () => {
   };
 
   return (
-    <>
+    <div className="h-screen">
       <div className="px-4 py-[10px] h-12 flex">
         <h1 className="text-gray-50 text-[18px] font-suit font-bold leading-[27px] tracking-[-0.36px] flex-1 justify-center">
           언어수업
@@ -46,15 +46,25 @@ const LessonPage = () => {
       )} */}
 
       {/* 기존 페이지 내용 */}
-      <div className={isMatching ? "opacity-50 pointer-events-none" : ""}>
-        <div className="z-[200]">
-          <h1>1:1랜덤 {userInfo?.learn_language}수업</h1>
-          <p>학습언어 {userInfo?.learn_language}</p>
+      <div className={isMatching ? "opacity-50 pointer-events-none relative" : "relative"}>
+        <div className="absolute top-0 left-0 z-[200] p-4 mt-6">
+          <>
+            <h1 className="text-black text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px] self-stretch">
+              1:1 랜덤 {userInfo?.learn_language}수업
+            </h1>
+            <p className="text-[#737373] font-pretendard text-[18px] font-medium leading-[27px] tracking-[-0.36px] self-stretch">
+              학습언어 {userInfo?.learn_language}
+            </p>
+          </>
+          <>
+            <button onClick={handleClickMachingButton} className="mt-4">
+              매칭하기
+            </button>
+          </>
         </div>
-        <button onClick={handleClickMachingButton}>매칭하기</button>
         <Image src={lessonBackground} alt={"레슨배경이미지"} width={375} height={812} className="z-[150]" />
       </div>
-    </>
+    </div>
   );
 };
 

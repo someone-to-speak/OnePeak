@@ -24,7 +24,7 @@ export default function MobileLayout({
   return (
     <div>
       <div className="w-[375px] flex flex-col mx-auto my-0 min-h-full">
-        <div className="px-4">
+        <div className={`${pathname?.startsWith("/lesson") && "px-4"}`}>
           <main>{children}</main>
         </div>
         {showNavbar && <NavbarGnb />}
