@@ -3,6 +3,7 @@ import Image from "next/image";
 // import DotsThree from "@/assets/chat/dots-three.svg";
 
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
+  console.log("");
   return (
     <div className="w-full h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
       <Image

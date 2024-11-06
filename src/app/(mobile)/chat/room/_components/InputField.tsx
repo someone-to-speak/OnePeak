@@ -7,6 +7,7 @@ type FormValues = {
 };
 
 const InputField = () => {
+  console.log("");
   const { register, handleSubmit } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = () => {};
