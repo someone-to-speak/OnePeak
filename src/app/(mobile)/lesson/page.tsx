@@ -48,7 +48,7 @@ const LessonPage = () => {
       {/* 기존 페이지 내용 */}
       <div className={isMatching ? "opacity-50 pointer-events-none" : ""}>
         <div className="z-[200]">
-          <h1>1:1랜덤 영어수업</h1>
+          <h1>1:1랜덤 {userInfo?.learn_language}수업</h1>
           <p>학습언어 {userInfo?.learn_language}</p>
         </div>
         <button onClick={handleClickMachingButton}>매칭하기</button>
