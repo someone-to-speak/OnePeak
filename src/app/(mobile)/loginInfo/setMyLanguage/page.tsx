@@ -77,7 +77,7 @@ export default function SetMyLanguage() {
                 }`}
             >
               <p className="flex-grow">{language}</p>
-              {selectedMyLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />}
+              {/* {selectedMyLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />} */}
             </button>
           ))}
         </div>

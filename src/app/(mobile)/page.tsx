@@ -56,21 +56,24 @@ export default function Home() {
   }, [isLoggedIn, showModal]);
 
   return (
-    <div className={`relative w-full h-[812px] ${!isLoggedIn && showModal ? "bg-black/60 z-[300]" : "z-[100]"}`}>
-      <>
-        {/* 홈 화면 콘텐츠 */}
-        <div className="h-10"></div>
-        <TodayLearn />
-        <CustomizedLearn />
-        <Reviewing />
-      </>
+    <div className="relative w-full h-[812px] bg-black/60 z-[9999]">
+      <div className={`relative w-full h-[812px] ${!isLoggedIn && showModal ? "bg-black/60 z-[300]" : "z-[100]"}`}>
+        <>
+          <div className="h-10 p-4"></div>
+          {/* 홈 화면 콘텐츠 */}
+          <div className="h-10"></div>
+          <TodayLearn />
+          <CustomizedLearn />
+          <Reviewing />
+        </>
 
-      {/* 로그인되지 않았을 때 모달 표시 */}
-      {!isLoggedIn && showModal && (
-        <div className="fixed py-[60px] bg-white rounded-t-[30px] bottom-0 flex justify-center items-end z-[400]">
-          <BottomSheetModal onClose={() => setShowModal(false)} />
-        </div>
-      )}
+        {/* 로그인되지 않았을 때 모달 표시 */}
+        {!isLoggedIn && showModal && (
+          <div className="fixed py-[60px] bg-white rounded-t-[30px] bottom-0 flex justify-center items-end z-[400]">
+            <BottomSheetModal onClose={() => setShowModal(false)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
