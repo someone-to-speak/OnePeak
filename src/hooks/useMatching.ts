@@ -30,7 +30,7 @@ export const useMatching = () => {
         handleUpdateSignal(payload);
       }
     );
-    matchingChannel.subscribe();
+    matchingChannel.subscribe(() => console.log("subscribe"));
 
     const roomId = await initiateMatching(userInfo);
 
