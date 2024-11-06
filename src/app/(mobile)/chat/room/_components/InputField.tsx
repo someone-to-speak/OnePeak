@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import ArrowUp from "@/assets/ArrowUp.svg";
+import ArrowUp from "@/assets/arrow-Up.svg";
 import Image from "next/image";
 
 type FormValues = {

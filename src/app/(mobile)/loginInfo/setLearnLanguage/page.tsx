@@ -80,7 +80,7 @@ export default function SetLearnLanguage() {
               }`}
             >
               <p className="flex-grow">{language}</p>
-              {/* {selectedLearnLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />} */}
+              {selectedLearnLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />}
             </button>
           ))}
         </div>
