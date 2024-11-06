@@ -26,7 +26,7 @@ const MyPage = () => {
   return (
     <Suspense>
       <WithIconHeader title="내 정보" />
-      <div className="flex flex-col px-[16px]">
+      <div className="flex flex-col">
         <UserProfilePage userId={userId} />
         <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
           <Link href="/myPage/faq" className="text-black text-base font-medium font-['Pretendard'] leading-normal">

@@ -111,7 +111,7 @@ const NotificationPage = () => {
   return (
     <div className="bg-white">
       <WithIconHeader title="알림" />
-      <div className="flex flex-col px-[16px]">
+      <div className="flex flex-col">
         {notifi && notifi.length > 0 ? (
           <Accordion isCompact>
             {notifi

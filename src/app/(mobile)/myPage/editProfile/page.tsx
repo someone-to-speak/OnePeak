@@ -113,7 +113,7 @@ const EditProfile = () => {
       <div className="absolute top-0">
         <WithIconHeader title="프로필 수정" />
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center px-[16px]">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center pb-[24px]">
           <div className="relative">
             <div className="w-[100px] h-[100px] rounded-[54px] overflow-hidden shadow-md relative">

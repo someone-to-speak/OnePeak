@@ -154,7 +154,7 @@ const SettingsPage = () => {
   return (
     <div className="bg-white w-full">
       <WithIconHeader title="설정" />
-      <div className="flex flex-col px-[16px]">
+      <div className="flex flex-col">
         <ImageSelectorDropDown
           text="내 모국어 변경"
           subtitle={myLanguage}
