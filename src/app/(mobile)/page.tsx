@@ -61,7 +61,6 @@ export default function Home() {
         <>
           <div className="h-10 p-4"></div>
           {/* 홈 화면 콘텐츠 */}
-          <div className="h-10"></div>
           <TodayLearn />
           <CustomizedLearn />
           <Reviewing />
