@@ -43,12 +43,6 @@ const VideoChat = () => {
     await handleCloseMatchingSignal();
   };
 
-  const handleLeaveAloneSignal = useCallback(async () => {
-    await channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    router.back();
-  }, []);
-
   const handleStopRecording = useCallback(async () => {
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
@@ -67,6 +61,34 @@ const VideoChat = () => {
     router.back();
   }, [handleStopRecording, router]);
 
+  const handleBackButton = async () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "back"
+    });
+
+    await channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+  };
+
+  const handleBackSignal = useCallback(async () => {
+    await channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
+    router.back();
+  }, [router]);
+
+  const handleRefresh = async () => {
+    channel.current?.send({
+      type: "broadcast",
+      event: "refresh"
+    });
+  };
+
+  const handleRefreshSignal = async () => {
+    await webrtcServiceRef.current?.reset();
+    await webrtcServiceRef.current?.init();
+  };
+
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
@@ -82,7 +104,8 @@ const VideoChat = () => {
         .on("broadcast", { event: "answer" }, (payload) =>
           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
+        .on("broadcast", { event: "refresh" }, handleRefreshSignal)
+        .on("broadcast", { event: "back" }, handleBackSignal)
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
@@ -98,14 +121,14 @@ const VideoChat = () => {
 
     init();
 
-    const cleanUp = async () => {
-      await handleLeaveAloneSignal();
-    };
+    window.addEventListener("popstate", handleBackButton);
+    window.addEventListener("beforeunload", handleRefresh);
 
     return () => {
-      cleanUp();
+      window.removeEventListener("popstate", handleBackButton);
+      window.removeEventListener("beforeunload", handleRefresh);
     };
-  }, [handleCloseMatchingSignal, handleLeaveAloneSignal, roomId]);
+  }, [handleBackSignal, handleCloseMatchingSignal, roomId]);
 
   return (
     <div className="relative h-auto">

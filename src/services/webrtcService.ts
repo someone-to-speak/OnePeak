@@ -7,6 +7,7 @@ export class WebRTCService {
   private remoteVideoRef: React.RefObject<HTMLVideoElement>;
   private channel: RealtimeChannel;
   private localStream: MediaStream | null = null;
+  private remoteStream: MediaStream | null = null;
   private localMediaRecorder: MediaRecorder | null = null;
   private localAudioChunks: Blob[] = [];
 
@@ -41,8 +42,12 @@ export class WebRTCService {
     };
 
     this.peerConnection.ontrack = (event) => {
-      if (this.remoteVideoRef.current) {
-        this.remoteVideoRef.current.srcObject = event.streams[0];
+      if (event.streams && event.streams[0]) {
+        this.remoteStream = event.streams[0];
+
+        if (this.remoteVideoRef.current) {
+          this.remoteVideoRef.current.srcObject = event.streams[0];
+        }
       }
     };
 
@@ -69,6 +74,26 @@ export class WebRTCService {
     });
 
     this.startLocalRecording(localStream);
+  }
+
+  async reset() {
+    // 로컬 미디어 트랙 중지
+    if (this.localVideoRef.current && this.localStream) {
+      this.localStream.getTracks().forEach((track) => track.stop());
+      this.localVideoRef.current.srcObject = null; // 로컬 비디오 요소 초기화
+    }
+
+    // 원격 미디어 트랙 중지
+    if (this.remoteVideoRef.current && this.remoteStream) {
+      this.remoteStream.getTracks().forEach((track) => track.stop());
+      this.remoteVideoRef.current.srcObject = null; // 원격 비디오 요소 초기화
+    }
+
+    // 기존의 peerConnection을 닫아 상태 초기화
+    if (this.peerConnection) {
+      this.peerConnection.close(); // 연결 종료
+      this.peerConnection = null; // peerConnection 객체 초기화
+    }
   }
 
   private startLocalRecording(stream: MediaStream) {
