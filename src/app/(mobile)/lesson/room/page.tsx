@@ -79,13 +79,13 @@ const VideoChat = () => {
   }, [router]);
 
   const handleRefresh = async () => {
-    await channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-
     channel.current?.send({
       type: "broadcast",
       event: "refresh"
     });
+
+    await channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
   };
 
   const handleRefreshSignal = async () => {
