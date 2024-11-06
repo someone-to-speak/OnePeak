@@ -41,9 +41,10 @@ export class WebRTCService {
     };
 
     const videoConstraints = {
-      width: { ideal: 640 },
-      height: { ideal: 360 },
-      frameRate: { max: 20 }
+      width: { ideal: 720 },
+      height: { ideal: 1280 },
+      frameRate: { ideal: 30, max: 60 },
+      aspectRatio: { ideal: 9 / 16 }
     };
 
     const localStream = await navigator.mediaDevices.getUserMedia({

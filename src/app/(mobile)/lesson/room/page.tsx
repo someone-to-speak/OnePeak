@@ -8,6 +8,11 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 import { useUser } from "@/hooks/useUser";
+import Camera from "./../../../../assets/lesson/camera.svg";
+import Microphone from "./../../../../assets/lesson/microphone.svg";
+import Power from "./../../../../assets/lesson/power.svg";
+import Prohibit from "./../../../../assets/lesson/prohibit.svg";
+import Image from "next/image";
 
 const VideoChatPage = () => {
   return (
@@ -113,13 +118,30 @@ const VideoChat = () => {
   }, [handleCloseMatchingSignal, handleLeaveAloneSignal, roomId]);
 
   return (
-    <div>
-      <h1>1:1 화상 채팅</h1>
-      <button onClick={handleCloseMatching}>종료하기</button>
-      <div className="flex flex-col h-auto">
-        <video className={"scale-x-[-1]"} ref={remoteVideoRef} autoPlay />
-        <video className={"scale-x-[-1]"} ref={localVideoRef} autoPlay />
+    <div className="relative h-auto">
+      <button className="cursor-pointer absolute bg-black rounded-full p-[10px] z-[100] top-[68px] right-[16px]">
+        <Image className="cursor-pointer" src={Prohibit} alt={""} width={25} height={25} />
+      </button>
+      <button
+        className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] bottom-4"
+        onClick={handleCloseMatching}
+      >
+        <Image className="cursor-pointer" src={Power} alt={""} width={25} height={25} />
+      </button>
+      <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center absolute top-1/2 -translate-y-1/2 left-[16px] bg-black  z-[100]">
+        <button className="cursor-pointer">
+          <Image className="cursor-pointer" src={Microphone} alt={""} width={32} height={32} />
+        </button>
+        <button className="cursor-pointer">
+          <Image className="cursor-pointer" src={Camera} alt={""} width={32} height={32} />
+        </button>
       </div>
+      <video
+        className={"scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover "}
+        ref={remoteVideoRef}
+        autoPlay
+      />
+      <video className={"scale-x-[-1] h-lvh object-cover"} ref={localVideoRef} autoPlay />
     </div>
   );
 };
