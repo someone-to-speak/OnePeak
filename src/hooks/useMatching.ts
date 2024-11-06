@@ -25,9 +25,9 @@ export const useMatching = () => {
     matchingChannel.on<matche>(
       "postgres_changes",
       { event: "UPDATE", schema: "public", table: "matches" },
-      (payload) => {
+      async (payload) => {
         console.log("update");
-        handleUpdateSignal(payload);
+        await handleUpdateSignal(payload);
       }
     );
     matchingChannel.subscribe((status) => {
