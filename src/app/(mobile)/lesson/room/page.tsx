@@ -59,7 +59,7 @@ const VideoChat = () => {
     await channel.current?.unsubscribe();
     await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
-    router.back();
+    router.replace("/lesson");
   }, [handleStopRecording, router]);
 
   useEffect(() => {
@@ -89,6 +89,7 @@ const VideoChat = () => {
       await channel.current?.unsubscribe();
       await webrtcServiceRef.current?.closeConnection();
       router.replace("/lesson");
+      alert("사용자와의 연결이 끊어졌습니다.");
     };
 
     const handleRefreshSignal = async () => {
