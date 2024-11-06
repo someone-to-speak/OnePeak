@@ -44,9 +44,9 @@ const VideoChat = () => {
   };
 
   const handleLeaveAloneSignal = useCallback(async () => {
-    sessionStorage.removeItem("session");
     await channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
+    router.back();
   }, []);
 
   const handleStopRecording = useCallback(async () => {
@@ -61,24 +61,14 @@ const VideoChat = () => {
   }, [roomId, userInfo?.id]);
 
   const handleCloseMatchingSignal = useCallback(async () => {
-    sessionStorage.removeItem("session");
     await channel.current?.unsubscribe();
     await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
+    router.back();
   }, [handleStopRecording, router]);
 
   useEffect(() => {
     if (!channel.current || !roomId) return;
-
-    const roomSession = sessionStorage.getItem("session");
-
-    if (roomSession) {
-      webrtcServiceRef.current?.createOffer();
-      return;
-    } else {
-      sessionStorage.setItem("session", "subscribe");
-    }
 
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
