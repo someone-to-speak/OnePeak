@@ -21,7 +21,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onStopRecording
 }) => {
   return (
-    <form className="sticky bottom-[55px] flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
+    <form className="sticky bottom-0 flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
       <div className="flex-grow relative">
         <input
           className="w-full h-10 py-2 pl-5 pr-[46px] rounded-[50px] border border-gray-900 text-xs"
