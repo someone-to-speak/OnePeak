@@ -152,7 +152,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white w-full">
       <WithIconHeader title="설정" />
       <div className="flex flex-col px-[16px]">
         <ImageSelectorDropDown

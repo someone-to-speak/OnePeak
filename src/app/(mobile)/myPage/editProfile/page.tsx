@@ -109,7 +109,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center relative min-h-[calc(100vh-55px)]">
+    <div className="w-full flex flex-col justify-center relative min-h-[calc(100vh-55px)]">
       <div className="absolute top-0">
         <WithIconHeader title="프로필 수정" />
       </div>
