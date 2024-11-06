@@ -5,7 +5,7 @@ import Image from "next/image";
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
   console.log("");
   return (
-    <div className="w-full h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
+    <div className="h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
       <Image
         className="rounded-[20px]"
         src={conversation.participants?.user_info.profile_url as string}
