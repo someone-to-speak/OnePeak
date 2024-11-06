@@ -15,7 +15,7 @@ export const useMatching = () => {
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
   const setupMatchingChannel = async () => {
-    if (!userInfo) return;
+    if (!userInfo || isLoading || matchingChannelRef.current) return;
 
     setIsMatching(true);
 
