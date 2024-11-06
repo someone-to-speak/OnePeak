@@ -8,10 +8,10 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 import { useUser } from "@/hooks/useUser";
-import Camera from "./../../../../assets/lesson/camera.svg";
-import Microphone from "./../../../../assets/lesson/microphone.svg";
-import Power from "./../../../../assets/lesson/power.svg";
-import Prohibit from "./../../../../assets/lesson/prohibit.svg";
+import Camera from "@/assets/lesson/camera.svg";
+import Microphone from "@/assets/lesson/microphone.svg";
+import Power from "@/assets/lesson/power.svg";
+import Prohibit from "@/assets/lesson/prohibit.svg";
 import Image from "next/image";
 
 const VideoChatPage = () => {
