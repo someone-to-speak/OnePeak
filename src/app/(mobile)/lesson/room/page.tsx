@@ -23,7 +23,6 @@ const VideoChatPage = () => {
 };
 
 const VideoChat = () => {
-  console.log("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as UUID;
@@ -47,8 +46,7 @@ const VideoChat = () => {
   const handleLeaveAloneSignal = useCallback(async () => {
     await channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  }, [router]);
+  }, []);
 
   const handleStopRecording = useCallback(async () => {
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
@@ -74,23 +72,17 @@ const VideoChat = () => {
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
       channel.current
-        .on(
-          "broadcast",
-          { event: "ice-candidate" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "ice-candidate" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on(
-          "broadcast",
-          { event: "offer" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "offer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on(
-          "broadcast",
-          { event: "answer" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "answer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "leaveAlone" }, async () => await handleLeaveAloneSignal())
-        .on("broadcast", { event: "closeMatching" }, async () => await handleCloseMatchingSignal());
+        .on("broadcast", { event: "leaveAlone" }, handleLeaveAloneSignal)
+        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           // webrtc 연결을 위한 초기 설정

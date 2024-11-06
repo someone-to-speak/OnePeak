@@ -11,7 +11,7 @@ export const useMatching = () => {
   const supabase = createClient();
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
   const router = useRouter();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading } = useUser();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
   const setupMatchingChannel = async () => {
@@ -55,5 +55,5 @@ export const useMatching = () => {
     await removeUserFromQueue(userInfo?.id as string);
   };
 
-  return { setupMatchingChannel, userInfo, isMatching };
+  return { setupMatchingChannel, userInfo, isLoading, isMatching };
 };
