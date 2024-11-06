@@ -4,6 +4,7 @@ import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
+// import ReviewContent from "@/components/ui/reviewContent";
 
 type ReviewType = Tables<"review">;
 
@@ -58,6 +59,7 @@ const Reviewing = () => {
       <button onClick={handleReviewDetail} className="absolute right-0">
         더보기
       </button>
+
       {
         // 최대 3개까지만 노출
         sortedReview?.map((review) => {
