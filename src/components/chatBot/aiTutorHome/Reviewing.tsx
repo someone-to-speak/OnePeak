@@ -53,7 +53,8 @@ const Reviewing = () => {
 
   return (
     <div className="relative">
-      <h1 className="text-3xl font-bold mt-5">복습하기</h1>
+      <h1 className="text-[24px] font-bold">복습하기</h1>
+      <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
       <button onClick={handleReviewDetail} className="absolute right-0">
         더보기
       </button>
