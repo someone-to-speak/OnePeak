@@ -32,22 +32,22 @@ const Result = () => {
       </div>
       <div className="w-full absolute bottom-[31px]">
         <div className="flex flex-col gap-[10px]">
-          <button
-            className={
-              "bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center inline-flex text-center text-[#fcfcfc] text-lg font-bold font-['SUIT'] leading-[27px]"
-            }
+          <Link
+            href="/challenge/word/wrongAnswerNote"
+            className="bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center inline-flex text-center text-[#fcfcfc] text-lg font-bold font-['SUIT'] leading-[27px]"
+            aria-label="오답노트로 가기"
           >
-            <Link href="/challenge/word/wrongAnswerNote">오답노트로 가기</Link>
-          </button>
+            오답노트로 가기
+          </Link>
 
           <div>
-            <button
-              className={
-                "bg-[#fcfcfc] w-full h-[54px] p-2.5 rounded-[10px] border border-[#7bd232] justify-center items-center inline-flex text-center text-[#7bd232] text-lg font-bold font-['SUIT'] leading-[27px]"
-              }
+            <Link
+              href="/challenge"
+              className="bg-[#fcfcfc] w-full h-[54px] p-2.5 rounded-[10px] border border-[#7bd232] justify-center items-center inline-flex text-center text-[#7bd232] text-lg font-bold font-['SUIT'] leading-[27px]"
+              aria-label="챌린지로 돌아가기"
             >
-              <Link href="/challenge">챌린지로 돌아가기</Link>
-            </button>
+              챌린지로 돌아가기
+            </Link>
           </div>
         </div>
       </div>
