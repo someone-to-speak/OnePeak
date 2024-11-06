@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
@@ -22,7 +22,7 @@ const ChatMessagePage = () => {
 };
 
 const ChatMessage = () => {
-  const router = useRouter();
+  // const router = useRouter();
   // const supabase = createClient();
 
   // // 유저 정보 조회
