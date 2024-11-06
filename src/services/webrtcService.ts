@@ -1,10 +1,7 @@
 import { SignalData } from "@/types/chatType/chatType";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 
 export class WebRTCService {
-  router = useRouter();
-
   private peerConnection: RTCPeerConnection | null = null;
   private localVideoRef: React.RefObject<HTMLVideoElement>;
   private remoteVideoRef: React.RefObject<HTMLVideoElement>;
@@ -39,8 +36,7 @@ export class WebRTCService {
 
     this.peerConnection.oniceconnectionstatechange = () => {
       if (this.peerConnection?.iceConnectionState === "disconnected") {
-        // Re-initiate connection logic here
-        this.router.back();
+        console.log("disconnected");
       }
     };
 
