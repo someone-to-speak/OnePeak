@@ -74,8 +74,8 @@ const VideoChat = () => {
   const handleBackSignal = useCallback(async () => {
     await channel.current?.unsubscribe();
     await webrtcServiceRef.current?.closeConnection();
-    router.back();
     alert("사용자와의 연길이 끊어졌습니다.");
+    router.back();
   }, [router]);
 
   const handleRefresh = async () => {
@@ -83,6 +83,9 @@ const VideoChat = () => {
       type: "broadcast",
       event: "refresh"
     });
+
+    await channel.current?.unsubscribe();
+    await webrtcServiceRef.current?.closeConnection();
   };
 
   const handleRefreshSignal = async () => {

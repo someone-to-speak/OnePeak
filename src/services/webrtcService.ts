@@ -42,13 +42,13 @@ export class WebRTCService {
     };
 
     this.peerConnection.ontrack = (event) => {
-      if (event.streams && event.streams[0]) {
-        this.remoteStream = event.streams[0];
+      // if (event.streams && event.streams[0]) {
+      this.remoteStream = event.streams[0];
 
-        if (this.remoteVideoRef.current) {
-          this.remoteVideoRef.current.srcObject = event.streams[0];
-        }
+      if (this.remoteVideoRef.current) {
+        this.remoteVideoRef.current.srcObject = event.streams[0];
       }
+      // }
     };
 
     const videoConstraints = {
