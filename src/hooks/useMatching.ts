@@ -30,9 +30,7 @@ export const useMatching = () => {
         handleUpdateSignal(payload);
       }
     );
-    matchingChannel.subscribe(() => console.log("subscribe"));
-
-    await initiateMatching(userInfo);
+    matchingChannel.subscribe(() => initiateMatching(userInfo));
 
     // if (roomId) {
     //   setIsMatching(false);
