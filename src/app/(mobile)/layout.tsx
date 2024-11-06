@@ -22,10 +22,11 @@ export default function MobileLayout({
     <div>
       {/* <div className="w-full flex flex-col min-w-[320px] max-w-[600px] px-4 mx-auto my-0  min-h-full"> */}
       <div className="w-[375px] flex flex-col px-4 mx-auto my-0  min-h-full">
-      <div className="w-[375px] flex flex-col mx-auto my-0 min-h-full">
-        {!hideHeaderFooter && <Header />}
-        <main>{children}</main>
-        {!hideHeaderFooter && <Navibar />}
+        <div className="w-[375px] flex flex-col mx-auto my-0 min-h-full">
+          {!hideHeaderFooter && <Header />}
+          <main>{children}</main>
+          {!hideHeaderFooter && <Navibar />}
+        </div>
       </div>
     </div>
   );

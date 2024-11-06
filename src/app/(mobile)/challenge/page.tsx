@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
-import caretleft from "@/../public/images/caret-left.svg";
+import caretLeft from "@/assets/caret-left.svg";
 import challIcon from "@/assets/chall-icon.svg";
 import Link from "next/link";
 import Image from "next/image";
@@ -119,7 +119,7 @@ const ChallengePage = () => {
                 </p>
               </div>
 
-              <Image className="rotate-180" src={caretleft} alt={"CaretLeft"} />
+              <Image className="rotate-180" src={caretLeft} alt={"caret-left"} />
             </Link>
           </div>
         ))}
