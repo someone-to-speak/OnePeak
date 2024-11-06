@@ -8,15 +8,18 @@ interface ReviewContentProps {
 
 const ReviewContent = ({ situation, level }: ReviewContentProps) => {
   return (
-    <div className="w-full p-3">
+    <div className="w-full p-3 bg-primary-600 mb-2">
       <Typography size={14} as="h1" className="font-bold text-black">
-        {situation}
+        <div className="flex flex-row justify-between">
+          <p>{situation}</p>
+          <p>{level}</p>
+        </div>
       </Typography>
+
       <Typography size={14} className="font-normal">
-        {situation}
-        {level}
+        Can I get The One Coffee
       </Typography>
-      <Button text="복습하기" variant="default" className="" />
+      <Button text="복습하기" variant="disabled" className="w-full rounded-[10px]" />
     </div>
   );
 };
