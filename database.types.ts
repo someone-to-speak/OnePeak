@@ -1,5 +1,3 @@
-import { AiMessages } from "@/type";
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -405,8 +403,11 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
-          messages: AiMessages[];
+          created_at?: string;
+          id?: number;
+          messages: string[];
           review_id: number;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string;

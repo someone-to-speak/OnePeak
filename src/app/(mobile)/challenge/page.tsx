@@ -95,7 +95,7 @@ const ChallengePage = () => {
           <div key={problem.type} className="w-full ">
             <div
               key={problem.type}
-              className="flex-col h-[444px] mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
+              className="flex-col  mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
             >
               <div className="flex flex-col items-center">
                 <div className="mb-[40.5px]">
@@ -103,10 +103,7 @@ const ChallengePage = () => {
                     {problem.label} 챌린지
                   </p>
                   <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
-                    {problem.label} 챌린지를 통해
-                  </p>
-                  <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
-                    실력을 확인해보세요!
+                    {problem.label} 챌린지를 통해 <br /> 실력을 확인해보세요!
                   </p>
                 </div>
                 {problem.type === "grammar" ? (
