@@ -3,8 +3,10 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
-
+import caretleft from "@/../public/images/CaretLeft.svg";
+import greenhead from "@/../public/images/GreenHead.svg";
 import Link from "next/link";
+import Image from "next/image";
 
 const ChallengePage = () => {
   const settings = {
@@ -60,8 +62,7 @@ const ChallengePage = () => {
   ];
 
   return (
-    <>
-      {" "}
+    <div className="">
       <div className="flex flex-row gap-4 mb-4">
         {problems.map((problem, index) => (
           <p
@@ -75,28 +76,55 @@ const ChallengePage = () => {
       </div>
       <Slider ref={sliderRef} {...settings}>
         {problems.map((problem) => (
-          <div key={problem.type} className="flex justify-center items-center">
-            <div className="bg-gray-200 p-4 rounded-lg shadow-lg w-full max-w-[400px] h-[400px] flex flex-col gap-4">
-              {/* 기존 문제 풀러가기 버튼 */}
-              <Link
-                href={`${problem.url}?userId=${userId}`}
-                className="bg-gray-800 text-white p-4 rounded-lg hover:bg-gray-700 transition duration-200 text-center"
-              >
-                {problem.label} 풀러가기
-              </Link>
+          <div>
+            <div
+              key={problem.type}
+              className="flex flex-col w-[343px] h-[444px] items-center justify-between px-4 py-8 relative bg-primary-900 rounded-xl"
+            >
+              <div className=" inline-flex gap-10 flex-col items-center relative flex-[0_0_auto]">
+                <div className="flex w-[248px] gap-1 flex-col items-center relative flex-[0_0_auto]">
+                  <div className="self-stretch text-black text-center font-suit text-[22px] font-bold leading-[33px] tracking-[-0.44px]">
+                    {problem.label} 챌린지
+                  </div>
+                  <p className="self-stretch text-[#595959] text-center font-pretendard text-[14px] font-medium leading-[21px] tracking-[-0.28px]">
+                    {problem.label} 챌린지를 통해 실력을 확인해보세요!
+                  </p>
+                </div>
 
-              {/* 추가된 오답노트 버튼 */}
-              <Link
-                href={`/challenge/${problem.type}/wrongAnswerNote`} // 오답노트 페이지로 이동하는 링크
-                className="bg-red-500 text-white p-4 rounded-lg hover:bg-red-600 transition duration-200 text-center"
-              >
-                {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
-              </Link>
+                <Image src={greenhead} alt={"GreenHead"} />
+                {/* 기존 문제 풀러가기 버튼 */}
+                <Link
+                  href={`${problem.url}?userId=${userId}`}
+                  className="flex h-[50px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 self-stretch rounded-[10px] border border-[#96DB5C] bg-[#7BD232]"
+                >
+                  <p className="text-[#FDFDFD] text-center font-suit text-[18px] font-bold leading-[27px] tracking-[-0.36px]">
+                    {problem.label} 풀러가기
+                  </p>
+                </Link>
+              </div>
             </div>
+            {/* 추가된 오답노트 버튼 */}
+            <Link
+              href={`/challenge/${problem.type}/wrongAnswerNote`} // 오답노트 페이지로 이동하는 링크
+              className="w-[343px] h-20 p-4 bg-[#f3f3f3] rounded-xl justify-center items-center gap-5 inline-flex"
+            >
+              <div className="grow shrink basis-0 flex-col justify-center items-start inline-flex">
+                <p className="self-stretch text-black text-lg font-bold font-['SUIT'] leading-[27px]">
+                  {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
+                </p>
+                <p className="self-stretch text-[#8c8c8c] text-sm font-medium font-['Pretendard']  leading-[21px]">
+                  {problem.type === "grammar"
+                    ? "배운 문법을 잊어버리지 않게 복습해보세요"
+                    : "배운 단어를 잊어버리지 않게 복습해보세요"}
+                </p>
+              </div>
+
+              <Image className="rotate-180" src={caretleft} alt={"CaretLeft"} />
+            </Link>
           </div>
         ))}
       </Slider>
-    </>
+    </div>
   );
 };
 
