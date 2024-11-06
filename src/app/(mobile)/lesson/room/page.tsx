@@ -71,8 +71,8 @@ const VideoChat = () => {
         event: "back"
       });
 
-      await channel.current?.unsubscribe();
-      await webrtcServiceRef.current?.closeConnection();
+      // await channel.current?.unsubscribe();
+      // await webrtcServiceRef.current?.closeConnection();
     };
 
     const handleRefresh = async () => {
@@ -129,7 +129,7 @@ const VideoChat = () => {
 
     init();
 
-    window.onpopstate = async () => {
+    window.onpopstate = () => {
       setTimeout(handleBackButton, 0);
     };
 
