@@ -32,6 +32,7 @@ const VideoChat = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
+  const isSubscribed = useRef(false);
 
   const handleCloseMatching = async () => {
     channel.current?.send({
@@ -79,13 +80,12 @@ const VideoChat = () => {
   }, [router]);
 
   const handleRefresh = async () => {
-    channel.current?.unsubscribe();
-    webrtcServiceRef.current?.closeConnection();
-
     channel.current?.send({
       type: "broadcast",
       event: "refresh"
     });
+
+    await handleRefreshSignal();
   };
 
   const handleRefreshSignal = async () => {
@@ -96,8 +96,13 @@ const VideoChat = () => {
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
+    window.addEventListener("popstate", handleBackButton);
+    window.addEventListener("beforeunload", handleRefresh);
+
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
+      if (isSubscribed.current) return;
+
       channel.current
         .on("broadcast", { event: "ice-candidate" }, (payload) =>
           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
@@ -113,6 +118,7 @@ const VideoChat = () => {
         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
+          isSubscribed.current = true;
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
           await webrtcServiceRef.current.init();
@@ -124,9 +130,6 @@ const VideoChat = () => {
     };
 
     init();
-
-    window.addEventListener("popstate", handleBackButton);
-    window.addEventListener("beforeunload", handleRefresh);
 
     return () => {
       window.removeEventListener("popstate", handleBackButton);

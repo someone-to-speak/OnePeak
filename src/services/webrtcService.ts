@@ -160,6 +160,7 @@ export class WebRTCService {
 
   async closeConnection() {
     this.peerConnection?.close();
+    this.peerConnection = null;
     this.localStream?.getTracks().forEach((track) => track.stop());
   }
 }
