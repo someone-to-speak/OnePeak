@@ -26,21 +26,29 @@ const Page = () => {
             채팅방
           </Typography>
         </div>
-        {conversationList?.map((conversation) => (
-          <div className="flex flex-col gap-2 flex-grow overflow-scroll" key={conversation.id}>
-            <UserProfile
-              name={conversation.participants.user_info.nickname}
-              country={conversation.participants.user_info.my_language.language_img_url}
-              profileImage={conversation.participants.user_info.profile_url}
-              lastMessage={
-                conversation.last_message_id.type === "text" ? conversation.last_message_id.content : "음성 파일"
-              }
-              learnLanguageUrl={conversation.participants.user_info.learn_language.language_img_url}
-              learnLanguage={conversation.participants.user_info.learn_language.language_name}
-              onClick={() => router.push(`/chat/room?id=${conversation.id}`)}
-            ></UserProfile>
+        {conversationList && conversationList.length > 0 ? (
+          conversationList?.map((conversation) => (
+            <div className="flex flex-col gap-2 flex-grow overflow-scroll" key={conversation.id}>
+              <UserProfile
+                name={conversation.participants.user_info.nickname}
+                country={conversation.participants.user_info.my_language.language_img_url}
+                profileImage={conversation.participants.user_info.profile_url}
+                lastMessage={
+                  conversation.last_message_id.type === "text" ? conversation.last_message_id.content : "음성 파일"
+                }
+                learnLanguageUrl={conversation.participants.user_info.learn_language.language_img_url}
+                learnLanguage={conversation.participants.user_info.learn_language.language_name}
+                onClick={() => router.push(`/chat/room?id=${conversation.id}`)}
+              ></UserProfile>
+            </div>
+          ))
+        ) : (
+          <div className="flex-grow flex justify-center items-center">
+            <Typography size={12} className="font-medium">
+              대화 내역이 없습니다.
+            </Typography>
           </div>
-        ))}
+        )}
       </div>
     </Suspense>
   );
