@@ -1,4 +1,3 @@
-import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 import safeArea from "tailwindcss-safe-area";
 import tailwindAnimate from "tailwindcss-animate";
@@ -102,5 +101,6 @@ const config: Config = {
       }
     }
   },
-  plugins: [safeArea,tailwindAnimate,nextui()]};
+  plugins: [safeArea, tailwindAnimate]
+};
 export default config;

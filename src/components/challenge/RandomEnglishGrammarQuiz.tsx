@@ -14,7 +14,7 @@ type RandomQuizProps = {
 
 type QuestionType = Tables<"questions">;
 
-const RandomKoreanWordQuiz = ({ userId }: RandomQuizProps) => {
+const RandomEnglishGrammarQuiz = ({ userId }: RandomQuizProps) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
   const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
@@ -23,9 +23,9 @@ const RandomKoreanWordQuiz = ({ userId }: RandomQuizProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchKoreanWordQuizQuestions = async () => {
+    const fetchEnglishGrammarQuestions = async () => {
       try {
-        const response = await fetch(`/api/getRandomQuiz?language=korean&type=word`);
+        const response = await fetch(`/api/getRandomQuiz?language=english&type=grammar`);
         const data = await response.json();
         if (data.error) throw new Error(data.error.message);
         setQuestions(data.questions);
@@ -33,7 +33,7 @@ const RandomKoreanWordQuiz = ({ userId }: RandomQuizProps) => {
         console.error("문제 로드 오류:", error);
       }
     };
-    fetchKoreanWordQuizQuestions();
+    fetchEnglishGrammarQuestions();
   }, []);
 
   const handleAnswerSelect = (questionId: number, answer: string) => {
@@ -208,4 +208,4 @@ const RandomKoreanWordQuiz = ({ userId }: RandomQuizProps) => {
   );
 };
 
-export default RandomKoreanWordQuiz;
+export default RandomEnglishGrammarQuiz;

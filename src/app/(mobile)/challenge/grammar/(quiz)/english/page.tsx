@@ -1,6 +1,6 @@
 "use client";
 
-import RandomEnglishGrammarQuiz from "@/components/challenge/RandomKoreanWordQuiz";
+import RandomEnglishGrammarQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
