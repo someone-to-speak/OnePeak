@@ -4,6 +4,8 @@ import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
+import Image from "next/image";
+import star from "@/assets/star.svg";
 
 type ReviewType = Tables<"review">;
 
@@ -52,37 +54,41 @@ const Reviewing = () => {
   };
 
   return (
-    <div className=" flex w-[343px] flex-col justify-end items-start">
-      <h1 className="self-stretch text-black font-suit text-[24px] font-bold leading-[36px] tracking-[-0.48px]">
-        복습하기
-      </h1>
-      <button
-        onClick={handleReviewDetail}
-        className=" text-[var(--Gray-600, #A6A6A6)] text-right font-suit text-[14px] font-light leading-[21px] tracking-[-0.28px]"
-      >
-        더보기
-      </button>
+    <div className="flex flex-col bg-[#f9f9f9] mt-10">
+      <h1 className="text-[24px] font-bold">복습하기</h1>
+      <div className="flex">
+        <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
+        <button onClick={handleReviewDetail} className="absolute right-0 text-[#a6a6a6] text-[12px]">
+          더보기
+        </button>
+      </div>
       {
         // 최대 3개까지만 노출
         sortedReview?.map((review) => {
           return (
             <div key={review.id}>
-              <div className="flex p-[12px] flex-col items-start gap-[8px] self-stretch rounded-[10px] bg-[var(--White, #FDFDFD)]">
-                <p className="text-black text-center font-suit text-[14px] font-bold leading-[21px] tracking-[-0.28px]">
-                  {review.situation}
-                </p>
-                <p className="self-stretch text-[var(--Gray-500, #8C8C8C)] font-pretendard text-[14px] font-medium leading-[21px] tracking-[-0.28px]">
-                  {review.level}
-                </p>
+              <div className="flex flex-col mt-2 p-3 rounded-[10px] bg-white">
+                <div className="">
+                  <div className="flex flex-row justify-between">
+                    <p className="text-[14px]">{review.situation}</p>
+                    <div className="flex">
+                      {Array.from({ length: review.level }, (_, i) => (
+                        <Image key={i} src={star} alt="star" className="" />
+                      ))}
+                    </div>
+                    {/* <p>{review.level}</p> */}
+                  </div>
+                  <p className="text-[14px] text-[#8C8C8C]">Can I get The One Coffee</p>
+                </div>
+                <button
+                  onClick={() => {
+                    handleReviewClick(review);
+                  }}
+                  className="w-full p-2 mt-5 bg-primary-800 text-[12px]text-[#335813] rounded-[10px]"
+                >
+                  복습하기
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  handleReviewClick(review);
-                }}
-                className="flex h-[34px] p-[10px] justify-center items-center gap-[10px] self-stretch rounded-[10px] bg-[var(--Primary-800, #CCEEB0)] text-[var(--Primary-200, #335813)] font-suit text-[12px] font-bold leading-[18px] tracking-[-0.24px]"
-              >
-                복습하기
-              </button>
             </div>
           );
         })

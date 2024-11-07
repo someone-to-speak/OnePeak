@@ -1,6 +1,7 @@
 import Image from "next/image";
 import sendIcon from "@/assets/send.svg";
 import mikeIcon from "@/assets/mike.svg";
+import returnIcon from "@/assets/chatbot/return.svg";
 
 type ChatInputProps = {
   userInput: string;
@@ -9,7 +10,7 @@ type ChatInputProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
-  onEndChat: () => void;
+  // onEndChat: () => void;
 };
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -21,7 +22,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onStopRecording
 }) => {
   return (
-    <form className="sticky bottom-[55px] flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
+    <form className="sticky bottom-0 flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
       <div className="flex-grow relative">
         <input
           className="w-full h-10 py-2 pl-5 pr-[46px] rounded-[50px] border border-gray-900 text-xs"
@@ -48,7 +49,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       >
         {/* {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />} */}
         {isRecording ? (
-          <Image src={mikeIcon} alt="녹음 시작" width={20} height={20} />
+          <Image src={returnIcon} alt="녹음 시작" width={20} height={20} />
         ) : (
           <Image src={mikeIcon} alt="녹음 중지" width={20} height={20} />
         )}

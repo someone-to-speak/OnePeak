@@ -23,7 +23,6 @@ const VideoChatPage = () => {
 };
 
 const VideoChat = () => {
-  console.log("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as UUID;
@@ -33,6 +32,7 @@ const VideoChat = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const webrtcServiceRef = useRef<WebRTCService | null>(null);
   const channel = useRef(createChannel(roomId || ""));
+  const isSubscribed = useRef(false);
 
   const handleCloseMatching = async () => {
     channel.current?.send({
@@ -43,12 +43,6 @@ const VideoChat = () => {
     await getOrCreateConversationId(roomId as UUID);
     await handleCloseMatchingSignal();
   };
-
-  const handleLeaveAloneSignal = useCallback(async () => {
-    channel.current?.unsubscribe();
-    await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
-  }, [router]);
 
   const handleStopRecording = useCallback(async () => {
     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
@@ -65,34 +59,64 @@ const VideoChat = () => {
     await channel.current?.unsubscribe();
     await handleStopRecording();
     await webrtcServiceRef.current?.closeConnection();
-    router.push("/lesson");
+    router.replace("/lesson");
   }, [handleStopRecording, router]);
 
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
+    const handleBackButton = async () => {
+      await channel.current?.send({
+        type: "broadcast",
+        event: "back"
+      });
+
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+    };
+
+    const handleRefresh = async () => {
+      channel.current?.send({
+        type: "broadcast",
+        event: "refresh"
+      });
+
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+    };
+
+    const handleBackSignal = async () => {
+      await channel.current?.unsubscribe();
+      await webrtcServiceRef.current?.closeConnection();
+      router.replace("/lesson");
+      alert("사용자와의 연결이 끊어졌습니다.");
+    };
+
+    const handleRefreshSignal = async () => {
+      await webrtcServiceRef.current?.reset();
+      await webrtcServiceRef.current?.init();
+    };
+
     // // 브로드캐스팅 채널 구독하고, 관련 이벤트 리스너 설정
     const init = async () => {
+      if (isSubscribed.current) return;
+
       channel.current
-        .on(
-          "broadcast",
-          { event: "ice-candidate" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "ice-candidate" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on(
-          "broadcast",
-          { event: "offer" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "offer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on(
-          "broadcast",
-          { event: "answer" },
-          async (payload) => await webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+        .on("broadcast", { event: "answer" }, (payload) =>
+          webrtcServiceRef.current?.handleSignalData(payload as SignalData)
         )
-        .on("broadcast", { event: "leaveAlone" }, async () => await handleLeaveAloneSignal())
-        .on("broadcast", { event: "closeMatching" }, async () => await handleCloseMatchingSignal());
+        .on("broadcast", { event: "refresh" }, handleRefreshSignal)
+        .on("broadcast", { event: "back" }, handleBackSignal)
+        .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
       channel.current.subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
+          isSubscribed.current = true;
           // webrtc 연결을 위한 초기 설정
           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
           await webrtcServiceRef.current.init();
@@ -105,18 +129,18 @@ const VideoChat = () => {
 
     init();
 
-    // const cleanUp = async () => {
-    //   channel.current?.send({
-    //     type: "broadcast",
-    //     event: "leaveAlone"
-    //   });
-    //   await handleLeaveAloneSignal();
-    // };
+    window.onpopstate = () => {
+      setTimeout(handleBackButton, 0);
+    };
 
-    // return () => {
-    //   cleanUp();
-    // };
-  }, [handleCloseMatchingSignal, handleLeaveAloneSignal, roomId]);
+    // window.addEventListener("popstate", handleBackButton);
+    window.addEventListener("beforeunload", handleRefresh);
+
+    return () => {
+      // window.removeEventListener("popstate", handleBackButton);
+      window.removeEventListener("beforeunload", handleRefresh);
+    };
+  }, [handleCloseMatchingSignal, roomId, router]);
 
   return (
     <div className="relative h-auto">
