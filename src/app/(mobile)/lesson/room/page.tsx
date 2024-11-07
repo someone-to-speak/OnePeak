@@ -162,7 +162,9 @@ const VideoChat = () => {
         </button>
       </div>
       <video
-        className={"scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover "}
+        className={
+          "scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover object-center"
+        }
         ref={remoteVideoRef}
         autoPlay
         playsInline
@@ -173,7 +175,7 @@ const VideoChat = () => {
         style={{ pointerEvents: "none" }}
       />
       <video
-        className={"scale-x-[-1] h-lvh object-cover"}
+        className={"scale-x-[-1] h-lvh object-cover object-center"}
         ref={localVideoRef}
         autoPlay
         playsInline
