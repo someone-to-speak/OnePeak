@@ -76,7 +76,6 @@ const ChatMessage = () => {
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
           <WithIconHeader title={situation} />
-          <h1 className="font-bold">{situation}</h1>
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
           {/* 현재 진행 중인 대화 */}

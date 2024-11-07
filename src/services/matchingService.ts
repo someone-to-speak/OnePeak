@@ -4,7 +4,6 @@ import { getRandomNumber } from "@/utils/randomNumber";
 import { v4 as uuidv4 } from "uuid";
 
 export const initiateMatching = async (userInfo: UserInfo) => {
-  console.log(userInfo);
   const { data: existingQueue } = await getExistingQueue(userInfo);
 
   if (!existingQueue || existingQueue.length === 0) {

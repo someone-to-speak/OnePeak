@@ -11,21 +11,33 @@ export const useMatching = () => {
   const supabase = createClient();
   const [isMatching, setIsMatching] = useState(false); // 로딩 상태 추가
   const router = useRouter();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading } = useUser();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
   const setupMatchingChannel = async () => {
-    if (!userInfo) return;
+    if (!userInfo || isLoading || matchingChannelRef.current) return;
 
     setIsMatching(true);
 
     const matchingChannel = supabase.channel("matches");
     matchingChannelRef.current = matchingChannel;
 
-    matchingChannel.on<matche>("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) =>
-      handleUpdateSignal(payload)
+    matchingChannel.on<matche>(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "matches" },
+      async (payload) => {
+        console.log("update");
+        await handleUpdateSignal(payload);
+      }
     );
-    matchingChannel.subscribe();
+    matchingChannel.subscribe((status) => {
+      if (status === "SUBSCRIBED") console.log("subscribe");
+      else if (status === "CHANNEL_ERROR") {
+        console.log("error");
+        setupMatchingChannel();
+      } else if (status === "TIMED_OUT") console.log("timeout");
+      else console.log("closed");
+    });
 
     const roomId = await initiateMatching(userInfo);
 
@@ -39,7 +51,6 @@ export const useMatching = () => {
   const handleUpdateSignal = async (payload: RealtimePostgresUpdatePayload<matche>) => {
     const updatedMatchQueue = payload;
     if (updatedMatchQueue.new.user_id === userInfo?.id) {
-      setIsMatching(false);
       await cleanUp();
       router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
     }
@@ -50,5 +61,5 @@ export const useMatching = () => {
     await removeUserFromQueue(userInfo?.id as string);
   };
 
-  return { setupMatchingChannel, userInfo, isMatching };
+  return { setupMatchingChannel, userInfo, isLoading, isMatching };
 };
