@@ -2,18 +2,18 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
 import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuestions";
+import Image from "next/image";
+import noActiveCheck from "@/assets/noactive-check.svg";
+import activeCheck from "@/assets/active-check.svg";
 
 const GrammarList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
   const queryClient = useQueryClient();
-
-  // 탭 상태 관리
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
-  // TanStack Query - 유저의 오답 데이터 가져오기
   const {
     data: userAnswers,
     error: userAnswersError,
@@ -24,7 +24,6 @@ const GrammarList = ({ userId }: { userId: string }) => {
     staleTime: 0
   });
 
-  // TanStack Query로 문법문제 데이터 가져오기
   const {
     data: questions,
     error: questionsError,
@@ -35,13 +34,9 @@ const GrammarList = ({ userId }: { userId: string }) => {
     staleTime: 0
   });
 
-  // 'user_answer'테이블에서 is_reviewed를 업데이트하는 Mutation
   const updateIsReviewed = useMutation({
     mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase
-        .from("user_answer")
-        .update({ is_reviewed: !currentReviewed }) // 기존 값 반대로 업데이트
-        .eq("id", answerId);
+      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
 
       if (error) {
         throw new Error(error.message);
@@ -52,14 +47,11 @@ const GrammarList = ({ userId }: { userId: string }) => {
     }
   });
 
-  // 로딩 상태
   if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
-  // 오류 상태
-  if (userAnswersError) return <p>Error loading user answers: {userAnswersError.message}</p>;
-  if (questionsError) return <p>Error loading questions: {questionsError.message}</p>;
+  if (userAnswersError) return <p>{userAnswersError.message}</p>;
+  if (questionsError) return <p>{questionsError.message}</p>;
 
-  // 변경된 부분: is_reviewed 상태에 따라 문법 오답만 필터링하는 로직 추가
-  const wrongGrammarAnswers = userAnswers
+  const filteredAnswers = userAnswers
     ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
       const matchedQuestion = questions?.find((question) => question.id === answer.question_id);
@@ -69,33 +61,54 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div>
-      {/* 탭 UI */}
-      <div className="flex space-x-4 mb-4">
-        <button onClick={() => setIsReviewed("미완료")} className={isReviewed === "미완료" ? "font-bold" : ""}>
+      <div className="bg-[#f3f3f3] flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
+        <button
+          className={`${
+            isReviewed === "미완료"
+              ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
+              : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
+          }`}
+          onClick={() => setIsReviewed("미완료")}
+        >
           미완료
         </button>
-        <button onClick={() => setIsReviewed("완료")} className={isReviewed === "완료" ? "font-bold" : ""}>
+        <button
+          className={`${
+            isReviewed === "완료"
+              ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
+              : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
+          }`}
+          onClick={() => setIsReviewed("완료")}
+        >
           완료
         </button>
       </div>
-      {/* '학습완료' 버튼클릭 시 각 탭에서의 효과 다르게 나타냄 */}
-      {wrongGrammarAnswers?.map((question, index) => (
-        <div key={index} className="flex gap-7">
-          <h1>{question?.answer}</h1>
+
+      {filteredAnswers?.map((question, index) => (
+        <div
+          key={index}
+          className={`w-full h-[70px] mb-[10px] px-5 py-[18px] bg-[#fcfcfc] rounded-[10px] shadow justify-center items-center inline-flex ${
+            question!.isReviewed ? "border border-primary-500" : ""
+          }`}
+        >
           <button
             onClick={() =>
               updateIsReviewed.mutate({
-                answerId: question!.answerId, // 전달할 answerId
-                currentReviewed: question!.isReviewed // 전달할 isReviewed 상태
+                answerId: question!.answerId,
+                currentReviewed: question!.isReviewed
               })
             }
-            className={isReviewed === "미완료" ? "text-gray-400" : "text-black"} // '미완료'일 땐 회색, '완료'일 땐 검정색
+            className="w-full h-16 px-5 py-2.5 rounded-[10px] justify-between items-center inline-flex"
           >
-            학습완료
+            <h1 className="text-left text-black text-base font-bold font-['SUIT'] leading-normal">
+              {question?.answer}
+            </h1>
+            <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-4 h-4" />
           </button>
         </div>
       ))}
     </div>
   );
 };
+
 export default GrammarList;

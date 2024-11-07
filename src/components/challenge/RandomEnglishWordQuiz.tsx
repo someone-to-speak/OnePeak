@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { Tables } from "../../../database.types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import close from "@/assets/close-icon.svg";
+import checkIcon from "@/assets/check-icon.svg";
+import notAnswer from "@/assets/not-answer.svg";
 
 type RandomQuizProps = {
   userId: string;
@@ -105,74 +109,101 @@ const RandomEnglishWordQuiz = ({ userId }: RandomQuizProps) => {
   const progressPercentage = (currentIndex / questions.length) * 100;
 
   return (
-    <div>
-      <h1>
-        {currentIndex}/{questions.length}
-      </h1>
+    <div className="w-full flex flex-col relative min-h-screen gap-4">
       {/* 진행 바 */}
-      <div className="relative mb-4 h-2 bg-gray-200">
-        <div
-          className="absolute h-full bg-blue-600 transition-all duration-500 ease-in-out"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
+      <div className="flex flex-col justify-center">
+        <div className="flex flex-row items-center justify-between">
+          <h1 className="flex-1 text-center text-[#0c0c0c] text-base font-bold font-['SUIT'] leading-normal py-[10px] cursor-default">
+            {currentIndex + 1} / {questions.length}
+          </h1>
+          <button onClick={() => router.back()} className="flex-none w-6">
+            <Image src={close} alt={close} className="w-6 h-6 right-0 top-0" />
+          </button>
+        </div>
+        <div className="relative mb-4 h-2 bg-primary-900">
+          <div
+            className="absolute h-full bg-primary-500 rounded transition-all duration-500 ease-in-out"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
       </div>
-
-      <div className="mb-4">
-        <h2>{currentQuestion.content}</h2>
-        <div className="flex flex-row gap-4">
+      {/* 문제 */}
+      <div className="w-[343px] h-[260px] bg-[#f3f3f3] rounded-xl flex-col justify-center items-center p-8 inline-flex">
+        <h2 className="text-balance text-center text-black text-[26px] font-bold font-['SUIT'] leading-[39px]">
+          {currentQuestion.content}
+        </h2>
+      </div>
+      {/* 답/설명 */}
+      <div>
+        <div className="flex flex-col gap-2.5">
           <button
             onClick={() => handleAnswerSelect(currentQuestion.id, currentQuestion.answer)}
-            className={`p-2 rounded ${
+            className={`w-full h-16 px-5 py-2.5 rounded-[10px] justify-start items-center inline-flex text-left ${
               selectedAnswers[currentQuestion.id] === currentQuestion.answer
-                ? "bg-yellow-400 text-black"
+                ? "bg-[#ffedcc] border border-[#ffa500] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
                 : selectedAnswers[currentQuestion.id] === currentQuestion.wrong_answer
-                ? "bg-red-500 text-white"
-                : "bg-gray-200 text-black"
+                ? "bg-[#ffedcc] border border-[#ffa500] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
+                : "bg-[#fcfcfc] border border-[#d9d9d9] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
             }`}
           >
-            {currentQuestion.answer}
+            <div className="w-full flex flex-row justify-between items-center">
+              {currentQuestion.answer}
+              {selectedAnswers[currentQuestion.id] === currentQuestion.answer && (
+                <Image src={checkIcon} alt="check icon" className="w-4 h-4" />
+              )}
+            </div>
           </button>
           <button
             onClick={() => handleAnswerSelect(currentQuestion.id, currentQuestion.wrong_answer)}
-            className={`p-2 rounded ${
+            className={`w-full h-16 px-5 py-2.5 rounded-[10px] justify-start items-center inline-flex text-left ${
               selectedAnswers[currentQuestion.id] === currentQuestion.wrong_answer
-                ? "bg-yellow-400 text-black"
+                ? "bg-[#f7d9d9] border border-[#f40000] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
                 : selectedAnswers[currentQuestion.id] === currentQuestion.answer
-                ? "bg-red-500 text-white"
-                : "bg-gray-200 text-black"
+                ? "bg-[#fcfcfc] border border-[#d9d9d9] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
+                : "bg-[#fcfcfc] border border-[#d9d9d9] grow shrink basis-0 text-[#020400] text-base font-bold font-['SUIT'] leading-normal"
             }`}
           >
-            {currentQuestion.wrong_answer}
+            <div className="w-full flex flex-row justify-between items-center">
+              {currentQuestion.wrong_answer}
+              {selectedAnswers[currentQuestion.id] === currentQuestion.wrong_answer && (
+                <Image src={notAnswer} alt="not answer" className="w-4 h-4" />
+              )}
+            </div>
           </button>
         </div>
         {selectedAnswers[currentQuestion.id] && !correctAnswers[currentQuestion.id] && reason[currentQuestion.id] && (
-          <div className="flex flex-row">
-            <p className="text-red-500">오답:</p>
-            <p className="text-gray-500">{reason[currentQuestion.id]}</p>
+          <div className="flex flex-col mt-[16px]">
+            <p className="text-[#f40000] text-base font-bold font-['SUIT'] leading-normal">오답:</p>
+            <p className="text-[#727272] text-base font-medium font-['Pretendard'] leading-normal">
+              {reason[currentQuestion.id]}
+            </p>
           </div>
         )}
       </div>
-      {selectedCount !== questions.length ? (
-        <button
-          onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, questions.length - 1))}
-          disabled={!selectedAnswers[currentQuestion.id]}
-          className={`p-2 w-full ${
-            !selectedAnswers[currentQuestion.id] ? "bg-gray-400 text-gray-200 cursor-default" : "bg-gray-800 text-white"
-          }`}
-        >
-          다음
-        </button>
-      ) : (
-        <button
-          onClick={saveAllAnswers}
-          className={`mt-4 p-2 w-full ${
-            selectedCount === questions.length ? "bg-gray-800 text-white" : "bg-gray-400 text-gray-200 cursor-default"
-          }`}
-          disabled={selectedCount !== questions.length}
-        >
-          답변 제출
-        </button>
-      )}
+      {/* 다음/제출 버튼 */}
+      <div className="w-full absolute bottom-[31px]">
+        {selectedCount !== questions.length ? (
+          <button
+            onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, questions.length - 1))}
+            disabled={!selectedAnswers[currentQuestion.id]}
+            className={`w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center inline-flex text-center text-[#fcfcfc] text-lg font-bold font-['SUIT'] leading-[27px] ${
+              !selectedAnswers[currentQuestion.id] ? "bg-primary-800 cursor-default" : "bg-primary-500"
+            }`}
+          >
+            다음
+          </button>
+        ) : (
+          <button
+            onClick={saveAllAnswers}
+            className={
+              "bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center inline-flex text-center text-[#fcfcfc] text-lg font-bold font-['SUIT'] leading-[27px]"
+            }
+            disabled={selectedCount !== questions.length}
+          >
+            답변 제출
+          </button>
+        )}
+      </div>
     </div>
   );
 };

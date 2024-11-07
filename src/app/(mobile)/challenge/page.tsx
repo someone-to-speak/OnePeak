@@ -7,6 +7,7 @@ import caretLeft from "@/assets/caret-left.svg";
 import challIcon from "@/assets/chall-icon.svg";
 import Link from "next/link";
 import Image from "next/image";
+import NoIconHeader from "@/components/ui/NoIconHeader";
 
 const ChallengePage = () => {
   const settings = {
@@ -69,7 +70,8 @@ const ChallengePage = () => {
 
   return (
     <div className="w-full">
-      <header className="h-[48px] p-4 bg-[#fcfcfc] text-[#0c0c0c] text-lg font-bold font-['SUIT']">챌린지</header>
+      <NoIconHeader title="챌린지" />
+      {/* <header className="h-[48px] p-4 bg-[#fcfcfc] text-[#0c0c0c] text-lg font-bold font-['SUIT']">챌린지</header> */}
       <div className=" w-full h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex-row justify-center items-center inline-flex">
         {problems.map((problem, index) => (
           <div
