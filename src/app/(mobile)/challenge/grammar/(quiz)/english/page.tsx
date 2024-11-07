@@ -16,12 +16,7 @@ const EnglishGrammarQuiz = () => {
   const searchParams = useSearchParams();
   const userId = searchParams?.get("userId");
 
-  return (
-    <div>
-      <h1>랜덤 영어 문법 퀴즈</h1>
-      {userId && <RandomEnglishGrammarQuiz userId={userId} />}
-    </div>
-  );
+  return <div>{userId && <RandomEnglishGrammarQuiz userId={userId} />}</div>;
 };
 
 export default EnglishGrammarQuizPage;

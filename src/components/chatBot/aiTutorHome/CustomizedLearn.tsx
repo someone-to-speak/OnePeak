@@ -2,8 +2,23 @@
 
 import Image from "next/image";
 import sendIcon from "@/assets/send.svg";
+import cafeIcon from "@/assets/home/cafe.svg";
+import foodIcon from "@/assets/home/food.svg";
+import martIcon from "@/assets/home/mart.svg";
+import shopIcon from "@/assets/home/shop.svg";
+import subwayIcon from "@/assets/home/subway.svg";
+import tripIcon from "@/assets/home/trip.svg";
 
 const CustomizedLearn = () => {
+  const themeItems = [
+    { name: "마트", icon: martIcon },
+    { name: "카페", icon: cafeIcon },
+    { name: "지하철", icon: subwayIcon },
+    { name: "옷가게", icon: shopIcon },
+    { name: "여행", icon: tripIcon },
+    { name: "음식점", icon: foodIcon }
+  ];
+
   return (
     <div className="w-full mt-10">
       <div className="mb-2">
@@ -11,7 +26,7 @@ const CustomizedLearn = () => {
         <p className="text-[12px] text-[#5d5d5d] font-normal">다양한 상황을 연습해보세요</p>
       </div>
       {/* 유저 인풋창 */}
-      <form className="flex w-full">
+      <form className="flex w-full mb-3">
         <div className="flex-grow relative">
           <input
             className="w-full h-[44px] py-2 pl-5 pr-[46px] rounded-[10px] bg-gray-900  text-xs"
@@ -29,14 +44,14 @@ const CustomizedLearn = () => {
         </div>
       </form>
       <div className="grid grid-cols-3 gap-4">
-        {["마트", "카페", "지하철", "옷가게", "여행", "음식점"].map((theme, index) => (
+        {themeItems.map(({ name, icon }, index) => (
           <div
             key={index}
-            className="w-[109px] h-[100px] p-3 bg-white rounded-lg shadow-red-300 flex items-center justify-center cursor-pointer"
+            className="w-[109px] h-[100px] p-3 bg-white rounded-[10px]  shadow-sm flex items-center justify-center cursor-pointer"
           >
             <div className="text-center">
-              <p className="font-bold">{theme}</p>
-              {/* <p className="text-sm text-gray-600">Content</p> */}
+              <Image src={icon} alt={name} width={24} height={24} className="mx-auto mb-2" />
+              <p className="font-bold">{name}</p>
             </div>
           </div>
         ))}

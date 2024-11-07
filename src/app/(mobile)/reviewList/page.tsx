@@ -8,6 +8,7 @@ import { useState } from "react";
 import { dateUtils } from "@/utils/chatbot/date";
 import { ReviewList } from "@/components/chatBot/review/ReviewList";
 import { reviewApi } from "@/services/supabaseChatbot";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type ReviewType = Tables<"review">;
 
@@ -54,10 +55,7 @@ const ReviewDetail = () => {
   return (
     <div className="p-5">
       <div className="flex">
-        <button onClick={() => router.back()} className="mr-5">
-          🔙
-        </button>
-        <p>복습하기</p>
+        <WithIconHeader title="복습하기" />
       </div>
 
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />

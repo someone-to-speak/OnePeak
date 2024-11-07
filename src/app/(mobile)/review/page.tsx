@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { Tables } from "../../../../database.types";
 import React from "react";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type ReviewContentType = Tables<"review_content">;
 
@@ -21,8 +22,6 @@ const ChatMessagePage = () => {
 };
 
 const ChatMessage = () => {
-  const router = useRouter();
-
   // URL 파라미터 가져오기
   const searchParams = useSearchParams();
   const situation = searchParams?.get("situation") as string;
@@ -76,10 +75,7 @@ const ChatMessage = () => {
     <div className="flex flex-col h-screen w-full mx-auto">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
-          <button onClick={() => router.back()} className="mr-5">
-            🔙
-          </button>
-          <h1 className="font-bold">{situation}</h1>
+          <WithIconHeader title={situation} />
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
           {/* 현재 진행 중인 대화 */}

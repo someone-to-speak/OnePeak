@@ -11,7 +11,7 @@ export const getUser = async () => {
     .from("user_info")
     .select("*")
     .eq("id", user?.id as string)
-    .single();
+    .maybeSingle();
 
   return userInfo as UserInfo;
 };
