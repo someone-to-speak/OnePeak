@@ -165,8 +165,24 @@ const VideoChat = () => {
         className={"scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover "}
         ref={remoteVideoRef}
         autoPlay
+        playsInline
+        muted // 필요에 따라 추가
+        onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+        onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+        onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+        style={{ pointerEvents: "none" }}
       />
-      <video className={"scale-x-[-1] h-lvh object-cover"} ref={localVideoRef} autoPlay />
+      <video
+        className={"scale-x-[-1] h-lvh object-cover"}
+        ref={localVideoRef}
+        autoPlay
+        playsInline
+        muted // 필요에 따라 추가
+        onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+        onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+        onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+        style={{ pointerEvents: "none" }}
+      />
     </div>
   );
 };

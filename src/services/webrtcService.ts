@@ -61,6 +61,7 @@ export class WebRTCService {
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: videoConstraints,
       audio: {
+        channelCount: 1,
         sampleRate: 16000
       }
     });
