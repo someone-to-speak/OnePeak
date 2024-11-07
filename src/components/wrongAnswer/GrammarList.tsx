@@ -12,8 +12,7 @@ import activeCheck from "@/assets/active-check.svg";
 const GrammarList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
   const queryClient = useQueryClient();
-
-  const [activeTab, setActiveTab] = useState<"미완료" | "완료">("미완료");
+  const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
   const {
     data: userAnswers,
@@ -52,9 +51,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
-  // activeTab 상태에 따라 필터링된 리스트 생성
   const filteredAnswers = userAnswers
-    ?.filter((answer) => (activeTab === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
+    ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
       const matchedQuestion = questions?.find((question) => question.id === answer.question_id);
       return matchedQuestion ? { ...matchedQuestion, answerId: answer.id, isReviewed: answer.is_reviewed } : null;
@@ -66,21 +64,21 @@ const GrammarList = ({ userId }: { userId: string }) => {
       <div className="bg-[#f3f3f3] flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
         <button
           className={`${
-            activeTab === "미완료"
+            isReviewed === "미완료"
               ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
               : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
           }`}
-          onClick={() => setActiveTab("미완료")}
+          onClick={() => setIsReviewed("미완료")}
         >
           미완료
         </button>
         <button
           className={`${
-            activeTab === "완료"
+            isReviewed === "완료"
               ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
               : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
           }`}
-          onClick={() => setActiveTab("완료")}
+          onClick={() => setIsReviewed("완료")}
         >
           완료
         </button>
