@@ -27,9 +27,8 @@ const Page = () => {
           </Typography>
         </div>
         {conversationList?.map((conversation) => (
-          <div className="flex-grow overflow-scroll">
+          <div className="flex-grow overflow-scroll" key={conversation.id}>
             <UserProfile
-              key={conversation.id}
               name={conversation.participants.user_info.nickname}
               country={conversation.participants.user_info.my_language.language_img_url}
               profileImage={conversation.participants.user_info.profile_url}
