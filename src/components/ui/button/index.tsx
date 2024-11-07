@@ -33,12 +33,13 @@ const buttonVariants = cva(
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   text: string;
   className?: string;
+  textClassName?: string;
 }
 
-const Button = ({ text, className, variant, size, ...props }: ButtonProps) => {
+const Button = ({ text, className, variant, size, textClassName, ...props }: ButtonProps) => {
   return (
     <button className={cn(buttonVariants({ variant, size, className }))} {...props}>
-      <Typography size={18} className={cn(variant === "stroke" ? "text-primary-400" : "text-white")}>
+      <Typography size={18} className={cn(variant === "stroke" ? "text-primary-400" : "text-white", textClassName)}>
         {text}
       </Typography>
     </button>
