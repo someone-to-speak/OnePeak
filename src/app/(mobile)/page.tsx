@@ -4,6 +4,7 @@ import BottomSheetModal from "@/components/BottomSheetModal";
 import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
 import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
 import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
+import Header from "@/components/header/Header";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -59,6 +60,7 @@ export default function Home() {
     <>
       <div className="relative w-full h-full ">
         <>
+          <Header />
           <div className="h-10 py-4"></div>
           {/* 홈 화면 콘텐츠 */}
           <TodayLearn />
