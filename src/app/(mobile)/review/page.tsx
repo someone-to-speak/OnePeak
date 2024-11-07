@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import { useQuery } from "@tanstack/react-query";
