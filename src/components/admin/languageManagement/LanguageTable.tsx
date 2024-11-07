@@ -37,7 +37,7 @@ const LanguageTable = () => {
     <div className="w-full text-center mt-6">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100 font-semibold">
+          <tr className="bg-gray-800 font-semibold">
             <th className="p-3"></th>
             <th className="p-3">언어 이미지</th>
             <th className="p-3">언어</th>
@@ -54,7 +54,7 @@ const LanguageTable = () => {
             </tr>
           ) : (
             data.map((language, index) => (
-              <tr key={language.id} className="border-b hover:bg-gray-50">
+              <tr key={language.id} className="border-b hover:bg-gray-900">
                 <td>{index + 1}</td>
                 <td className="p-3 flex items-center justify-center">
                   <Image

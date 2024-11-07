@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import caretleft from "@/assets/caret-left.svg";
 import { useRouter } from "next/navigation";
