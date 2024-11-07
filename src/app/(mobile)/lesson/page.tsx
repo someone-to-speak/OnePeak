@@ -6,7 +6,7 @@ import lessonBackground from "@/assets/iPhone-13-mini-124.svg";
 import Image from "next/image";
 
 const LessonPage = () => {
-  const { setupMatchingChannel, userInfo, isMatching } = useMatching();
+  const { setupMatchingChannel, userInfo, isLoading, isMatching } = useMatching();
 
   const handleClickMachingButton = async () => {
     if (!userInfo) {
@@ -15,6 +15,8 @@ const LessonPage = () => {
     }
     await setupMatchingChannel();
   };
+
+  if (isLoading) return <div>로딩중입니다..</div>;
 
   return (
     <div className="h-screen">
