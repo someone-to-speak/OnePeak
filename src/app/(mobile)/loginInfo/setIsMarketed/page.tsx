@@ -9,12 +9,12 @@ import Button from "@/components/ui/button";
 const IsMarketed = () => {
   const supabase = createClient();
   const router = useRouter();
-  const [isMarketed, setIsMarketed] = useState<boolean | undefined>(undefined);
+  const [isMarketed, setIsMarketed] = useState<boolean>(false);
 
   const handleAddMarketedInfo = async (isMarketed: boolean) => {
     const { data } = await supabase.auth.getSession();
     const userId = data?.session?.user?.id;
-    console.log("isMarketed", isMarketed);
+
     if (userId) {
       const { error } = await supabase.from("user_info").update({ is_marketing: isMarketed }).eq("id", userId);
 
@@ -43,7 +43,7 @@ const IsMarketed = () => {
       <button
         onClick={() => {
           setIsMarketed(false);
-          handleAddMarketedInfo(false);
+          handleAddMarketedInfo(isMarketed);
         }}
         className=" w-full px-auto mt-[490px]  text-center text-[#8c8c8c] text-xs font-bold font-['SUIT'] underline "
       >
@@ -57,7 +57,7 @@ const IsMarketed = () => {
         textClassName="w-[343px] text-center text-[#fcfcfc] text-[16px] font-bold font-['SUIT']"
         onClick={() => {
           setIsMarketed(true);
-          handleAddMarketedInfo(true);
+          handleAddMarketedInfo(isMarketed);
         }}
       />
     </div>
