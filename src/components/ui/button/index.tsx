@@ -15,7 +15,8 @@ const buttonVariants = cva(
           "active:bg-primary-400",
           "disabled:opacity-40 disabled:bg-primary-500 disabled:cursor-not-allowed"
         ],
-        stroke: ["border border-primary-500 bg-[#FDFDFD]", "disabled:opacity-40 disabled:cursor-not-allowed"]
+        stroke: ["border border-primary-500 bg-[#FDFDFD]", "disabled:opacity-40 disabled:cursor-not-allowed"],
+        disabled: [" bg-primary-800", "disabled:opacity-40"]
       },
       size: {
         large: "max-w-[343px] h-[54px]",

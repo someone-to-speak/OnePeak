@@ -1,7 +1,7 @@
 // api/review.ts
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../database.types";
-import { AiMessages } from "@/type";
+// import { AiMessages } from "@/type";
 
 type ReviewType = Tables<"review">;
 type SituationType = Tables<"situation">;
@@ -95,16 +95,16 @@ export const reviewApi = {
   // 타입 파일도 수정
 
   // AI 튜터 학습 내용 저장
-  postLearnMessage: async (messages: AiMessages[], review_id: number) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from("review_content").insert({ messages, review_id }).select();
+  // postLearnMessage: async (messages: AiMessages[], review_id: number) => {
+  //   const supabase = createClient();
+  //   const { data, error } = await supabase.from("review_content").insert({ messages, review_id }).select();
 
-    if (error) {
-      console.log("review 테이블 추가 오류: ", error);
-      throw error; // 에러 전파
-    }
-    return data;
-  },
+  //   if (error) {
+  //     console.log("review 테이블 추가 오류: ", error);
+  //     throw error; // 에러 전파
+  //   }
+  //   return data;
+  // },
 
   // AI 튜터 학습 내용 조회
   getLearnMessage: async (userId: string, reviewId: string): Promise<ReviewContentType[]> => {
