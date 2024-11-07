@@ -15,7 +15,8 @@ const buttonVariants = cva(
           "active:bg-primary-400",
           "disabled:opacity-40 disabled:bg-primary-500 disabled:cursor-not-allowed"
         ],
-        stroke: ["border border-primary-500 bg-[#FDFDFD]", "disabled:opacity-40 disabled:cursor-not-allowed"]
+        stroke: ["border border-primary-500 bg-[#FDFDFD]", "disabled:opacity-40 disabled:cursor-not-allowed"],
+        disabled: [" bg-primary-800", "disabled:opacity-40"]
       },
       size: {
         large: "max-w-[343px] h-[54px]",
@@ -32,12 +33,13 @@ const buttonVariants = cva(
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   text: string;
   className?: string;
+  textClassName?: string;
 }
 
-const Button = ({ text, className, variant, size, ...props }: ButtonProps) => {
+const Button = ({ text, className, variant, size, textClassName, ...props }: ButtonProps) => {
   return (
     <button className={cn(buttonVariants({ variant, size, className }))} {...props}>
-      <Typography size={18} className={cn(variant === "stroke" ? "text-primary-400" : "text-white")}>
+      <Typography size={18} className={cn(variant === "stroke" ? "text-primary-400" : "text-white", textClassName)}>
         {text}
       </Typography>
     </button>
