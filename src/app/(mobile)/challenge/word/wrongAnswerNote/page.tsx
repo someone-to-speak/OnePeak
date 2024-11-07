@@ -16,7 +16,7 @@ const WrongWordPage = async () => {
 
   return (
     <div>
-      <WithIconHeader title="문법 오답노트" />
+      <WithIconHeader title="단어 오답노트" />
       <WordList userId={userId} />
     </div>
   );
