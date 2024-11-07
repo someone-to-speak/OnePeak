@@ -148,7 +148,7 @@ const VideoChat = () => {
         <Image className="cursor-pointer" src={Prohibit} alt={""} width={25} height={25} />
       </button>
       <button
-        className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] bottom-4"
+        className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] pb-safe-offset-2"
         onClick={handleCloseMatching}
       >
         <Image className="cursor-pointer" src={Power} alt={""} width={25} height={25} />
