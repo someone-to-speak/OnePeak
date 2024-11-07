@@ -81,13 +81,12 @@ const NotificationPage = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "notifications" },
         async (payload: { new: { title: string; message: string } }) => {
-          console.log("New notification received:", payload);
           const { title, message } = payload.new;
           const registration = await navigator.serviceWorker.ready;
           registration.showNotification(title, {
             body: message,
-            icon: "/icon-192x192.png",
-            badge: "/icon-192x192.png"
+            icon: "/app-icon.png",
+            badge: "/app-icon.png"
           });
         }
       )

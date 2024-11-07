@@ -128,13 +128,13 @@ const EditProfile = () => {
             </div>
             <label htmlFor="file-upload" className="absolute right-0 bottom-0 mb-0 mr-0 cursor-pointer">
               <input type="file" id="file-upload" onChange={handleFileChange} className="hidden" />
-              <Button
+              <button
                 type="button"
                 onClick={() => document.getElementById("file-upload")?.click()}
-                className="w-[27.27px] h-[27.27px] p-[3.64px] bg-[#686868] rounded-full text-white shadow-md hover:bg-gray-600 transition duration-150"
+                className="w-[30px] h-[30px] p-[3px] bg-[#686868] flex items-center justify-center rounded-full text-white shadow-md hover:bg-gray-600 transition duration-150"
               >
                 <Camera size={18} />
-              </Button>
+              </button>
             </label>
           </div>
         </div>
