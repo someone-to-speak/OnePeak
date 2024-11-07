@@ -33,8 +33,8 @@ export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
         return (
           <div key={dateKey}>
             <div>
-              <p className="font-bold text-left">{month}월</p>
-              <p className="font-bold text-left">{day}일</p>
+              <p className="font-bold text-left text-[#595959]">{month}월</p>
+              <p className="font-bold text-left text-[#595959]">{day}</p>
             </div>
             {dateReviews.map((review) => (
               <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />

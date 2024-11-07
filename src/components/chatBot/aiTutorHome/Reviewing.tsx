@@ -84,7 +84,7 @@ const Reviewing = () => {
                   onClick={() => {
                     handleReviewClick(review);
                   }}
-                  className="w-full p-2 mt-5 bg-primary-800 text-[12px] text-[#335813] rounded-[10px]"
+                  className="w-full p-2 mt-5 bg-primary-800 text-[12px]text-[#335813] rounded-[10px]"
                 >
                   복습하기
                 </button>

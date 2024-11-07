@@ -9,6 +9,7 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import { Message } from "@/app/types/chatBotType/chatBotType";
 import { Tables } from "../../../../database.types";
 import React from "react";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 type ReviewContentType = Tables<"review_content">;
 
@@ -76,9 +77,7 @@ const ChatMessage = () => {
     <div className="flex flex-col h-screen w-full mx-auto">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
-          <button onClick={() => router.back()} className="mr-5">
-            🔙
-          </button>
+          <WithIconHeader title={situation} />
           <h1 className="font-bold">{situation}</h1>
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
