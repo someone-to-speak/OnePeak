@@ -32,11 +32,11 @@ export const convertSpeechToText = async (audioFile: File) => {
     const blob = new Blob([await audioFile.arrayBuffer()], { type: "audio/webm" });
     formData.append("audio", blob, "audio.webm");
 
-    console.log("전송할 파일 정보:", {
-      name: audioFile.name,
-      type: audioFile.type,
-      size: audioFile.size
-    });
+    // console.log("전송할 파일 정보:", {
+    //   name: audioFile.name,
+    //   type: audioFile.type,
+    //   size: audioFile.size
+    // });
 
     const response = await fetch("/api/whisper", {
       method: "POST",
@@ -46,12 +46,13 @@ export const convertSpeechToText = async (audioFile: File) => {
     const data = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
+      // const errorData = await response.json();
+      const errorData = data;
       console.error("API Error:", errorData);
       throw new Error("음성 변환 실패");
     }
 
-    console.log("API Response:", data);
+    // console.log("API Response:", data);
     return data.text;
   } catch (error) {
     console.log("음성 변환 중 오류: ", error);
