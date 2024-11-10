@@ -92,7 +92,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
       {filteredAnswers?.map((question, index) => (
         <div
           key={index}
-          className={`w-full h-auto mb-[10px] px-5 py-[18px] items-center justify-center bg-white rounded-[10px] shadow-review ${
+          className={`w-full h-auto mb-[10px] px-5 py-[18px] justify-center bg-white rounded-[10px] shadow-review ${
             question!.isReviewed ? "border border-primary-500" : ""
           }`}
         >
@@ -103,25 +103,26 @@ const GrammarList = ({ userId }: { userId: string }) => {
                 currentReviewed: question!.isReviewed
               })
             }
+            className="w-full flex flex-row items-center justify-between"
           >
-            <div className="w-full flex flex-row items-center justify-between gap-[10px]">
-              <Typography size={16} weight="bold" className="flex-none text-left text-[#F50000]">
+            <div className="flex-none max-w-[60px]">
+              <Typography size={16} weight="bold" className="text-left text-[#F50000] break-keep">
                 {question?.answer}
               </Typography>
-              <div className="flex-grow px-[20px]">
-                <div className="flex flex-col gap-[10px]">
-                  <Typography size={16} weight="bold" className="text-left">
-                    {question?.content}
-                  </Typography>
-                  <div className="border border-gray-900" />
-                  <Typography size={14} weight="medium" className="text-left text-gray-300">
-                    {question?.reason}
-                  </Typography>
-                </div>
+            </div>
+            <div className="grow px-[20px]">
+              <div className="flex flex-col gap-[10px]">
+                <Typography size={16} weight="bold" className="text-left">
+                  {question?.content}
+                </Typography>
+                <div className="border border-gray-900" />
+                <Typography size={14} weight="medium" className="text-left text-gray-300">
+                  {question?.reason}
+                </Typography>
               </div>
-              <div className="flex-none">
-                <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
-              </div>
+            </div>
+            <div className="flex-none">
+              <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
             </div>
           </button>
         </div>

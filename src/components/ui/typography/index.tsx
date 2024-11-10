@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const typographyVariants = cva("font-suit leading-normal", {
+const typographyVariants = cva("font-suit leading-normal inline-block align-middle antialiased", {
   variants: {
     size: {
       10: "text-xs tracking-[-0.2px]",
