@@ -4,7 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Slider from "react-slick";
 import caretLeft from "@/assets/caret-left.svg";
-import challIcon from "@/assets/chall-icon.svg";
+import challIconWord from "@/assets/chall-icon-word.svg";
+import challIconGrammar from "@/assets/chall-icon-grammar.svg";
 import Link from "next/link";
 import Image from "next/image";
 import NoIconHeader from "@/components/ui/NoIconHeader";
@@ -76,8 +77,8 @@ const ChallengePage = () => {
         {problems.map((problem, index) => (
           <div
             key={problem.type}
-            className={`w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
-              selectedButtonIndex === index ? "bg-[#b0e484]" : "bg-[#f3f3f3]"
+            className={` cursor-default cursor-pointer w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
+              selectedButtonIndex === index ? "  bg-[#b0e484]" : "bg-[#f3f3f3]"
             }`}
           >
             <p
@@ -96,7 +97,7 @@ const ChallengePage = () => {
           <div key={problem.type} className="w-full ">
             <div
               key={problem.type}
-              className="flex-col h-[444px] mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
+              className="flex-col  mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
             >
               <div className="flex flex-col items-center">
                 <div className="mb-[40.5px]">
@@ -104,13 +105,14 @@ const ChallengePage = () => {
                     {problem.label} 챌린지
                   </p>
                   <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
-                    {problem.label} 챌린지를 통해
-                  </p>
-                  <p className="text-center text-[#595959] text-sm font-medium font-['Pretendard'] ">
-                    실력을 확인해보세요!
+                    {problem.label} 챌린지를 통해 <br /> 실력을 확인해보세요!
                   </p>
                 </div>
-                <Image src={challIcon} alt={"chall-icon"} className="mb-[44px]" />
+                {problem.type === "grammar" ? (
+                  <Image src={challIconGrammar} alt={"chall-icon-grammar"} className="mb-[44px]" />
+                ) : (
+                  <Image src={challIconWord} alt={"chall-icon-word"} className="mb-[44px]" />
+                )}
                 {/* 기존 문제 풀러가기 버튼 */}{" "}
               </div>
               <Link
@@ -135,6 +137,7 @@ const ChallengePage = () => {
                       : "배운 단어를 잊어버리지 않게 복습해보세요"}
                   </p>
                 </div>
+
                 <Image className="rotate-180" src={caretLeft} alt={"caret-left"} />
               </div>
             </Link>

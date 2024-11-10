@@ -8,6 +8,8 @@ import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLang
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import { requestNotificationPermission } from "@/utils/notifications/pushSubscription";
 import WithIconHeader from "@/components/ui/WithIconHeader";
+import { Typography } from "@/components/ui/typography";
+import NotificationToggle from "@/components/ui/toggle/notificationToggle";
 
 type LanguageType = {
   id: number;
@@ -152,7 +154,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="bg-white w-full">
+    <div className="bg-white">
       <WithIconHeader title="설정" />
       <div className="flex flex-col">
         <ImageSelectorDropDown
@@ -167,32 +169,21 @@ const SettingsPage = () => {
           languageOptions={languageOptions}
           onLanguageChange={handleUpdateLearnLanguage}
         />
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <h3 className="text-black text-lg font-medium font-['Pretendard'] leading-normal">알림 설정</h3>
-          <div
-            onClick={handleNotificationToggle}
-            className={`w-12 h-7 px-[3px] py-0.5 rounded-full flex justify-between items-center gap-2.5 cursor-pointer ${
-              isNotificationEnabled ? "bg-[#96db5b]" : "bg-gray-300"
-            }`}
-          >
-            <div
-              className={`w-6 h-6 bg-white rounded-full shadow transform duration-300 ease-in-out ${
-                isNotificationEnabled ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </div>
+        <div className="border-b border-gray-800 flex flex-row items-center justify-between py-[20px] px-2">
+          <Typography size={16} weight="medium">
+            알림 설정
+          </Typography>
+          <NotificationToggle isEnabled={isNotificationEnabled} onToggle={handleNotificationToggle} />
         </div>
-        <button
-          onClick={handleLogout}
-          className="border-b border-[#f3f3f3] text-left w-full py-[20px] text-black text-lg font-medium font-['Pretendard'] leading-normal px-2"
-        >
-          로그아웃
+        <button onClick={handleLogout} className="border-b border-gray-800 text-left w-full py-[20px] px-2">
+          <Typography size={16} weight="medium">
+            로그아웃
+          </Typography>
         </button>
-        <button
-          onClick={cancelAccount}
-          className="border-b border-[#f3f3f3] text-left w-full py-[20px]  text-black text-lg font-medium font-['Pretendard'] leading-normal px-2"
-        >
-          회원 탈퇴
+        <button onClick={cancelAccount} className="border-b border-gray-800 text-left w-full py-[20px] px-2">
+          <Typography size={16} weight="medium">
+            회원탈퇴
+          </Typography>
         </button>
       </div>
     </div>

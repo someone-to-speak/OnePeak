@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchMessages } from "@/api/supabase/chat";
 // import { MessageWithUserInfo } from "@/types/chatType/chatType";
 import { UUID } from "crypto";
+import { MessageWithUserInfo } from "@/types/chatType/chatType";
 // import { v4 as uuidv4 } from "uuid";
 
 // const queryClient = new QueryClient();
@@ -16,7 +17,7 @@ export const useMessage = (conversationId: UUID) => {
     data: messages,
     isLoading,
     isError
-  } = useQuery({
+  } = useQuery<MessageWithUserInfo[]>({
     queryKey: ["messages", conversationId],
     queryFn: () => fetchMessages(conversationId),
     enabled: !!userInfo?.id

@@ -5,10 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../../../../database.types";
 import { uploadImage } from "@/utils/myPage/imageUpload";
-import { Input, Button, Spinner } from "@nextui-org/react";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import WithIconHeader from "@/components/ui/WithIconHeader";
+import Button from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
 
 type UserInfoType = Tables<"user_info">;
 
@@ -26,8 +27,6 @@ const EditProfile = () => {
   const userId = searchParams?.get("userId");
   const [selectedProfile, setSelectedProfile] = useState<UserInfoType | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
@@ -36,16 +35,12 @@ const EditProfile = () => {
     const fetchUserProfile = async () => {
       if (!userId) return;
 
-      setLoading(true);
-      const { data, error } = await supabase.from("user_info").select("*").eq("id", userId).single();
+      const { data } = await supabase.from("user_info").select("*").eq("id", userId).single();
 
-      if (error) {
-        setError("프로필 정보를 가져오는 데 실패했습니다.");
-      } else {
+      if (data) {
         setSelectedProfile(data);
         setPreviewUrl(data.profile_url);
       }
-      setLoading(false);
     };
 
     fetchUserProfile();
@@ -56,7 +51,6 @@ const EditProfile = () => {
     if (selectedFile) {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
-      setError(null);
     }
   };
 
@@ -64,17 +58,13 @@ const EditProfile = () => {
     e.preventDefault();
 
     if (userId) {
-      setLoading(true);
       let imageUrl = selectedProfile?.profile_url;
 
       if (file) {
         try {
           const data = await uploadImage(file);
           imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`;
-          alert("이미지가 성공적으로 업로드 되었습니다!");
         } catch {
-          setError("이미지 업로드에 실패했습니다.");
-          setLoading(false);
           return;
         }
       }
@@ -83,8 +73,7 @@ const EditProfile = () => {
       const { nickname, state_msg } = selectedProfile;
 
       if (!nickname || !imageUrl || !state_msg) {
-        alert("모든 필드를 입력해 주세요.");
-        setLoading(false);
+        alert("모두 입력해주세요.");
         return;
       }
 
@@ -99,12 +88,10 @@ const EditProfile = () => {
 
       if (error) {
         alert("프로필 업데이트에 실패했습니다.");
-        console.error("Update error", error);
       } else {
         alert("프로필이 성공적으로 업데이트되었습니다.");
         router.push("/myPage");
       }
-      setLoading(false);
     }
   };
 
@@ -119,7 +106,7 @@ const EditProfile = () => {
             <div className="w-[100px] h-[100px] rounded-[54px] overflow-hidden shadow-md relative">
               <Image
                 fill
-                src={previewUrl || "/images/profile.png"}
+                src={previewUrl || "/app-icon.png"}
                 alt="프로필 이미지"
                 className="object-cover"
                 priority
@@ -140,42 +127,38 @@ const EditProfile = () => {
         </div>
         <div className="flex flex-col gap-[20px] w-full">
           <div className="flex flex-col gap-[6px]">
-            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal">닉네임</p>
-            <div className="h-[50px] px-[20px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center gap-2.5 inline-flex hover:border hover:border-[#7bd232]">
-              <Input
+            <Typography size={16} weight="medium">
+              닉네임
+            </Typography>
+            <div className="h-[50px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center inline-flex hover:border hover:border-[#7bd232]">
+              <input
                 type="text"
                 value={selectedProfile?.nickname}
                 onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, nickname: e.target.value }))}
                 required
                 placeholder="닉네임을 입력해주세요."
-                className="text-center text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+                className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
               />
             </div>
           </div>
           <div className="flex flex-col w-full gap-[6px]">
-            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal">상태 메세지</p>
-            <div className="h-[50px] px-[20px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center gap-2.5 inline-flex hover:border hover:border-[#7bd232]">
-              <Input
+            <Typography size={16} weight="medium">
+              상태 메세지
+            </Typography>
+            <div className="h-[50px] py-2.5 bg-[#fcfcfc] rounded-xl border border-[#a5a5a5] justify-start items-center inline-flex hover:border hover:border-[#7bd232]">
+              <input
                 type="text"
                 value={selectedProfile?.state_msg}
                 onChange={(e) => setSelectedProfile((prev) => ({ ...prev!, state_msg: e.target.value }))}
                 required
                 placeholder="상태 메세지를 입력해주세요."
-                className="text-center text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+                className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
               />
             </div>
           </div>
         </div>
-        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-
         <div className="w-full absolute bottom-0">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full h-[54px] p-2.5 bg-[#7bd232] rounded-[10px] justify-center items-center gap-2.5 inline-flex text-center text-[#fcfcfc] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px]"
-          >
-            {loading ? <Spinner size="sm" /> : "완료"}
-          </Button>
+          <Button text="왼료"></Button>
         </div>
       </form>
     </div>

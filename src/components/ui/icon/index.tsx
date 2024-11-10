@@ -1,8 +1,8 @@
 import React from "react";
-import { ChatsTeardropIcon, PencilSimpleIcon, TrophyIcon } from "./Icons";
+import { CareLeft, ChatsTeardropIcon, DotThree, PencilSimpleIcon, TrophyIcon } from "./Icons";
 import { CameraIcon, UserIcon } from "lucide-react";
 
-export type IconType = "trophy" | "user" | "pencil" | "camera" | "chats";
+export type IconType = "trophy" | "user" | "pencil" | "camera" | "chats" | "dotThree" | "careLeft";
 
 interface IconProps {
   name: IconType;
@@ -15,7 +15,9 @@ const iconComponents = {
   user: UserIcon,
   pencil: PencilSimpleIcon,
   camera: CameraIcon,
-  chats: ChatsTeardropIcon
+  chats: ChatsTeardropIcon,
+  dotThree: DotThree,
+  careLeft: CareLeft
 };
 
 const Icon = ({ name, size = 32, color = "#343330" }: IconProps) => {

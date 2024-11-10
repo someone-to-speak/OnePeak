@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import { Typography } from "../ui/typography";
 
 type LanguageType = {
   id: number;
@@ -26,16 +27,18 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
 
   return (
     <div className="w-full">
-      <Accordion isCompact className="border-b border-[#f3f3f3] py-[10px]">
+      <Accordion isCompact className="border-b border-gray-800 py-[10px]">
         <AccordionItem
           key={1}
           title={
-            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal text-left">{text}</p>
+            <Typography size={16} weight="medium" className="text-primary-50">
+              {text}
+            </Typography>
           }
           subtitle={
-            <p className="text-gray-500 text-base font-medium font-['Pretendard'] leading-normal text-left">
+            <Typography size={16} weight="medium" className="text-primary-50">
               {subtitle}
-            </p>
+            </Typography>
           }
         >
           <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-[#f3f3f3] rounded">
@@ -53,14 +56,16 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
                       height={24}
                       className="rounded-full"
                     />
-                    <span className="text-[#020400] text-base font-bold font-['SUIT'] leading-normal">
+                    <Typography size={16} weight="bold" className="text-primary-50">
                       {lang.language_name}
-                    </span>
+                    </Typography>
                   </button>
                 </li>
               ))
             ) : (
-              <li className="p-2 text-gray-500">결과가 없습니다.</li>
+              <Typography size={16} className="text-primary-50">
+                결과가 없습니다.
+              </Typography>
             )}
           </ul>
         </AccordionItem>

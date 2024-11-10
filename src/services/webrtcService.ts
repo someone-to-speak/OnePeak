@@ -42,13 +42,15 @@ export class WebRTCService {
     };
 
     this.peerConnection.ontrack = (event) => {
-      // if (event.streams && event.streams[0]) {
       this.remoteStream = event.streams[0];
 
       if (this.remoteVideoRef.current) {
         this.remoteVideoRef.current.srcObject = event.streams[0];
+
+        this.remoteVideoRef.current.onloadedmetadata = () => {
+          this.remoteVideoRef.current?.play();
+        };
       }
-      // }
     };
 
     const videoConstraints = {
@@ -61,6 +63,7 @@ export class WebRTCService {
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: videoConstraints,
       audio: {
+        channelCount: 1,
         sampleRate: 16000
       }
     });

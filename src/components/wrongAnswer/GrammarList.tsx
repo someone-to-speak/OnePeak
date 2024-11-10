@@ -8,6 +8,7 @@ import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuesti
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
+import { Typography } from "../ui/typography";
 
 const GrammarList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
@@ -47,7 +48,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
     }
   });
 
-  if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
+  if (userAnswersLoading || questionsLoading) return <p>로딩중</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
@@ -61,33 +62,37 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div>
-      <div className="bg-[#f3f3f3] flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
+      <div className="bg-gray-900 flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
         <button
           className={`${
             isReviewed === "미완료"
-              ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
-              : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
+              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("미완료")}
         >
-          미완료
+          <Typography size={16} weight="medium">
+            미완료
+          </Typography>
         </button>
         <button
           className={`${
             isReviewed === "완료"
-              ? "w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex bg-[#b0e484] text-white"
-              : "bg-[#f3f3f3] text-gray-600 w-[163px] h-[38px] p-2.5 rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
+              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("완료")}
         >
-          완료
+          <Typography size={16} weight="medium">
+            완료
+          </Typography>
         </button>
       </div>
 
       {filteredAnswers?.map((question, index) => (
         <div
           key={index}
-          className={`w-full h-[70px] mb-[10px] px-5 py-[18px] bg-[#fcfcfc] rounded-[10px] shadow justify-center items-center inline-flex ${
+          className={`w-full h-auto mb-[10px] px-5 py-[18px] items-center justify-center bg-white rounded-[10px] shadow-review ${
             question!.isReviewed ? "border border-primary-500" : ""
           }`}
         >
@@ -98,12 +103,26 @@ const GrammarList = ({ userId }: { userId: string }) => {
                 currentReviewed: question!.isReviewed
               })
             }
-            className="w-full h-16 px-5 py-2.5 rounded-[10px] justify-between items-center inline-flex"
           >
-            <h1 className="text-left text-black text-base font-bold font-['SUIT'] leading-normal">
-              {question?.answer}
-            </h1>
-            <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-4 h-4" />
+            <div className="w-full flex flex-row items-center justify-between gap-[10px]">
+              <Typography size={16} weight="bold" className="flex-none text-left text-[#F50000]">
+                {question?.answer}
+              </Typography>
+              <div className="flex-grow px-[20px]">
+                <div className="flex flex-col gap-[10px]">
+                  <Typography size={16} weight="bold" className="text-left">
+                    {question?.content}
+                  </Typography>
+                  <div className="border border-gray-900" />
+                  <Typography size={14} weight="medium" className="text-left text-gray-300">
+                    {question?.reason}
+                  </Typography>
+                </div>
+              </div>
+              <div className="flex-none">
+                <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
+              </div>
+            </div>
           </button>
         </div>
       ))}
