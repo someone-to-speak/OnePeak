@@ -2,12 +2,12 @@ import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/server";
 
 export const getUserClient = async () => {
-  const supabase = createClient();
+  const serverClient = createClient();
   const {
     data: { user }
-  } = await supabase.auth.getUser();
+  } = await serverClient.auth.getUser();
 
-  const { data: userInfo } = await supabase
+  const { data: userInfo } = await serverClient
     .from("user_info")
     .select("*")
     .eq("id", user?.id as string)
