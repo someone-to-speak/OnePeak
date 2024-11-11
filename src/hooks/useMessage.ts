@@ -85,8 +85,13 @@ export const useMessage = (conversationId: string) => {
     channel.current = supabase.channel(`conversation-${conversationId}`);
 
     channel.current
-      .on<MessageWithUserInfo>("broadcast", { event: "INSERT" }, ({ payload }) => {
+      .on<MessageWithUserInfo>("broadcast", { event: "INSERT" }, async ({ payload }) => {
         console.log("payload: ", payload);
+        await queryClient.cancelQueries({ queryKey: ["messages", conversationId] });
+
+        // 현재 메시지 목록을 가져옵니다.
+        queryClient.getQueryData<MessageWithUserInfo[]>(["messages", conversationId]);
+
         const newMessage = payload as MessageWithUserInfo;
 
         // Check if the message is already in the cache to avoid duplicates
