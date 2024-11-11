@@ -1,7 +1,7 @@
 import { UserInfo } from "@/types/userType/userType";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 
-export const getUser = async () => {
+export const getUserClient = async () => {
   const supabase = createClient();
   const {
     data: { user }
