@@ -11,7 +11,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
-import { format } from "date-fns";
 
 const ChatMessagePage = () => {
   return (
@@ -22,7 +21,6 @@ const ChatMessagePage = () => {
 };
 
 const ChatMessage = () => {
-  // const router = useRouter();
   const supabase = createClient();
 
   // 유저 정보 조회
@@ -67,7 +65,6 @@ const ChatMessage = () => {
   // 채팅 종료 버튼
   const saveMessages = useMutation({
     mutationFn: ({ messages, review_id }: { messages: AiMessages[]; review_id: number }) => {
-      console.log("review_id", review_id);
       // messages 배열을 JSON 문자열로 변환
       const stringMessages = messages.map((msg) => JSON.stringify(msg));
       return reviewApi.postLearnMessage(stringMessages, review_id);
@@ -77,41 +74,33 @@ const ChatMessage = () => {
     }
   });
 
-  // 오늘 날짜 생성
-
   const handleEndChat = async () => {
-    if (!user) return;
+    if (!user || messages.length === 0) return;
 
     try {
-      // 날짜 계산 수정
-      const today = new Date();
-      const todayString = format(today, "yyyy-MM-dd");
-
-      console.log("오늘 날짜 확인:", todayString); // 2024-11-11이 나와야 함
-
-      const { data: existingReviews, error } = await supabase
+      const { data: newReview, error } = await supabase
         .from("review")
+        .insert([
+          {
+            user_id: user.id,
+            situation,
+            level
+          }
+        ])
         .select("*")
-        .eq("user_id", user.id)
-        .eq("situation", situation);
+        .single();
 
       if (error) throw error;
 
-      const todayReview = existingReviews?.filter((review) => {
-        const dateOnly = review.created_at.split("T")[0];
-        return dateOnly === todayString;
-      });
-
-      if (todayReview && todayReview.length > 0) {
+      // review 생성 성공 시 메세지 저장
+      if (newReview) {
         saveMessages.mutate({
-          messages: messages,
-          review_id: todayReview[0].id
+          messages,
+          review_id: newReview.id
         });
-      } else {
-        console.log("오늘 생성된 리뷰를 찾을 수 없습니다");
       }
     } catch (error) {
-      console.error("대화 저장에 실패하였습니다.", error);
+      console.log("대화 저장에 실패하였습니다.", error);
     }
   };
 
@@ -119,11 +108,7 @@ const ChatMessage = () => {
     <div className="flex flex-col h-screen w-full mx-auto bg-white">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
-          {/* <button onClick={() => router.back()} className="mr-5">
-            🔙
-          </button> */}
           <WithIconHeader title={situation} />
-          {/* <h1 className="font-bold">{situation}</h1> */}
           <button
             type="button"
             className="ml-2 px-4 py-2 top-0 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"

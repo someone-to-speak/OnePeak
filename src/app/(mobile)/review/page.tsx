@@ -24,7 +24,6 @@ const ChatMessage = () => {
   // URL 파라미터 가져오기
   const searchParams = useSearchParams();
   const situation = searchParams?.get("situation") as string;
-  // const level = Number(searchParams?.get("level"));
   const reviewId = searchParams?.get("id");
 
   // 유저 정보 조회
