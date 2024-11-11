@@ -77,10 +77,11 @@ const WordList = ({ userId }: { userId: string }) => {
         }
       }
 
+      // 음성 데이터를 Base64 형식으로 받아오기
       const base64Audio = await convertTextToSpeech(text);
 
-      // Base64를 Blob으로 변환
-      const byteCharacters = atob(base64Audio);
+      // Base64 문자열을 Blob 객체로 변환
+      const byteCharacters = atob(base64Audio); // Base64를 디코딩
       const byteNumbers = new Array(byteCharacters.length);
 
       for (let i = 0; i < byteCharacters.length; i++) {
@@ -88,6 +89,7 @@ const WordList = ({ userId }: { userId: string }) => {
       }
 
       const byteArray = new Uint8Array(byteNumbers);
+      // Blob 객체 생성 (MP3 형식)
       const blob = new Blob([byteArray], { type: "audio/mp3" });
 
       // 기존 오디오 엘리먼트가 있다면 제거(동일한 단어를 여러 번 클릭할 때)
