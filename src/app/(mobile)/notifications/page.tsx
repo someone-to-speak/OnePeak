@@ -7,6 +7,7 @@ import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import Image from "next/image";
 import stamp from "@/assets/stamp.svg";
 import WithIconHeader from "@/components/ui/WithIconHeader";
+import { Typography } from "@/components/ui/typography";
 
 type NotificationType = Tables<"notifications">;
 
@@ -81,13 +82,12 @@ const NotificationPage = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "notifications" },
         async (payload: { new: { title: string; message: string } }) => {
-          console.log("New notification received:", payload);
           const { title, message } = payload.new;
           const registration = await navigator.serviceWorker.ready;
           registration.showNotification(title, {
             body: message,
-            icon: "/icon-192x192.png",
-            badge: "/icon-192x192.png"
+            icon: "/app-icon.png",
+            badge: "/app-icon.png"
           });
         }
       )
@@ -124,23 +124,27 @@ const NotificationPage = () => {
                     <div className="flex flex-row justify-between items-center">
                       <div className="flex flex-row gap-[8px]">
                         <Image src={stamp} alt={"Stamp"} width={18} height={18} />
-                        <p className="text-[#0c0c0c] text-base font-bold font-['SUIT'] leading-[27px]">{noti.title}</p>
+                        <Typography size={16} weight="bold">
+                          {noti.title}
+                        </Typography>
                       </div>
-                      <p className="text-right text-[#a5a5a5] text-sm font-medium font-['Pretendard'] leading-[21px]">
+                      <Typography size={10} weight="medium" className="text-gray-600">
                         {new Date(noti.created_at).toLocaleString()}
-                      </p>
+                      </Typography>
                     </div>
                   }
-                  className="flex flex-col border-b border-b-[#f3f3f3] py-[20px]"
+                  className="flex flex-col border-b border-gray-800 py-[20px]"
                 >
-                  <p className="text-[#3f3f3f] text-sm font-medium font-['Pretendard'] leading-[21px] text-left">
+                  <Typography size={12} weight="medium">
                     {noti.message}
-                  </p>
+                  </Typography>
                 </AccordionItem>
               ))}
           </Accordion>
         ) : (
-          <div className="text-gray-500">알림없음</div>
+          <Typography size={16} weight="bold" className="text-gray-500">
+            알림없음
+          </Typography>
         )}
       </div>
     </div>

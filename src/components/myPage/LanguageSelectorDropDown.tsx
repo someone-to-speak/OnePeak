@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import { Typography } from "../ui/typography";
 
 type LanguageType = {
   id: number;
@@ -26,25 +27,27 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
 
   return (
     <div className="w-full">
-      <Accordion isCompact className="border-b border-[#f3f3f3] py-[10px]">
+      <Accordion isCompact className="border-b border-gray-800 py-[10px]">
         <AccordionItem
           key={1}
           title={
-            <p className="text-black text-base font-medium font-['Pretendard'] leading-normal text-left">{text}</p>
+            <Typography size={16} weight="medium">
+              {text}
+            </Typography>
           }
           subtitle={
-            <p className="text-gray-500 text-base font-medium font-['Pretendard'] leading-normal text-left">
+            <Typography size={14} weight="medium" className="text-gray-500">
               {subtitle}
-            </p>
+            </Typography>
           }
         >
-          <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-[#f3f3f3] rounded">
+          <ul className="mt-2 grid grid-cols-2 gap-2 p-4 bg-gray-900 rounded">
             {languageOptions.length > 0 ? (
               languageOptions.map((lang) => (
                 <li key={lang.id}>
                   <button
                     onClick={() => handleSelectionChange(lang)}
-                    className="w-full h-20 px-5 bg-[#fcfcfc] rounded-[10px] border border-[#d9d9d9] flex justify-center items-center gap-2.5 hover:bg-[#e6f6d9] hover:border hover:border-[#d9d9d9]"
+                    className="w-full h-20 px-5 bg-white rounded-[10px] border border-gray-800 flex justify-center items-center gap-2.5 hover:bg-secondary-900"
                   >
                     <Image
                       src={lang.language_img_url}
@@ -53,14 +56,16 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
                       height={24}
                       className="rounded-full"
                     />
-                    <span className="text-[#020400] text-base font-bold font-['SUIT'] leading-normal">
+                    <Typography size={16} weight="bold">
                       {lang.language_name}
-                    </span>
+                    </Typography>
                   </button>
                 </li>
               ))
             ) : (
-              <li className="p-2 text-gray-500">결과가 없습니다.</li>
+              <Typography size={16} className="text-gray-500">
+                결과가 없습니다.
+              </Typography>
             )}
           </ul>
         </AccordionItem>

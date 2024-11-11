@@ -148,7 +148,7 @@ const VideoChat = () => {
         <Image className="cursor-pointer" src={Prohibit} alt={""} width={25} height={25} />
       </button>
       <button
-        className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] bottom-4"
+        className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] bottom-4 pb-safe-offset-2"
         onClick={handleCloseMatching}
       >
         <Image className="cursor-pointer" src={Power} alt={""} width={25} height={25} />
@@ -162,11 +162,29 @@ const VideoChat = () => {
         </button>
       </div>
       <video
-        className={"scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover "}
+        className={
+          "scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover object-center"
+        }
         ref={remoteVideoRef}
         autoPlay
+        playsInline
+        muted // 필요에 따라 추가
+        onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+        onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+        onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+        style={{ pointerEvents: "none" }}
       />
-      <video className={"scale-x-[-1] h-lvh object-cover"} ref={localVideoRef} autoPlay />
+      <video
+        className={"scale-x-[-1] h-lvh object-cover object-center"}
+        ref={localVideoRef}
+        autoPlay
+        playsInline
+        muted // 필요에 따라 추가
+        onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+        onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+        onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+        style={{ pointerEvents: "none" }}
+      />
     </div>
   );
 };

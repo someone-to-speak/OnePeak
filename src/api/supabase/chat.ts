@@ -99,14 +99,14 @@ export const fetchConversationList = async (userId: string) => {
 // 메시지 불러오기
 export const fetchMessages = async (conversationId: UUID) => {
   const supabase = createClient();
-  const { data: Messages } = await supabase
+  const { data: messages } = await supabase
     .from("messages")
-    .select("*, user_info: sender_id(*)")
+    .select("*, sender_id(*)")
     .eq("conversation_id", conversationId);
 
-  const formattedMessages = Messages?.map((message) => ({
+  const formattedMessages = messages?.map((message) => ({
     ...message,
-    user_info: (message.user_info[0] || {}) as UserInfo
+    sender_id: (message.sender_id || {}) as UserInfo
   }));
 
   return formattedMessages as MessageWithUserInfo[];
