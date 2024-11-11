@@ -69,14 +69,14 @@ export const block = async (targetUser: string) => {
 };
 
 // 특정 회원 탈퇴
-export const cancle = async (targetUser: UserInfo) => {
+export const withdraw = async (targetUser: UserInfo) => {
   const browserClient = createClient();
   const { error } = await browserClient.from("user_info").update({ is_deleted: true }).eq("id", targetUser.id);
   if (error) errorFn(error, "해당 유저를 탈퇴시키는데 실패하였습니다");
 };
 
 // 특정 회원 재가입
-export const uncancle = async (targetUser: UserInfo) => {
+export const unWithdraw = async (targetUser: UserInfo) => {
   const browserClient = createClient();
   const { error } = await browserClient.from("user_info").update({ is_deleted: false }).eq("id", targetUser.id);
   if (error) errorFn(error, "해당 유저를 재가입 시키는데 실패하였습니다");
