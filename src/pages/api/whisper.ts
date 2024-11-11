@@ -2,6 +2,7 @@ import formidable from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
+import os from "os";
 
 export const config = {
   api: {
@@ -42,7 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // 임시 파일로 저장해보기
-      const tempPath = `./temp-${Date.now()}.webm`;
+
+      const tempPath = `${os.tmpdir()}/temp-${Date.now()}.webm`;
       fs.writeFileSync(tempPath, fileContent);
 
       console.log("tempPath", tempPath); // 디버깅용
