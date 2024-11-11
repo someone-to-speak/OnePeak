@@ -97,9 +97,9 @@ const WordList = ({ userId }: { userId: string }) => {
             question!.isReviewed ? "border border-primary-500" : ""
           }`}
         >
-          <div className="flex items-start justify-between">
-            <button onClick={() => {}} className="flex-1 flex gap-[30px]">
-              <div className="flex gap-[10px] justify-center items-center">
+          <div className="flex items-center justify-between h-auto">
+            <button onClick={() => {}} className="flex-1 flex gap-[30px] items-center">
+              <div className="flex gap-[10px] items-center">
                 <Image src={speaker} alt="speaker icon" />
                 <Typography
                   size={14}
