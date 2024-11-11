@@ -8,6 +8,7 @@ import { fetchWordQuestions } from "@/api/wrongAnswersNote/fetchWordQuestions";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
+import speaker from "@/assets/wrongAnswerNote/speaker-high.svg";
 import { Typography } from "../ui/typography";
 
 const WordList = ({ userId }: { userId: string }) => {
@@ -98,13 +99,16 @@ const WordList = ({ userId }: { userId: string }) => {
         >
           <div className="flex items-start justify-between">
             <button onClick={() => {}} className="flex-1 flex gap-[30px]">
-              <Typography
-                size={14}
-                weight="bold"
-                className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
-              >
-                {question?.content}
-              </Typography>
+              <div className="flex gap-[10px] justify-center items-center">
+                <Image src={speaker} alt="speaker icon" />
+                <Typography
+                  size={14}
+                  weight="bold"
+                  className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
+                >
+                  {question?.content}
+                </Typography>
+              </div>
               <Typography size={14} weight="medium" className="text-left text-#000 break-words">
                 {question?.reason}
               </Typography>
