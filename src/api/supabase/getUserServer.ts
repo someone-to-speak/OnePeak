@@ -1,7 +1,7 @@
 import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/server";
 
-export const getUserClient = async () => {
+export const getUserServer = async () => {
   const serverClient = createClient();
   const {
     data: { user }
