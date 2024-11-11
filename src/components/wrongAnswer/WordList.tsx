@@ -47,7 +47,7 @@ const WordList = ({ userId }: { userId: string }) => {
     }
   });
 
-  if (userAnswersLoading || questionsLoading) return <p>Loading...</p>;
+  if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
@@ -101,7 +101,7 @@ const WordList = ({ userId }: { userId: string }) => {
             className="w-full h-16 px-5 py-2.5 rounded-[10px] justify-between items-center inline-flex"
           >
             <h1 className="text-left text-black text-base font-bold font-['SUIT'] leading-normal">
-              {question?.answer}
+              {question?.content}
             </h1>
             <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-4 h-4" />
           </button>
