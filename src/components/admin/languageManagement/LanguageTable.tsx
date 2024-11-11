@@ -37,7 +37,7 @@ const LanguageTable = () => {
     <div className="w-full text-center mt-6">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-800 font-semibold">
+          <tr className="bg-gray-8ㄴ00 font-semibold">
             <th className="p-3"></th>
             <th className="p-3">언어 이미지</th>
             <th className="p-3">언어</th>

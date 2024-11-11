@@ -1,14 +1,13 @@
 import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 
-export const getUser = async () => {
-  const supabase = createClient();
-
+export const getUserClient = async () => {
+  const browserClient = createClient();
   const {
     data: { user }
-  } = await supabase.auth.getUser();
+  } = await browserClient.auth.getUser();
 
-  const { data: userInfo } = await supabase
+  const { data: userInfo } = await browserClient
     .from("user_info")
     .select("*")
     .eq("id", user?.id as string)
