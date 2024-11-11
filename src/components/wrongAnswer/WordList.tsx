@@ -92,34 +92,37 @@ const WordList = ({ userId }: { userId: string }) => {
       {filteredAnswers?.map((question, index) => (
         <div
           key={index}
-          className={`w-full h-auto mb-[10px] px-5 py-[18px] justify-center bg-white rounded-[10px] shadow-review ${
+          className={`w-full h-auto mb-[10px] px-5 py-[18px] bg-white rounded-[10px] shadow-review ${
             question!.isReviewed ? "border border-primary-500" : ""
           }`}
         >
-          <button
-            onClick={() =>
-              updateIsReviewed.mutate({
-                answerId: question!.answerId,
-                currentReviewed: question!.isReviewed
-              })
-            }
-            className="w-full flex flex-row items-center justify-between"
-          >
-            <div className="flex-none max-w-[60px]">
-              <Typography size={14} weight="bold" className="text-left text-[#F50000] break-keep">
+          <div className="flex items-start justify-between">
+            <button onClick={() => {}} className="flex-1 flex gap-[30px]">
+              <Typography
+                size={14}
+                weight="bold"
+                className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
+              >
                 {question?.content}
               </Typography>
-            </div>
-
-            <div className="grow px-[20px]">
-              <Typography size={14} weight="medium" className="text-left text-gray-300">
+              <Typography size={14} weight="medium" className="text-left text-#000 break-words">
                 {question?.reason}
               </Typography>
-            </div>
-            <div className="flex-none">
-              <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
-            </div>
-          </button>
+            </button>
+            <button
+              onClick={() =>
+                updateIsReviewed.mutate({
+                  answerId: question!.answerId,
+                  currentReviewed: question!.isReviewed
+                })
+              }
+              className="flex-shrink-0 ml-4 w-6"
+            >
+              <div className="flex-none">
+                <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
+              </div>
+            </button>
+          </div>
         </div>
       ))}
     </div>
