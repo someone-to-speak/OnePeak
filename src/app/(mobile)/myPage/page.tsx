@@ -35,7 +35,7 @@ const MyPage = () => {
           { href: "/myPage/privacyPolicy", label: "개인정보 보호 정책" },
           { href: "/myPage/servicePolicy", label: "서비스 이용약관" }
         ].map(({ href, label }) => (
-          <div key={href} className="border-b border-gray-800 py-[20px] px-2">
+          <div key={href} className="border-b border-gray-800 py-[20px]">
             <Link href={href}>
               <Typography size={16} weight="medium">
                 {label}

@@ -96,7 +96,12 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
     }
   };
 
-  if (questions.length === 0) return <p>문제를 불러오는 중...</p>;
+  if (questions.length === 0)
+    return (
+      <Typography size={16} weight="medium">
+        문제를 불러오는 중
+      </Typography>
+    );
 
   const currentQuestion = questions[currentIndex];
   const selectedCount = Object.keys(selectedAnswers).length;

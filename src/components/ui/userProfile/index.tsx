@@ -25,7 +25,7 @@ const UserProfile = ({
   return (
     <div
       onClick={onClick}
-      className={cn("flex gap-[10px] p-3 rounded-[10px] border-none bg-white w-full items-center cursor-pointer")}
+      className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none bg-white w-full items-center cursor-pointer")}
     >
       {/* image part */}
       <UserProfileImage profileImage={profileImage} />
@@ -60,15 +60,15 @@ const UserProfileContent = ({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <FlagIcon countryImageUrl={country} />
-          <Typography size={14} className="font-bold text-gray-50">
+          <Typography size={14} className="font-bold text-gray-50 truncate w-[140px]">
             {name}
           </Typography>
         </div>
-        <Typography size={12} className="text-gray-600 font-medium font-pretendard">
+        <Typography size={12} className="text-gray-600 font-medium font-pretendard text-nowrap text-right">
           프로필 수정
         </Typography>
       </div>
-      <Typography size={12} className="text-gray-200 font-medium font-pretendard">
+      <Typography size={12} className="text-gray-200 font-medium font-pretendard truncate">
         {lastMessage}
       </Typography>
       <div className="flex items-center gap-1  pb-1">

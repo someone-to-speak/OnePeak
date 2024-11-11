@@ -20,6 +20,7 @@ type LanguageType = {
 const SettingsPage = () => {
   const supabase = createClient();
   const router = useRouter();
+
   const [userId, setUserId] = useState<string | null>(null);
   const [languageOptions, setLanguageOptions] = useState<LanguageType[]>([]);
   const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false);
@@ -27,10 +28,11 @@ const SettingsPage = () => {
   const [learnLanguage, setLearnLanguage] = useState<string>("");
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       const { data } = await supabase.auth.getSession();
       if (data?.session?.user?.id) {
         setUserId(data.session.user.id);
+
         const { data: languages, error: langError } = await supabase
           .from("user_info")
           .select(
@@ -59,7 +61,7 @@ const SettingsPage = () => {
       }
     };
 
-    fetchUser();
+    fetchData();
   }, [supabase]);
 
   useEffect(() => {
@@ -157,18 +159,22 @@ const SettingsPage = () => {
     <div className="bg-white">
       <WithIconHeader title="설정" />
       <div className="flex flex-col">
-        <ImageSelectorDropDown
-          text="내 모국어 변경"
-          subtitle={myLanguage}
-          languageOptions={languageOptions}
-          onLanguageChange={handleUpdateMyLanguage}
-        />
-        <ImageSelectorDropDown
-          text="학습 언어 변경"
-          subtitle={learnLanguage}
-          languageOptions={languageOptions}
-          onLanguageChange={handleUpdateLearnLanguage}
-        />
+        {languageOptions.length > 0 && (
+          <>
+            <ImageSelectorDropDown
+              text="내 모국어 변경"
+              subtitle={myLanguage}
+              languageOptions={languageOptions}
+              onLanguageChange={handleUpdateMyLanguage}
+            />
+            <ImageSelectorDropDown
+              text="학습 언어 변경"
+              subtitle={learnLanguage}
+              languageOptions={languageOptions}
+              onLanguageChange={handleUpdateLearnLanguage}
+            />
+          </>
+        )}
         <div className="border-b border-gray-800 flex flex-row items-center justify-between py-[20px] px-2">
           <Typography size={16} weight="medium">
             알림 설정

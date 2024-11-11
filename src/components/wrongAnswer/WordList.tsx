@@ -10,7 +10,7 @@ import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
 
-const GrammarList = ({ userId }: { userId: string }) => {
+const WordList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
@@ -132,4 +132,4 @@ const GrammarList = ({ userId }: { userId: string }) => {
   );
 };
 
-export default GrammarList;
+export default WordList;
