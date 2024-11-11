@@ -85,9 +85,9 @@ export const useMessage = (conversationId: string) => {
     channel.current = supabase.channel(`conversation-${conversationId}`);
 
     channel.current
-      .on("broadcast", { event: "INSERT" }, (payload) => {
+      .on<MessageWithUserInfo>("broadcast", { event: "INSERT" }, ({ payload }) => {
         console.log("payload: ", payload);
-        const newMessage = payload.new as MessageWithUserInfo;
+        const newMessage = payload as MessageWithUserInfo;
 
         // Check if the message is already in the cache to avoid duplicates
         queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => [
