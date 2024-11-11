@@ -4,6 +4,7 @@ import { MessageWithUserInfo } from "@/types/chatType/chatType";
 import { useState } from "react";
 import Coaching from "./Coaching";
 import CustomAudio from "@/components/audio/Audio";
+import MyChatCard from "@/components/ui/chat/myChat/MyChatCard";
 
 const MyChat = ({ message }: { message: MessageWithUserInfo }) => {
   const [isCoaching, setIsCoaching] = useState<boolean>(false);
@@ -22,7 +23,7 @@ const MyChat = ({ message }: { message: MessageWithUserInfo }) => {
           )}
         </div>
       ) : (
-        <div>텍스트</div>
+        <MyChatCard message={message} />
       )}
     </div>
   );

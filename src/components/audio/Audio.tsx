@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Typography } from "../ui/typography";
 import Icon from "../ui/icon";
 
 const CustomAudio = ({ url }: { url: string }) => {
-  const audioFile = new Audio(url);
+  const audioFile = useMemo(() => new Audio(url), [url]);
   const [playing, isPlaying] = useState(false);
   // const [duration, setDuration] = useState("00:00");
   const [currentTime, setCurrentTime] = useState("00:00");
@@ -71,8 +71,8 @@ const CustomAudio = ({ url }: { url: string }) => {
   // };
 
   return (
-    <div className="flex gap-[10px] py-2 px-3 bg-secondary-900 rounded-2xl rounded-br-none">
-      <Typography size={12} className="font-medium">
+    <div className="flex items-center gap-[10px] py-2 px-3 bg-gray-900 rounded-2xl rounded-br-none">
+      <Typography size={12} className="font-medium cursor-default">
         {currentTime}
       </Typography>
       {playing ? (
