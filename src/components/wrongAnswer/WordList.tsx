@@ -107,20 +107,14 @@ const WordList = ({ userId }: { userId: string }) => {
           >
             <div className="flex-none max-w-[60px]">
               <Typography size={14} weight="bold" className="text-left text-[#F50000] break-keep">
-                {question?.answer}
+                {question?.content}
               </Typography>
             </div>
 
             <div className="grow px-[20px]">
-              <div className="flex flex-col gap-[10px]">
-                <Typography size={16} weight="bold" className="text-left">
-                  {question?.content}
-                </Typography>
-                <div className="border border-gray-900" />
-                <Typography size={14} weight="medium" className="text-left text-gray-300">
-                  {question?.reason}
-                </Typography>
-              </div>
+              <Typography size={14} weight="medium" className="text-left text-gray-300">
+                {question?.reason}
+              </Typography>
             </div>
             <div className="flex-none">
               <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
