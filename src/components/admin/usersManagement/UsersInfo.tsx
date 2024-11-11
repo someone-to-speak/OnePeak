@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
 import PageNationUI from "../PageNationUI";
-import { block, cancle, getUsersInfo, unblock, uncancle } from "@/api/route";
+import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/route";
 import { Tables } from "../../../../database.types";
 
 type UserInfo = Tables<"user_info">;
@@ -74,7 +74,7 @@ const UsersInfo = () => {
 
   // 회원탈퇴
   const cancleUser = useMutation({
-    mutationFn: (userInfo: UserInfo) => cancle(userInfo),
+    mutationFn: (userInfo: UserInfo) => withdraw(userInfo),
     onSuccess: () => {
       alert("해당 유저를 탈퇴처리하였습니다");
       queryClient.invalidateQueries({ queryKey: ["usersInfo"] });
@@ -83,7 +83,7 @@ const UsersInfo = () => {
 
   // 회원 탈퇴 취소
   const uncancleUser = useMutation({
-    mutationFn: (userInfo: UserInfo) => uncancle(userInfo),
+    mutationFn: (userInfo: UserInfo) => unWithdraw(userInfo),
     onSuccess: () => {
       alert("해당 유저를 가입상태로 변경하였습니다");
       queryClient.invalidateQueries({ queryKey: ["usersInfo"] });
