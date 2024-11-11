@@ -10,7 +10,7 @@ export const getUser = async () => {
 
   const { data: userInfo } = await supabase
     .from("user_info")
-    .select("*, my_language(*), learn_language(*)")
+    .select("*")
     .eq("id", user?.id as string)
     .maybeSingle();
 
