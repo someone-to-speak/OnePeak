@@ -9,8 +9,8 @@ interface UsersTableProps {
   indexOfFirstUser: number;
   unblockUser: (userInfo: UserInfo) => void;
   blockUser: (userInfo: UserInfo) => void;
-  cancleUser: (userInfo: UserInfo) => void;
-  uncancleUser: (userInfo: UserInfo) => void;
+  withdrawUwer: (userInfo: UserInfo) => void;
+  unWithdrawUser: (userInfo: UserInfo) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
@@ -19,8 +19,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
   indexOfFirstUser,
   unblockUser,
   blockUser,
-  cancleUser,
-  uncancleUser
+  withdrawUwer,
+  unWithdrawUser
 }) => {
   return (
     <div className="w-full text-center">
@@ -78,14 +78,14 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   {userInfo.is_deleted ? (
                     <button
                       className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600"
-                      onClick={() => uncancleUser(userInfo)}
+                      onClick={() => unWithdrawUser(userInfo)}
                     >
                       가입하기
                     </button>
                   ) : (
                     <button
                       className="px-3 py-1 text-white bg-red-500 rounded hover:bg-gray-600"
-                      onClick={() => cancleUser(userInfo)}
+                      onClick={() => withdrawUwer(userInfo)}
                     >
                       탈퇴하기
                     </button>

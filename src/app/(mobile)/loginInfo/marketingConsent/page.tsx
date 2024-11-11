@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import caretleft from "@/assets/caret-left.svg";
 import Button from "@/components/ui/button";
 
-const IsMarketed = () => {
+const marketingConsent = () => {
   const supabase = createClient();
   const router = useRouter();
   const [isMarketed, setIsMarketed] = useState<boolean>(false);
@@ -64,4 +64,4 @@ const IsMarketed = () => {
   );
 };
 
-export default IsMarketed;
+export default marketingConsent;

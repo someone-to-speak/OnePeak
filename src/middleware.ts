@@ -1,24 +1,52 @@
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-// import { createClient } from "./utils/supabase/server";
-// import { useQuery } from "@tanstack/react-query";
-// import { getUserServer } from "./api/supabase/getUserServer";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getUserServer } from "./api/supabase/getUserServer";
+import { UserInfo } from "./types/userType/userType";
 
-// // This function can be marked `async` if using `await` inside
-// export function middleware(request: NextRequest) {
-//   //tanstack써서 쿼리키에 userid적어서 바뀌게
-//   const { data, isPending, isError } = useQuery({
-//     queryKey: ["targetUserInfo"],
-//     queryFn: () => getUserServer()
-//   });
-//   console.log("data", data);
+// 차단된 사용자일 경우 리디렉션 처리
+const redirectIfBlocked = (data: UserInfo, request: NextRequest) => {
+  const isBlocked = data?.is_blocked === true;
+  const isFAQPage = request.nextUrl.pathname.startsWith("/myPage/faq");
 
-//   //   if (isBlocked) {
-//   //     return NextResponse.rewrite(new URL("/myPage/faq", request.url));
-//   //   }
-// }
+  if (isBlocked && !isFAQPage) {
+    return NextResponse.redirect(new URL("/myPage/faq", request.url));
+  }
+};
 
-// //어떤 페이지에서 middleware 함수를 실행시킬지 결정
-// export const config = {
-//   matcher: "/"
-// };
+// 인증되지 않은 사용자에 대한 접근 차단
+const redirectIfUnauthenticated = (data: UserInfo, request: NextRequest) => {
+  const isAuthenticated = data !== null;
+  const isPathProtected = ["/myPage", "/challenge", "/lesson", "/chat"].some((path) =>
+    request.nextUrl.pathname.startsWith(path)
+  );
+
+  if (!isAuthenticated && isPathProtected) {
+    return NextResponse.rewrite(new URL("/", request.url));
+  }
+};
+
+// 미들웨어 함수
+export async function middleware(request: NextRequest) {
+  const data = await getUserServer();
+  console.log("User data:", data);
+  console.log("Request Pathname:", request.nextUrl.pathname);
+
+  // 차단된 사용자 리디렉션
+  const blockedResponse = redirectIfBlocked(data, request);
+  if (blockedResponse) {
+    return blockedResponse;
+  }
+
+  // 인증되지 않은 사용자 리디렉션
+  const unauthenticatedResponse = redirectIfUnauthenticated(data, request);
+  if (unauthenticatedResponse) {
+    return unauthenticatedResponse;
+  }
+
+  return NextResponse.next();
+}
+
+// 어떤 페이지에서 미들웨어 함수를 실행할지 정의
+export const config = {
+  matcher: ["/myPage/:path*", "/challenge/:path*", "/lesson/:path*", "/chat/:path*"]
+};
