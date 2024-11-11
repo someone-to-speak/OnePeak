@@ -9,7 +9,6 @@ import challIconGrammar from "@/assets/chall-icon-grammar.svg";
 import Link from "next/link";
 import Image from "next/image";
 import NoIconHeader from "@/components/ui/NoIconHeader";
-import { Button } from "@nextui-org/react";
 
 const ChallengePage = () => {
   const settings = {
