@@ -18,7 +18,7 @@ export const MessageList = ({ messages }: { messages: MessageWithUserInfo[] | un
   }, [messages]);
 
   return (
-    <div ref={containerRef} className="w-full flex flex-col mb-[80px] flex-grow gap-3 overflow-scroll">
+    <div ref={containerRef} className="w-full flex flex-col flex-grow gap-3 overflow-scroll">
       {messages?.map((msg) =>
         msg.sender_id.id === userInfo?.id ? (
           <MyChat key={msg.id} message={msg} />

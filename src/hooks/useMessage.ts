@@ -11,7 +11,7 @@ export const useMessage = (conversationId: string) => {
   const queryClient = useQueryClient();
   const supabase = createClient();
   const { userInfo } = useUser();
-  const matchingChannelRef = useRef<RealtimeChannel | null>(null);
+  const channel = useRef<RealtimeChannel | null>(null);
 
   const {
     data: messages,
@@ -63,32 +63,30 @@ export const useMessage = (conversationId: string) => {
 
   // 채널로 메시지 전송
   const sendMessageToChannel = async ({ content }: { content: string }) => {
-    if (matchingChannelRef.current) {
-      const newMessage = {
-        id: uuidv4(),
-        coach_content: "",
-        content: content,
-        conversation_id: conversationId,
-        created_at: new Date().toISOString(),
-        sender_id: userInfo,
-        stt_content: "",
-        type: "text"
-      };
+    const newMessage = {
+      id: uuidv4(),
+      coach_content: "",
+      content: content,
+      conversation_id: conversationId,
+      created_at: new Date().toISOString(),
+      sender_id: userInfo,
+      stt_content: "",
+      type: "text"
+    };
 
-      await matchingChannelRef.current.send({
-        type: "broadcast",
-        event: "INSERT",
-        payload: newMessage
-      });
-    }
+    await channel.current?.send({
+      type: "broadcast",
+      event: "INSERT",
+      payload: newMessage
+    });
   };
 
   useEffect(() => {
-    const channel = supabase.channel(`conversation-${conversationId}`);
-    matchingChannelRef.current = channel;
+    channel.current = supabase.channel(`conversation-${conversationId}`);
 
-    channel
+    channel.current
       .on("broadcast", { event: "INSERT" }, (payload) => {
+        console.log("payload: ", payload);
         const newMessage = payload.new as MessageWithUserInfo;
 
         // Check if the message is already in the cache to avoid duplicates
@@ -96,10 +94,13 @@ export const useMessage = (conversationId: string) => {
           return old?.some((msg) => msg.id === newMessage.id) ? old : [...(old || []), newMessage];
         });
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") console.log("subscribe");
+      });
 
     return () => {
-      channel.unsubscribe();
+      channel.current?.unsubscribe();
+      channel.current = null;
     };
   }, [conversationId, queryClient, supabase]);
 
