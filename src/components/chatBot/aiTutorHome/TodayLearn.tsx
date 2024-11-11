@@ -40,9 +40,7 @@ const TodayLearn = () => {
   }): Promise<SituationType> => {
     // 오늘 날짜 생성
     const today = new Date();
-    // KST로 조정 (UTC+9)
-    const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
-    const todayString = format(kstToday, "yyyy-MM-dd");
+    const todayString = format(today, "yyyy-MM-dd");
 
     // 중복 데이터 확인
     const { data: existingReviews, error: checkError } = await supabase
