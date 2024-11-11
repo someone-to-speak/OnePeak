@@ -1,6 +1,5 @@
 "use client";
 
-import { UUID } from "crypto";
 import { useSearchParams } from "next/navigation";
 import MessageList from "./_components/MessageList";
 import InputField from "./_components/InputField";
@@ -18,19 +17,19 @@ const ChatroomPage = () => {
 
 const Chatroom = () => {
   const searchParams = useSearchParams();
-  const conversationId = searchParams?.get("id") as UUID;
+  const conversationId = searchParams?.get("id") as string;
 
-  const { messages, isLoading, isError } = useMessage(conversationId);
-  console.log("11messagesL ", messages);
+  const { messages, isLoading, isError, sendMessage, sendMessageToChannel } = useMessage(conversationId);
+
   if (isLoading) return <div>잠시만 기다려주세요...</div>;
 
   if (isError) return <div>페이지 오류입니다.</div>;
 
   return (
-    <div className="w-full flex flex-col mx-0 pt-safe-offset-5 h-screen">
+    <div className="relative w-full flex flex-col mx-0 gap-[10px] pt-safe-offset-5 h-screen">
       <WithIconHeader title={"채팅방"} />
       <MessageList messages={messages} />
-      <InputField />
+      <InputField sendMessage={sendMessage} sendMessageToChannel={sendMessageToChannel} />
     </div>
   );
 };
