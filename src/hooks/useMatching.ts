@@ -20,7 +20,6 @@ export const useMatching = () => {
     setIsMatching(true);
 
     const matchingChannel = supabase.channel("matches");
-    matchingChannelRef.current = matchingChannel;
 
     matchingChannel.on<matche>(
       "postgres_changes",

@@ -2,6 +2,7 @@
 // QueryClientProvider가 내부적으로 useContext를 사용하기 때문에
 // 이 파일 맨 위에 'use client' 지시어를 추가해야 합니다.
 import { isServer, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -38,5 +39,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   // React는 초기 렌더링 중에 클라이언트를 버릴 수 있습니다.
   const queryClient = getQueryClient();
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }
