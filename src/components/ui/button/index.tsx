@@ -39,7 +39,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Var
 const Button = ({ text, className, variant, size, textClassName, ...props }: ButtonProps) => {
   return (
     <button className={cn(buttonVariants({ variant, size, className }))} {...props}>
-      <Typography size={18} className={cn(variant === "stroke" ? "text-primary-400" : "text-white", textClassName)}>
+      <Typography
+        size={18}
+        weight="bold"
+        className={cn(variant === "stroke" ? "text-primary-400" : "text-white", textClassName)}
+      >
         {text}
       </Typography>
     </button>
