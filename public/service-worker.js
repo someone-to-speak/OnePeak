@@ -42,7 +42,7 @@ self.addEventListener("push", (event) => {
   let body = "새로운 알림이 도착했습니다.";
   let options = {
     body: body,
-    icon: "/app-icon.svg"
+    icon: "/app-icon.png"
   };
 
   // 권한 상태 확인

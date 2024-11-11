@@ -1,10 +1,11 @@
 "use client";
 
-import UserProfilePage from "@/components/myPage/UserProfile";
-import WithIconHeader from "@/components/ui/WithIconHeader";
-import { createClient } from "@/utils/supabase/client";
-import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
+import UserProfilePage from "@/components/myPage/UserProfile";
+import { Typography } from "@/components/ui/typography";
+import NoIconHeader from "@/components/ui/NoIconHeader";
 
 const MyPage = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -17,7 +18,6 @@ const MyPage = () => {
         setUserId(data.session.user.id);
       }
     };
-
     fetchUserId();
   }, [supabase]);
 
@@ -25,43 +25,24 @@ const MyPage = () => {
 
   return (
     <Suspense>
-      <WithIconHeader title="내 정보" />
+      <NoIconHeader title="내정보" />
       <div className="flex flex-col">
         <UserProfilePage userId={userId} />
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <Link href="/myPage/faq" className="text-black text-base font-medium font-['Pretendard'] leading-normal">
-            1:1 문의하기
-          </Link>
-        </div>
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <Link
-            href="/myPage/subscription"
-            className="text-black text-base font-medium font-['Pretendard'] leading-normal"
-          >
-            구독관리
-          </Link>
-        </div>
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <Link href="/myPage/settings" className="text-black text-base font-medium font-['Pretendard'] leading-normal">
-            설정
-          </Link>
-        </div>
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <Link
-            href="/myPage/privacyPolicy"
-            className="text-black text-base font-medium font-['Pretendard'] leading-normal"
-          >
-            개인정보 보호 정책
-          </Link>
-        </div>
-        <div className="border-b border-[#f3f3f3] flex flex-row items-center justify-between py-[20px] px-2">
-          <Link
-            href="/myPage/servicePolicy"
-            className="text-black text-base font-medium font-['Pretendard'] leading-normal"
-          >
-            서비스 이용약관
-          </Link>
-        </div>
+        {[
+          { href: "/myPage/faq", label: "1:1 문의하기" },
+          { href: "/myPage/subscription", label: "구독관리" },
+          { href: "/myPage/settings", label: "설정" },
+          { href: "/myPage/privacyPolicy", label: "개인정보 보호 정책" },
+          { href: "/myPage/servicePolicy", label: "서비스 이용약관" }
+        ].map(({ href, label }) => (
+          <div key={href} className="border-b border-gray-800 py-[20px]">
+            <Link href={href}>
+              <Typography size={16} weight="medium">
+                {label}
+              </Typography>
+            </Link>
+          </div>
+        ))}
       </div>
     </Suspense>
   );
