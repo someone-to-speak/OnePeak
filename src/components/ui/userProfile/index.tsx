@@ -39,6 +39,7 @@ const UserProfile = ({
         lastMessage={lastMessage}
         learnLanguageUrl={learnLanguageUrl}
         learnLanguage={learnLanguage}
+        onClick={onClick}
       />
     </div>
   );
@@ -55,8 +56,9 @@ const UserProfileContent = ({
   country,
   lastMessage,
   learnLanguageUrl,
-  learnLanguage
-}: Omit<UserProfileProps, "profileImage" | "onClick">) => {
+  learnLanguage,
+  onClick
+}: Omit<UserProfileProps, "profileImage">) => {
   return (
     <div className="flex flex-col gap-0.5 w-full">
       <div className="flex justify-between items-center">
@@ -66,7 +68,7 @@ const UserProfileContent = ({
             {name}
           </Typography>
         </div>
-        <Icon name="dotThree" />
+        <Icon name="dotThree" onClick={onClick} />
       </div>
       <Typography size={12} className="text-gray-200 font-medium font-pretendard">
         {lastMessage}
