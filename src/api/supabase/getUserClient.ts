@@ -9,7 +9,7 @@ export const getUserClient = async () => {
 
   const { data: userInfo } = await browserClient
     .from("user_info")
-    .select("*")
+    .select("*, my_language(*), learn_language(*)")
     .eq("id", user?.id as string)
     .maybeSingle();
 
