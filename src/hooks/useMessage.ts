@@ -90,9 +90,10 @@ export const useMessage = (conversationId: string) => {
         const newMessage = payload.new as MessageWithUserInfo;
 
         // Check if the message is already in the cache to avoid duplicates
-        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => {
-          return old?.some((msg) => msg.id === newMessage.id) ? old : [...(old || []), newMessage];
-        });
+        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => [
+          ...(old || []),
+          newMessage as MessageWithUserInfo
+        ]);
       })
       .subscribe((status) => {
         if (status === "SUBSCRIBED") console.log("subscribe");
