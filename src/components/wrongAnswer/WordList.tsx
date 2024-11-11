@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
 import { fetchWordQuestions } from "@/api/wrongAnswersNote/fetchWordQuestions";
+import { convertTextToSpeech } from "@/api/openAI/tts";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
@@ -15,6 +16,7 @@ const WordList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
+  const [playingQuestionId, setPlayingQuestionId] = useState<number | null>(null);
 
   const {
     data: userAnswers,
@@ -61,6 +63,57 @@ const WordList = ({ userId }: { userId: string }) => {
     })
     .filter((item) => item !== null);
 
+  // 텍스트를 음성으로 변환하는 함수
+  const handleTextToSpeech = async (text: string, questionId: number) => {
+    if (!text || playingQuestionId === questionId) return;
+
+    try {
+      // 이전 재생 중인 오디오가 있다면 중지
+      if (playingQuestionId) {
+        const prevAudio = document.getElementById(`audio-${playingQuestionId}`) as HTMLAudioElement;
+        if (prevAudio) {
+          prevAudio.pause();
+          prevAudio.currentTime = 0;
+        }
+      }
+
+      const base64Audio = await convertTextToSpeech(text);
+
+      // Base64를 Blob으로 변환
+      const byteCharacters = atob(base64Audio);
+      const byteNumbers = new Array(byteCharacters.length);
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "audio/mp3" });
+
+      // 기존 오디오 엘리먼트가 있다면 제거(동일한 단어를 여러 번 클릭할 때)
+      const existingAudio = document.getElementById(`audio-${questionId}`);
+      if (existingAudio) {
+        existingAudio.remove();
+      }
+
+      // 새 오디오 엘리먼트 생성 및 재생
+      const audio = new Audio(URL.createObjectURL(blob));
+      audio.id = `audio-${questionId}`;
+
+      audio.onplay = () => setPlayingQuestionId(questionId);
+      audio.onended = () => {
+        setPlayingQuestionId(null);
+        URL.revokeObjectURL(audio.src);
+      };
+
+      document.body.appendChild(audio);
+      await audio.play();
+    } catch (error) {
+      console.error("텍스트 변환 오류:", error);
+      setPlayingQuestionId(null);
+    }
+  };
+
   return (
     <div>
       <div className="bg-gray-900 flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
@@ -90,15 +143,18 @@ const WordList = ({ userId }: { userId: string }) => {
         </button>
       </div>
 
-      {filteredAnswers?.map((question, index) => (
+      {filteredAnswers?.map((question) => (
         <div
-          key={index}
+          key={question!.id}
           className={`w-full h-auto mb-[10px] px-5 py-[18px] bg-white rounded-[10px] shadow-review ${
             question!.isReviewed ? "border border-primary-500" : ""
           }`}
         >
           <div className="flex items-center justify-between h-auto">
-            <button onClick={() => {}} className="flex-1 flex gap-[30px] items-center">
+            <button
+              onClick={() => handleTextToSpeech(question?.content || "", question!.id)}
+              className="flex-1 flex gap-[30px] items-center"
+            >
               <div className="flex gap-[10px] items-center">
                 <Image src={speaker} alt="speaker icon" />
                 <Typography
