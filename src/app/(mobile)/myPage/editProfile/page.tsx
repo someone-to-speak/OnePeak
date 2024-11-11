@@ -1,50 +1,32 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { Tables } from "../../../../../database.types";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { uploadImage } from "@/utils/myPage/imageUpload";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import Button from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-
-type UserInfoType = Tables<"user_info">;
-
-const EditProfilePage = () => {
-  return (
-    <Suspense>
-      <EditProfile />
-    </Suspense>
-  );
-};
+import { createClient } from "@/utils/supabase/client";
+import { useUser } from "@/hooks/useUser";
 
 const EditProfile = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId");
-  const [selectedProfile, setSelectedProfile] = useState<UserInfoType | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
   const supabase = createClient();
+  const { userInfo, isLoading } = useUser();
+  const [selectedProfile, setSelectedProfile] = useState(userInfo);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!userId) return;
+    if (userInfo) {
+      setSelectedProfile(userInfo);
+      setPreviewUrl(userInfo.profile_url);
+    }
+  }, [userInfo]);
 
-      const { data } = await supabase.from("user_info").select("*").eq("id", userId).single();
-
-      if (data) {
-        setSelectedProfile(data);
-        setPreviewUrl(data.profile_url);
-      }
-    };
-
-    fetchUserProfile();
-  }, [supabase, userId]);
+  if (isLoading) return <p>Loading...</p>;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -67,7 +49,7 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (userId) {
+    if (userInfo?.id) {
       let imageUrl = selectedProfile?.profile_url;
 
       if (file) {
@@ -94,7 +76,7 @@ const EditProfile = () => {
           profile_url: imageUrl,
           state_msg
         })
-        .eq("id", userId);
+        .eq("id", userInfo.id);
 
       if (error) {
         alert("프로필 업데이트에 실패했습니다.");
@@ -182,4 +164,5 @@ const EditProfile = () => {
     </div>
   );
 };
-export default EditProfilePage;
+
+export default EditProfile;
