@@ -126,7 +126,7 @@ const ChallengePage = () => {
             <Link
               href={`/challenge/${problem.type}/wrongAnswerNote`} // 오답노트 페이지로 이동하는 링크
             >
-              <div className="w-full h-[80px] gap-[20px] flex p-[16px] mt-[16px] justify-center items-center rounded-[12px] bg-gray-900 ">
+              <div className="w-full mb-[20px] h-[80px] gap-[20px] flex p-[16px] mt-[16px] justify-center items-center rounded-[12px] bg-gray-900 ">
                 <div>
                   <p className="text-black text-lg font-bold font-['SUIT'] ">
                     {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}

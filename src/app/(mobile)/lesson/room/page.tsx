@@ -168,7 +168,6 @@ const VideoChat = () => {
         ref={remoteVideoRef}
         autoPlay
         playsInline
-        muted // 필요에 따라 추가
         onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
         onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
         onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
@@ -179,7 +178,6 @@ const VideoChat = () => {
         ref={localVideoRef}
         autoPlay
         playsInline
-        muted // 필요에 따라 추가
         onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
         onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
         onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시

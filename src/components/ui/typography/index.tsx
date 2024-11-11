@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const typographyVariants = cva("text-black font-suit font-light leading-normal", {
+const typographyVariants = cva("font-suit leading-normal inline-block align-middle antialiased", {
   variants: {
     size: {
       10: "text-xs tracking-[-0.2px]",
@@ -14,6 +14,13 @@ const typographyVariants = cva("text-black font-suit font-light leading-normal",
       24: "text-4xl tracking-[-0.48px]",
       26: "text-5xl tracking-[-0.52px]",
       28: "text-6xl tracking-[-0.56px]"
+    },
+    weight: {
+      light: "font-light",
+      normal: "font-normal",
+      medium: "font-medium",
+      bold: "font-bold",
+      extrabold: "font-extrabold"
     }
   },
   defaultVariants: {
@@ -27,6 +34,6 @@ interface TypographyProps extends VariantProps<typeof typographyVariants> {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
 }
 
-export const Typography = ({ children, size, className, as: Component = "span" }: TypographyProps) => {
-  return <Component className={cn(typographyVariants({ size }), className)}>{children}</Component>;
+export const Typography = ({ children, size, weight, className, as: Component = "span" }: TypographyProps) => {
+  return <Component className={cn(typographyVariants({ size, weight }), className)}>{children}</Component>;
 };

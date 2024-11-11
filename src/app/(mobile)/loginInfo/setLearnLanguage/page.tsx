@@ -42,7 +42,7 @@ export default function SetLearnLanguage() {
         .eq("id", userId);
 
       if (!error) {
-        router.push("/loginInfo/setIsMarketed");
+        router.push("/loginInfo/marketingConsent");
       }
     }
   };

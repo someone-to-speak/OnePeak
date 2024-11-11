@@ -41,7 +41,7 @@ export const checkOrAddParticipant = async (conversationId: UUID, participantId:
     });
 };
 
-export const insertMessage = async (conversationId: UUID, content: string, type: string) => {
+export const insertMessage = async (conversationId: string, content: string, type: string) => {
   const supabase = createClient();
   await supabase.from("messages").insert({
     conversation_id: conversationId,
@@ -97,7 +97,7 @@ export const fetchConversationList = async (userId: string) => {
 };
 
 // 메시지 불러오기
-export const fetchMessages = async (conversationId: UUID) => {
+export const fetchMessages = async (conversationId: string) => {
   const supabase = createClient();
   const { data: messages } = await supabase
     .from("messages")
