@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 import { Typography } from "../typography";
-import Icon from "../icon";
 
 interface UserProfileProps {
   name: string;
@@ -60,26 +59,28 @@ const UserProfileContent = ({
   onClick
 }: Omit<UserProfileProps, "profileImage">) => {
   return (
-    <div className="flex flex-col gap-0.5 w-full">
+    <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <FlagIcon countryImageUrl={country} />
-          <Typography size={14} className="font-bold text-gray-50 truncate w-[140px]">
+          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px]">
             {name}
           </Typography>
         </div>
-        <Icon name="dotThree" onClick={onClick} />
+        <button onClick={onClick} className="text-[12px] font-medium text-gray-500 text-nowrap">
+          프로필 수정
+        </button>
       </div>
-      <Typography size={12} className="text-gray-200 font-medium font-pretendard truncate">
+      <Typography size={14} className="text-gray-200 font-medium font-pretendard truncate">
         {lastMessage}
       </Typography>
       <div className="flex items-center gap-1  pb-1">
-        <Typography size={10} className="text-gray-600 font-medium font-pretendard">
+        <Typography size={12} className="text-gray-600 font-medium font-pretendard">
           학습 언어
         </Typography>
         <div className="flex items-center gap-0.5">
           <FlagIcon countryImageUrl={learnLanguageUrl} size={12} />
-          <Typography size={10} className="font-bold">
+          <Typography size={12} className="font-bold">
             {learnLanguage === "korean" ? "한국어" : "영어"}
           </Typography>
         </div>
