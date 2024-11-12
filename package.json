@@ -45,7 +45,7 @@
     "tailwindcss-safe-area": "^0.6.0",
     "uuid": "^11.0.2",
     "zod": "^3.23.8",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "1.9.0",
