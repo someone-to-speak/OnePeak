@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from "react";
 import Slider from "react-slick";
 import caretLeft from "@/assets/caret-left.svg";
 import challIconWord from "@/assets/chall-icon-word.svg";
@@ -9,75 +8,33 @@ import challIconGrammar from "@/assets/chall-icon-grammar.svg";
 import Link from "next/link";
 import Image from "next/image";
 import NoIconHeader from "@/components/ui/NoIconHeader";
+import useSlider from "@/hooks/useSlider";
+import useProblems from "@/hooks/useProblems";
+import { useLearnLanguage } from "@/hooks/useUserInfo";
+import { useUser } from "@/hooks/useUser";
 
 const ChallengePage = () => {
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: false,
-    autoplaySpeed: 2000,
-    draggable: true,
-    swipe: true,
-    centerMode: true,
-    centerPadding: "5px",
-    arrows: false
-  };
-
-  const [userId, setUserId] = useState<string | null>(null);
-  const [learnLanguage, setLearnLanguage] = useState<string>("");
-  const supabase = createClient();
-  const sliderRef = useRef<Slider | null>(null);
+  const { userInfo } = useUser();
+  const { learnLanguage } = useLearnLanguage();
+  const { sliderRef, goToSlide, settings } = useSlider();
   const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(0);
+  const problems = useProblems(learnLanguage);
 
   const handleClick = (index: number) => {
     setSelectedButtonIndex(index);
     goToSlide(index);
   };
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session?.user?.id) {
-        setUserId(data.session.user.id);
-        const { data: languages, error: langError } = await supabase
-          .from("user_info")
-          .select("learn_language")
-          .eq("id", data.session.user.id)
-          .single();
-
-        if (langError) throw langError;
-        if (languages) {
-          setLearnLanguage(languages.learn_language || "");
-        }
-      }
-    };
-
-    fetchUserId();
-  }, [supabase]);
-
-  if (!userId) return null;
-
-  const goToSlide = (index: number) => {
-    sliderRef.current?.slickGoTo(index);
-  };
-
-  const problems = [
-    { type: "grammar", label: `${learnLanguage} 문법 문제`, url: `/challenge/grammar/${learnLanguage}` },
-    { type: "word", label: `${learnLanguage} 단어 문제`, url: `/challenge/word/${learnLanguage}` }
-  ];
+  if (!userInfo?.id) return null;
 
   return (
     <div className="w-full">
       <NoIconHeader title="챌린지" />
-      {/* <header className="h-[48px] p-4 bg-[#fcfcfc] text-[#0c0c0c] text-lg font-bold font-['SUIT']">챌린지</header> */}
       <div className=" w-full h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex-row justify-center items-center inline-flex">
         {problems.map((problem, index) => (
           <div
             key={problem.type}
-            className={` cursor-default cursor-pointer w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
+            className={`cursor-pointer w-full h-[38px] p-2.5 rounded-[22px] justify-center items-center gap-2.5 flex ${
               selectedButtonIndex === index ? "  bg-[#b0e484]" : "bg-[#f3f3f3]"
             }`}
           >
@@ -113,10 +70,9 @@ const ChallengePage = () => {
                 ) : (
                   <Image src={challIconWord} alt={"chall-icon-word"} className="mb-[44px]" />
                 )}
-                {/* 기존 문제 풀러가기 버튼 */}{" "}
               </div>
               <Link
-                href={`${problem.url}?userId=${userId}`}
+                href={`${problem.url}`}
                 className="h-[50px] w-full bg-primary-500 p-[10px] justify-center rounded-[10px] "
               >
                 <p className="text-[#FDFDFD] text-center font-suit text-[18px]  ">{problem.label} 풀러가기</p>

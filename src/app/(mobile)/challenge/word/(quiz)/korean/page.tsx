@@ -1,7 +1,7 @@
 "use client";
 
 import RandomKoreanWordQuiz from "@/components/challenge/RandomKoreanWordQuiz";
-import { useSearchParams } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 import { Suspense } from "react";
 
 const KoreanWordQuizPage = () => {
@@ -13,8 +13,8 @@ const KoreanWordQuizPage = () => {
 };
 
 const KoreanWordQuiz = () => {
-  const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId");
+  const { userInfo } = useUser();
+  const userId = userInfo?.id;
 
   return <div>{userId && <RandomKoreanWordQuiz userId={userId} />}</div>;
 };

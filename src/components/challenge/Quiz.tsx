@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Tables } from "../../../database.types";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import close from "@/assets/close-icon.svg";
@@ -9,6 +7,7 @@ import checkIcon from "@/assets/check-icon.svg";
 import notAnswer from "@/assets/not-answer.svg";
 import { Typography } from "../ui/typography";
 import Button from "../ui/button";
+import { useQuiz } from "@/hooks/useQuiz";
 
 type QuizProps = {
   userId: string;
@@ -16,85 +15,22 @@ type QuizProps = {
   type: "word" | "grammar";
 };
 
-type QuestionType = Tables<"questions">;
-
 const Quiz = ({ userId, language, type }: QuizProps) => {
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
-  const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
-  const [reason, setReason] = useState<{ [key: number]: string | null }>({});
-  const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const response = await fetch(`/api/getRandomQuiz?language=${language}&type=${type}`);
-        const data = await response.json();
-        if (data.error) throw new Error(data.error.message);
-        setQuestions(data.questions);
-      } catch (error) {
-        console.error("문제 로드 오류:", error);
-      }
-    };
-    fetchQuestions();
-  }, [language, type]);
-
-  const handleAnswerSelect = (questionId: number, answer: string) => {
-    setSelectedAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionId]: answer
-    }));
-
-    const question = questions.find((q) => q.id === questionId);
-    const isCorrect = answer === question?.answer;
-    setCorrectAnswers((prev) => ({
-      ...prev,
-      [questionId]: isCorrect
-    }));
-
-    if (question) {
-      setReason((prev) => ({
-        ...prev,
-        [questionId]: isCorrect ? null : question.reason
-      }));
-    }
-  };
-
-  const saveAllAnswers = async () => {
-    try {
-      let score = 0;
-      questions.forEach((question) => {
-        if (selectedAnswers[question.id] === question.answer) {
-          score += 1;
-        }
-      });
-
-      const totalQuestions = questions.length;
-      const scoreMessage = `점수: ${score} / ${totalQuestions}`;
-
-      await Promise.all(
-        questions.map((question) =>
-          fetch("/api/saveUserAnswer", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              questionId: question.id,
-              userId,
-              selectedAnswer: selectedAnswers[question.id]
-            })
-          })
-        )
-      );
-
-      router.push(`/challenge/${type}/result?message=${encodeURIComponent(scoreMessage)}`);
-    } catch (error) {
-      console.error("답안 저장 실패:", error);
-      router.push(`/challenge/${type}/result?message=${encodeURIComponent("답안 저장 실패")}`);
-    }
-  };
+  const {
+    questions,
+    selectedAnswers,
+    correctAnswers,
+    reason,
+    currentIndex,
+    setCurrentIndex,
+    handleAnswerSelect,
+    saveAllAnswers
+  } = useQuiz({ userId, language, type });
+  const currentQuestion = questions[currentIndex];
+  const selectedCount = Object.keys(selectedAnswers).length;
+  const progressPercentage = (currentIndex / questions.length) * 100;
+  console.log(currentQuestion);
 
   if (questions.length === 0)
     return (
@@ -102,10 +38,6 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
         문제를 불러오는 중
       </Typography>
     );
-
-  const currentQuestion = questions[currentIndex];
-  const selectedCount = Object.keys(selectedAnswers).length;
-  const progressPercentage = (currentIndex / questions.length) * 100;
 
   return (
     <div className="w-full flex flex-col relative min-h-screen gap-4">
@@ -117,7 +49,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
             {currentIndex + 1} / {questions.length}
           </Typography>
           <button onClick={() => router.back()} className="flex-none w-6">
-            <Image src={close} alt={close} className="w-6 h-6 right-0 top-0" />
+            <Image src={close} alt="Close" className="w-6 h-6" />
           </button>
         </div>
         <div className="relative mb-4 h-2 bg-primary-900">
@@ -157,7 +89,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
                 {selectedAnswers[currentQuestion.id] === answer && (
                   <Image
                     src={answer === currentQuestion.answer ? checkIcon : notAnswer}
-                    alt={answer === currentQuestion.answer ? "correct" : "incorrect"}
+                    alt={answer === currentQuestion.answer ? "Correct" : "Incorrect"}
                     className="w-4 h-4"
                   />
                 )}
@@ -193,7 +125,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
           <Button
             onClick={saveAllAnswers}
             className="bg-primary-500 w-full h-[54px] p-2.5 rounded-[10px] justify-center items-center gap-2.5 inline-flex text-center text-[#fcfcfc] mb-[10px] text-lg font-bold font-['SUIT'] leading-[27px]"
-            text="다음"
+            text="제출"
           />
         )}
       </div>
