@@ -437,18 +437,21 @@ export type Database = {
           id: number
           image_url: string | null
           level: number
+          sentence: string | null
           situation: string
         }
         Insert: {
           id?: number
           image_url?: string | null
           level: number
+          sentence?: string | null
           situation: string
         }
         Update: {
           id?: number
           image_url?: string | null
           level?: number
+          sentence?: string | null
           situation?: string
         }
         Relationships: []

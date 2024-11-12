@@ -21,10 +21,12 @@ export default function MobileLayout({
     pathname === "/lesson" ||
     pathname === "/myPage/editProfile";
 
+  const ignoredPaddingWithPath = !pathname?.startsWith("/lesson") || !pathname?.startsWith("/");
+
   return (
     <div>
-      <div className="w-[375px] flex flex-col mx-auto my-0 min-h-full">
-        <div className={`${!pathname?.startsWith("/lesson") && "px-4"}`}>
+      <div className="w-full max-w-[1024px] min-w-[320px] flex flex-col mx-auto my-0 min-h-full">
+        <div className={`${ignoredPaddingWithPath && "px-4"}`}>
           <main>{children}</main>
         </div>
         {showNavbar && <NavbarGnb />}
