@@ -27,7 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const [filed, files] = await form.parse(req);
       const audioFile = files.audio?.[0];
       console.log("filed", filed); // build 오류 임시 해결
-      console.log("files", files); // 디버깅용
 
       if (!audioFile) {
         return res.status(400).json({ error: "No audio file provided" });
@@ -35,19 +34,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // 파일 내용 확인
       const fileContent = fs.readFileSync(audioFile.filepath);
-      console.log("fileContent", fileContent); // 디버깅용
 
       // 파일이 비어있는지 확인
       if (fileContent.length === 0) {
         return res.status(400).json({ error: "Empty file received" });
       }
 
-      // 임시 파일로 저장해보기
-
+      // 임시 파일로 저장
       const tempPath = `${os.tmpdir()}/temp-${Date.now()}.webm`;
       fs.writeFileSync(tempPath, fileContent);
-
-      console.log("tempPath", tempPath); // 디버깅용
 
       // Whisper API 호출
       const transcription = await whisperai.audio.transcriptions.create({
@@ -55,7 +50,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         model: "whisper-1",
         language: "ko"
       });
-      console.log("transcription", transcription); // 디버깅용
 
       // 임시 파일들 삭제
       fs.unlinkSync(audioFile.filepath);

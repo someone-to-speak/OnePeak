@@ -1,26 +1,14 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Tables } from "../../../../database.types";
+import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import Slider from "react-slick";
 import star from "@/assets/star.svg";
 import Image from "next/image";
 
-type SituationType = Tables<"situation">;
-
 const TodayLearn = () => {
-  const supabase = createClient();
   const router = useRouter();
-
-  // 유저 정보 조회
-  const { data: user } = useQuery({
-    queryKey: ["userInfo"],
-    queryFn: reviewApi.getUserInfo
-  });
 
   // situation 조회
   const { data: situations } = useQuery({
@@ -28,76 +16,9 @@ const TodayLearn = () => {
     queryFn: reviewApi.getEachLevel
   });
 
-  // review 테이블에 유저가 선택한 학습 추가
-  const addReview = async ({
-    userId,
-    situation,
-    level
-  }: {
-    userId: string;
-    situation: string;
-    level: number;
-  }): Promise<SituationType> => {
-    // 오늘 날짜 생성
-    const today = new Date();
-    // KST로 조정 (UTC+9)
-    const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
-    const todayString = format(kstToday, "yyyy-MM-dd");
-
-    // 중복 데이터 확인
-    const { data: existingReviews, error: checkError } = await supabase
-      .from("review")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("situation", situation);
-
-    const todayReview = existingReviews?.filter((review) => {
-      const dateOnly = review.created_at.split("T")[0];
-      return dateOnly === todayString;
-    });
-
-    if (checkError) {
-      console.error("중복 확인 오류: ", checkError);
-      throw checkError;
-    }
-    console.log(existingReviews);
-    // 중복 데이터가 없을 때만 추가
-    if (todayReview?.length === 0) {
-      const { error } = await supabase
-        .from("review")
-        .insert([{ user_id: userId, situation, level }])
-        .select();
-
-      if (error) {
-        console.log("review 테이블 추가 오류: ", error);
-        throw error; // 에러 전파
-      }
-    }
-
-    return {
-      id: 0,
-      situation,
-      level
-    };
-  };
-
-  const mutation = useMutation({
-    mutationFn: addReview,
-    onSuccess: (data: SituationType) => {
-      router.push(`/chatbot?situation=${data.situation}&level=${data.level}`);
-    },
-    onError: (error) => {
-      console.log("리뷰 추가 중 오류가 발생하였습니다!", error);
-    }
-  });
-
-  // 버튼 핸들러
-  const handleLearnSelect = async (e: { preventDefault: () => void }, situation: string, level: number) => {
+  const handleLearnSelect = (e: { preventDefault: () => void }, situation: string, level: number) => {
     e.preventDefault();
-
-    if (user) {
-      mutation.mutate({ userId: user.id, situation, level });
-    }
+    router.push(`/chatbot?situation=${situation}&level=${level}`);
   };
 
   // 캐러셀
@@ -108,8 +29,6 @@ const TodayLearn = () => {
     slidesToScroll: 1,
     speed: 500,
     autoplay: false, // 자동 재생
-    autoplaySpeed: 3000, // 자동 재생 속도
-    pauseOnHover: true, // 호버시 일시정지
     arrows: false, // 화살표 표시
     centerPadding: "60px", // 센터 모드 패딩
     variableWidth: true,
@@ -138,7 +57,6 @@ const TodayLearn = () => {
                     <Image key={i} src={star} alt="star" className="" />
                   ))}
                 </div>
-                {/* <p>{situation.level}</p> */}
                 <p className="text-[20px] font-bold">{situation.situation}</p>
                 <p className="text-[14px] font-normal">Can I get The One Coffe</p>
               </div>
