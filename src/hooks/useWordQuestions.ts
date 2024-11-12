@@ -1,4 +1,4 @@
-import { QuestionsType } from "@/types/\bwrongAnswerNote";
+import { QuestionsType } from "@/types/wrongAnswerNote";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
