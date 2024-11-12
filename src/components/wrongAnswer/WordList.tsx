@@ -36,6 +36,7 @@ const WordList = ({ userId }: { userId: string }) => {
       queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
     }
   });
+  // const { mutate: toggleIsReviewed, isLoading, isError } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
