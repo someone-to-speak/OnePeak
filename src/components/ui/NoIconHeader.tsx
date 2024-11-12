@@ -8,10 +8,12 @@ interface BackButtonProps {
 
 const NoIconHeader: React.FC<BackButtonProps> = ({ title }) => {
   return (
-    <div className="with-icon-header">
-      <Typography size={18} weight="bold">
-        {title}
-      </Typography>
+    <div className="flex items-center">
+      <div className="app-header">
+        <Typography weight="bold" className="app-header-text">
+          {title}
+        </Typography>
+      </div>
     </div>
   );
 };
