@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="relative w-full h-full ">
+      <div className="relative w-full pb-20">
         <>
           <Header />
           <div className="h-10 py-4"></div>
