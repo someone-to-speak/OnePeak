@@ -72,7 +72,7 @@ const ChallengePage = () => {
                 )}
               </div>
               <Link
-                href={`${problem.url}?userId=${userInfo.id}`}
+                href={`${problem.url}`}
                 className="h-[50px] w-full bg-primary-500 p-[10px] justify-center rounded-[10px] "
               >
                 <p className="text-[#FDFDFD] text-center font-suit text-[18px]  ">{problem.label} 풀러가기</p>
