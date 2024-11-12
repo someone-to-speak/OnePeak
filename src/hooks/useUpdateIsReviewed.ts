@@ -1,4 +1,4 @@
-// import { createClient } from "@/utils/supabase/server";
+// import { createClient } from "@/utils/supabase/client";
 // import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // export const useUpdateIsReviewed = (userId: string) => {

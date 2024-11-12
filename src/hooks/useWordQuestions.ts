@@ -1,5 +1,5 @@
 import { QuestionsType } from "@/types/\bwrongAnswerNote";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
 export const useWordQuestions = () => {
