@@ -4,7 +4,12 @@
 
 @media (min-width: 768px) {
   .app-header {
-    padding-top: 70px;
+    display: inline-flex;
+    width: 100%;
+    align-items: end;
+    gap: 20px;
+    cursor: default;
+    margin-top: 70px;
   }
   .app-header-text {
     font-size: 32px;
@@ -34,11 +39,10 @@
   .app-header {
     display: inline-flex;
     width: 100%;
-    height: 48px; /* Tailwind의 h-12와 같은 높이 */
+    height: 48px;
     align-items: center;
-    gap: 6px; /* Tailwind의 gap-1.5와 동일 */
+    gap: 6px;
     cursor: default;
-    padding-top: 0;
   }
   .app-header-text {
     font-size: 18px;
@@ -142,15 +146,41 @@
     --gray-900: #f3f3f3;
 
     /* Font Sizes */
-    --font-sm: 0.75rem;
-    --font-base: 0.875rem;
-    --font-lg: 1rem;
-    --font-xl: 1.125rem;
-    --font-2xl: 1.25rem;
-    --font-3xl: 1.375rem;
-    --font-4xl: 1.5rem;
-    --font-5xl: 1.625rem;
-    --font-6xl: 1.75rem;
+    --font-xs: 0.625rem; /* 10px */
+    --font-sm: 0.75rem; /* 12px */
+    --font-base: 0.875rem; /* 14px */
+    --font-lg: 1rem; /* 16px */
+    --font-xl: 1.125rem; /* 18px */
+    --font-2xl: 1.25rem; /* 20px */
+    --font-3xl: 1.375rem; /* 22px */
+    --font-4xl: 1.5rem; /* 24px */
+    --font-5xl: 1.625rem; /* 26px */
+    --font-6xl: 1.75rem; /* 28px */
+    --font-7xl: 1.875rem; /* 30px */
+    --font-8xl: 2rem; /* 32px */
+    --font-9xl: 2.125rem; /* 34px */
+    --font-10xl: 2.25rem; /* 36px */
+    --font-11xl: 2.375rem; /* 38px */
+    --font-12xl: 2.5rem; /* 40px */
+    --font-13xl: 2.625rem; /* 42px */
+    --font-14xl: 2.75rem; /* 44px */
+    --font-15xl: 2.875rem; /* 46px */
+    --font-16xl: 3rem; /* 48px */
+    --font-17xl: 3.125rem; /* 50px */
+    --font-18xl: 3.25rem; /* 52px */
+    --font-19xl: 3.375rem; /* 54px */
+    --font-20xl: 3.5rem; /* 56px */
+    --font-21xl: 3.625rem; /* 58px */
+    --font-22xl: 3.75rem; /* 60px */
+    --font-23xl: 3.875rem; /* 62px */
+    --font-24xl: 4rem; /* 64px */
+    --font-25xl: 4.125rem; /* 66px */
+    --font-26xl: 4.25rem; /* 68px */
+    --font-27xl: 4.375rem; /* 70px */
+    --font-28xl: 4.5rem; /* 72px */
+    --font-29xl: 4.625rem; /* 74px */
+    --font-30xl: 4.75rem; /* 76px */
+    --font-31xl: 4.875rem; /* 78px */
 
     /* Font Families */
     --font-family-suit: "SUIT", sans-serif;
