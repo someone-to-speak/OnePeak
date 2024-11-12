@@ -1,14 +1,12 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
-
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useGrammarQuestions } from "@/hooks/useGrammarQuestions";
 
