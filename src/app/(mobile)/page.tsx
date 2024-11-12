@@ -61,7 +61,7 @@ export default function Home() {
       <div className="relative w-full h-full ">
         <>
           <Header />
-          <div className="h-10 py-4"></div>
+          <div className="h-10 py-4 bg-#FDFDFD"></div>
           {/* 홈 화면 콘텐츠 */}
           <TodayLearn />
           <CustomizedLearn />
