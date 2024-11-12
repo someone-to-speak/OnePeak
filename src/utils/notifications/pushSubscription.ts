@@ -37,10 +37,13 @@ export async function requestNotificationPermission(userId: string): Promise<boo
 }
 
 export async function subscribeUserToPush(userId: string) {
+  console.log("subscribeUserToPush");
   const supabase = createClient();
   try {
-    const registration = await navigator.serviceWorker.ready;
+    // const registration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.register("/service-worker.js");
     const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    console.log(registration);
 
     if (!vapidPublicKey) {
       console.error("VAPID Public Key is missing.");

@@ -88,12 +88,10 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="w-full flex flex-col relative min-h-[calc(100vh-80px)]">
-      <div className="absolute top-0">
-        <WithIconHeader title="프로필 수정" />
-      </div>
-      <form onSubmit={handleSubmit} className="flex flex-col mt-[72px]">
-        <div className="flex flex-col items-center pb-[24px]">
+    <div className="w-full flex flex-col min-h-[calc(100vh-80px)]">
+      <WithIconHeader title="프로필 수정" />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-[30px] w-[343px] m-auto">
+        <div className="flex flex-col items-center">
           <div className="relative">
             <div className="w-[100px] h-[100px] rounded-[54px] overflow-hidden shadow-md relative">
               <Image
@@ -117,47 +115,46 @@ const EditProfile = () => {
             </label>
           </div>
         </div>
-        <div className="flex flex-col gap-[20px] w-full">
-          <div className="flex flex-col gap-[6px]">
-            <div className="flex flex-row items-center justify-between">
-              <Typography size={16} weight="medium">
-                닉네임
-              </Typography>
-              <Typography size={12} weight="medium" className="text-gray-500 text-right">
-                {selectedProfile?.nickname.length}/12
-              </Typography>
-            </div>
-            <div className="h-[50px] py-2.5 bg-white rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
-              <input
-                type="text"
-                value={selectedProfile?.nickname}
-                onChange={handleNicknameChange}
-                placeholder="닉네임을 입력해주세요."
-                className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
-              />
-            </div>
+
+        <div className="flex flex-col gap-[6px]">
+          <div className="flex flex-row items-center justify-between">
+            <Typography size={16} weight="medium">
+              닉네임
+            </Typography>
+            <Typography size={12} weight="medium" className="text-gray-500 text-right">
+              {selectedProfile?.nickname.length}/12
+            </Typography>
           </div>
-          <div className="flex flex-col w-full gap-[6px]">
-            <div className="flex flex-row items-center justify-between">
-              <Typography size={16} weight="medium">
-                상태 메세지
-              </Typography>
-              <Typography size={12} weight="medium" className="text-gray-500 text-right">
-                {selectedProfile?.state_msg.length}/12
-              </Typography>
-            </div>
-            <div className="h-[50px] py-2.5 rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
-              <input
-                type="text"
-                value={selectedProfile?.state_msg}
-                onChange={handleStateMsgChange}
-                placeholder="상태 메세지를 입력해주세요."
-                className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
-              />
-            </div>
+          <div className="h-[50px] py-2.5 bg-white rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
+            <input
+              type="text"
+              value={selectedProfile?.nickname}
+              onChange={handleNicknameChange}
+              placeholder="닉네임을 입력해주세요."
+              className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+            />
           </div>
         </div>
-        <div className="w-full absolute bottom-0">
+        <div className="flex flex-col w-full gap-[6px]">
+          <div className="flex flex-row items-center justify-between">
+            <Typography size={16} weight="medium">
+              상태 메세지
+            </Typography>
+            <Typography size={12} weight="medium" className="text-gray-500 text-right">
+              {selectedProfile?.state_msg.length}/12
+            </Typography>
+          </div>
+          <div className="h-[50px] py-2.5 rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
+            <input
+              type="text"
+              value={selectedProfile?.state_msg}
+              onChange={handleStateMsgChange}
+              placeholder="상태 메세지를 입력해주세요."
+              className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
+            />
+          </div>
+        </div>
+        <div className="w-full">
           <Button text="완료" disabled={!selectedProfile}></Button>
         </div>
       </form>
