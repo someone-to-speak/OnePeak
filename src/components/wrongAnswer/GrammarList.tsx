@@ -3,12 +3,12 @@
 import { createClient } from "@/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
-import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuestions";
+
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
+import { fetchGrammarQuestions, fetchUserWrongAnswers } from "@/api/wrongAnswerNote";
 
 const GrammarList = ({ userId }: { userId: string }) => {
   const supabase = createClient();

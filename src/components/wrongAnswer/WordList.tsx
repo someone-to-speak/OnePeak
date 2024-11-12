@@ -3,14 +3,14 @@
 import { createClient } from "@/utils/supabase/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
-import { fetchWordQuestions } from "@/api/wrongAnswersNote/fetchWordQuestions";
+
 import { convertTextToSpeech } from "@/api/openAI/tts";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import speaker from "@/assets/wrongAnswerNote/speaker-high.svg";
 import { Typography } from "../ui/typography";
+import { fetchUserWrongAnswers, fetchWordQuestions } from "@/api/wrongAnswerNote";
 
 const WordList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
