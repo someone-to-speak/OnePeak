@@ -8,8 +8,8 @@ interface BackButtonProps {
 
 const NoIconHeader: React.FC<BackButtonProps> = ({ title }) => {
   return (
-    <div className="w-full h-12 justify-start items-center gap-1.5 inline-flex">
-      <Typography size={18} weight="bold">
+    <div className="app-header">
+      <Typography weight="bold" className="app-header-text">
         {title}
       </Typography>
     </div>

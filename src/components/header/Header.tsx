@@ -8,8 +8,8 @@ import CalendarIcon from "@/assets/calendar.svg";
 
 const Header = () => {
   return (
-    <header className="w-full sticky min-w-[320px] max-w-[600px] top-0 left-0 right-0 mx-[16px] mt-0 z-[200] ml-[-0px]">
-      <div className="w-full h-12 justify-between items-center inline-flex bg-white">
+    <header className="w-full sticky top-0 left-0 right-0 mx-[16px] mt-0 z-[200] ml-[-0px]">
+      <div className="w-full h-12 flex justify-between items-center bg-white">
         <Image src={LogoIcon} alt="logo-icon" className="h-[27px]" />
         <div className="flex items-center gap-[14px]">
           <Link href="/notifications">
