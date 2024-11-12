@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./provider";
+import { ScreenSizeStoreProvider } from "@/shared/screen-store-provider";
 
 export const metadata: Metadata = {
   title: "one peak",
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body>
         <div className="h-full">
           <div className="w-full mx-auto my-0  min-h-full">
-            <Providers>{children}</Providers>
+            <ScreenSizeStoreProvider>
+              <Providers>{children}</Providers>
+            </ScreenSizeStoreProvider>
           </div>
         </div>
       </body>
