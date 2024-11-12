@@ -13,7 +13,7 @@ const WithIconHeader: React.FC<BackButtonProps> = ({ title }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full h-12 justify-start items-center gap-1.5 inline-flex">
+    <div className="w-full h-12 justify-start items-center gap-1.5 inline-flex cursor-default">
       <button onClick={() => router.back()}>
         <Image src={caretleft} alt={"caret-left"} className="w-6 h-6 left-0 top-0" />
       </button>
