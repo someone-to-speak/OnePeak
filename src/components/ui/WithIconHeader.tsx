@@ -14,12 +14,14 @@ const WithIconHeader: React.FC<BackButtonProps> = ({ title }) => {
 
   return (
     <div className="app-header">
-      <button onClick={() => router.back()}>
-        <Image src={caretleft} alt={"caret-left"} className="app-header-icon" />
-      </button>
-      <Typography weight="bold" className="app-header-text">
-        {title}
-      </Typography>
+      <div className="flex items-center">
+        <button onClick={() => router.back()}>
+          <Image src={caretleft} alt={"caret-left"} className="app-header-icon" />
+        </button>
+        <Typography weight="bold" className="app-header-text">
+          {title}
+        </Typography>
+      </div>
     </div>
   );
 };
