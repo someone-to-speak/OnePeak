@@ -103,7 +103,7 @@ const UsersInfo = () => {
   }
 
   if (isError) {
-    return <div>회원 목록을 불러우는데 실패하였습니다</div>;
+    return <div>회원 목록을 불러오는데 실패하였습니다</div>;
   }
 
   return (
