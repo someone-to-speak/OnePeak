@@ -88,9 +88,9 @@ const SettingsPage = () => {
   if (!userInfo?.id) return null;
 
   return (
-    <div className="bg-white">
+    <div className="flex flex-col md:gap-[70px]">
       <WithIconHeader title="설정" />
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full md:w-[674px] mx-auto">
         {languageData.length > 0 && (
           <>
             <ImageSelectorDropDown
@@ -124,6 +124,7 @@ const SettingsPage = () => {
           </Typography>
         </button>
       </div>
+      {/* <Footer /> */}
     </div>
   );
 };

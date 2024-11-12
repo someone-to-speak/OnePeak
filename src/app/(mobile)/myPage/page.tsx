@@ -13,9 +13,9 @@ const MyPage = () => {
   if (!userInfo?.id) return null;
 
   return (
-    <>
+    <div className="flex flex-col md:gap-[70px]">
       <NoIconHeader title="내정보" />
-      <div className="flex flex-col">
+      <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
         <UserProfilePage userId={userInfo.id} />
         {[
           { href: "/myPage/faq", label: "1:1 문의하기" },
@@ -33,7 +33,8 @@ const MyPage = () => {
           </div>
         ))}
       </div>
-    </>
+      {/* <Footer/> */}
+    </div>
   );
 };
 
