@@ -90,7 +90,7 @@ const SettingsPage = () => {
   return (
     <div className="bg-white">
       <WithIconHeader title="설정" />
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         {languageData.length > 0 && (
           <>
             <ImageSelectorDropDown
