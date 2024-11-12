@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { useChatMessages } from "@/hooks/useChatMessages";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
@@ -25,10 +24,7 @@ const ChatMessage = () => {
   // URL 파라미터 가져오기
   const searchParams = useSearchParams();
   const situation = searchParams?.get("situation") as string;
-  const level = Number(searchParams?.get("level"));
-  // URL에서 review id 추출 ('id-숫자' 형태에서 숫자만 추출)
-  const reviewIdParam = searchParams?.get("id");
-  const reviewId = reviewIdParam?.split("-")[1];
+  const reviewId = searchParams?.get("id");
 
   // 유저 정보 조회
   const { data: user } = useQuery({
@@ -57,39 +53,32 @@ const ChatMessage = () => {
     }
   };
 
-  // ReviewContentType의 messages를 Message[] 형식으로 변환
-  const convertToMessageFormat = (messages: string[]): Message[] => {
-    return messages.map(parseStoredMessage).filter((msg): msg is Message => msg !== null);
+  // 시간 포맷팅 함수
+  const formatKSTDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    return kstDate.toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul"
+    });
   };
 
-  // 메시지 정렬
-  const filteredMessages = React.useMemo(() => {
-    if (!reviewMessages) return null;
-
-    return reviewMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-  }, [reviewMessages]);
-
-  const { messages } = useChatMessages(situation, level);
-
   return (
-    <div className="flex flex-col h-screen w-full mx-auto">
-      <div className="flex-grow overflow-y-auto p-4 mb-16">
-        <div className="flex">
-          <WithIconHeader title={situation} />
-        </div>
-        <div className="flex-grow overflow-y-auto p-4 mb-16">
-          {/* 현재 진행 중인 대화 */}
-          <ChatMessageList messages={messages} />
+    <div className="flex flex-col h-screen w-full mx-auto bg-white">
+      <div className="flex p-4">
+        <WithIconHeader title={situation} />
+      </div>
 
-          {/* 저장된 대화 */}
-          {filteredMessages &&
-            filteredMessages.map((review) => (
-              <div key={review.id} className="mt-8 border-t pt-4">
-                <div className="text-sm text-gray-500 mb-4">{new Date(review.created_at).toLocaleDateString()}</div>
-                <ChatMessageList messages={convertToMessageFormat(review.messages)} />
-              </div>
-            ))}
-        </div>
+      <div className="flex-grow overflow-y-auto px-4 pb-16">
+        {reviewMessages?.map((review) => {
+          const parsedMessages = review.messages.map(parseStoredMessage).filter((msg): msg is Message => msg !== null);
+
+          return (
+            <div key={review.id} className="mb-4">
+              <div className="text-sm text-gray-500 mb-2">{formatKSTDate(review.created_at)}</div>
+              <ChatMessageList messages={parsedMessages} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

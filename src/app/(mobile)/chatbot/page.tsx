@@ -7,11 +7,10 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import WithIconHeader from "@/components/ui/WithIconHeader";
-// import { useQuery } from "@tanstack/react-query";
-// import { reviewApi } from "@/services/supabaseChatbot";
-// import { AiMessages } from "@/type";
-// import { createClient } from "@/utils/supabase/client";
-// import { format } from "date-fns";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { reviewApi } from "@/services/supabaseChatbot";
+import { AiMessages } from "@/type";
+import { createClient } from "@/utils/supabase/client";
 
 const ChatMessagePage = () => {
   return (
@@ -22,14 +21,13 @@ const ChatMessagePage = () => {
 };
 
 const ChatMessage = () => {
-  // const router = useRouter();
-  // const supabase = createClient();
+  const supabase = createClient();
 
-  // // 유저 정보 조회
-  // const { data: user } = useQuery({
-  //   queryKey: ["userInfo"],
-  //   queryFn: reviewApi.getUserInfo
-  // });
+  // 유저 정보 조회
+  const { data: user } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: reviewApi.getUserInfo
+  });
 
   // 선택한 "오늘의 학습" 데이터 받아오기
   const searchParams = useSearchParams();
@@ -65,59 +63,59 @@ const ChatMessage = () => {
   };
 
   // 채팅 종료 버튼
-  // const saveMessages = useMutation({
-  //   mutationFn: ({ messages, review_id }: { messages: AiMessages[]; review_id: number }) =>
-  //     reviewApi.postLearnMessage(messages, review_id),
-  //   onSuccess: () => {
-  //     alert("연결 확인");
-  //   }
-  // });
+  const saveMessages = useMutation({
+    mutationFn: ({ messages, review_id }: { messages: AiMessages[]; review_id: number }) => {
+      // messages 배열을 JSON 문자열로 변환
+      const stringMessages = messages.map((msg) => JSON.stringify(msg));
+      return reviewApi.postLearnMessage(stringMessages, review_id);
+    },
+    onSuccess: () => {
+      alert("연결 확인");
+    }
+  });
 
-  // // 오늘 날짜 생성
-  // const today = new Date();
-  // // KST로 조정 (UTC+9)
-  // const kstToday = new Date(today.getTime() + 9 * 60 * 60 * 1000);
-  // const todayString = format(kstToday, "yyyy-MM-dd");
+  const handleEndChat = async () => {
+    if (!user || messages.length === 0) return;
 
-  // const handleEndChat = async () => {
-  //   if (user) {
-  //     const { data: existingReviews, error } = await supabase
-  //       .from("review")
-  //       .select("*")
-  //       .eq("user_id", user.id)
-  //       .eq("situation", situation);
+    try {
+      const { data: newReview, error } = await supabase
+        .from("review")
+        .insert([
+          {
+            user_id: user.id,
+            situation,
+            level
+          }
+        ])
+        .select("*")
+        .single();
 
-  //     const todayReview = existingReviews?.filter((review) => {
-  //       const dateOnly = review.created_at.split("T")[0];
-  //       return dateOnly === todayString;
-  //     });
+      if (error) throw error;
 
-  //     if (todayReview) {
-  //       saveMessages.mutate({ messages: messages, review_id: todayReview[0].id });
-  //     }
-
-  //     if (error) {
-  //       console.log("대화 저장에 실패하였습니다.", error);
-  //     }
-  //   }
-  // };
+      // review 생성 성공 시 메세지 저장
+      if (newReview) {
+        saveMessages.mutate({
+          messages,
+          review_id: newReview.id
+        });
+      }
+    } catch (error) {
+      console.log("대화 저장에 실패하였습니다.", error);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen w-full mx-auto bg-white">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
         <div className="flex">
-          {/* <button onClick={() => router.back()} className="mr-5">
-            🔙
-          </button> */}
           <WithIconHeader title={situation} />
-          {/* <h1 className="font-bold">{situation}</h1> */}
-          {/* <button
+          <button
             type="button"
             className="ml-2 px-4 py-2 top-0 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
             onClick={handleEndChat}
           >
             대화 종료
-          </button> */}
+          </button>
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
           <ChatMessageList messages={messages} />
@@ -131,7 +129,7 @@ const ChatMessage = () => {
         onSubmit={handleSubmit}
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
-        // onEndChat={handleEndChat}
+        onEndChat={handleEndChat}
       />
     </div>
   );

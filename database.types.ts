@@ -435,16 +435,19 @@ export type Database = {
       situation: {
         Row: {
           id: number
+          image_url: string | null
           level: number
           situation: string
         }
         Insert: {
           id?: number
+          image_url?: string | null
           level: number
           situation: string
         }
         Update: {
           id?: number
+          image_url?: string | null
           level?: number
           situation?: string
         }

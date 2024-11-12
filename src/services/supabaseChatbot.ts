@@ -1,7 +1,6 @@
 // api/review.ts
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "../../database.types";
-// import { AiMessages } from "@/type";
 
 type ReviewType = Tables<"review">;
 type SituationType = Tables<"situation">;
@@ -90,21 +89,23 @@ export const reviewApi = {
     }
   },
 
-  // TODO: 민정님 오류 알려드리기!!
-  // insert에서 오류나는 거 타입에서 자동으로 세팅되는 벨류 값을 필수 타입으로 설정해서 여기서도 인자로 넘겨줘야만 함
-  // 타입 파일도 수정
-
   // AI 튜터 학습 내용 저장
-  // postLearnMessage: async (messages: AiMessages[], review_id: number) => {
-  //   const supabase = createClient();
-  //   const { data, error } = await supabase.from("review_content").insert({ messages, review_id }).select();
+  postLearnMessage: async (messages: string[], review_id: number) => {
+    const supabase = createClient();
 
-  //   if (error) {
-  //     console.log("review 테이블 추가 오류: ", error);
-  //     throw error; // 에러 전파
-  //   }
-  //   return data;
-  // },
+    const now = new Date();
+    const kstTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const { data, error } = await supabase
+      .from("review_content")
+      .insert({ messages, review_id, created_at: kstTime.toISOString() })
+      .select();
+
+    if (error) {
+      console.log("review 테이블 추가 오류: ", error);
+      throw error; // 에러 전파
+    }
+    return data;
+  },
 
   // AI 튜터 학습 내용 조회
   getLearnMessage: async (userId: string, reviewId: string): Promise<ReviewContentType[]> => {
@@ -114,7 +115,7 @@ export const reviewApi = {
       .select("*")
       .eq("user_id", userId)
       .eq("review_id", reviewId);
-    console.log(data);
+
     if (error) {
       console.log("getLearnMessage  호출 오류: ", error);
     }
