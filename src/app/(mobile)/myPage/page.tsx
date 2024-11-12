@@ -1,33 +1,22 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
 import UserProfilePage from "@/components/myPage/UserProfile";
 import { Typography } from "@/components/ui/typography";
 import NoIconHeader from "@/components/ui/NoIconHeader";
+import { useUser } from "@/hooks/useUser";
 
 const MyPage = () => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const supabase = createClient();
+  const { userInfo, isLoading } = useUser();
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session?.user?.id) {
-        setUserId(data.session.user.id);
-      }
-    };
-    fetchUserId();
-  }, [supabase]);
-
-  if (!userId) return null;
+  if (isLoading) return <p>Loading...</p>;
+  if (!userInfo?.id) return null;
 
   return (
-    <Suspense>
+    <>
       <NoIconHeader title="내정보" />
       <div className="flex flex-col">
-        <UserProfilePage userId={userId} />
+        <UserProfilePage userId={userInfo.id} />
         {[
           { href: "/myPage/faq", label: "1:1 문의하기" },
           { href: "/myPage/subscription", label: "구독관리" },
@@ -44,7 +33,7 @@ const MyPage = () => {
           </div>
         ))}
       </div>
-    </Suspense>
+    </>
   );
 };
 
