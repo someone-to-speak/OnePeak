@@ -2,6 +2,7 @@ import formidable from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
+import os from "os";
 
 export const config = {
   api: {
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       const [filed, files] = await form.parse(req);
       const audioFile = files.audio?.[0];
-      console.log(filed); // build 오류 임시 해결
+      console.log("filed", filed); // build 오류 임시 해결
 
       if (!audioFile) {
         return res.status(400).json({ error: "No audio file provided" });
@@ -39,8 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Empty file received" });
       }
 
-      // 임시 파일로 저장해보기
-      const tempPath = `./temp-${Date.now()}.webm`;
+      // 임시 파일로 저장
+      const tempPath = `${os.tmpdir()}/temp-${Date.now()}.webm`;
       fs.writeFileSync(tempPath, fileContent);
 
       // Whisper API 호출

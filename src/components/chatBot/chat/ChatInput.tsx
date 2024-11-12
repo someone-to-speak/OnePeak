@@ -10,7 +10,7 @@ type ChatInputProps = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
-  // onEndChat: () => void;
+  onEndChat: () => void;
 };
 
 const ChatInput: React.FC<ChatInputProps> = ({
