@@ -35,11 +35,10 @@ export class WebRTCService {
       }
     };
 
-    this.peerConnection.oniceconnectionstatechange = () => {
-      if (this.peerConnection?.iceConnectionState === "disconnected") {
-        console.log("disconnected");
-      }
-    };
+    // this.peerConnection.oniceconnectionstatechange = () => {
+    //   if (this.peerConnection?.iceConnectionState === "disconnected") {
+    //   }
+    // };
 
     this.peerConnection.ontrack = (event) => {
       this.remoteStream = event.streams[0];
