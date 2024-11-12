@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 const typographyVariants = cva("font-suit leading-normal inline-block align-middle antialiased", {
   variants: {
     size: {
-      10: "text-xs tracking-[-0.2px]",
       12: "text-sm tracking-[-0.24px]",
       14: "text-base tracking-[-0.28px]",
       16: "text-lg tracking-[-0.32px]",
