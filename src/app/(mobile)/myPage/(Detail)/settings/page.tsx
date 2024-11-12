@@ -2,86 +2,43 @@
 
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
-import { requestNotificationPermission } from "@/utils/notifications/pushSubscription";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import NotificationToggle from "@/components/ui/toggle/notificationToggle";
-
-type LanguageType = {
-  id: number;
-  language_name: string;
-  language_img_url: string;
-};
+import { useUser } from "@/hooks/useUser";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useLanguages } from "@/hooks/useLanguages";
 
 const SettingsPage = () => {
   const supabase = createClient();
   const router = useRouter();
+  const { userInfo } = useUser();
 
-  const [userId, setUserId] = useState<string | null>(null);
-  const [languageOptions, setLanguageOptions] = useState<LanguageType[]>([]);
-  const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false);
-  const [myLanguage, setMyLanguage] = useState<string>("");
-  const [learnLanguage, setLearnLanguage] = useState<string>("");
+  const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session?.user?.id) {
-        setUserId(data.session.user.id);
-
-        const { data: languages, error: langError } = await supabase
-          .from("user_info")
-          .select(
-            "my_language, learn_language, learn_language:language!user_info_learn_language_fkey(language_img_url, language_name), my_language:language!user_info_my_language_fkey(language_img_url, language_name)"
-          )
-          .eq("id", data.session.user.id)
-          .single();
-
-        if (langError) {
-          console.error(langError);
-          return;
-        }
-
-        if (languages) {
-          setMyLanguage(languages.my_language?.language_name || "");
-          setLearnLanguage(languages.learn_language?.language_name || "");
-        }
-
-        const { data: existingSubscription } = await supabase
-          .from("subscriptions")
-          .select("subscription")
-          .eq("user_id", data.session.user.id)
-          .single();
-
-        setIsNotificationEnabled(!!existingSubscription);
-      }
-    };
-
-    fetchData();
-  }, [supabase]);
+  const { data: languageData, isLoading: languageLoading } = useLanguages();
+  const { isNotificationEnabled, handleNotificationToggle } = useSubscription(userInfo?.id || "");
+  const [myLanguage, setMyLanguage] = useState<string>(profile?.my_language?.language_name || "");
+  const [learnLanguage, setLearnLanguage] = useState<string>(profile?.learn_language?.language_name || "");
 
   useEffect(() => {
-    const fetchLanguages = async () => {
-      const { data, error } = await supabase.from("language").select("*");
-      if (error) {
-        console.error(error);
-        return;
-      }
-      setLanguageOptions(data);
-    };
+    if (profile) {
+      setMyLanguage(profile.my_language?.language_name || "");
+      setLearnLanguage(profile.learn_language?.language_name || "");
+    }
+  }, [profile]);
 
-    fetchLanguages();
-  }, [supabase]);
+  if (profileLoading || languageLoading) return <p>Loading...</p>;
 
   const handleUpdateMyLanguage = async (language: string) => {
-    if (!userId || !language) return;
-
+    if (!userInfo?.id || !language) return;
     try {
-      await updateMyLanguage(userId, language);
+      await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
     } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
@@ -90,10 +47,10 @@ const SettingsPage = () => {
   };
 
   const handleUpdateLearnLanguage = async (language: string) => {
-    if (!userId || !language) return;
+    if (!userInfo?.id || !language) return;
 
     try {
-      await updateLearnLanguage(userId, language);
+      await updateLearnLanguage(userInfo.id, language);
       setLearnLanguage(language);
     } catch (err) {
       alert("언어 설정 저장 중 오류가 발생했습니다.");
@@ -101,7 +58,8 @@ const SettingsPage = () => {
     }
   };
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = async () => {
+    if (!userInfo?.id) return;
     try {
       await logout();
       router.push("/");
@@ -109,14 +67,15 @@ const SettingsPage = () => {
       alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
       console.error(err);
     }
-  }, [router]);
+  };
 
   const cancelAccount = async () => {
+    if (!userInfo?.id) return;
     const confirmation = confirm("정말 회원 계정을 탈퇴하시겠습니까?");
-    if (!confirmation || !userId) return;
+    if (!confirmation) return;
 
     try {
-      const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userId);
+      const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
       if (error) throw error;
       alert("회원 계정이 성공적으로 탈퇴되었습니다.");
       handleLogout();
@@ -126,51 +85,24 @@ const SettingsPage = () => {
     }
   };
 
-  const enableNotifications = async () => {
-    if (userId) {
-      const permissionResult = await requestNotificationPermission(userId);
-      if (permissionResult) {
-        setIsNotificationEnabled(true);
-      }
-    }
-  };
-
-  const disableNotifications = async () => {
-    if (userId) {
-      try {
-        await supabase.from("subscriptions").delete().eq("user_id", userId);
-        setIsNotificationEnabled(false);
-      } catch (err) {
-        alert("알림 비활성화 중 오류가 발생했습니다.");
-        console.error(err);
-      }
-    }
-  };
-
-  const handleNotificationToggle = async () => {
-    if (isNotificationEnabled) {
-      await disableNotifications();
-    } else {
-      await enableNotifications();
-    }
-  };
+  if (!userInfo?.id) return null;
 
   return (
     <div className="bg-white">
       <WithIconHeader title="설정" />
       <div className="flex flex-col">
-        {languageOptions.length > 0 && (
+        {languageData.length > 0 && (
           <>
             <ImageSelectorDropDown
               text="내 모국어 변경"
               subtitle={myLanguage}
-              languageOptions={languageOptions}
+              languageOptions={languageData}
               onLanguageChange={handleUpdateMyLanguage}
             />
             <ImageSelectorDropDown
               text="학습 언어 변경"
               subtitle={learnLanguage}
-              languageOptions={languageOptions}
+              languageOptions={languageData}
               onLanguageChange={handleUpdateLearnLanguage}
             />
           </>
