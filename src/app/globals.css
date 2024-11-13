@@ -76,7 +76,7 @@
   }
 
   body {
-    font-family: "Pretendard", sans-serif;
+    font-family: "Pretendard", "SUIT", sans-serif;
     background-color: white;
     color: var(--primary-50);
   }
