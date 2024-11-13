@@ -53,7 +53,7 @@ const ChallengePage = () => {
         <Slider ref={sliderRef} {...settings}>
           {problems.map((problem) => (
             <div key={problem.type}>
-              <div className="flex flex-col mt-[24px] bg-primary-900 rounded-[12px] justify-between items-center p-6">
+              <div className="flex flex-col mt-[24px] bg-primary-900 rounded-[12px] justify-between items-center p-8">
                 <div className="flex flex-col items-center justify-center">
                   <Typography size={22} weight="bold" className="text-center mb-[4px]">
                     {problem.label} 챌린지
