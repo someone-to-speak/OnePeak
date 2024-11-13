@@ -53,21 +53,6 @@ const ReviewDetail = () => {
     }) || [];
 
   return (
-    // <div className="p-5">
-    //   <div className="flex">
-    //     <WithIconHeader title="복습하기" />
-    //   </div>
-    //   <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 md:h-[calc(100vh-120px)]">
-    //     <div className="flex justify-center md:w-1/2">
-    //       <div className=" mb-10">
-    //         <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-    //       </div>
-    //     </div>
-    //     <div className="md:w-1/2 md:overflow-y-auto">
-    //       <ReviewList reviews={filteredReviews} onReviewClick={handleReviewClick} />
-    //     </div>
-    //   </div>
-    // </div>
     <div className="p-5">
       <div className="flex">
         <WithIconHeader title="복습하기" />
