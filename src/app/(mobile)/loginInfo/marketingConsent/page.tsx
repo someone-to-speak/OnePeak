@@ -26,7 +26,7 @@ const MarketingConsent = () => {
     }
   };
   return (
-    <div className="w-full md:max-w-[343px] md:mx-auto md:mt-[70px]">
+    <div className="w-full md:max-w-[343px] md:mx-auto md:my-[70px] md:py-[40px]">
       <button
         onClick={() => router.back()} // 뒤로 가기 함수 호출
         className="flex h-[48px] px-[16px] items-center gap-[6px] bg-white-fdfdfd md:hidden "
