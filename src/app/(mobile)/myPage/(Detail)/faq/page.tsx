@@ -2,6 +2,7 @@
 import { insertFaqData } from "@/api/route";
 import { getUserClient } from "@/api/supabase/getUserClient";
 import { useQuery } from "@tanstack/react-query";
+
 import React, { useEffect, useState } from "react";
 
 const FaqPage = () => {
@@ -69,7 +70,12 @@ const FaqPage = () => {
         ></textarea>
       </div>
       <div className="flex w-full items-start gap-[10px]">
-        <button className="p-[10px] w-full justify-center items-center  rounded-[10px] bg-[#d9d9d9] text-center text-[#fcfcfc] font-medium font-['Pretendard']  ">
+        <button
+          onClick={() => {
+            window.history.back();
+          }}
+          className="p-[10px] w-full justify-center items-center  rounded-[10px] bg-[#d9d9d9] text-center text-[#fcfcfc] font-medium font-['Pretendard']  "
+        >
           취소
         </button>
         <button
