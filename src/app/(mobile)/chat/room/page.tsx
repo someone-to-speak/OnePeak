@@ -5,7 +5,6 @@ import MessageList from "./_components/MessageList";
 import InputField from "./_components/InputField";
 import { Suspense } from "react";
 import { useMessage } from "@/hooks/useMessage";
-import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
 

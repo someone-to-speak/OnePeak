@@ -23,6 +23,7 @@ const UserProfilePage = ({ userId }: UserProfileProps) => {
       lastMessage={profile.state_msg || ""}
       learnLanguageUrl={profile.learn_language?.language_img_url || ""}
       learnLanguage={profile.learn_language?.language_img_url || ""}
+      path="mypage"
       onClick={() => router.push(`/myPage/editProfile`)}
     />
   );
