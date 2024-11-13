@@ -11,6 +11,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        lessonBackground: "url('../assets/lesson/lesson-background.svg')"
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
