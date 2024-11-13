@@ -10,6 +10,7 @@ import Button from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { createClient } from "@/utils/supabase/client";
 import { useUser } from "@/hooks/useUser";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const EditProfile = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const EditProfile = () => {
     }
   }, [userInfo]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];

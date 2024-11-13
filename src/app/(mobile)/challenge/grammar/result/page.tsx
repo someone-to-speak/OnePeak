@@ -38,10 +38,12 @@ const Result = () => {
         </div>
         <div className="fixed left-0 right-0 bottom-[31px] px-[16px] md:static">
           <div className="flex flex-col gap-[10px] md:flex-row">
-            <Button text="오답노트로 가기" size="auto" />
-            <Link href="/challenge/grammar/wrongAnswerNote" />
-            <Button text="챌린지로 돌아가기" size="auto" variant="stroke" />
-            <Link href="/challenge" />
+            <Link href="/challenge/grammar/wrongAnswerNote" className="w-[50%]">
+              <Button text="오답노트로 가기" size="auto" />
+            </Link>
+            <Link href="/challenge" className="w-[50%]">
+              <Button text="챌린지로 돌아가기" size="auto" variant="stroke" />
+            </Link>
           </div>
         </div>
       </div>
