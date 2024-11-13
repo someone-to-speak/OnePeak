@@ -52,7 +52,7 @@ const TodayLearn = () => {
   };
 
   return (
-    <div className="w-full max-w-[1024px] mx-auto">
+    <div className="w-full max-w-[1024px] mx-auto ml-4">
       <div className="mb-2">
         <h1 className="text-[24px] font-bold">오늘의 학습</h1>
         <p className="text-[12px] text-[#5d5d5d] font-normal">매일 업데이트 되는 추천 학습</p>

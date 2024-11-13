@@ -57,9 +57,16 @@ const ReviewDetail = () => {
       <div className="flex">
         <WithIconHeader title="복습하기" />
       </div>
-
-      <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <ReviewList reviews={filteredReviews} onReviewClick={handleReviewClick} />
+      <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 md:h-[calc(100vh-120px)]">
+        <div className="flex justify-center md:flex-grow">
+          <div className="mb-10">
+            <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
+          </div>
+        </div>
+        <div className="md:w-[561px] md:flex-shrink-0 md:overflow-y-auto">
+          <ReviewList reviews={filteredReviews} onReviewClick={handleReviewClick} />
+        </div>
+      </div>
     </div>
   );
 };
