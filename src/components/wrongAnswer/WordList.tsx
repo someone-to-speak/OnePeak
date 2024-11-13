@@ -104,8 +104,8 @@ const WordList = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div>
-      <div className="bg-gray-900 flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
+    <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
+      <div className="bg-gray-900 flex rounded-[22px] w-full h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5">
         <button
           className={`${
             isReviewed === "미완료"
@@ -131,49 +131,64 @@ const WordList = ({ userId }: { userId: string }) => {
           </Typography>
         </button>
       </div>
-
-      {filteredAnswers?.map((question) => (
-        <div
-          key={question!.id}
-          className={`w-full h-auto mb-[10px] px-5 py-[18px] bg-white rounded-[10px] shadow-review ${
-            question!.isReviewed ? "border border-primary-500" : ""
-          }`}
-        >
-          <div className="flex items-center justify-between h-auto">
-            <button
-              onClick={() => handleTextToSpeech(question?.content || "", question!.id)}
-              className="flex-1 flex gap-[30px] items-center"
-            >
-              <div className="flex gap-[10px] items-center">
-                <Image src={speaker} alt="speaker icon" />
-                <Typography
-                  size={14}
-                  weight="bold"
-                  className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
-                >
-                  {question?.content}
-                </Typography>
-              </div>
-              <Typography size={14} weight="medium" className="text-left text-#000 break-words">
-                {question?.reason}
-              </Typography>
-            </button>
-            <button
-              onClick={() =>
-                updateIsReviewed.mutate({
-                  answerId: question!.answerId,
-                  currentReviewed: question!.isReviewed
-                })
-              }
-              className="flex-shrink-0 ml-4 w-6"
-            >
-              <div className="flex-none">
-                <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
-              </div>
-            </button>
-          </div>
+      <div
+        className={`md:h-[543px] md:flex md:flex-col md:gap-5 md:p-[30px] md:border-none md:rounded-xl ${
+          isReviewed === "미완료" ? "md:bg-gray-900" : "md:bg-primary-900"
+        }`}
+      >
+        {/* Content here */}
+        <div className=" hidden md:flex md:flex-col">
+          <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
-      ))}
+        <div className="flex flex-col gap-[10px] md:gap-[20px]">
+          {filteredAnswers?.map((question) => (
+            <div
+              key={question!.id}
+              className={`w-full h-auto  px-5 py-[18px] bg-white rounded-[10px] shadow-review  ${
+                question!.isReviewed ? "border border-primary-500" : ""
+              }`}
+            >
+              <div className="flex items-center justify-between h-auto">
+                <button
+                  onClick={() => handleTextToSpeech(question?.content || "", question!.id)}
+                  className="flex-1 flex gap-[30px] items-center"
+                >
+                  <div className="flex gap-[10px] items-center">
+                    <Image src={speaker} alt="speaker icon" />
+                    <Typography
+                      size={14}
+                      weight="bold"
+                      className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
+                    >
+                      {question?.content}
+                    </Typography>
+                  </div>
+                  <Typography size={14} weight="medium" className="text-left text-#000 break-words">
+                    {question?.reason}
+                  </Typography>
+                </button>
+                <button
+                  onClick={() =>
+                    updateIsReviewed.mutate({
+                      answerId: question!.answerId,
+                      currentReviewed: question!.isReviewed
+                    })
+                  }
+                  className="flex-shrink-0 ml-4 w-6"
+                >
+                  <div className="flex-none">
+                    <Image
+                      src={question!.isReviewed ? activeCheck : noActiveCheck}
+                      alt="status icon"
+                      className="w-6 h-6"
+                    />
+                  </div>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
