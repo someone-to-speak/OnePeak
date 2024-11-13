@@ -21,36 +21,49 @@ const TodayLearn = () => {
     router.push(`/chatbot?situation=${situation}&level=${level}`);
   };
 
-  // 캐러셀
+  // 캐러셀 라이브러리 세팅
   const settings = {
     focusOnSelect: true,
     infinite: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
     speed: 500,
-    autoplay: false, // 자동 재생
-    arrows: false, // 화살표 표시
-    centerPadding: "60px", // 센터 모드 패딩
-    variableWidth: true,
+    autoplay: false,
+    arrows: false,
     dots: false,
     draggable: true,
-    swipe: true
+    swipe: true,
+    responsive: [
+      {
+        breakpoint: 787, // 모바일
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          variableWidth: true // 모바일에서는 variableWidth true로
+        }
+      },
+      {
+        breakpoint: 9999, // PC
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          variableWidth: false // PC에서는 variableWidth false로
+        }
+      }
+    ]
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[1024px] mx-auto">
       <div className="mb-2">
         <h1 className="text-[24px] font-bold">오늘의 학습</h1>
         <p className="text-[12px] text-[#5d5d5d] font-normal">매일 업데이트 되는 추천 학습</p>
       </div>
-      <Slider {...settings} className="[&_.slick-slide]:mx-1 [&_.slick-track]:flex [&_.slick-track]:gap-2 w-full">
+      <Slider {...settings} className="[&_.slick-slide]:px-2 [&_.slick-track]:gap-4">
         {situations?.map((situation) => (
-          <div
-            key={situation.id}
-            onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}
-            className="flex w-full"
-          >
-            <div className="relative p-4 rounded-lg w-[244px] h-[320px] flex flex-col overflow-hidden">
+          <div key={situation.id} onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}>
+            <div
+              className="relative p-4 rounded-lg h-[320px] flex flex-col 
+              w-[244px] md:w-full" // 모바일에서 244px, PC에서 full
+            >
               {situation.image_url ? (
                 <img
                   src={situation.image_url}
@@ -58,13 +71,9 @@ const TodayLearn = () => {
                   className="absolute inset-0 w-full h-full object-cover rounded-lg"
                 />
               ) : (
-                // 이미지가 없을 경우 기존 배경색 유지
                 <div className="absolute inset-0 bg-primary-900 rounded-lg" />
               )}
-              {/* 이미지 위에 그라데이션 오버레이 (텍스트 가독성을 위해) */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent rounded-lg" />
-
-              {/* 컨텐츠 */}
               <div className="relative flex flex-col mt-auto mb-3 text-white">
                 <div className="flex">
                   {Array.from({ length: situation.level }, (_, i) => (

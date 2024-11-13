@@ -45,7 +45,7 @@ const Reviewing = () => {
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/review/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}&id=${review.id}`);
   };
 
   // 더보기 버튼 핸들러
@@ -62,9 +62,8 @@ const Reviewing = () => {
           더보기
         </button>
       </div>
-      {
-        // 최대 3개까지만 노출
-        sortedReview?.map((review) => {
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {sortedReview?.map((review) => {
           return (
             <div key={review.id}>
               <div className="flex flex-col mt-2 p-3 rounded-[10px] bg-white">
@@ -91,8 +90,8 @@ const Reviewing = () => {
               </div>
             </div>
           );
-        })
-      }
+        })}
+      </div>
     </div>
   );
 };
