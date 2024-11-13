@@ -1,6 +1,7 @@
 "use client";
 import { insertFaqData } from "@/api/route";
 import { getUserClient } from "@/api/supabase/getUserClient";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useQuery } from "@tanstack/react-query";
 
 import React, { useEffect, useState } from "react";
@@ -40,7 +41,11 @@ const FaqPage = () => {
   };
 
   if (isPending) {
-    return <div> 사용자의 차단 여부를 확인하고 있습니다..</div>;
+    return (
+      <div className="m-auto">
+        <LoadingSpinner />;
+      </div>
+    );
   }
   if (isError) {
     return <div>사용자의 차단 여부를 확인하는데 실패하였습니다</div>;
@@ -83,7 +88,7 @@ const FaqPage = () => {
           취소
         </button>
         <button
-          className="w-full p-[10px] w-full justify-center items-center  rounded-[10px] bg-[#7bd232] text-center text-[#fcfcfc] font-medium font-['Pretendard']  "
+          className="w-full p-[10px] justify-center items-center  rounded-[10px] bg-[#7bd232] text-center text-[#fcfcfc] font-medium font-['Pretendard']  "
           onClick={faqDataHandler}
         >
           문의
