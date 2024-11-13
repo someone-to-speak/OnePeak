@@ -46,7 +46,7 @@ export class WebRTCService {
       if (this.remoteVideoRef.current) {
         // this.remoteVideoRef.current.srcObject = event.streams[0];
         this.remoteVideoRef.current.srcObject = this.remoteStream;
-        this.remoteVideoRef.current?.play();
+        // this.remoteVideoRef.current?.play();
 
         // this.remoteVideoRef.current.onloadedmetadata = () => {
         //   this.remoteVideoRef.current?.play();
@@ -93,7 +93,7 @@ export class WebRTCService {
       // this.remoteStream.getTracks().forEach((track) => track.stop());
       // this.remoteVideoRef.current.srcObject = null; // 원격 비디오 요소 초기화
       this.remoteVideoRef.current.srcObject = this.remoteStream;
-      this.remoteVideoRef.current.play().catch(console.error);
+      // this.remoteVideoRef.current.play().catch(console.error);
     }
 
     // 기존의 peerConnection을 닫아 상태 초기화
