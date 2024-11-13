@@ -54,7 +54,7 @@ const ChallengePage = () => {
           <div key={problem.type} className="w-full ">
             <div
               key={problem.type}
-              className="flex-col  mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
+              className="flex-col mt-[24px] py-[32px] px-[16px] bg-primary-900 rounded-[12px] justify-between items-center flex"
             >
               <div className="flex flex-col items-center">
                 <div className="mb-[40.5px]">

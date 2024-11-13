@@ -41,7 +41,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
     );
 
   return (
-    <div className="w-full flex flex-col gap-[10px]">
+    <div className="w-full flex flex-col gap-[10px] px-[16px]">
       {/* 진행 바 */}
       <div className="flex flex-col justify-center">
         <div className="flex flex-row items-center justify-between">
