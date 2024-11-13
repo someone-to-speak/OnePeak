@@ -26,11 +26,15 @@ const FaqPage = () => {
     }
   });
 
-  const faqDataHandler = () => {
+  const faqDataHandler = async () => {
     const userId = data?.id;
     const userNickname = data?.nickname;
-    insertFaqData(userId!, userNickname!, selectedType, content);
-    alert("문의가 성공하였습니다");
+    const isSuccess = await insertFaqData(userId!, userNickname!, selectedType, content);
+    if (isSuccess) {
+      alert("문의가 성공하였습니다");
+    } else {
+      alert("문의하는데 실패하였습니다. 다시 시도해주세요");
+    }
     setSelectedType("");
     setContent("");
   };
@@ -43,7 +47,7 @@ const FaqPage = () => {
   }
 
   return (
-    <div className="w-full  m-[30px]">
+    <div className="w-full  p-[30px]">
       <h1 className="text-center text-black text-xl font-bold font-['SUIT'] ">문의하기</h1>
       <div className="my-[20px]">
         <h3 className="mb-[10px] text-[#0c0c0c] text-sm font-bold font-['SUIT'] ">카테고리</h3>

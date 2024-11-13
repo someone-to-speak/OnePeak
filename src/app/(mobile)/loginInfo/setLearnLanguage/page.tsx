@@ -49,15 +49,13 @@ export default function SetLearnLanguage() {
 
   return (
     <div className="md:mt-[70px] md:max-w-[480px] md:mx-auto">
-      <div className="py-3 mb-[10px] h-12 flex gap-[6px] md:hidden ">
-        <button
-          onClick={() => router.back()} // 뒤로 가기 함수 호출
-          className="mb-4"
-        >
-          <Image src={caretleft} alt={"caret-left"} />
-        </button>
-      </div>
-      <div>
+      <button
+        onClick={() => router.back()} // 뒤로 가기 함수 호출
+        className="mb-4 md:hidden"
+      >
+        <Image src={caretleft} alt={"caret-left"} />
+      </button>
+      <div className="md: py-[40px] md:mt-[70px]">
         <div className="mb-6 flex flex-col items-center gap-1">
           <h1 className="text-primary-50 text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px]">
             학습언어를 선택해 주세요
@@ -90,7 +88,7 @@ export default function SetLearnLanguage() {
           disabled={!selectedLearnLanguage}
           className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] ${
             selectedLearnLanguage ? "opacity-100 bg-primary-500" : "opacity-40 bg-primary-500"
-          }`}
+          } md:my-[70px]`}
         >
           계속
         </button>
