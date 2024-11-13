@@ -153,12 +153,12 @@ const WordList = ({ userId }: { userId: string }) => {
                   onClick={() => handleTextToSpeech(question?.content || "", question!.id)}
                   className="flex-1 flex gap-[30px] items-center"
                 >
-                  <div className="flex gap-[10px] items-center">
-                    <Image src={speaker} alt="speaker icon" />
+                  <div className="flex gap-[10px] md:gap-5 items-center">
+                    <Image src={speaker} alt="speaker icon" width={24} height={24} />
                     <Typography
                       size={14}
                       weight="bold"
-                      className="w-[100px] text-left text-#000 break-words whitespace-pre-wrap"
+                      className="w-[100px] md:w-[200px] md:text-center text-left text-#000 break-words whitespace-pre-wrap md:text-[16px]"
                     >
                       {question?.content}
                     </Typography>
@@ -180,7 +180,8 @@ const WordList = ({ userId }: { userId: string }) => {
                     <Image
                       src={question!.isReviewed ? activeCheck : noActiveCheck}
                       alt="status icon"
-                      className="w-6 h-6"
+                      width={24}
+                      height={24}
                     />
                   </div>
                 </button>
