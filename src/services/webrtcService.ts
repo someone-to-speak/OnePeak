@@ -44,11 +44,13 @@ export class WebRTCService {
       this.remoteStream = event.streams[0];
 
       if (this.remoteVideoRef.current) {
-        this.remoteVideoRef.current.srcObject = event.streams[0];
+        // this.remoteVideoRef.current.srcObject = event.streams[0];
+        this.remoteVideoRef.current.srcObject = this.remoteStream;
+        // this.remoteVideoRef.current?.play();
 
-        this.remoteVideoRef.current.onloadedmetadata = () => {
-          this.remoteVideoRef.current?.play();
-        };
+        // this.remoteVideoRef.current.onloadedmetadata = () => {
+        //   this.remoteVideoRef.current?.play();
+        // };
       }
     };
 
@@ -79,6 +81,7 @@ export class WebRTCService {
   }
 
   async reset() {
+    const handRemoteStrean = !!this.remoteStream;
     // 로컬 미디어 트랙 중지
     if (this.localVideoRef.current && this.localStream) {
       this.localStream.getTracks().forEach((track) => track.stop());
@@ -86,9 +89,11 @@ export class WebRTCService {
     }
 
     // 원격 미디어 트랙 중지
-    if (this.remoteVideoRef.current && this.remoteStream) {
-      this.remoteStream.getTracks().forEach((track) => track.stop());
-      this.remoteVideoRef.current.srcObject = null; // 원격 비디오 요소 초기화
+    if (handRemoteStrean && this.remoteVideoRef.current && this.remoteStream) {
+      // this.remoteStream.getTracks().forEach((track) => track.stop());
+      // this.remoteVideoRef.current.srcObject = null; // 원격 비디오 요소 초기화
+      this.remoteVideoRef.current.srcObject = this.remoteStream;
+      // this.remoteVideoRef.current.play().catch(console.error);
     }
 
     // 기존의 peerConnection을 닫아 상태 초기화
