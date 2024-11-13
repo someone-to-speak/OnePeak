@@ -153,7 +153,7 @@ const EditProfile = () => {
             />
           </div>
         </div>
-        <div className="w-full absolute bottom-[90px] md:static">
+        <div className="w-full fixed bottom-[90px] md:static">
           <Button text="완료" disabled={!selectedProfile}></Button>
         </div>
       </form>
