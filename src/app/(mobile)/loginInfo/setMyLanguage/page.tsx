@@ -53,7 +53,7 @@ export default function SetMyLanguage() {
         <Image src={caretleft} alt={"caret-left"} />
       </button>
 
-      <div className="md: py-[40px] md:mt-[70px]">
+      <div className="md:py-[40px] md:mt-[70px]">
         <div className="mb-6 flex flex-col items-center gap-1 ">
           <h1 className="text-primary-50 text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px]">
             모국어를 선택해 주세요
