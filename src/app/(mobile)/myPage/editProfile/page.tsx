@@ -88,9 +88,9 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="w-full flex flex-col min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col justify-center gap-[24px] md:gap-[70px]">
       <WithIconHeader title="프로필 수정" />
-      <form onSubmit={handleSubmit} className="flex flex-col gap-[30px] w-[343px] m-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-[10px] md:gap-[30px] w-[343px] mx-auto">
         <div className="flex flex-col items-center">
           <div className="relative">
             <div className="w-[100px] h-[100px] rounded-[54px] overflow-hidden shadow-md relative">
@@ -115,7 +115,6 @@ const EditProfile = () => {
             </label>
           </div>
         </div>
-
         <div className="flex flex-col gap-[6px]">
           <div className="flex flex-row items-center justify-between">
             <Typography size={16} weight="medium">
@@ -154,10 +153,11 @@ const EditProfile = () => {
             />
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full fixed bottom-[90px] md:static">
           <Button text="완료" disabled={!selectedProfile}></Button>
         </div>
       </form>
+      {/* <Footer /> */}
     </div>
   );
 };
