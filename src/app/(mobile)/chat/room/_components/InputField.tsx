@@ -31,7 +31,10 @@ const InputField: React.FC<InputFieldProps> = ({ sendMessage, sendMessageToChann
   };
 
   return (
-    <form className="absolute bottom-0 w-full px-4 py-[10px] bg-gray-900" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="absolute bottom-0 pb-safe-offset-0 w-full px-4 py-[10px] bg-gray-900 md:static"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex gap-[10px] py-2 pr-2 h-[40px] bg-white items-center rounded-[50px]">
         <input className="w-full px-[20px] " {...register("input")} />
         <button type="submit" className="bg-secondary-900 rounded-full">
