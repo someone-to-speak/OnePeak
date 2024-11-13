@@ -1,4 +1,3 @@
-import tailwindAnimate from "tailwindcss-animate";
 import type { Config } from "tailwindcss";
 import safeArea from "tailwindcss-safe-area";
 import tailwindAnimate from "tailwindcss-animate";
@@ -23,9 +22,9 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))"
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))"
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))"
         },
         primary: {
           50: "var(--primary-50)",
