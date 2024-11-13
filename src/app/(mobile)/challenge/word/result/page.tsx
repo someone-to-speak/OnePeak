@@ -29,7 +29,7 @@ const Result = () => {
   return (
     <>
       {isLargeScreen && <NoIconHeader title="챌린지 결과" />}
-      <div className="w-full flex flex-col min-h-screen">
+      <div className="w-full flex flex-col">
         <div className="mx-auto">
           {message === "점수: 0 / 3" ? <Image src={zeroPoint} alt="zero" width={375} height={550} /> : null}
           {message === "점수: 1 / 3" ? <Image src={onePoint} alt="one" width={375} height={550} /> : null}

@@ -11,7 +11,7 @@ import { Typography } from "../typography";
 const HeaderTop = () => {
   return (
     <div className="border-b border-gray-900">
-      <header className="max-w-[1024px] min-w-[320px] bg-white sticky top-0 mt-0 z-[200] mx-auto">
+      <header className="max-w-[1024px] min-w-[320px] bg-white sticky top-0 mt-0 z-[200] mx-auto px-[12px]">
         <div className="w-full h-[68px] flex justify-between items-center">
           <Link href="/">
             <Image src={LogoIcon} alt="logo-icon" className="h-[27px]" />

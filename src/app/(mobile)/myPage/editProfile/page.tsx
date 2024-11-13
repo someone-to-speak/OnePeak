@@ -158,7 +158,6 @@ const EditProfile = () => {
           <Button text="완료" disabled={!selectedProfile}></Button>
         </div>
       </form>
-      {/* <Footer /> */}
     </div>
   );
 };

@@ -39,7 +39,6 @@ const MyPage = () => {
           </div>
         ))}
       </div>
-      {/* <Footer/> */}
     </div>
   );
 };

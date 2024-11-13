@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import NavbarGnb from "@/components/ui/NavbarGnb";
 import ScreenSizeInitializer from "./ScreenSizeInitializer";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import Footer from "@/components/ui/footer/Footer";
 import HeaderTop from "@/components/ui/header/HeaderTop";
 
 export default function MobileLayout({
@@ -35,7 +36,7 @@ export default function MobileLayout({
         <div className={`${!ignoredPaddingWithPath && "px-4"}`}>
           <main>{children}</main>
         </div>
-        {showNavbar && !isLargeScreen && <NavbarGnb />}
+        {isLargeScreen ? <Footer /> : showNavbar && <NavbarGnb />}
       </div>
     </div>
   );
