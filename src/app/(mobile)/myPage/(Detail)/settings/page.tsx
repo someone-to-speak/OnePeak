@@ -13,6 +13,7 @@ import { useUser } from "@/hooks/useUser";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useLanguages } from "@/hooks/useLanguages";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const SettingsPage = () => {
   const supabase = createClient();
@@ -33,7 +34,7 @@ const SettingsPage = () => {
     }
   }, [profile]);
 
-  if (profileLoading || languageLoading) return <p>Loading...</p>;
+  if (profileLoading || languageLoading) return <LoadingSpinner />;
 
   const handleUpdateMyLanguage = async (language: string) => {
     if (!userInfo?.id || !language) return;

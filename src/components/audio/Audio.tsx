@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Typography } from "../ui/typography";
 import Icon from "../ui/icon";
 
-const CustomAudio = ({ url }: { url: string }) => {
+const CustomAudio = ({ url, isOwned }: { url: string; isOwned: boolean }) => {
   const audioFile = useMemo(() => new Audio(url), [url]);
   const [playing, isPlaying] = useState(false);
   // const [duration, setDuration] = useState("00:00");
@@ -71,14 +71,30 @@ const CustomAudio = ({ url }: { url: string }) => {
   // };
 
   return (
-    <div className="flex items-center gap-[10px] py-2 px-3 bg-gray-900 rounded-2xl rounded-br-none">
-      <Typography size={12} className="font-medium cursor-default">
+    <div
+      className={`flex justify-end items-center gap-[10px] py-2 px-3 bg-gray-900 rounded-2xl ${
+        isOwned ? "rounded-br-none" : "rounded-tl-none"
+      } w-max`}
+    >
+      <Typography size={12} className="font-medium cursor-default md:text-[16px]">
         {currentTime}
       </Typography>
       {playing ? (
-        <Icon name={"pause"} size={12} color={"#FFB733"} onClick={handlePlayPause} />
+        <Icon
+          name={"pause"}
+          size={12}
+          color={"#FFB733"}
+          className="fill-current text-[#FFB733] cursor-pointer md:w-[16px] md:h-[16px]"
+          onClick={handlePlayPause}
+        />
       ) : (
-        <Icon name={"play"} size={12} color={"#FFB733"} onClick={handlePlayPause} />
+        <Icon
+          name={"play"}
+          size={12}
+          color={"#FFB733"}
+          className="fill-current text-[#FFB733] cursor-pointer md:w-[16px] md:h-[16px]"
+          onClick={handlePlayPause}
+        />
       )}
     </div>
   );

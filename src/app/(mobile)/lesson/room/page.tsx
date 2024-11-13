@@ -70,6 +70,11 @@ const VideoChat = () => {
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
+    const resetVideo = async () => {
+      await webrtcServiceRef.current?.reset();
+      await webrtcServiceRef.current?.init();
+    };
+    resetVideo();
     const handleBackButton = async () => {
       await channel.current?.send({
         type: "broadcast",
@@ -145,7 +150,7 @@ const VideoChat = () => {
       // window.removeEventListener("popstate", handleBackButton);
       window.removeEventListener("beforeunload", handleRefresh);
     };
-  }, [handleCloseMatchingSignal, roomId, router]);
+  }, [isLargeScreen, handleCloseMatchingSignal, roomId, router]);
 
   return (
     <>

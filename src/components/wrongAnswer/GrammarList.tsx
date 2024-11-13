@@ -47,8 +47,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
     .filter((item) => item !== null);
 
   return (
-    <div>
-      <div className="bg-gray-900 flex my-4 rounded-[22px] w-[343px] h-[46px] p-2.5 justify-center items-center">
+    <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
+      <div className="bg-gray-900 flex rounded-[22px] w-full h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5">
         <button
           className={`${
             isReviewed === "미완료"
@@ -74,45 +74,62 @@ const GrammarList = ({ userId }: { userId: string }) => {
           </Typography>
         </button>
       </div>
-
-      {filteredAnswers?.map((question, index) => (
-        <div
-          key={index}
-          className={`w-full h-auto mb-[10px] px-5 py-[18px] justify-center bg-white rounded-[10px] shadow-review ${
-            question!.isReviewed ? "border border-primary-500" : ""
-          }`}
-        >
-          <button
-            onClick={() =>
-              updateIsReviewed.mutate({
-                answerId: question!.answerId,
-                currentReviewed: question!.isReviewed
-              })
-            }
-            className="w-full flex flex-row items-center justify-between"
-          >
-            <div className="flex-none max-w-[60px]">
-              <Typography size={16} weight="bold" className="text-left text-[#F50000] break-keep">
-                {question?.answer}
-              </Typography>
-            </div>
-            <div className="grow px-[20px]">
-              <div className="flex flex-col gap-[10px]">
-                <Typography size={16} weight="bold" className="text-left">
-                  {question?.content}
-                </Typography>
-                <div className="border border-gray-900" />
-                <Typography size={14} weight="medium" className="text-left text-gray-300">
-                  {question?.reason}
-                </Typography>
-              </div>
-            </div>
-            <div className="flex-none">
-              <Image src={question!.isReviewed ? activeCheck : noActiveCheck} alt="status icon" className="w-6 h-6" />
-            </div>
-          </button>
+      <div
+        className={`md:h-[543px] md:flex md:flex-col md:gap-5 md:p-[30px] md:border-none md:rounded-xl ${
+          isReviewed === "미완료" ? "md:bg-gray-900" : "md:bg-primary-900"
+        }`}
+      >
+        {/* Content here */}
+        <div className=" hidden md:flex md:flex-col">
+          <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
-      ))}
+        <div className="flex flex-col gap-[10px] md:gap-[20px]">
+          {filteredAnswers?.map((question, index) => (
+            <div
+              key={index}
+              className={`w-full h-auto mb-[10px] px-5 py-[18px] md:py-0 justify-center bg-white rounded-[10px] shadow-review ${
+                question!.isReviewed ? "border border-primary-500" : ""
+              }`}
+            >
+              <button
+                onClick={() =>
+                  updateIsReviewed.mutate({
+                    answerId: question!.answerId,
+                    currentReviewed: question!.isReviewed
+                  })
+                }
+                className="w-full flex flex-row items-center justify-between"
+              >
+                <div className="grow px-[20px] md:px-0">
+                  <div className="flex flex-col gap-[10px] md:gap-0">
+                    <Typography size={16} weight="bold" className="text-left md:my-[10px]">
+                      {question?.content.split("_____").map((part, index) => (
+                        <span key={index}>
+                          {part}
+                          {index < question.content.split("____").length - 1 && (
+                            <span className="text-red-500 inline">{question.answer}</span>
+                          )}
+                        </span>
+                      ))}
+                    </Typography>
+                    <div className="border border-gray-900" />
+                    <Typography size={14} weight="medium" className="text-left text-gray-300 md:mt-[10px] md:mb-5">
+                      {question?.reason}
+                    </Typography>
+                  </div>
+                </div>
+                <div className="flex-none">
+                  <Image
+                    src={question!.isReviewed ? activeCheck : noActiveCheck}
+                    alt="status icon"
+                    className="w-6 h-6"
+                  />
+                </div>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

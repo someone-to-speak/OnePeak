@@ -29,7 +29,7 @@ const Result = () => {
   return (
     <>
       {isLargeScreen && <NoIconHeader title="챌린지 결과" />}
-      <div className="w-full flex flex-col min-h-screen">
+      <div className="w-full flex flex-col">
         <div className="mx-auto">
           {message === "점수: 0 / 3" ? <Image src={zeroPoint} alt="zero" width={375} height={550} /> : null}
           {message === "점수: 1 / 3" ? <Image src={onePoint} alt="one" width={375} height={550} /> : null}
@@ -38,10 +38,12 @@ const Result = () => {
         </div>
         <div className="fixed left-0 right-0 bottom-[31px] px-[16px] md:static">
           <div className="flex flex-col gap-[10px] md:flex-row">
-            <Button text="오답노트로 가기" size="auto" />
-            <Link href="/challenge/grammar/wrongAnswerNote" />
-            <Button text="챌린지로 돌아가기" size="auto" variant="stroke" />
-            <Link href="/challenge" />
+            <Link href="/challenge/grammar/wrongAnswerNote" className="md:w-[50%]">
+              <Button text="오답노트로 가기" size="auto" />
+            </Link>
+            <Link href="/challenge" className="md:w-[50%]">
+              <Button text="챌린지로 돌아가기" size="auto" variant="stroke" />
+            </Link>
           </div>
         </div>
       </div>

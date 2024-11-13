@@ -9,6 +9,7 @@ import { Typography } from "../ui/typography";
 import Button from "../ui/button";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 type QuizProps = {
   userId: string;
@@ -33,12 +34,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
   const progressPercentage = (currentIndex / questions.length) * 100;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
-  if (questions.length === 0)
-    return (
-      <Typography size={16} weight="medium">
-        문제를 불러오는 중
-      </Typography>
-    );
+  if (questions.length === 0) return <LoadingSpinner />;
 
   return (
     <div className="w-full flex flex-col gap-[10px]">
@@ -64,8 +60,26 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
       <div className="w-full flex flex-col gap-[12px] md:flex-row md:gap-[30px]">
         {/* 문제 */}
         <div className="w-full h-[260px] md:max-w-[520px] md:h-[520px] bg-[#f3f3f3] rounded-xl flex-col justify-center items-center p-8 inline-flex">
-          <Typography size={26} weight="bold" className="text-center">
-            {currentQuestion.content}
+          <Typography size={26} weight="bold" className="text-center leading-loose">
+            {currentQuestion.content.split("_____").map((part, index) => (
+              <span key={index}>
+                {part}
+                {index < currentQuestion.content.split("____").length - 1 && (
+                  <span
+                    className={`inline-flex w-[109px] h-[40px] align-middle rounded-[10px] justify-center items-center text-[24px] mx-[10px] text-nowrap truncate ${
+                      selectedAnswers[currentQuestion.id]
+                        ? selectedAnswers[currentQuestion.id] === currentQuestion.answer
+                          ? "bg-secondary-900 border border-secondary-500"
+                          : "bg-[#F7D9D9] border border-[#F50000]"
+                        : "bg-white border border-[#D9D9D9] ${"
+                    }`}
+                  >
+                    {/* 선택한 답이 있을 경우 답 표시 */}
+                    {selectedAnswers[currentQuestion.id] || ""}
+                  </span>
+                )}
+              </span>
+            ))}
           </Typography>
         </div>
 
@@ -99,6 +113,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
               </button>
             ))}
           </div>
+
           {selectedAnswers[currentQuestion.id] && !correctAnswers[currentQuestion.id] && reason[currentQuestion.id] && (
             <div className="flex flex-col mt-[16px]">
               <Typography size={16} weight="bold" className="text-[#f40000]">
@@ -109,6 +124,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
               </Typography>
             </div>
           )}
+
           {isLargeScreen && (
             <div className="w-full">
               {selectedCount !== questions.length ? (

@@ -32,6 +32,7 @@ interface IconProps {
   name: IconType;
   size?: number;
   color?: string;
+  className?: string;
   onClick?: () => void;
 }
 
@@ -50,9 +51,9 @@ const iconComponents = {
   camera: Camera
 };
 
-const Icon = ({ name, size = 32, color = "#343330", onClick }: IconProps) => {
+const Icon = ({ name, size = 32, color = "#343330", className, onClick }: IconProps) => {
   const IconComponent = iconComponents[name];
-  return <IconComponent size={size} color={color} onClick={onClick} />;
+  return <IconComponent size={size} color={color} className={className} onClick={onClick} />;
 };
 
 export default Icon;

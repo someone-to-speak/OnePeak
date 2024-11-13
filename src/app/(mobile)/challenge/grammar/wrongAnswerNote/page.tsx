@@ -14,7 +14,7 @@ const WrongGrammarPage = async () => {
   const userId = await fetchUserInfo();
 
   return (
-    <div>
+    <div className="flex flex-col gap-3 md:gap-[70px]">
       <WithIconHeader title="문법 오답노트" />
       <GrammarList userId={userId} />
     </div>

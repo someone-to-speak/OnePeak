@@ -4,7 +4,8 @@ import BottomSheetModal from "@/components/BottomSheetModal";
 import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
 import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
 import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
-import Header from "@/components/header/Header";
+import Header from "@/components/ui/header/Header";
+import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
   const router = useRouter();
+  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   useEffect(() => {
     // 로그인 상태를 확인하는 비동기 함수
@@ -65,14 +67,12 @@ export default function Home() {
   return (
     <>
       <div className="relative w-full pb-20">
-        <>
-          <Header />
-          <div className="h-10 py-4 bg-#FDFDFD"></div>
-          {/* 홈 화면 콘텐츠 */}
-          <TodayLearn />
-          <CustomizedLearn />
-          <Reviewing />
-        </>
+        {!isLargeScreen && <Header />}
+        <div className="h-10 py-4 bg-#FDFDFD"></div>
+        {/* 홈 화면 콘텐츠 */}
+        <TodayLearn />
+        <CustomizedLearn />
+        <Reviewing />
       </div>
 
       {/* 로그인되지 않았을 때 모달 표시 */}
