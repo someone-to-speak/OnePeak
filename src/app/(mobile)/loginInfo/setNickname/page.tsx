@@ -26,9 +26,8 @@ export default function SetNickname() {
   };
 
   return (
-    <>
-      <div className="w-full h-12 px-4 py-[10.5px] "></div>
-      <div className="px-4 mt-[10px] md:max-w-[343px] md:mx-auto">
+    <div className="px-4 mt-[10px] md:max-w-[343px] md:mx-auto md:mt-[70px] ">
+      <div className="md:py-[40px]">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-[var(--Primary-50,#020401)] text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px]">
             닉네임을 입력해 주세요
@@ -50,16 +49,16 @@ export default function SetNickname() {
             maxLength={maxTexts} // 최대 글자 수 제한
           />
         </div>
-        <button
-          onClick={handleContinue}
-          disabled={!nickname}
-          className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] ${
-            nickname ? "opacity-100 bg-[var(--Primary-500,#7BD232)]" : "opacity-40 bg-[var(--Primary-500,#7BD232)]"
-          }`}
-        >
-          계속
-        </button>
       </div>
-    </>
+      <button
+        onClick={handleContinue}
+        disabled={!nickname}
+        className={`flex w-full h-[54px] p-[10px] justify-center items-center gap-[10px] flex-shrink-0 rounded-[10px] mb-[10px] ${
+          nickname ? "opacity-100 bg-[var(--Primary-500,#7BD232)]" : "opacity-40 bg-[var(--Primary-500,#7BD232)]"
+        } md:my-[70px] `}
+      >
+        계속
+      </button>
+    </div>
   );
 }
