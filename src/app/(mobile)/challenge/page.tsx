@@ -32,7 +32,7 @@ const ChallengePage = () => {
   return (
     <div>
       <NoIconHeader title="챌린지" />
-      <div className="w-full h-[calc(100vh+90px)] md:h-full">
+      <div className="w-full h-[calc(100vh+20px)] md:h-full">
         <div className="max-w-[343px] h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex flex-row justify-center items-center">
           {problems.map((problem, index) => (
             <div
