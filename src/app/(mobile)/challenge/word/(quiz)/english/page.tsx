@@ -1,7 +1,7 @@
 "use client";
 
 import RandomEnglishWordQuiz from "@/components/challenge/RandomEnglishWordQuiz";
-import { useSearchParams } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 import { Suspense } from "react";
 
 const EnglishWordQuizPage = () => {
@@ -13,8 +13,8 @@ const EnglishWordQuizPage = () => {
 };
 
 const EnglishWordQuiz = () => {
-  const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId");
+  const { userInfo } = useUser();
+  const userId = userInfo?.id;
 
   return <div>{userId && <RandomEnglishWordQuiz userId={userId} />}</div>;
 };

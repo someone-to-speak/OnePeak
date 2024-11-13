@@ -1,16 +1,16 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
-import { fetchWordQuestions } from "@/api/wrongAnswersNote/fetchWordQuestions";
 import { convertTextToSpeech } from "@/api/openAI/tts";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import speaker from "@/assets/wrongAnswerNote/speaker-high.svg";
 import { Typography } from "../ui/typography";
+import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
+import { useWordQuestions } from "@/hooks/useWordQuestions";
 
 const WordList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
@@ -18,25 +18,11 @@ const WordList = ({ userId }: { userId: string }) => {
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
   const [playingQuestionId, setPlayingQuestionId] = useState<number | null>(null);
 
-  const {
-    data: userAnswers,
-    error: userAnswersError,
-    isLoading: userAnswersLoading
-  } = useQuery({
-    queryKey: ["userAnswers", userId],
-    queryFn: () => fetchUserWrongAnswers(userId),
-    staleTime: 0
-  });
+  // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
+  const { data: userAnswers, error: userAnswersError, isLoading: userAnswersLoading } = useUserWrongAnswers(userId);
 
-  const {
-    data: questions,
-    error: questionsError,
-    isLoading: questionsLoading
-  } = useQuery({
-    queryKey: ["questions"],
-    queryFn: () => fetchWordQuestions(),
-    staleTime: 0
-  });
+  // 단어문제 데이터를 가져오는 커스텀훅
+  const { data: questions, error: questionsError, isLoading: questionsLoading } = useWordQuestions();
 
   const updateIsReviewed = useMutation({
     mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
@@ -50,6 +36,7 @@ const WordList = ({ userId }: { userId: string }) => {
       queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
     }
   });
+  // const { mutate: toggleIsReviewed, isLoading, isError } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
@@ -77,10 +64,11 @@ const WordList = ({ userId }: { userId: string }) => {
         }
       }
 
+      // 음성 데이터를 Base64 형식으로 받아오기
       const base64Audio = await convertTextToSpeech(text);
 
-      // Base64를 Blob으로 변환
-      const byteCharacters = atob(base64Audio);
+      // Base64 문자열을 Blob 객체로 변환
+      const byteCharacters = atob(base64Audio); // Base64를 디코딩
       const byteNumbers = new Array(byteCharacters.length);
 
       for (let i = 0; i < byteCharacters.length; i++) {
@@ -88,6 +76,7 @@ const WordList = ({ userId }: { userId: string }) => {
       }
 
       const byteArray = new Uint8Array(byteNumbers);
+      // Blob 객체 생성 (MP3 형식)
       const blob = new Blob([byteArray], { type: "audio/mp3" });
 
       // 기존 오디오 엘리먼트가 있다면 제거(동일한 단어를 여러 번 클릭할 때)

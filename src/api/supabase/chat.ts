@@ -73,7 +73,6 @@ export const fetchConversationList = async (userId: string) => {
     last_message_id: (list?.last_message_id || {}) as Message
   }));
 
-  // console.log("formattedConversationList: ", formattedConversationList);
   const conversationListWithParticipants = await Promise.all(
     formattedConversationList?.map(async (conversation) => {
       const { data: participants } = await supabase

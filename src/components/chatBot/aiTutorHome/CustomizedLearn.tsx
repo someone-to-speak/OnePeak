@@ -38,6 +38,7 @@ const CustomizedLearn = () => {
             className="absolute h-[26px] right-2 top-1/2 -translate-y-1/2 pl-2 "
             type="submit"
             aria-label="메시지 전송"
+            disabled
           >
             <Image src={sendIcon} alt="전송" width={20} height={20} />
           </button>

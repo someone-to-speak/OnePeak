@@ -1,39 +1,25 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchUserWrongAnswers } from "@/api/wrongAnswersNote/fetchUserWrongAnswers";
-import { fetchGrammarQuestions } from "@/api/wrongAnswersNote/fetchGrammarQuestions";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
 import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
+import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
+import { useGrammarQuestions } from "@/hooks/useGrammarQuestions";
 
 const GrammarList = ({ userId }: { userId: string }) => {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
-  const {
-    data: userAnswers,
-    error: userAnswersError,
-    isLoading: userAnswersLoading
-  } = useQuery({
-    queryKey: ["userAnswers", userId],
-    queryFn: () => fetchUserWrongAnswers(userId),
-    staleTime: 0
-  });
+  // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
+  const { data: userAnswers, error: userAnswersError, isLoading: userAnswersLoading } = useUserWrongAnswers(userId);
 
-  const {
-    data: questions,
-    error: questionsError,
-    isLoading: questionsLoading
-  } = useQuery({
-    queryKey: ["questions"],
-    queryFn: () => fetchGrammarQuestions(),
-    staleTime: 0
-  });
+  // 문법문제 데이터를 가져오는 커스텀훅
+  const { data: questions, error: questionsError, isLoading: questionsLoading } = useGrammarQuestions();
 
   const updateIsReviewed = useMutation({
     mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
