@@ -30,7 +30,7 @@ const FaqPage = () => {
     const userId = data?.id;
     const userNickname = data?.nickname;
     insertFaqData(userId!, userNickname!, selectedType, content);
-    //에러면 에러다, 성공했으면 성공했다 이 처리 해줘야함
+    alert("문의가 성공하였습니다");
     setSelectedType("");
     setContent("");
   };
