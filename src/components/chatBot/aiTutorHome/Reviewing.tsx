@@ -41,7 +41,7 @@ const Reviewing = () => {
     ?.sort((a, b) => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     })
-    .slice(0, 3);
+    .slice(0, 4);
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
@@ -54,15 +54,15 @@ const Reviewing = () => {
   };
 
   return (
-    <div className="flex flex-col bg-[#f9f9f9] mt-10">
+    <div className="flex flex-col bg-[#f9f9f9] mt-10 p-4">
       <h1 className="text-[24px] font-bold">복습하기</h1>
       <div className="flex">
         <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
-        <button onClick={handleReviewDetail} className="absolute right-0 text-[#a6a6a6] text-[12px]">
+        <button onClick={handleReviewDetail} className="absolute right-4 text-[#a6a6a6] text-[12px]">
           더보기
         </button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {sortedReview?.map((review) => {
           return (
             <div key={review.id}>
