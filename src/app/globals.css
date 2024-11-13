@@ -188,7 +188,7 @@
 
     /* Shadows */
     --shadow-category: 0px 2px 7px 0px rgba(0, 0, 0, 0.15);
-    --shadow-review: 1px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    --shadow-review: 0px 0px 10px 2px rgba(0, 0, 0, 0.12);
     --shadow-background: inset 0px 5px 8px 0px rgba(0, 0, 0, 0.02);
     --shadow-challenge-tab: inset 0px 5px 8px 0px rgba(0, 0, 0, 0.02);
 
