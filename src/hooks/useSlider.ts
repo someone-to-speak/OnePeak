@@ -7,13 +7,11 @@ const useSlider = () => {
     infinite: false,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     autoplay: false,
     autoplaySpeed: 2000,
     draggable: true,
     swipe: true,
-    centerMode: true,
-    centerPadding: "5px",
     arrows: false
   };
 

@@ -21,9 +21,9 @@ const NotificationBell = () => {
   }, []);
 
   return (
-    <div className="relative" ref={popupRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="relative p-2 focus:outline-none">
-        <Image src={BellIcon} alt="알림" width={24} height={24} />
+    <div ref={popupRef} className="w-7 h-7">
+      <button onClick={() => setIsOpen(!isOpen)}>
+        <Image src={BellIcon} alt="알림" width={28} height={28} />
       </button>
 
       {isOpen && <NotificationPopup />}

@@ -8,10 +8,13 @@ import { Typography } from "@/components/ui/typography";
 import useNotifications from "@/hooks/useNotifications";
 import { useUser } from "@/hooks/useUser";
 import { Spinner } from "@nextui-org/spinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const NotificationPage = () => {
   const { notifi } = useNotifications();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading } = useUser();
+
+  if (isLoading) return <LoadingSpinner />;
 
   if (!userInfo) return null;
 

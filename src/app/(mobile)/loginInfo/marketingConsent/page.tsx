@@ -26,10 +26,10 @@ const MarketingConsent = () => {
     }
   };
   return (
-    <div className="w-full">
+    <div className="w-full md:max-w-[343px] md:mx-auto md:mt-[70px]">
       <button
         onClick={() => router.back()} // 뒤로 가기 함수 호출
-        className="flex h-[48px] px-[16px] items-center gap-[6px] bg-white-fdfdfd "
+        className="flex h-[48px] px-[16px] items-center gap-[6px] bg-white-fdfdfd md:hidden "
       >
         <Image height={24} src={caretleft} alt={"caret-left"} className="bg-[#fcfcfc] " />
       </button>
@@ -45,12 +45,12 @@ const MarketingConsent = () => {
           setIsMarketed(false);
           handleAddMarketedInfo(isMarketed);
         }}
-        className=" w-full px-auto mt-[490px]  text-center text-[#8c8c8c] text-xs font-bold font-['SUIT'] underline "
+        className=" w-full px-auto mt-[490px]  text-center text-[#8c8c8c] text-xs font-bold font-['SUIT'] underline md:mt-[70px]"
       >
         미동의하고 시작하기
       </button>
       <Button
-        className="mt-[10px]  "
+        className="mt-[10px] mx-auto "
         text="동의하고 시작하기"
         variant="default"
         size="large"

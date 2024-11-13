@@ -27,8 +27,8 @@ export default function SetNickname() {
 
   return (
     <>
-      <div className="w-full h-12 px-4 py-[10.5px]"></div>
-      <div className="px-4 mt-[10px]">
+      <div className="w-full h-12 px-4 py-[10.5px] "></div>
+      <div className="px-4 mt-[10px] md:max-w-[343px] md:mx-auto">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-[var(--Primary-50,#020401)] text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px]">
             닉네임을 입력해 주세요
@@ -37,7 +37,7 @@ export default function SetNickname() {
             원픽에서 사용할 닉네임을 설정해 주세요
           </p>
         </div>
-        <div className="flex flex-col gap-[6px] mb-[447px]">
+        <div className="flex flex-col gap-[6px] mb-[447px] md:mb-[70px]">
           <p className="text-[var(--Gray-500,#8C8C8C)] text-right font-pretendard text-[12px] font-medium leading-[18px] tracking-[-0.24px]">
             {nickname.length}/{maxTexts}
           </p>
