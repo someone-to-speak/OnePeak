@@ -24,7 +24,8 @@ export default function MobileLayout({
     pathname === "/lesson" ||
     pathname === "/myPage/editProfile";
 
-  const ignoredPaddingWithPath = pathname?.startsWith("/lesson") || pathname?.startsWith("/");
+  const ignoredPaddingWithPath =
+    pathname?.startsWith("/lesson") || pathname?.startsWith("/") || pathname?.startsWith("/chat");
 
   return (
     <div>

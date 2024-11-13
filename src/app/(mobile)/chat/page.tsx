@@ -6,10 +6,10 @@ import { useConversation } from "@/hooks/useConversation";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { conversationList, isLoading, isError } = useConversation();
+  const { conversationList, isFetched, isError } = useConversation();
   const router = useRouter();
 
-  if (isLoading) {
+  if (!isFetched) {
     return (
       <div className="h-screen flex justify-center items-center">
         <Typography size={14} className="font-medium">

@@ -76,9 +76,21 @@ const CustomAudio = ({ url }: { url: string }) => {
         {currentTime}
       </Typography>
       {playing ? (
-        <Icon name={"pause"} size={12} color={"#FFB733"} onClick={handlePlayPause} />
+        <Icon
+          name={"pause"}
+          size={12}
+          color={"#FFB733"}
+          className="fill-current text-[#FFB733] cursor-pointer"
+          onClick={handlePlayPause}
+        />
       ) : (
-        <Icon name={"play"} size={12} color={"#FFB733"} onClick={handlePlayPause} />
+        <Icon
+          name={"play"}
+          size={12}
+          color={"#FFB733"}
+          className="fill-current text-[#FFB733] cursor-pointer"
+          onClick={handlePlayPause}
+        />
       )}
     </div>
   );

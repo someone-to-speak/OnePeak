@@ -145,7 +145,7 @@ const VideoChat = () => {
       // window.removeEventListener("popstate", handleBackButton);
       window.removeEventListener("beforeunload", handleRefresh);
     };
-  }, [handleCloseMatchingSignal, roomId, router]);
+  }, [isLargeScreen, handleCloseMatchingSignal, roomId, router]);
 
   return (
     <>

@@ -8,7 +8,7 @@ export const useConversation = () => {
   // 채팅방 리스트 불러오기
   const {
     data: conversationList,
-    isLoading,
+    isFetched,
     isError
   } = useQuery({
     queryKey: ["conversation", userInfo?.id],
@@ -16,5 +16,5 @@ export const useConversation = () => {
     enabled: !!userInfo?.id
   });
 
-  return { conversationList, isLoading, isError };
+  return { conversationList, isFetched, isError };
 };
