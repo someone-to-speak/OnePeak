@@ -206,8 +206,8 @@ export const uploadLanguageImage = async (file: File) => {
   return data;
 };
 
-// bucket으로부터 받은 이미지 주소 language 테이블에 넣기
-export const insertLanguageImg = async ({ imageUrl, language }: { imageUrl: string; language: string }) => {
+// bucket으로부터 받은 이미지주소와 언어를 language 테이블에 넣기
+export const insertLanguageInfo = async ({ imageUrl, language }: { imageUrl: string; language: string }) => {
   const browserClient = createClient();
   const { error } = await browserClient
     .from("language")
@@ -250,4 +250,13 @@ export const insertAlarmInfo = async (selectedType: string, title: string, conte
   const browserClient = createClient();
   const data = await browserClient.from("notifications").insert({ type: selectedType, title: title, message: content });
   return data.status === 201;
+};
+
+// 1:1 문의하기 내용 faq 테이블에 넣기
+export const insertFaqData = async (userId: string, userNickname: string, selectedType: string, content: string) => {
+  const browserClient = createClient();
+  const { error } = await browserClient
+    .from("faq")
+    .insert({ category: selectedType, content: content, user_id: userId, user_nickname: userNickname });
+  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
 };
