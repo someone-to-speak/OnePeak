@@ -70,6 +70,11 @@ const VideoChat = () => {
   useEffect(() => {
     if (!channel.current || !roomId) return;
 
+    const resetVideo = async () => {
+      await webrtcServiceRef.current?.reset();
+      await webrtcServiceRef.current?.init();
+    };
+    resetVideo();
     const handleBackButton = async () => {
       await channel.current?.send({
         type: "broadcast",
