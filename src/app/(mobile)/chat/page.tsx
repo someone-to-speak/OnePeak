@@ -1,7 +1,7 @@
 "use client";
 
 import { Typography } from "@/components/ui/typography";
-import UserProfile from "@/components/ui/userProfile";
+import UserProfile from "@/components/ui/chatUserProfile";
 import { useConversation } from "@/hooks/useConversation";
 import { useRouter } from "next/navigation";
 
@@ -45,7 +45,6 @@ const Page = () => {
               }
               learnLanguageUrl={conversation.participants.user_info.learn_language.language_img_url}
               learnLanguage={conversation.participants.user_info.learn_language.language_name}
-              path="chat"
               onClick={() => router.push(`/chat/room?id=${conversation.id}`)}
             ></UserProfile>
           </div>

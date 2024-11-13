@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 import { Typography } from "../typography";
+import Icon from "../icon";
 
 interface UserProfileProps {
   name: string;
@@ -10,6 +11,7 @@ interface UserProfileProps {
   lastMessage: string;
   learnLanguageUrl: string;
   learnLanguage: string;
+
   onClick: () => void;
 }
 
@@ -20,12 +22,15 @@ const UserProfile = ({
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
+
   onClick
 }: UserProfileProps) => {
   return (
     <div
       onClick={onClick}
-      className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none bg-white w-full items-center cursor-pointer")}
+      className={cn(
+        "flex gap-[10px] px-3 py-[20px] rounded-[10px] bg-white w-full items-center cursor-pointer shadow-review "
+      )}
     >
       {/* image part */}
       <UserProfileImage profileImage={profileImage} />
@@ -46,7 +51,13 @@ export default UserProfile;
 
 const UserProfileImage = ({ profileImage }: { profileImage: string }) => {
   return profileImage ? (
-    <Image src={profileImage || "/app-icon.png"} alt="profile" width={78} height={78} className="rounded-[20px]" />
+    <Image
+      src={profileImage || "/app-icon.png"}
+      alt="profile"
+      width={62}
+      height={62}
+      className="rounded-[20px] w-[62px] h-[62px] md:w-[66px] md:h-[66px]"
+    />
   ) : null;
 };
 
@@ -56,6 +67,7 @@ const UserProfileContent = ({
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
+
   onClick
 }: Omit<UserProfileProps, "profileImage">) => {
   return (
@@ -63,24 +75,24 @@ const UserProfileContent = ({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <FlagIcon countryImageUrl={country} />
-          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px]">
+          <Typography size={14} className="font-bold text-gray-50 truncate w-[140px] md:text-[18px]">
             {name}
           </Typography>
         </div>
-        <button onClick={onClick} className="text-[12px] font-medium text-gray-500 text-nowrap">
-          프로필 수정
+        <button onClick={onClick} className="flex justify-center items-center">
+          <Icon name="dotThree" size={25} color="#0D0D0D" />
         </button>
       </div>
-      <Typography size={14} className="text-gray-200 font-medium font-pretendard truncate">
+      <Typography size={12} className="text-gray-200 font-medium font-pretendard truncate md:text-[16px]">
         {lastMessage}
       </Typography>
       <div className="flex items-center gap-1  pb-1">
-        <Typography size={12} className="text-gray-600 font-medium font-pretendard">
+        <Typography size={10} className="text-gray-600 font-medium font-pretendard md:text-[14px]">
           학습 언어
         </Typography>
         <div className="flex items-center gap-0.5">
           <FlagIcon countryImageUrl={learnLanguageUrl} size={12} />
-          <Typography size={12} className="font-bold">
+          <Typography size={10} className="font-bold md:text-[14px]">
             {learnLanguage === "korean" ? "한국어" : "영어"}
           </Typography>
         </div>
@@ -91,6 +103,12 @@ const UserProfileContent = ({
 
 export const FlagIcon = ({ countryImageUrl, size = 14 }: { countryImageUrl: string; size?: number }) => {
   return countryImageUrl ? (
-    <Image src={countryImageUrl} className="rounded-[5px]" alt={`${countryImageUrl} flag`} width={size} height={size} />
+    <Image
+      src={countryImageUrl}
+      alt={`${countryImageUrl} flag`}
+      width={size}
+      height={size}
+      className="rounded-[5px] md:w-[18px] md:h-[18px]"
+    />
   ) : null;
 };
