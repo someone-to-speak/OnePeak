@@ -37,7 +37,7 @@ export default function MobileLayout({
         <div className={`${!ignoredPaddingWithPath && "px-4"}`}>
           <main>{children}</main>
         </div>
-        {isLargeScreen ? <Footer /> : showNavbar && <NavbarGnb />}
+        {isLargeScreen && !pathname?.startsWith("/chat/room") ? <Footer /> : showNavbar && <NavbarGnb />}
       </div>
     </div>
   );

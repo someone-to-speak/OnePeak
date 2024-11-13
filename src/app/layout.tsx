@@ -20,6 +20,10 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
         />
+        <link
+          href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css"
+          rel="stylesheet"
+        ></link>
         <link rel="icon" type="image/png" href="/app-icon.png" />
       </head>
       <body>

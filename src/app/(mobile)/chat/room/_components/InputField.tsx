@@ -32,13 +32,13 @@ const InputField: React.FC<InputFieldProps> = ({ sendMessage, sendMessageToChann
 
   return (
     <form
-      className="absolute bottom-0 pb-safe-offset-0 w-full px-4 py-[10px] bg-gray-900 md:static"
+      className="fixed w-full max-w-[1024px] min-w-[320px] mx-auto px-4 bottom-0 left-0 right-0 pb-safe-offset-0 bg-gray-900"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="flex gap-[10px] py-2 pr-2 h-[40px] bg-white items-center rounded-[50px]">
+      <div className="flex gap-[10px] py-2 pr-2 h-[40px] my-[10px] bg-white items-center rounded-[50px]">
         <input className="w-full px-[20px] " {...register("input")} />
         <button type="submit" className="bg-secondary-900 rounded-full">
-          <Icon name={"arrowup"} size={26} color={"#FFB733"} />
+          <Icon name="arrowup" size={26} color={"#FFB733"} />
         </button>
       </div>
     </form>

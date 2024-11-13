@@ -21,15 +21,23 @@ const Chatroom = () => {
   const conversationId = searchParams?.get("id") as string;
   const router = useRouter();
 
-  const { messages, isLoading, isError, sendMessage, sendMessageToChannel } = useMessage(conversationId);
+  const { messages, isFetched, isError, sendMessage, sendMessageToChannel } = useMessage(conversationId);
 
-  if (isLoading) return <div>잠시만 기다려주세요...</div>;
+  if (!isFetched) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Typography size={14} className="font-medium">
+          채팅 내역을 불러오고 있습니다.
+        </Typography>
+      </div>
+    );
+  }
 
   if (isError) return <div>페이지 오류입니다.</div>;
 
   return (
-    <div className="flex flex-col px-4 md:px-3 gap-[10px] pt-safe-offset-0 h-screen">
-      <div className="flex items-center gap-[6px] py-[10.5px] md:py-[70px]">
+    <div className="relative flex flex-col gap-[10px] pt-safe-offset-0 h-screen">
+      <div className="flex items-center px-4 md:px-3 gap-[6px] py-[10.5px] md:py-[70px]">
         <Icon
           name="careLeft"
           size={24}
