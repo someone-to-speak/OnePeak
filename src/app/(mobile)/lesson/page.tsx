@@ -74,11 +74,11 @@ const LessonPage = () => {
                 >
                   {/* 고정된 배경 원 */}
                   <circle
-                    className="text-gray-200"
+                    className="text-gray-200 stroke-primary-900 opacity-50"
                     cx="12"
                     cy="12"
                     r="10" // 원의 중심 위치와 반지름을 설정
-                    stroke="currentColor" // 원의 테두리 색상을 설정
+                    // stroke="currentColor" // 원의 테두리 색상을 설정
                     strokeWidth="4" // 테두리 두께를 설정
                     fill="none" // 내부 채우기를 제거
                   />
@@ -87,12 +87,12 @@ const LessonPage = () => {
                     cx="12"
                     cy="12"
                     r="10" // 중심 좌표와 반지름을 배경 원과 동일하게 설정
-                    stroke="currentColor" // 현재 색상으로 테두리 색 설정
+                    // stroke="currentColor" // 현재 색상으로 테두리 색 설정
                     strokeWidth="4" // 테두리 두께 설정
                     fill="none" // 내부 채우기 없음
-                    strokeDasharray="62.8" // 원 둘레 길이 (2 * π * 반지름) 설정
-                    strokeDashoffset="62.8" // 원이 비어 있는 상태로 시작 (채워지는 시작점 설정)
-                    className="animate-fill-empty" // 커스텀 애니메이션 클래스 적용
+                    strokeDasharray="31.4" /* 반 원 길이 (π * r) */
+                    strokeDashoffset="31.4"
+                    className="stroke-primary-500 animate-dash"
                   />
                 </svg>
               </button>
