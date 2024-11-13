@@ -361,24 +361,24 @@ export type Database = {
           id: number;
           level: number;
           sentence: string | null;
-          situation: string | null;
-          user_id: string | null;
+          situation: string;
+          user_id: string;
         };
         Insert: {
           created_at?: string;
           id?: number;
           level: number;
           sentence?: string | null;
-          situation?: string | null;
-          user_id?: string | null;
+          situation: string;
+          user_id?: string;
         };
         Update: {
           created_at?: string;
           id?: number;
           level?: number;
           sentence?: string | null;
-          situation?: string | null;
-          user_id?: string | null;
+          situation?: string;
+          user_id?: string;
         };
         Relationships: [
           {

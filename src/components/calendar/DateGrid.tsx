@@ -23,9 +23,9 @@ export const DateGrid: React.FC<DateGridProps> = ({
         key={index}
         onClick={() => onDateClick(date)}
         className={`py-2 cursor-pointer ${
-          dateUtils.isSameMonth(date, currentDate) ? "cursor-pointer text-black" : "cursor-not-allowed text-gray-300"
-        } ${dateUtils.isSameDayForUI(date, today) ? "bg-blue-100 font-bold rounded-lg" : ""}
-          ${dateUtils.isSameDayForUI(date, selectedDate) ? "bg-blue-300 text-white font-bold rounded-lg" : ""}`}
+          dateUtils.isSameMonth(date, currentDate) ? "cursor-pointer text-gray-300" : "cursor-not-allowed text-gray-800"
+        } ${dateUtils.isSameDayForUI(date, today) ? "bg-primary-700 font-bold text-white rounded-lg" : ""}
+          ${dateUtils.isSameDayForUI(date, selectedDate) ? "bg-primary-500 text-white font-bold rounded-lg" : ""}`}
       >
         {date.getDate()}
       </div>
