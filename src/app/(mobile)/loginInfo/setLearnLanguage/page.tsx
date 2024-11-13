@@ -48,17 +48,16 @@ export default function SetLearnLanguage() {
   };
 
   return (
-    <>
-      <div className="px-4 py-3 mb-[10px] h-12 flex gap-[6px]">
+    <div className="md:mt-[70px] md:max-w-[480px] md:mx-auto">
+      <div className="py-3 mb-[10px] h-12 flex gap-[6px] md:hidden ">
         <button
           onClick={() => router.back()} // 뒤로 가기 함수 호출
           className="mb-4"
         >
           <Image src={caretleft} alt={"caret-left"} />
         </button>
-        <></>
       </div>
-      <div className="px-4">
+      <div>
         <div className="mb-6 flex flex-col items-center gap-1">
           <h1 className="text-primary-50 text-center font-suit text-[28px] font-bold leading-[42px] tracking-[-0.56px]">
             학습언어를 선택해 주세요
@@ -67,7 +66,7 @@ export default function SetLearnLanguage() {
             배우고 싶은 언어를 설정해 주세요
           </p>
         </div>
-        <div className="w-full flex flex-col items-start gap-2 shrink-0">
+        <div className="w-full flex flex-col items-start gap-2 shrink-0 md:flex md:flex-wrap md:flex-row md:mx-auto md:mb-[70px] ">
           {supportingLanguages?.map((language, index) => (
             <button
               key={index}
@@ -77,7 +76,7 @@ export default function SetLearnLanguage() {
                 selectedLearnLanguage === language
                   ? "border border-secondary-500 bg-secondary-900"
                   : "border border-gray-800 bg-white"
-              }`}
+              } md:w-[112px]`}
             >
               <p className="flex-grow">{language}</p>
               {selectedLearnLanguage === language && <Image src={check} alt="checkIcon" className="w-6 h-6" />}
@@ -85,7 +84,7 @@ export default function SetLearnLanguage() {
           ))}
         </div>
       </div>
-      <div className="relative z-0 bg-white py-[10px] px-4">
+      <div className="relative z-0 bg-white py-[10px] md:max-w-[323px] md:mx-auto">
         <button
           onClick={handleContinue}
           disabled={!selectedLearnLanguage}
@@ -96,6 +95,6 @@ export default function SetLearnLanguage() {
           계속
         </button>
       </div>
-    </>
+    </div>
   );
 }
