@@ -1,4 +1,4 @@
-import { insertLanguageImg, uploadLanguageImage } from "@/api/route";
+import { insertLanguageInfo, uploadLanguageImage } from "@/api/route";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -11,7 +11,7 @@ const AddLanguageForm = () => {
 
   const { mutate } = useMutation({
     mutationFn: ({ imageUrl, language }: { imageUrl: string; language: string }) =>
-      insertLanguageImg({ imageUrl, language }),
+      insertLanguageInfo({ imageUrl, language }),
     onSuccess: () => {
       alert("해당 언어를 활성화하였습니다");
       queryClient.invalidateQueries({ queryKey: ["languagesInfo"] });
@@ -41,7 +41,7 @@ const AddLanguageForm = () => {
 
     // 받아온 이미지 주소를 langauge 테이블에 넣기
     // try {
-    //   await insertLanguageImg(imageUrl, language);
+    //   await insertLanguageInfo(imageUrl, language);
     //   alert("언어와 이미지를 추가하였습니다");
     //   setPreviewUrl("");
     //   setLanguage("");
