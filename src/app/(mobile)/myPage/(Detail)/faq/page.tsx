@@ -83,7 +83,7 @@ const FaqPage = () => {
           취소
         </button>
         <button
-          className="w-full p-[10px] w-full justify-center items-center  rounded-[10px] bg-[#7bd232] text-center text-[#fcfcfc] font-medium font-['Pretendard']  "
+          className="w-full p-[10px]  justify-center items-center  rounded-[10px] bg-[#7bd232] text-center text-[#fcfcfc] font-medium font-['Pretendard']  "
           onClick={faqDataHandler}
         >
           문의
