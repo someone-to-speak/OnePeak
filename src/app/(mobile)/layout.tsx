@@ -9,7 +9,6 @@ import ScreenSizeInitializer from "./ScreenSizeInitializer";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import Footer from "@/components/ui/footer/Footer";
 import HeaderTop from "@/components/ui/header/HeaderTop";
-import path from "path";
 
 export default function MobileLayout({
   children
