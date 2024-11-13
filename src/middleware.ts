@@ -6,9 +6,12 @@ import { UserInfo } from "./types/userType/userType";
 // 차단된 사용자일 경우 리디렉션 처리
 const redirectIfBlocked = (data: UserInfo, request: NextRequest) => {
   const isBlocked = data?.is_blocked === true;
-  const isFAQPage = request.nextUrl.pathname.startsWith("/myPage/faq");
+  const isPathProtected = ["/challenge", "/lesson", "/chat", "/"].some(
+    (path) => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(`${path}/`)
+  );
+  const startWithFaq = request.nextUrl.pathname.startsWith("/myPage/faq");
 
-  if (isBlocked && !isFAQPage) {
+  if (isBlocked && isPathProtected && !startWithFaq) {
     return NextResponse.redirect(new URL("/myPage/faq", request.url));
   }
 };
@@ -48,5 +51,5 @@ export async function middleware(request: NextRequest) {
 
 // 어떤 페이지에서 미들웨어 함수를 실행할지 정의
 export const config = {
-  matcher: ["/myPage/:path*", "/challenge/:path*", "/lesson/:path*", "/chat/:path*"]
+  matcher: ["/myPage/:path*", "/challenge/:path*", "/lesson/:path*", "/chat/:path*", "/"]
 };

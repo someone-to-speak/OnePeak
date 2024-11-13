@@ -25,9 +25,15 @@ export default function Home() {
         // 로그인 후 user_info 테이블을 확인
         const { data: userInfo } = await supabase
           .from("user_info")
-          .select("nickname, my_language, learn_language")
+          .select("nickname, my_language, learn_language, is_blocked")
           .eq("id", data.session.user.id)
           .single();
+
+        // 차단된 사용자일 경우 홈페이지 접근 제한 1:1문의 페이지로 이동
+        if (userInfo?.is_blocked === true) {
+          alert("관리자에의해 차단된 사용자입니다. 문의할 점이 있다면 1:1 문의페이지를 이용해주세요");
+          router.push("/myPage/faq");
+        }
 
         // userInfo가 null인지 확인한 후, 초기 정보가 없을 경우 설정 페이지로 이동
         if (!userInfo || !userInfo.nickname || !userInfo.my_language || !userInfo.learn_language) {
