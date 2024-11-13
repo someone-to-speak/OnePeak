@@ -25,8 +25,8 @@ const Page = () => {
 
   return (
     <div className="flex flex-col pt-safe-offset-0 h-screen px-4 md:px-3">
-      <div className="py-[10.5px] bg-white">
-        <Typography size={18} className="font-bold ">
+      <div className="py-[10.5px] bg-white md:my-[70px]">
+        <Typography size={18} className="font-bold md:text-[36px]">
           채팅방
         </Typography>
       </div>
