@@ -13,7 +13,7 @@ interface ReviewItemProps {
 const ReviewItem: React.FC<ReviewItemProps> = ({ review, onReviewClick }) => {
   return (
     <div key={review.id}>
-      <div className="flex flex-col ml-10 mt-2 p-3 rounded-[10px] bg-white">
+      <div className="flex flex-col mt-2 p-3 rounded-[10px] bg-white">
         <div className="">
           <div className="flex flex-row justify-between">
             <p className="text-[14px]">{review.situation}</p>

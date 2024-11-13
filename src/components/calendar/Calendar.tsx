@@ -36,7 +36,7 @@ const Calendar: React.FC<CalendarProps> = ({ setSelectedDate, selectedDate, clas
   return (
     <div className={`my-1 ${className}`}>
       <CalendarHeader currentDate={currentDate} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
-      <div className="border p-5 border-primary-500 rounded-[15px] ">
+      <div className="border p-5 border-primary-500 rounded-[15px] w-[324px] h-auto md:w-[399px] md:h-auto">
         <DayHeader />
         <DateGrid
           dates={dates}
