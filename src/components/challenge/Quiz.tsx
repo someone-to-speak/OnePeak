@@ -9,6 +9,7 @@ import { Typography } from "../ui/typography";
 import Button from "../ui/button";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 type QuizProps = {
   userId: string;
@@ -33,15 +34,10 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
   const progressPercentage = (currentIndex / questions.length) * 100;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
-  if (questions.length === 0)
-    return (
-      <Typography size={16} weight="medium">
-        문제를 불러오는 중
-      </Typography>
-    );
+  if (questions.length === 0) return <LoadingSpinner />;
 
   return (
-    <div className="w-full flex flex-col gap-[10px] px-[16px]">
+    <div className="w-full flex flex-col gap-[10px]">
       {/* 진행 바 */}
       <div className="flex flex-col justify-center">
         <div className="flex flex-row items-center justify-between">
