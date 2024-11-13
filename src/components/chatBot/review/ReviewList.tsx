@@ -26,15 +26,15 @@ export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
   }, {} as Record<string, ReviewType[]>);
 
   return (
-    <div>
+    <div className="bg-[#F9F9F9]">
       {Object.entries(groupedReviews).map(([dateKey, dateReviews]) => {
         const [month, day] = dateKey.split("-");
 
         return (
           <div key={dateKey}>
             <div>
-              <p className="font-bold text-left">{month}월</p>
-              <p className="font-bold text-left">{day}일</p>
+              <p className="font-bold text-left text-[#595959]">{month}월</p>
+              <p className="font-bold text-left text-[#595959]">{day}</p>
             </div>
             {dateReviews.map((review) => (
               <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />

@@ -4,6 +4,8 @@ import { Tables } from "../../../../database.types";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
+import Image from "next/image";
+import star from "@/assets/star.svg";
 
 type ReviewType = Tables<"review">;
 
@@ -43,7 +45,7 @@ const Reviewing = () => {
 
   // 복습하기 버튼 핸들러
   const handleReviewClick = (review: ReviewType) => {
-    router.push(`/review/?situation=${review.situation}&level=${review.level}`);
+    router.push(`/review/?situation=${review.situation}&level=${review.level}&id=${review.id}`);
   };
 
   // 더보기 버튼 핸들러
@@ -52,32 +54,44 @@ const Reviewing = () => {
   };
 
   return (
-    <div className="relative">
-      <h1 className="text-3xl font-bold mt-5">복습하기</h1>
-      <button onClick={handleReviewDetail} className="absolute right-0">
-        더보기
-      </button>
-      {
-        // 최대 3개까지만 노출
-        sortedReview?.map((review) => {
+    <div className="flex flex-col bg-[#f9f9f9] mt-10">
+      <h1 className="text-[24px] font-bold">복습하기</h1>
+      <div className="flex">
+        <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
+        <button onClick={handleReviewDetail} className="absolute right-0 text-[#a6a6a6] text-[12px]">
+          더보기
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {sortedReview?.map((review) => {
           return (
             <div key={review.id}>
-              <div className="flex flex-row justify-between my-5">
-                <p>{review.situation}</p>
-                <p>{review.level}</p>
+              <div className="flex flex-col mt-2 p-3 rounded-[10px] bg-white">
+                <div className="">
+                  <div className="flex flex-row justify-between">
+                    <p className="text-[14px]">{review.situation}</p>
+                    <div className="flex">
+                      {Array.from({ length: review.level }, (_, i) => (
+                        <Image key={i} src={star} alt="star" className="" />
+                      ))}
+                    </div>
+                    {/* <p>{review.level}</p> */}
+                  </div>
+                  <p className="text-[14px] text-[#8C8C8C]">Can I get The One Coffee</p>
+                </div>
+                <button
+                  onClick={() => {
+                    handleReviewClick(review);
+                  }}
+                  className="w-full p-2 mt-5 bg-primary-800 text-[12px]text-[#335813] rounded-[10px]"
+                >
+                  복습하기
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  handleReviewClick(review);
-                }}
-                className="w-full p-2 border border-spacing-2"
-              >
-                복습하기
-              </button>
             </div>
           );
-        })
-      }
+        })}
+      </div>
     </div>
   );
 };

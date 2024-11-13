@@ -1,40 +1,56 @@
 import tailwindAnimate from "tailwindcss-animate";
 import type { Config } from "tailwindcss";
 import safeArea from "tailwindcss-safe-area";
+import tailwindAnimate from "tailwindcss-animate";
 const config: Config = {
   darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/components/(dropdown|tabs|menu|divider|popover|button|ripple|spinner).js"
   ],
   theme: {
-    colors: {
-      background: "hsl(var(--background))",
-      foreground: "hsl(var(--foreground))",
-      card: {
-        DEFAULT: "hsl(var(--card))",
-        foreground: "hsl(var(--card-foreground))"
+    extend: {
+      backgroundImage: {
+        lessonBackground: "url('../assets/lesson/lesson-background.svg')",
+        tabletsLessonBackground: "url('../assets/lesson/tablets-lesson-background.svg')"
       },
-      popover: {
-        DEFAULT: "hsl(var(--popover))",
-        foreground: "hsl(var(--popover-foreground))"
-      },
-      primary: {
-        DEFAULT: "hsl(var(--primary))",
-        foreground: "hsl(var(--primary-foreground))"
-      },
-      secondary: {
-        DEFAULT: "hsl(var(--secondary))",
-        foreground: "hsl(var(--secondary-foreground))"
-      },
-      muted: {
-        DEFAULT: "hsl(var(--muted))",
-        foreground: "hsl(var(--muted-foreground))"
-      },
-      accent: {
-        DEFAULT: "hsl(var(--accent))",
-        foreground: "hsl(var(--accent-foreground))",
+      colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))"
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))"
+        },
+        primary: {
+          50: "var(--primary-50)",
+          100: "var(--primary-100)",
+          200: "var(--primary-200)",
+          300: "var(--primary-300)",
+          400: "var(--primary-400)",
+          500: "var(--primary-500)",
+          600: "var(--primary-600)",
+          700: "var(--primary-700)",
+          800: "var(--primary-800)",
+          900: "var(--primary-900)"
+        },
+        secondary: {
+          50: "var(--secondary-50)",
+          100: "var(--secondary-100)",
+          200: "var(--secondary-200)",
+          300: "var(--secondary-300)",
+          400: "var(--secondary-400)",
+          500: "var(--secondary-500)",
+          600: "var(--secondary-600)",
+          700: "var(--secondary-700)",
+          800: "var(--secondary-800)",
+          900: "var(--secondary-900)"
+        },
         gray: {
           50: "var(--gray-50)",
           100: "var(--gray-100)",
@@ -76,8 +92,7 @@ const config: Config = {
         "3xl": "var(--font-3xl)",
         "4xl": "var(--font-4xl)",
         "5xl": "var(--font-5xl)",
-        "6xl": "var(--font-6xl)",
-        "7xl": "var(--font-7xl)"
+        "6xl": "var(--font-6xl)"
       },
       fontFamily: {
         suit: "var(--font-family-suit)",
@@ -89,8 +104,8 @@ const config: Config = {
         background: "var(--shadow-background)",
         challengeTab: "var(--shadow-challenge-tab)"
       }
-    },
-    plugins: [safeArea, tailwindAnimate]
-  }
+    }
+  },
+  plugins: [safeArea, tailwindAnimate]
 };
 export default config;

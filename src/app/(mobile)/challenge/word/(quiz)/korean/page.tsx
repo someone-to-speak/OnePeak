@@ -1,7 +1,7 @@
 "use client";
 
-import RandomKoreanWordQuiz from "@/components/challenge/RandomEnglishGrammarQuiz";
-import { useSearchParams } from "next/navigation";
+import RandomKoreanWordQuiz from "@/components/challenge/RandomKoreanWordQuiz";
+import { useUser } from "@/hooks/useUser";
 import { Suspense } from "react";
 
 const KoreanWordQuizPage = () => {
@@ -13,15 +13,10 @@ const KoreanWordQuizPage = () => {
 };
 
 const KoreanWordQuiz = () => {
-  const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId");
+  const { userInfo } = useUser();
+  const userId = userInfo?.id;
 
-  return (
-    <div>
-      <h1>랜덤 한글 단어 퀴즈</h1>
-      {userId && <RandomKoreanWordQuiz userId={userId} />}
-    </div>
-  );
+  return <div>{userId && <RandomKoreanWordQuiz userId={userId} />}</div>;
 };
 
 export default KoreanWordQuizPage;

@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import WordList from "@/components/wrongAnswer/WordList";
-import Link from "next/link";
+import WithIconHeader from "@/components/ui/WithIconHeader";
 
 const WrongWordPage = async () => {
   // supabase의 auth 데이터 가져오는 함수
@@ -16,10 +16,7 @@ const WrongWordPage = async () => {
 
   return (
     <div>
-      <div className="flex gap-4">
-        <Link href={"/challenge"}>🔙</Link>
-        <h1>문법 오답노트</h1>
-      </div>
+      <WithIconHeader title="단어 오답노트" />
       <WordList userId={userId} />
     </div>
   );

@@ -1,11 +1,12 @@
-import { getUser } from "@/api/supabase/user";
+import { getUserClient } from "@/api/supabase/getUserClient";
+
 import { useQuery } from "@tanstack/react-query";
 
 export const useUser = () => {
-  const { data: userInfo } = useQuery({
+  const { data: userInfo, isLoading } = useQuery({
     queryKey: ["user"],
-    queryFn: () => getUser()
+    queryFn: () => getUserClient()
   });
 
-  return { userInfo };
+  return { userInfo, isLoading };
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import RandomKoreanGrammarQuiz from "@/components/challenge/RandomKoreanGrammarQuiz";
-import { useSearchParams } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 import { Suspense } from "react";
 
 const KoreanGrammarQuizPage = () => {
@@ -13,15 +13,10 @@ const KoreanGrammarQuizPage = () => {
 };
 
 const KoreanGrammarQuiz = () => {
-  const searchParams = useSearchParams();
-  const userId = searchParams?.get("userId");
+  const { userInfo } = useUser();
+  const userId = userInfo?.id;
 
-  return (
-    <div>
-      <h1>랜덤 한글 문법 퀴즈</h1>
-      {userId && <RandomKoreanGrammarQuiz userId={userId} />}
-    </div>
-  );
+  return <div>{userId && <RandomKoreanGrammarQuiz userId={userId} />}</div>;
 };
 
 export default KoreanGrammarQuizPage;

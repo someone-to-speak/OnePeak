@@ -14,8 +14,8 @@ export type PartialMessage = Partial<Message>;
 export type Message = Tables<"messages">;
 export type Language = Tables<"language">;
 
-export type MessageWithUserInfo = Message & {
-  user_info: UserInfo;
+export type MessageWithUserInfo = Omit<Message, "sender_id"> & {
+  sender_id: UserInfo;
 };
 
 export type UserInfoWithLanguage = Omit<UserInfo, "my_language" | "learn_language"> & {

@@ -1,8 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  font-family: Arial, Helvetica, sans-serif;
+
+@media (min-width: 768px) {
+  .app-header {
+    display: inline-flex;
+    width: 100%;
+    align-items: end;
+    gap: 20px;
+    cursor: default;
+    margin-top: 70px;
+  }
+  .app-header-text {
+    font-size: 32px;
+  }
+  .app-header-icon {
+    width: 36px;
+    height: 36px;
+  }
 }
 @layer utilities {
   .text-balance {
@@ -21,62 +36,24 @@ body {
   .rounded {
     border-radius: 0.5rem;
   }
-}
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+  .app-header {
+    display: inline-flex;
+    width: 100%;
+    height: 48px;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
   }
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+  .app-header-text {
+    font-size: 18px;
+    margin-left: 6px;
+  }
+  .app-header-icon {
+    width: 24px;
+    height: 24px;
   }
 }
+
 @layer base {
   /* 모든 요소의 호버 상태에서 아웃라인 제거 */
   *:hover {
@@ -169,16 +146,41 @@ body {
     --gray-900: #f3f3f3;
 
     /* Font Sizes */
-    --font-sm: 0.625rem;
-    --font-base: 0.75rem;
-    --font-lg: 0.875rem;
-    --font-xl: 1rem;
-    --font-2xl: 1.125rem;
-    --font-3xl: 1.25rem;
-    --font-4xl: 1.375rem;
-    --font-5xl: 1.5rem;
-    --font-6xl: 1.625rem;
-    --font-7xl: 1.75rem;
+    --font-xs: 0.625rem; /* 10px */
+    --font-sm: 0.75rem; /* 12px */
+    --font-base: 0.875rem; /* 14px */
+    --font-lg: 1rem; /* 16px */
+    --font-xl: 1.125rem; /* 18px */
+    --font-2xl: 1.25rem; /* 20px */
+    --font-3xl: 1.375rem; /* 22px */
+    --font-4xl: 1.5rem; /* 24px */
+    --font-5xl: 1.625rem; /* 26px */
+    --font-6xl: 1.75rem; /* 28px */
+    --font-7xl: 1.875rem; /* 30px */
+    --font-8xl: 2rem; /* 32px */
+    --font-9xl: 2.125rem; /* 34px */
+    --font-10xl: 2.25rem; /* 36px */
+    --font-11xl: 2.375rem; /* 38px */
+    --font-12xl: 2.5rem; /* 40px */
+    --font-13xl: 2.625rem; /* 42px */
+    --font-14xl: 2.75rem; /* 44px */
+    --font-15xl: 2.875rem; /* 46px */
+    --font-16xl: 3rem; /* 48px */
+    --font-17xl: 3.125rem; /* 50px */
+    --font-18xl: 3.25rem; /* 52px */
+    --font-19xl: 3.375rem; /* 54px */
+    --font-20xl: 3.5rem; /* 56px */
+    --font-21xl: 3.625rem; /* 58px */
+    --font-22xl: 3.75rem; /* 60px */
+    --font-23xl: 3.875rem; /* 62px */
+    --font-24xl: 4rem; /* 64px */
+    --font-25xl: 4.125rem; /* 66px */
+    --font-26xl: 4.25rem; /* 68px */
+    --font-27xl: 4.375rem; /* 70px */
+    --font-28xl: 4.5rem; /* 72px */
+    --font-29xl: 4.625rem; /* 74px */
+    --font-30xl: 4.75rem; /* 76px */
+    --font-31xl: 4.875rem; /* 78px */
 
     /* Font Families */
     --font-family-suit: "SUIT", sans-serif;

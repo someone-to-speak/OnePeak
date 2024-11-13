@@ -1,11 +1,12 @@
 "use client";
 
-import Header from "@/components/header/Header";
 import "../globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Navibar from "@/components/nav/Navibar";
 import { usePathname } from "next/navigation";
+import NavbarGnb from "@/components/ui/NavbarGnb";
+import ScreenSizeInitializer from "./ScreenSizeInitializer";
+import { useScreenSizeStore } from "@/shared/screen-store-provider";
 
 export default function MobileLayout({
   children
@@ -13,16 +14,26 @@ export default function MobileLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
-  // pathname이 null이 아니면 특정 경로에서 헤더와 푸터 숨기기
-  const hideHeaderFooter = pathname !== null && pathname.startsWith("/loginInfo");
+  const showNavbar =
+    pathname === "/" ||
+    pathname === "/challenge" ||
+    pathname === "/myPage" ||
+    pathname === "/chat" ||
+    pathname === "/lesson" ||
+    pathname === "/myPage/editProfile";
+
+  const ignoredPaddingWithPath = pathname?.startsWith("/lesson") || pathname?.startsWith("/");
 
   return (
     <div>
-      <div className="w-full min-w-[320px] max-w-[600px] mx-auto my-0  min-h-full">
-        {!hideHeaderFooter && <Header />}
-        {children}
-        {!hideHeaderFooter && <Navibar />}
+      <ScreenSizeInitializer />
+      <div className="w-full max-w-[1024px] min-w-[320px] flex flex-col mx-auto my-0 min-h-full">
+        <div className={`${!ignoredPaddingWithPath && "px-4"}`}>
+          <main>{children}</main>
+        </div>
+        {showNavbar && !isLargeScreen && <NavbarGnb />}
       </div>
     </div>
   );

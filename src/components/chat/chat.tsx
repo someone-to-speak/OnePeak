@@ -1,10 +1,11 @@
 import { ConversationWithParticipants } from "@/types/chatType/chatType";
 import Image from "next/image";
-import DotsThree from "@/assets/DotsThree.svg";
+// import DotsThree from "@/assets/chat/dots-three.svg";
 
 export const Chat = ({ conversation }: { conversation: ConversationWithParticipants }) => {
+  console.log("");
   return (
-    <div className="w-full h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
+    <div className="h-auto flex gap-[10px] items-center p-3 border-[1px] border-solid border-black rounded-[20px]">
       <Image
         className="rounded-[20px]"
         src={conversation.participants?.user_info.profile_url as string}
@@ -21,7 +22,7 @@ export const Chat = ({ conversation }: { conversation: ConversationWithParticipa
             width={14}
             height={14}
           />
-          <Image src={DotsThree} alt={""} />
+          {/* <Image src={DotsThree} alt={""} /> */}
         </div>
         <p>{conversation.last_message_id.type}</p>
         <div></div>

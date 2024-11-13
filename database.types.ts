@@ -1,5 +1,3 @@
-import { AiMessages } from "@/type";
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -141,31 +139,31 @@ export type Database = {
       };
       faq: {
         Row: {
-          category: string | null;
+          category: string;
           comment: string;
-          content: string | null;
+          content: string;
           created_at: string;
           id: string;
-          title: string | null;
-          user_id: string | null;
+          user_id: string;
+          user_nickname: string;
         };
         Insert: {
-          category?: string | null;
-          comment: string;
-          content?: string | null;
+          category?: string;
+          comment?: string;
+          content?: string;
           created_at?: string;
           id?: string;
-          title?: string | null;
-          user_id?: string | null;
+          user_id?: string;
+          user_nickname?: string;
         };
         Update: {
-          category?: string | null;
+          category?: string;
           comment?: string;
-          content?: string | null;
+          content?: string;
           created_at?: string;
           id?: string;
-          title?: string | null;
-          user_id?: string | null;
+          user_id?: string;
+          user_nickname?: string;
         };
         Relationships: [];
       };
@@ -362,22 +360,25 @@ export type Database = {
           created_at: string;
           id: number;
           level: number;
-          situation: string | null;
-          user_id: string | null;
+          sentence: string | null;
+          situation: string;
+          user_id: string;
         };
         Insert: {
           created_at?: string;
           id?: number;
           level: number;
-          situation?: string | null;
-          user_id?: string | null;
+          sentence?: string | null;
+          situation: string;
+          user_id?: string;
         };
         Update: {
           created_at?: string;
           id?: number;
           level?: number;
-          situation?: string | null;
-          user_id?: string | null;
+          sentence?: string | null;
+          situation?: string;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -402,17 +403,23 @@ export type Database = {
           id: number;
           messages: string[];
           review_id: number;
+          sentence: string | null;
           user_id: string | null;
         };
         Insert: {
-          messages: AiMessages[];
+          created_at?: string;
+          id?: number;
+          messages: string[];
           review_id: number;
+          sentence?: string | null;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string;
           id?: number;
           messages?: string[];
           review_id?: number;
+          sentence?: string | null;
           user_id?: string | null;
         };
         Relationships: [
@@ -428,17 +435,23 @@ export type Database = {
       situation: {
         Row: {
           id: number;
+          image_url: string | null;
           level: number;
+          sentence: string;
           situation: string;
         };
         Insert: {
           id?: number;
+          image_url?: string | null;
           level: number;
+          sentence?: string;
           situation: string;
         };
         Update: {
           id?: number;
+          image_url?: string | null;
           level?: number;
+          sentence?: string;
           situation?: string;
         };
         Relationships: [];

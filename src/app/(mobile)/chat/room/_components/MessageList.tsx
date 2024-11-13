@@ -1,27 +1,26 @@
 "use client";
 
-import { useMessage } from "@/hooks/useMessage";
 import { useUser } from "@/hooks/useUser";
-import { UUID } from "crypto";
 import MyChat from "./MyChat";
 import OtherChat from "./OhterChat";
+import { MessageWithUserInfo } from "@/types/chatType/chatType";
+import { useRef, useEffect } from "react";
 
-export const MessageList = ({ conversationId }: { conversationId: UUID }) => {
+export const MessageList = ({ messages }: { messages: MessageWithUserInfo[] | undefined }) => {
   const { userInfo } = useUser();
-  const { messages, isLoading, isError } = useMessage(conversationId);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  if (isLoading) {
-    return <div>잠시만 기다려주세요...</div>;
-  }
-
-  if (isError) {
-    return <div>에러가 발생...</div>;
-  }
+  useEffect(() => {
+    // Scroll to the bottom when the component mounts or when `messages` change
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
-    <div className="w-full">
+    <div ref={containerRef} className="w-full flex flex-col mb-[70px] flex-grow gap-3 overflow-scroll">
       {messages?.map((msg) =>
-        msg.sender_id === userInfo?.id ? (
+        msg.sender_id.id === userInfo?.id ? (
           <MyChat key={msg.id} message={msg} />
         ) : (
           <OtherChat key={msg.id} message={msg} />

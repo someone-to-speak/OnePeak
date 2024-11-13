@@ -1,147 +1,59 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState, useCallback } from "react";
-import { Tables } from "../../../../database.types";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
-import BackButton from "@/components/BackButton";
 import Image from "next/image";
-import stamp from "@/../public/images/Stamp.svg";
-
-type NotificationType = Tables<"notifications">;
+import stamp from "@/assets/stamp.svg";
+import WithIconHeader from "@/components/ui/WithIconHeader";
+import { Typography } from "@/components/ui/typography";
+import useNotifications from "@/hooks/useNotifications";
+import { useUser } from "@/hooks/useUser";
+import { Spinner } from "@nextui-org/spinner";
 
 const NotificationPage = () => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [notifi, setNotifi] = useState<NotificationType[] | null>(null);
-  const supabase = createClient();
+  const { notifi } = useNotifications();
+  const { userInfo } = useUser();
 
-  // 사용자 ID 가져오기
-  useEffect(() => {
-    const initialize = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session?.user?.id) {
-        setUserId(data.session.user.id);
-      }
-    };
-
-    initialize();
-  }, [supabase]);
-
-  // 알림 가져오기
-  useEffect(() => {
-    const fetchUserNoti = async () => {
-      const { data: noti } = await supabase.from("notifications").select("*");
-      setNotifi(noti);
-      console.log("Fetched notifications for user:", noti);
-    };
-
-    fetchUserNoti();
-  }, [supabase]);
-
-  // 오래된 알림 정리
-  useEffect(() => {
-    const cleanupOldNotifications = async () => {
-      if (!userId) {
-        console.warn("User ID is null, cannot clean up old notifications.");
-        return;
-      }
-
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      console.log("Cleaning up notifications older than:", thirtyDaysAgo.toISOString());
-
-      await supabase.from("notifications").delete().lt("created_at", thirtyDaysAgo.toISOString());
-
-      // 마케팅 동의 여부 불러오기
-      const { data: marketed } = await supabase.from("user_info").select("is_marketing").eq("id", userId).single();
-      console.log("Marketing:", marketed);
-
-      if (marketed && marketed.is_marketing) {
-        const { data: updatedNoti } = await supabase
-          .from("notifications")
-          .select("*")
-          .in("type", ["marketingMsg", "noticeMsg"])
-          .eq("user_id", userId);
-
-        setNotifi(updatedNoti);
-        console.log("Updated marketing noti:", updatedNoti);
-      }
-    };
-
-    if (userId) {
-      cleanupOldNotifications();
-    }
-  }, [userId, supabase]);
-
-  // 푸시 알림 구독 설정
-  const subscribeToNotifications = useCallback(() => {
-    const subscription = supabase
-      .channel("notifications")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "notifications" },
-        async (payload: { new: { title: string; message: string } }) => {
-          console.log("New notification received:", payload);
-          const { title, message } = payload.new;
-          const registration = await navigator.serviceWorker.ready;
-          registration.showNotification(title, {
-            body: message,
-            icon: "/icon-192x192.png",
-            badge: "/icon-192x192.png"
-          });
-        }
-      )
-      .subscribe();
-
-    console.log("Subscribed to notifications channel.");
-    return subscription;
-  }, [supabase]);
-
-  useEffect(() => {
-    if (userId) {
-      const subscription = subscribeToNotifications();
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [userId, subscribeToNotifications]);
-
-  if (!userId) return null;
+  if (!userInfo) return null;
 
   return (
-    <div className="bg-white px-[16px]">
-      <BackButton title="알림" />
-      {notifi && notifi.length > 0 ? (
-        <Accordion isCompact>
-          {notifi
-            .slice()
-            .reverse()
-            .map((noti) => (
-              <AccordionItem
-                key={noti.id}
-                title={
-                  <div className="flex flex-row justify-between items-center">
-                    <div className="flex flex-row gap-[8px]">
-                      <Image src={stamp} alt={"Stamp"} width={18} height={18} />
-                      <p className="text-[#0c0c0c] text-base font-bold font-['SUIT'] leading-[27px]">{noti.title}</p>
+    <div className="flex flex-col md:gap-[70px]">
+      <WithIconHeader title="알림" />
+      <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
+        {notifi && notifi.length > 0 ? (
+          <Accordion isCompact>
+            {notifi
+              .slice()
+              .reverse()
+              .map((noti) => (
+                <AccordionItem
+                  key={noti.id}
+                  title={
+                    <div className="w-full flex flex-row justify-between items-center gap-2">
+                      <div className="flex flex-row gap-2 items-center">
+                        <Image src={stamp} alt="Stamp" width={16} />
+                        <Typography size={16} weight="bold" className="text-wrap">
+                          {noti.title}
+                        </Typography>
+                      </div>
+                      <Typography size={14} weight="medium" className="text-gray-600 text-right text-nowrap">
+                        {new Date(noti.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                      </Typography>
                     </div>
-                    <p className="text-[#3f3f3f] text-sm font-medium font-['Pretendard'] leading-[21px] text-right">
-                      {new Date(noti.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                }
-                aria-label={noti.title}
-                className="flex flex-col border-b border-[#f3f3f3] py-[20px]"
-              >
-                <p className="text-[#3f3f3f] text-sm font-medium font-['Pretendard'] leading-[21px] text-left">
-                  {noti.message}
-                </p>
-              </AccordionItem>
-            ))}
-        </Accordion>
-      ) : (
-        <div className="text-gray-500">알림없음</div>
-      )}
+                  }
+                  className="border-b border-gray-800 py-4 cursor-default"
+                >
+                  <Typography size={14} weight="medium" className="break-words max-w-full">
+                    {noti.message}
+                  </Typography>
+                </AccordionItem>
+              ))}
+          </Accordion>
+        ) : (
+          <div className="flex items-center justify-center h-48">
+            <Spinner label="로딩중" color="success" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -20,11 +20,11 @@ export async function requestNotificationPermission(userId: string): Promise<boo
       .eq("user_id", userId)
       .single();
 
-    if (!existingSubscription) {
-      await subscribeUserToPush(userId);
+    if (existingSubscription) {
+      console.log("User is already subscribed to notifications.");
+      return false; // 이미 구독된 경우, 알림 구독을 건너뜀
     } else {
-      alert("이미 알림을 허용하였습니다.");
-      return false; // 이미 구독된 경우
+      await subscribeUserToPush(userId); // 구독이 없다면 구독
     }
 
     // 알림 구독을 위한 설정
@@ -37,10 +37,13 @@ export async function requestNotificationPermission(userId: string): Promise<boo
 }
 
 export async function subscribeUserToPush(userId: string) {
+  console.log("subscribeUserToPush");
   const supabase = createClient();
   try {
-    const registration = await navigator.serviceWorker.ready;
+    // const registration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.register("/service-worker.js");
     const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    console.log(registration);
 
     if (!vapidPublicKey) {
       console.error("VAPID Public Key is missing.");

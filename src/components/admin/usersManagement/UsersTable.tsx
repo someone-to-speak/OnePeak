@@ -9,8 +9,8 @@ interface UsersTableProps {
   indexOfFirstUser: number;
   unblockUser: (userInfo: UserInfo) => void;
   blockUser: (userInfo: UserInfo) => void;
-  cancleUser: (userInfo: UserInfo) => void;
-  uncancleUser: (userInfo: UserInfo) => void;
+  withdrawUwer: (userInfo: UserInfo) => void;
+  unWithdrawUser: (userInfo: UserInfo) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
@@ -19,14 +19,14 @@ const UsersTable: React.FC<UsersTableProps> = ({
   indexOfFirstUser,
   unblockUser,
   blockUser,
-  cancleUser,
-  uncancleUser
+  withdrawUwer,
+  unWithdrawUser
 }) => {
   return (
     <div className="w-full text-center">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100 font-semibold">
+          <tr className="bg-gray-800 font-semibold">
             <th className="p-3 "></th>
             <th className="p-3 ">닉네임</th>
             <th className="p-3 ">이메일</th>
@@ -48,7 +48,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
             </tr>
           ) : (
             currentUsers.map((userInfo, index) => (
-              <tr key={userInfo.id} className="border-b hover:bg-gray-50">
+              <tr key={userInfo.id} className="border-b hover:bg-gray-900">
                 <td>{indexOfFirstUser + index + 1}</td>
                 <td className="p-3 max-w-[150px] overflow-x-auto ">{userInfo.nickname}</td>
                 <td className="p-3 max-w-[200px] overflow-x-auto">{userInfo.email}</td>
@@ -78,14 +78,14 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   {userInfo.is_deleted ? (
                     <button
                       className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600"
-                      onClick={() => uncancleUser(userInfo)}
+                      onClick={() => unWithdrawUser(userInfo)}
                     >
                       가입하기
                     </button>
                   ) : (
                     <button
                       className="px-3 py-1 text-white bg-red-500 rounded hover:bg-gray-600"
-                      onClick={() => cancleUser(userInfo)}
+                      onClick={() => withdrawUwer(userInfo)}
                     >
                       탈퇴하기
                     </button>
