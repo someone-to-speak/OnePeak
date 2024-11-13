@@ -9,6 +9,7 @@ import ScreenSizeInitializer from "./ScreenSizeInitializer";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import Footer from "@/components/ui/footer/Footer";
 import HeaderTop from "@/components/ui/header/HeaderTop";
+import path from "path";
 
 export default function MobileLayout({
   children
@@ -37,7 +38,7 @@ export default function MobileLayout({
         <div className={`${!ignoredPaddingWithPath && "px-4"}`}>
           <main>{children}</main>
         </div>
-        {isLargeScreen ? <Footer /> : showNavbar && <NavbarGnb />}
+        {isLargeScreen && !pathname?.startsWith("/chat/room") ? <Footer /> : showNavbar && <NavbarGnb />}
       </div>
     </div>
   );
