@@ -7,6 +7,7 @@ import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import useNotifications from "@/hooks/useNotifications";
 import { useUser } from "@/hooks/useUser";
+import { Spinner } from "@nextui-org/spinner";
 
 const NotificationPage = () => {
   const { notifi } = useNotifications();
@@ -15,9 +16,9 @@ const NotificationPage = () => {
   if (!userInfo) return null;
 
   return (
-    <div className="bg-white">
+    <div className="flex flex-col md:gap-[70px]">
       <WithIconHeader title="알림" />
-      <div className="flex flex-col">
+      <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
         {notifi && notifi.length > 0 ? (
           <Accordion isCompact>
             {notifi
@@ -27,30 +28,30 @@ const NotificationPage = () => {
                 <AccordionItem
                   key={noti.id}
                   title={
-                    <div className="flex flex-row justify-between items-center">
-                      <div className="flex flex-row gap-[8px]">
-                        <Image src={stamp} alt={"Stamp"} width={18} height={18} />
-                        <Typography size={16} weight="bold">
+                    <div className="w-full flex flex-row justify-between items-center gap-2">
+                      <div className="flex flex-row gap-2 items-center">
+                        <Image src={stamp} alt="Stamp" width={16} />
+                        <Typography size={16} weight="bold" className="text-wrap">
                           {noti.title}
                         </Typography>
                       </div>
-                      <Typography size={10} weight="medium" className="text-gray-600">
-                        {new Date(noti.created_at).toLocaleString()}
+                      <Typography size={14} weight="medium" className="text-gray-600 text-right text-nowrap">
+                        {new Date(noti.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
                       </Typography>
                     </div>
                   }
-                  className="flex flex-col border-b border-gray-800 py-[20px]"
+                  className="border-b border-gray-800 py-4 cursor-default"
                 >
-                  <Typography size={12} weight="medium">
+                  <Typography size={14} weight="medium" className="break-words max-w-full">
                     {noti.message}
                   </Typography>
                 </AccordionItem>
               ))}
           </Accordion>
         ) : (
-          <Typography size={16} weight="bold" className="text-gray-500">
-            알림없음
-          </Typography>
+          <div className="flex items-center justify-center h-48">
+            <Spinner label="로딩중" color="success" />
+          </div>
         )}
       </div>
     </div>

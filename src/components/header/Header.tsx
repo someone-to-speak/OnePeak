@@ -5,6 +5,7 @@ import Link from "next/link";
 import LogoIcon from "@/assets/logo-icon.svg";
 import BellIcon from "@/assets/bell-ringing.svg";
 import CalendarIcon from "@/assets/calendar.svg";
+import NotificationBell from "../notificationPopup/NotificationBell";
 
 const Header = () => {
   return (
@@ -15,6 +16,7 @@ const Header = () => {
           <Link href="/notifications">
             <Image src={BellIcon} alt="bell-icon" className="w-6 h-6" />
           </Link>
+          <NotificationBell />
           <Link href="/attendance">
             <Image src={CalendarIcon} alt="chalendar-icon" className="w-6 h-6" />
           </Link>

@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { usePathname } from "next/navigation";
 import NavbarGnb from "@/components/ui/NavbarGnb";
 import ScreenSizeInitializer from "./ScreenSizeInitializer";
+import { useScreenSizeStore } from "@/shared/screen-store-provider";
 
 export default function MobileLayout({
   children
@@ -13,6 +14,7 @@ export default function MobileLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const showNavbar =
     pathname === "/" ||
@@ -31,7 +33,7 @@ export default function MobileLayout({
         <div className={`${!ignoredPaddingWithPath && "px-4"}`}>
           <main>{children}</main>
         </div>
-        {showNavbar && <NavbarGnb />}
+        {showNavbar && !isLargeScreen && <NavbarGnb />}
       </div>
     </div>
   );
