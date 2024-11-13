@@ -15,7 +15,6 @@ const useNotifications = () => {
     const fetchUserNoti = async () => {
       const { data: noti } = await supabase.from("notifications").select("*");
       setNotifi(noti);
-      console.log("Fetched notifications for user:", noti);
     };
 
     fetchUserNoti();
@@ -38,13 +37,9 @@ const useNotifications = () => {
           .eq("user_id", userInfo.id);
 
         setNotifi(updatedNoti);
-        console.log("Updated marketing noti:", updatedNoti);
       }
     };
-
-    if (userInfo?.id) {
-      cleanupOldNotifications();
-    }
+    cleanupOldNotifications();
   }, [userInfo, supabase]);
 
   // 푸시 알림 구독 설정
@@ -66,7 +61,6 @@ const useNotifications = () => {
       )
       .subscribe();
 
-    console.log("Subscribed to notifications channel.");
     return subscription;
   }, [supabase]);
 
