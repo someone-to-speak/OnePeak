@@ -107,21 +107,20 @@ const ChatMessage = () => {
   return (
     <div className="flex flex-col h-screen w-full mx-auto bg-white">
       <div className="flex-grow overflow-y-auto p-4 mb-16">
-        <div className="flex">
+        <div className="flex justify-between items-center">
           <WithIconHeader title={situation} />
           <button
             type="button"
-            className="ml-2 px-4 py-2 top-0 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            className="w-[45px] h-[29px] bg-gray-900 text-gray-400 text-[14px] rounded-[20px] self-center"
             onClick={handleEndChat}
           >
-            대화 종료
+            종료
           </button>
         </div>
         <div className="flex-grow overflow-y-auto p-4 mb-16">
           <ChatMessageList messages={messages} />
         </div>
       </div>
-
       <ChatInput
         userInput={userInput}
         setUserInput={setUserInput}
