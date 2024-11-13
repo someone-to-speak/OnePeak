@@ -5,11 +5,17 @@ import UserProfilePage from "@/components/myPage/UserProfile";
 import { Typography } from "@/components/ui/typography";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 import { useUser } from "@/hooks/useUser";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const MyPage = () => {
   const { userInfo, isLoading } = useUser();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="m-auto">
+        <LoadingSpinner />;
+      </div>
+    );
   if (!userInfo?.id) return null;
 
   return (
@@ -33,7 +39,6 @@ const MyPage = () => {
           </div>
         ))}
       </div>
-      {/* <Footer/> */}
     </div>
   );
 };

@@ -91,15 +91,17 @@ const GrammarList = ({ userId }: { userId: string }) => {
             }
             className="w-full flex flex-row items-center justify-between"
           >
-            <div className="flex-none max-w-[60px]">
-              <Typography size={16} weight="bold" className="text-left text-[#F50000] break-keep">
-                {question?.answer}
-              </Typography>
-            </div>
             <div className="grow px-[20px]">
               <div className="flex flex-col gap-[10px]">
                 <Typography size={16} weight="bold" className="text-left">
-                  {question?.content}
+                  {question?.content.split("_____").map((part, index) => (
+                    <span key={index}>
+                      {part}
+                      {index < question.content.split("____").length - 1 && (
+                        <span className="text-red-500 inline">{question.answer}</span>
+                      )}
+                    </span>
+                  ))}
                 </Typography>
                 <div className="border border-gray-900" />
                 <Typography size={14} weight="medium" className="text-left text-gray-300">
