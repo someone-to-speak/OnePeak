@@ -4,7 +4,7 @@ import { getUserClient } from "@/api/supabase/getUserClient";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const FaqPage = () => {
   const [selectedType, setSelectedType] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
@@ -83,4 +83,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default FaqPage;
