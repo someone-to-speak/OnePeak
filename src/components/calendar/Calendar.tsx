@@ -34,9 +34,9 @@ const Calendar: React.FC<CalendarProps> = ({ setSelectedDate, selectedDate, clas
   const dates = dateUtils.generateCalendarDates(currentDate);
 
   return (
-    <div className={`my-1 p-5 ${className}`}>
+    <div className={`my-1 ${className}`}>
       <CalendarHeader currentDate={currentDate} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
-      <div className="border p-5">
+      <div className="border p-5 border-primary-500 rounded-[15px] ">
         <DayHeader />
         <DateGrid
           dates={dates}
