@@ -3,7 +3,7 @@ import React from "react";
 
 const SpinnerButton = () => {
   return (
-    <div className="fixed">
+    <div>
       <button
         type="button"
         className="bg-white text-#000 py-2.5 px-5 flex items-center rounded-[25px] shadow-[2px_2px_8px_0px_rgba(0,0,0,0.22)]"
