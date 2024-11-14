@@ -10,6 +10,7 @@ import PageNationUI from "../PageNationUI";
 import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/route";
 
 import { Tables } from "../../../../database.types";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 type UserInfo = Tables<"user_info">;
 
@@ -99,7 +100,11 @@ const UsersInfo = () => {
   };
 
   if (isPending) {
-    return <div>로딩중..</div>;
+    return (
+      <div className="m-auto">
+        <LoadingSpinner />;
+      </div>
+    );
   }
 
   if (isError) {

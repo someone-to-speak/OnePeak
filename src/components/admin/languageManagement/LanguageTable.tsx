@@ -2,6 +2,7 @@ import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { changeToUnuse, changeToUse, getLanguageList } from "@/api/route";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const LanguageTable = () => {
   const queryClient = useQueryClient();
@@ -27,7 +28,11 @@ const LanguageTable = () => {
   });
 
   if (isPending) {
-    return <div>로딩중</div>;
+    return (
+      <div className="m-auto">
+        <LoadingSpinner />;
+      </div>
+    );
   }
 
   if (isError) {
