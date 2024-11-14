@@ -10,6 +10,7 @@ import {
   PencilSimpleIcon,
   Play,
   Power,
+  Prohibit,
   TrophyIcon
 } from "./Icons";
 import { UserIcon } from "lucide-react";
@@ -26,7 +27,8 @@ export type IconType =
   | "arrowup"
   | "power"
   | "microphone"
-  | "camera";
+  | "camera"
+  | "prohibit";
 
 interface IconProps {
   name: IconType;
@@ -48,7 +50,8 @@ const iconComponents = {
   arrowup: ArrowUp,
   power: Power,
   microphone: Microphone,
-  camera: Camera
+  camera: Camera,
+  prohibit: Prohibit
 };
 
 const Icon = ({ name, size = 32, color = "#343330", className, onClick }: IconProps) => {
