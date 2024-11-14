@@ -65,9 +65,10 @@ const TodayLearn = () => {
               w-[244px] md:w-full" // 모바일에서 244px, PC에서 full
             >
               {situation.image_url ? (
-                <img
+                <Image
                   src={situation.image_url}
                   alt={situation.situation}
+                  fill
                   className="absolute inset-0 w-full h-full object-cover rounded-lg"
                 />
               ) : (
