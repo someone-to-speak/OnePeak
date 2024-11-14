@@ -10,7 +10,6 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
-  console.log("reviews", reviews);
   if (!reviews.length) return <p>학습 내역이 없습니다!</p>;
 
   // 리뷰들을 날짜별로 그룹화
