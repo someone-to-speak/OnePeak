@@ -9,6 +9,8 @@ import caretleft from "@/assets/caret-left.svg";
 import check from "@/assets/check.svg";
 import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "react-toastify";
 
 export default function SetLearnLanguage() {
   const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
@@ -28,9 +30,9 @@ export default function SetLearnLanguage() {
   const supportingLanguages = languages?.map((language) => language.language_name);
 
   // 로딩 상태
-  if (languagesLoading) return <p>Loading...</p>;
+  if (languagesLoading) return <LoadingSpinner />;
   // 오류 상태
-  if (languagesError) return <p>Error loading user answers: {languagesError.message}</p>;
+  if (languagesError) return toast.error(`${languagesError.message}`);
 
   const handleContinue = async () => {
     const { data } = await supabase.auth.getSession();
