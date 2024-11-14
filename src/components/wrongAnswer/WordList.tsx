@@ -134,13 +134,13 @@ const WordList = ({ userId }: { userId: string }) => {
       <div
         className={`md:h-[543px] md:flex md:flex-col md:gap-5 md:p-[30px] md:border-none md:rounded-xl ${
           isReviewed === "미완료" ? "md:bg-gray-900" : "md:bg-primary-900"
-        }`}
+        } max-h-[543px] overflow-y-auto`}
       >
         {/* Content here */}
         <div className=" hidden md:flex md:flex-col">
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
-        <div className="flex flex-col gap-[10px] md:gap-[20px]">
+        <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">
           {filteredAnswers?.map((question) => (
             <div
               key={question!.id}
