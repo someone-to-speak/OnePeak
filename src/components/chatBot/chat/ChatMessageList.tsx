@@ -2,6 +2,7 @@ import { Message } from "@/app/types/chatBotType/chatBotType";
 import React from "react";
 import mainIcon from "@/assets/main-icon.svg";
 import Image from "next/image";
+import { Typography } from "@/components/ui/typography";
 
 type ChatMessageListProps = {
   messages: Message[];
@@ -12,7 +13,9 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
   const formatMessage = (content: string) => {
     return content.split("\n").map((line, i) => (
       <React.Fragment key={i}>
-        {line}
+        <Typography size={12} weight={"normal"}>
+          {line}
+        </Typography>
         {i !== content.split("\n").length - 1 && <br />}
       </React.Fragment>
     ));

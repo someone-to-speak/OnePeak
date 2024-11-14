@@ -59,7 +59,7 @@ const ReviewDetail = () => {
       </div>
       <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 md:h-[calc(100vh-120px)]">
         <div className="flex justify-center md:flex-grow">
-          <div className="mb-10">
+          <div className="mb-2 md:mb-10">
             <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
           </div>
         </div>

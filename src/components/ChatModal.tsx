@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Typography } from "./ui/typography";
 
 interface ModalProps {
   isOpen: boolean;
@@ -59,12 +60,16 @@ const ChatModal = ({
         aria-labelledby="modal-title"
         className="bg-white rounded-[16px] p-8 w-[310px] max-w-md z-10 shadow-xl flex flex-col items-center text-center"
       >
-        <h2 id="modal-title" className="text-xl font-semibold mb-4">
+        <Typography size={18} weight={"medium"} className="mb-1">
           {title}
-        </h2>
-
-        {description && <p className="text-gray-600 mb-8">{description}</p>}
-
+        </Typography>
+        {/* 
+        {description && <p className="text-gray-600 mb-8">{description}</p>} */}
+        {description && (
+          <Typography size={12} className="text-gray-500 mb-5">
+            {description}
+          </Typography>
+        )}
         {children && <div className="mb-8 w-full">{children}</div>}
 
         {/* 버튼 영역 */}
@@ -74,14 +79,14 @@ const ChatModal = ({
               onClick={onClose}
               className="px-6 py-2 text-white bg-gray-800 rounded-[10px] focus:outline-none focus:ring-2 focus:ring-gray-300"
             >
-              {cancelText}
+              <Typography size={16}>{cancelText}</Typography>
             </button>
           )}
           <button
             onClick={onConfirm}
             className={`px-6 py-2 text-white rounded-[10px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${buttonStyles[confirmButtonStyle]}`}
           >
-            {confirmText}
+            <Typography size={16}>{confirmText}</Typography>
           </button>
         </div>
       </div>
