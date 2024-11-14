@@ -31,7 +31,10 @@ const Report = () => {
       </div>{" "}
       <div className="md:max-w-[454px] md:flex md:flex-col md:mx-auto">
         <h3 className="text-[#0c0c0c] mb-[6px] text-lg font-bold font-['SUIT']">사진첨부</h3>
-        <div className="w-[84px] mb-[28px] bg-[#E7F7D9] p-[20.5px] flex flex-col items-center rounded-[10px]  md:w-[84px] md:mr-auto ">
+        <div
+          onClick={handleDivClick}
+          className="w-[84px] mb-[28px] bg-[#E7F7D9] cursor-pointer p-[20.5px] flex flex-col items-center rounded-[10px]  md:w-[84px] md:mr-auto "
+        >
           <Image src={cameraIcon} alt="카메라 아이콘" />
           <p className="text-[#7bd232]  text-[10px] font-medium font-['SUIT'] ">사진 등록</p>
         </div>
