@@ -89,6 +89,7 @@ const FaqPage = () => {
             <textarea
               className="mb-[20px] flex p-[20px] w-full items-start  rounded-[10px] border border-[#7BD232] placeholder:text-[#a5a5a5] placeholder:text-sm placeholder:font-medium placeholder:font-['Pretendard'] "
               placeholder="사유를 작성해 주세요"
+              value={content}
               onChange={(e) => {
                 setContent(e.target.value);
               }}
