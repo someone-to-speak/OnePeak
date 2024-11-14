@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -23,8 +23,6 @@ const ChatModal = ({
   confirmButtonStyle = "primary",
   children
 }: ModalProps) => {
-  if (!isOpen) return null;
-
   // 버튼 스타일 매핑
   const buttonStyles = {
     danger: "bg-red-500 hover:bg-red-600",
@@ -33,7 +31,7 @@ const ChatModal = ({
   };
 
   // ESC 키로 모달 닫기
-  React.useEffect(() => {
+  useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -44,6 +42,8 @@ const ChatModal = ({
       window.removeEventListener("keydown", handleEsc);
     };
   }, [onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
