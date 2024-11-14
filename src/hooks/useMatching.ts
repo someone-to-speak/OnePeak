@@ -14,7 +14,23 @@ export const useMatching = () => {
   const { userInfo, isLoading } = useUser();
   const matchingChannelRef = useRef<RealtimeChannel | null>(null);
 
-  const setupMatchingChannel = async () => {
+  const cleanUp = useCallback(async () => {
+    await matchingChannelRef.current?.unsubscribe();
+    await removeUserFromQueue(userInfo?.id as string);
+  }, [userInfo?.id]);
+
+  const handleUpdateSignal = useCallback(
+    async (payload: RealtimePostgresUpdatePayload<matche>) => {
+      const updatedMatchQueue = payload;
+      if (updatedMatchQueue.new.user_id === userInfo?.id) {
+        await cleanUp();
+        router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
+      }
+    },
+    [cleanUp, router, userInfo?.id]
+  );
+
+  const setupMatchingChannel = useCallback(async () => {
     if (!userInfo || isLoading || matchingChannelRef.current) return;
 
     setIsMatching(true);
@@ -28,6 +44,7 @@ export const useMatching = () => {
         handleUpdateSignal(payload);
       }
     );
+
     matchingChannel.subscribe((status) => {
       if (status === "SUBSCRIBED") console.log("subscribe");
       else if (status === "CHANNEL_ERROR") {
@@ -40,24 +57,10 @@ export const useMatching = () => {
     const roomId = await initiateMatching(userInfo);
 
     if (roomId) {
-      setIsMatching(false);
       await cleanUp();
       router.push(`/lesson/room?id=${roomId}`);
     }
-  };
-
-  const handleUpdateSignal = async (payload: RealtimePostgresUpdatePayload<matche>) => {
-    const updatedMatchQueue = payload;
-    if (updatedMatchQueue.new.user_id === userInfo?.id) {
-      await cleanUp();
-      router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
-    }
-  };
-
-  const cleanUp = useCallback(async () => {
-    await matchingChannelRef.current?.unsubscribe();
-    await removeUserFromQueue(userInfo?.id as string);
-  }, [userInfo?.id]);
+  }, [cleanUp, handleUpdateSignal, isLoading, router, supabase, userInfo]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", cleanUp);
