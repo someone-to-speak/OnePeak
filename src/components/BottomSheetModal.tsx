@@ -18,7 +18,7 @@ const BottomSheetModal: React.FC<BottomSheetModalProps> = ({ onClose }) => {
   console.log(onClose); // build 오류 임시 해결
 
   return (
-    <div className="flex flex-col mt-[30px] gap-[40px] justify-center items-center">
+    <div className="flex flex-col mt-[30px] md:my-[58px] gap-[40px] justify-center items-center">
       <h1 className="text-center text-black text-6xl font-bold font-suit leading-9">SNS 로그인 하기</h1>
       <div className="flex gap-[35px] mb-[44px]">
         <button onClick={handleSignInWithGoogle}>
