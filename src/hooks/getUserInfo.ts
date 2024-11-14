@@ -1,4 +1,4 @@
-import { getUserForMatching } from "@/repositories/matchingRepository";
+import { getUserForMatching } from "@/api/supabase/match";
 import { UserInfoForMatching } from "@/types/userType/userType";
 import { useQuery } from "@tanstack/react-query";
 
