@@ -15,12 +15,12 @@ export const useMessage = (conversationId: string) => {
 
   const {
     data: messages,
-    isLoading,
+    isFetched,
     isError
   } = useQuery<MessageWithUserInfo[]>({
     queryKey: ["messages", conversationId],
     queryFn: () => fetchMessages(conversationId),
-    enabled: !!userInfo
+    enabled: !!userInfo?.id
   });
 
   const { mutate: sendMessage } = useMutation({
@@ -103,5 +103,5 @@ export const useMessage = (conversationId: string) => {
     };
   }, [conversationId, queryClient, supabase]);
 
-  return { messages, isLoading, isError, sendMessage, sendMessageToChannel };
+  return { messages, isFetched, isError, sendMessage, sendMessageToChannel };
 };

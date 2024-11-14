@@ -249,14 +249,15 @@ export const changeToUnuse = async (targetLanguage: number) => {
 export const insertAlarmInfo = async (selectedType: string, title: string, content: string) => {
   const browserClient = createClient();
   const data = await browserClient.from("notifications").insert({ type: selectedType, title: title, message: content });
+  // 위에 식이 성공하면 data.status가 201이기때문에, 에러나면 201이 아님
   return data.status === 201;
 };
 
 // 1:1 문의하기 내용 faq 테이블에 넣기
 export const insertFaqData = async (userId: string, userNickname: string, selectedType: string, content: string) => {
   const browserClient = createClient();
-  const { error } = await browserClient
+  const data = await browserClient
     .from("faq")
     .insert({ category: selectedType, content: content, user_id: userId, user_nickname: userNickname });
-  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+  return data.status === 201;
 };
