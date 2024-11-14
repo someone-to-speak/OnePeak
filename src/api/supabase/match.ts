@@ -49,3 +49,18 @@ export const removeUserFromQueue = async (userId: string) => {
   const supabase = createClient();
   return await supabase.from("matches").delete().eq("user_id", userId);
 };
+
+export async function getSharedConversationId(myId: string, userId: string) {
+  const supabase = createClient();
+  const { data } = await supabase.from("participants").select("*").in("user_id", [myId, userId]);
+
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  const conversationId = data
+    .map((item) => item.conversation_id)
+    .find((id) => data.filter((item) => item.conversation_id === id).length === 2);
+
+  return conversationId;
+}

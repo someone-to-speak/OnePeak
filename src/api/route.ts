@@ -249,7 +249,7 @@ export const changeToUnuse = async (targetLanguage: number) => {
 export const insertAlarmInfo = async (selectedType: string, title: string, content: string) => {
   const browserClient = createClient();
   const data = await browserClient.from("notifications").insert({ type: selectedType, title: title, message: content });
-  // 위에 식이 성공하면 data.status가 201이기때문에, 에러나면 201이 아님
+  // 위에 식이 성공하면 data.status가 201이기때문에, 에러나면 201이 아님 즉 status가 201이면 true를 아니면 false를 반환
   return data.status === 201;
 };
 
