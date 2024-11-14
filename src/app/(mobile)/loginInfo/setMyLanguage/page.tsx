@@ -39,10 +39,7 @@ export default function SetLearnLanguage() {
     const userId = data?.session?.user?.id;
 
     if (userId && selectedMyLanguage) {
-      const { error } = await supabase
-        .from("user_info")
-        .update({ learn_language: selectedMyLanguage })
-        .eq("id", userId);
+      const { error } = await supabase.from("user_info").update({ my_language: selectedMyLanguage }).eq("id", userId);
 
       if (!error) {
         router.push("/loginInfo/setLearnLanguage");
