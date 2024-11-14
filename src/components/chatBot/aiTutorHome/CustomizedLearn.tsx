@@ -28,8 +28,10 @@ const CustomizedLearn = () => {
     <>
       <div className="w-full mt-10 px-4" onClick={() => setIsModalOpen(true)}>
         <div className="md:flex md:justify-between md:items-center mb-2">
-          <div>
-            <h1 className="text-[24px] font-bold">트레이닝</h1>
+          <div className="flex flex-col">
+            <Typography size={24} weight={"bold"} as="h1">
+              트레이닝
+            </Typography>
             <Typography size={14} weight={"normal"} className="text-[#5d5d5d]">
               다양한 상황을 연습해보세요
             </Typography>

@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import Image from "next/image";
 import star from "@/assets/star.svg";
+import { Typography } from "@/components/ui/typography";
+import Button from "@/components/ui/button";
 
 type ReviewType = Tables<"review">;
 
@@ -55,9 +57,13 @@ const Reviewing = () => {
 
   return (
     <div className="flex flex-col bg-[#f9f9f9] mt-10 p-4">
-      <h1 className="text-[24px] font-bold">복습하기</h1>
+      <Typography size={24} weight={"bold"}>
+        복습하기
+      </Typography>
       <div className="flex">
-        <p className="text-[12px] text-[#5d5d5d] font-normal">다시 한 번 복습해보세요</p>
+        <Typography size={14} weight={"normal"} className="text-[#5d5d5d]">
+          다시 한 번 복습해보세요
+        </Typography>
         <button onClick={handleReviewDetail} className="absolute right-4 text-[#a6a6a6] text-[12px]">
           더보기
         </button>
@@ -75,9 +81,10 @@ const Reviewing = () => {
                         <Image key={i} src={star} alt="star" className="" />
                       ))}
                     </div>
-                    {/* <p>{review.level}</p> */}
                   </div>
-                  <p className="text-[14px] text-[#8C8C8C]">Can I get The One Coffee</p>
+                  <Typography size={14} className="text-[#8c8c8c]">
+                    {review.sentence}I'm going to update my key sentence
+                  </Typography>
                 </div>
                 <button
                   onClick={() => {
@@ -85,7 +92,9 @@ const Reviewing = () => {
                   }}
                   className="w-full p-2 mt-5 bg-primary-800 text-[12px]text-[#335813] rounded-[10px]"
                 >
-                  복습하기
+                  <Typography size={12} weight={"bold"} className="text-primary-200">
+                    복습하기
+                  </Typography>
                 </button>
               </div>
             </div>

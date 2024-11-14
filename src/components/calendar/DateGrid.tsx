@@ -1,4 +1,5 @@
 import { dateUtils } from "@/utils/chatbot/date";
+import { Typography } from "../ui/typography";
 
 type DateGridProps = {
   dates: Date[];
@@ -27,7 +28,21 @@ export const DateGrid: React.FC<DateGridProps> = ({
         } ${dateUtils.isSameDayForUI(date, today) ? "bg-primary-700 font-bold text-white rounded-lg" : ""}
         ${dateUtils.isSameDayForUI(date, selectedDate) ? "bg-primary-500 text-white font-bold rounded-lg" : ""}`}
       >
-        {date.getDate()}
+        <Typography
+          size={14} // 크기는 필요에 따라 조절
+          weight={
+            dateUtils.isSameDayForUI(date, today) || dateUtils.isSameDayForUI(date, selectedDate) ? "bold" : "normal"
+          }
+          className={
+            dateUtils.isSameDayForUI(date, today) || dateUtils.isSameDayForUI(date, selectedDate)
+              ? "text-white"
+              : dateUtils.isSameMonth(date, currentDate)
+              ? "text-gray-300"
+              : "text-gray-800"
+          }
+        >
+          {date.getDate()}
+        </Typography>
       </div>
     ))}
   </div>
