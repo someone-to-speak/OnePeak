@@ -12,7 +12,8 @@
     margin-top: 70px;
   }
   .app-header-text {
-    font-size: 32px;
+    margin-left: 12px;
+    font-size: 36px;
   }
   .app-header-icon {
     width: 36px;
@@ -62,22 +63,22 @@
 
   /* 모든 요소의 포커스 상태에서 아웃라인 제거 */
   *:focus {
-    outline: none; /* 포커스 상태에서 아웃라인 제거 */
+    outline: none;
   }
 
   /* 스크롤바 스타일 */
   *::-webkit-scrollbar {
-    width: 0; /* 스크롤바의 너비를 0으로 설정 */
-    background: transparent; /* 배경을 투명으로 설정 */
+    width: 0;
+    background: transparent;
   }
 
   * {
-    scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+    scrollbar-width: none;
   }
 
   body {
     font-family: "Pretendard", sans-serif;
-    background-color: white;
+    background-color: #fdfdfd;
     color: var(--primary-50);
   }
 

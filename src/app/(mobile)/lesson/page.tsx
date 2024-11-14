@@ -26,7 +26,7 @@ const LessonPage = () => {
       <div className="relative bg-white px-4 flex ">
         <NoIconHeader title="언어수업" />
       </div>
-      <div className=" hidden md:h-[70px] md:flex md:justify-center md:items-center">
+      <div className="hidden md:h-[70px] md:flex md:justify-center md:items-center">
         {isMatching && <SpinnerButton />}
       </div>
       {/* 기존 페이지 내용 */}

@@ -19,7 +19,7 @@ const MyPage = () => {
   if (!userInfo?.id) return null;
 
   return (
-    <div className="flex flex-col md:gap-[70px]">
+    <div className="flex flex-col md:gap-[60px]">
       <NoIconHeader title="내정보" />
       <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
         <UserProfilePage userId={userInfo.id} />

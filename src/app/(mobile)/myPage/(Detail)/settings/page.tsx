@@ -14,6 +14,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useLanguages } from "@/hooks/useLanguages";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "react-toastify";
 
 const SettingsPage = () => {
   const supabase = createClient();
@@ -41,9 +42,8 @@ const SettingsPage = () => {
     try {
       await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
-    } catch (err) {
-      alert("언어 설정 저장 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("언어설정에 오류가 생겼습니다.");
     }
   };
 
@@ -53,9 +53,8 @@ const SettingsPage = () => {
     try {
       await updateLearnLanguage(userInfo.id, language);
       setLearnLanguage(language);
-    } catch (err) {
-      alert("언어 설정 저장 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("언어설정에 오류가 생겼습니다.");
     }
   };
 
@@ -64,9 +63,8 @@ const SettingsPage = () => {
     try {
       await logout();
       router.push("/");
-    } catch (err) {
-      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
-      console.error(err);
+    } catch {
+      toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -78,11 +76,10 @@ const SettingsPage = () => {
     try {
       const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
       if (error) throw error;
-      alert("회원 계정이 성공적으로 탈퇴되었습니다.");
+      toast.success("회원 계정이 성공적으로 탈퇴되었습니다.");
       handleLogout();
-    } catch (err) {
-      alert("회원 탈퇴 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("회원탈퇴에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -125,7 +122,6 @@ const SettingsPage = () => {
           </Typography>
         </button>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };

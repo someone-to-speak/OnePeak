@@ -39,6 +39,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.6",
     "recharts": "^2.13.2",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.4",
@@ -72,5 +73,6 @@
     "storybook": "8.3.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
 }
