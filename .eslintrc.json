@@ -1,3 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"],
+  "rules": {
+    "react/no-unescaped-entities": 0
+  }
+  // "no-unused-vars": "off", // build 에러 임시 해결
+  // "@typescript-eslint/no-unused-vars": "warn" // build 에러 임시 해결
 }
