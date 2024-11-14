@@ -3,7 +3,7 @@ import { Typography } from "../typography";
 
 const Footer = () => {
   return (
-    <div className="mt-[70px] py-10 px-3 flex flex-col gap-6">
+    <div className="mt-[70px] py-10 px-3 flex flex-col gap-6 border-t border-gray-800">
       <Typography size={16} weight={"medium"} className="text-#000">
         서비스 소개
       </Typography>

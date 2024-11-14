@@ -2,13 +2,13 @@ import Image from "next/image";
 import stamp from "@/assets/stamp.svg";
 import { Typography } from "@/components/ui/typography";
 import useNotifications from "@/hooks/useNotifications";
-import { Spinner } from "@nextui-org/react";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 const NotificationPopup = () => {
   const { notifi } = useNotifications();
 
   return (
-    <div className="absolute right-0 mt-2 w-[375px] h-[330px] bg-[#FDFDFD] shadow-2xl z-10 overflow-auto hover:overflow-scroll cursor-default">
+    <div className="absolute right-0 mt-2 w-[375px] h-[330px] bg-[#FDFDFD] rounded-[4px] shadow-2xl z-10 overflow-auto hover:overflow-scroll cursor-default">
       {notifi && notifi.length > 0 ? (
         notifi
           .slice()
@@ -33,7 +33,7 @@ const NotificationPopup = () => {
           ))
       ) : (
         <div className="w-[375px] h-[330px] flex items-center justify-center">
-          <Spinner label="로딩중" color="success" />
+          <LoadingSpinner />
         </div>
       )}
     </div>

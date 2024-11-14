@@ -75,12 +75,12 @@ const GrammarList = ({ userId }: { userId: string }) => {
         </button>
       </div>
       <div
-        className={`md:h-[543px] md:flex md:flex-col md:gap-5 md:p-[30px] md:border-none md:rounded-xl ${
+        className={`overflow-auto md:h-[543px] md:flex md:flex-col md:gap-5 md:p-[30px] md:border-none md:rounded-xl ${
           isReviewed === "미완료" ? "md:bg-gray-900" : "md:bg-primary-900"
         }`}
       >
         {/* Content here */}
-        <div className=" hidden md:flex md:flex-col">
+        <div className="hidden md:flex md:flex-col">
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
         <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">

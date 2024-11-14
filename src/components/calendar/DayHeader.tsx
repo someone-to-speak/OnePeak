@@ -1,3 +1,5 @@
+import { Typography } from "../ui/typography";
+
 type DayHeaderProps = {
   className?: string;
 };
@@ -8,7 +10,9 @@ export const DayHeader: React.FC<DayHeaderProps> = ({ className = "" }) => (
   <div className={`grid grid-cols-7 text-center font-medium text-gray-300${className}`}>
     {DAYS_OF_WEEK.map((day) => (
       <div key={day} className="py-2">
-        {day}
+        <Typography size={16} weight={"normal"}>
+          {day}
+        </Typography>
       </div>
     ))}
   </div>

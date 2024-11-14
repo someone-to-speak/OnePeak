@@ -41,7 +41,6 @@ export default function Home() {
         if (!userInfo || !userInfo.nickname || !userInfo.my_language || !userInfo.learn_language) {
           router.push("/loginInfo/setNickname");
         }
-        console.log("userInfo", userInfo);
       } else {
         setShowModal(true); // 세션이 없으면 모달을 표시
       }

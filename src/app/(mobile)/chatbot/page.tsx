@@ -12,6 +12,7 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import ChatModal from "@/components/ChatModal";
+import { Typography } from "@/components/ui/typography";
 
 const ChatMessagePage = () => {
   return (
@@ -120,7 +121,9 @@ const ChatMessage = () => {
             className="w-[45px] h-[29px] bg-gray-900 text-gray-400 text-[14px] rounded-[20px] self-center"
             onClick={() => setIsModalOpen(true)}
           >
-            종료
+            <Typography size={14} weight={"normal"}>
+              종료
+            </Typography>
           </button>
           {/* 종료 확인 모달 */}
           <ChatModal

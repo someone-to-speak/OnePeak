@@ -6,6 +6,7 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import Slider from "react-slick";
 import star from "@/assets/star.svg";
 import Image from "next/image";
+import { Typography } from "@/components/ui/typography";
 
 const TodayLearn = () => {
   const router = useRouter();
@@ -53,9 +54,13 @@ const TodayLearn = () => {
 
   return (
     <div className="w-full max-w-[1024px] mx-auto ml-4">
-      <div className="mb-2">
-        <h1 className="text-[24px] font-bold">오늘의 학습</h1>
-        <p className="text-[12px] text-[#5d5d5d] font-normal">매일 업데이트 되는 추천 학습</p>
+      <div className="mb-2 flex flex-col">
+        <Typography size={24} weight={"bold"}>
+          오늘의 학습
+        </Typography>
+        <Typography size={14} weight={"normal"} className="text-[#5d5d5d]">
+          매일 업데이트 되는 추천 학습
+        </Typography>
       </div>
       <Slider {...settings} className="[&_.slick-slide]:px-2 [&_.slick-track]:gap-4">
         {situations?.map((situation) => (
@@ -65,9 +70,10 @@ const TodayLearn = () => {
               w-[244px] md:w-full" // 모바일에서 244px, PC에서 full
             >
               {situation.image_url ? (
-                <img
+                <Image
                   src={situation.image_url}
                   alt={situation.situation}
+                  fill
                   className="absolute inset-0 w-full h-full object-cover rounded-lg"
                 />
               ) : (
@@ -80,8 +86,12 @@ const TodayLearn = () => {
                     <Image key={i} src={star} alt="star" />
                   ))}
                 </div>
-                <p className="text-[20px] font-bold">{situation.situation}</p>
-                <p className="text-[14px] font-normal">{situation.sentence}</p>
+                <Typography size={20} weight={"bold"}>
+                  {situation.situation}
+                </Typography>
+                <Typography size={14} weight={"normal"} className="text-gray-800">
+                  {situation.sentence}
+                </Typography>
               </div>
             </div>
           </div>

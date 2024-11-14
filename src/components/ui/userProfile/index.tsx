@@ -67,15 +67,17 @@ const UserProfileContent = ({
             {name}
           </Typography>
         </div>
-        <button onClick={onClick} className="text-[12px] font-medium text-gray-500 text-nowrap">
-          프로필 수정
+        <button onClick={onClick} className="text-gray-500 text-nowrap">
+          <Typography size={14} weight="medium">
+            프로필 수정
+          </Typography>
         </button>
       </div>
-      <Typography size={14} className="text-gray-200 font-medium font-pretendard truncate">
+      <Typography size={14} weight="medium" className="text-gray-200 truncate">
         {lastMessage}
       </Typography>
-      <div className="flex items-center gap-1  pb-1">
-        <Typography size={12} className="text-gray-600 font-medium font-pretendard">
+      <div className="flex items-center gap-1 pb-1">
+        <Typography size={12} weight="medium" className="text-gray-600">
           학습 언어
         </Typography>
         <div className="flex items-center gap-0.5">

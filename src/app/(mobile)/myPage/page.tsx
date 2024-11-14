@@ -5,21 +5,14 @@ import UserProfilePage from "@/components/myPage/UserProfile";
 import { Typography } from "@/components/ui/typography";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 import { useUser } from "@/hooks/useUser";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const MyPage = () => {
-  const { userInfo, isLoading } = useUser();
+  const { userInfo } = useUser();
 
-  if (isLoading)
-    return (
-      <div className="m-auto">
-        <LoadingSpinner />;
-      </div>
-    );
   if (!userInfo?.id) return null;
 
   return (
-    <div className="flex flex-col md:gap-[70px]">
+    <div className="flex flex-col md:gap-[60px]">
       <NoIconHeader title="내정보" />
       <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
         <UserProfilePage userId={userInfo.id} />
