@@ -77,8 +77,8 @@ export default function Home() {
 
       {/* 로그인되지 않았을 때 모달 표시 */}
       {!isLoggedIn && showModal && (
-        <div className="absolute w-[375px] ml-[-16px] top-0 bottom-0 flex items-end bg-black/60 z-[300]">
-          <div className="w-full h-auto bg-white rounded-t-[30px] z-[400]">
+        <div className="absolute w-full md:max-w-[1056px] md:h-full top-0 bottom-0 flex items-end bg-black/60 z-[300]">
+          <div className="w-full bg-white rounded-t-[30px] z-[400]">
             <BottomSheetModal onClose={() => setShowModal(false)} />
           </div>
         </div>
