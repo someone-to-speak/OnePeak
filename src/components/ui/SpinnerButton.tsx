@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "./typography";
 // import { Typography } from "./typography";
 
 const SpinnerButton = () => {
@@ -9,8 +10,9 @@ const SpinnerButton = () => {
         className="bg-white text-#000 py-2.5 px-5 flex items-center rounded-[25px] shadow-[2px_2px_8px_0px_rgba(0,0,0,0.22)]"
         disabled
       >
-        {/* <Typography>매칭중</Typography> */}
-        <span className="font-suit font-base font-bold leading-[21px] tracking-[-0.02em] mr-2.5">매칭중</span>
+        <Typography size={14} weight="bold" className="mr-2.5">
+          매칭중
+        </Typography>
 
         <svg
           className="animate-spin h-5 w-5 text-white"

@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import WithIconHeader from "@/components/ui/WithIconHeader";
@@ -14,9 +13,10 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useLanguages } from "@/hooks/useLanguages";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "react-toastify";
+import { cancelAccount } from "@/utils/myPage/cancelAccount";
 
 const SettingsPage = () => {
-  const supabase = createClient();
   const router = useRouter();
   const { userInfo } = useUser();
 
@@ -41,9 +41,8 @@ const SettingsPage = () => {
     try {
       await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
-    } catch (err) {
-      alert("언어 설정 저장 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("언어설정에 오류가 생겼습니다.");
     }
   };
 
@@ -53,9 +52,8 @@ const SettingsPage = () => {
     try {
       await updateLearnLanguage(userInfo.id, language);
       setLearnLanguage(language);
-    } catch (err) {
-      alert("언어 설정 저장 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("언어설정에 오류가 생겼습니다.");
     }
   };
 
@@ -64,25 +62,8 @@ const SettingsPage = () => {
     try {
       await logout();
       router.push("/");
-    } catch (err) {
-      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
-      console.error(err);
-    }
-  };
-
-  const cancelAccount = async () => {
-    if (!userInfo?.id) return;
-    const confirmation = confirm("정말 회원 계정을 탈퇴하시겠습니까?");
-    if (!confirmation) return;
-
-    try {
-      const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
-      if (error) throw error;
-      alert("회원 계정이 성공적으로 탈퇴되었습니다.");
-      handleLogout();
-    } catch (err) {
-      alert("회원 탈퇴 중 오류가 발생했습니다.");
-      console.error(err);
+    } catch {
+      toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -119,13 +100,15 @@ const SettingsPage = () => {
             로그아웃
           </Typography>
         </button>
-        <button onClick={cancelAccount} className="border-b border-gray-800 text-left w-full py-[20px] px-2">
+        <button
+          onClick={() => cancelAccount({ userInfo, handleLogout })}
+          className="border-b border-gray-800 text-left w-full py-[20px] px-2"
+        >
           <Typography size={16} weight="medium">
             회원탈퇴
           </Typography>
         </button>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };

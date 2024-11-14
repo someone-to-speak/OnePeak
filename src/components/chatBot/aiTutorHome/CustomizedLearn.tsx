@@ -8,6 +8,7 @@ import martIcon from "@/assets/home/mart.svg";
 import shopIcon from "@/assets/home/shop.svg";
 import subwayIcon from "@/assets/home/subway.svg";
 import tripIcon from "@/assets/home/trip.svg";
+import { Typography } from "@/components/ui/typography";
 
 const CustomizedLearn = () => {
   const themeItems = [
@@ -24,7 +25,9 @@ const CustomizedLearn = () => {
       <div className="md:flex md:justify-between md:items-center mb-2">
         <div>
           <h1 className="text-[24px] font-bold">트레이닝</h1>
-          <p className="text-[12px] text-[#5d5d5d] font-normal">다양한 상황을 연습해보세요</p>
+          <Typography size={14} weight={"normal"} className="text-[#5d5d5d]">
+            다양한 상황을 연습해보세요
+          </Typography>
         </div>
         {/* 유저 인풋창 */}
         <form className="flex w-full md:w-[495px] mt-3 md:mt-0">
@@ -54,7 +57,10 @@ const CustomizedLearn = () => {
           >
             <div className="text-center">
               <Image src={icon} alt={name} width={24} height={24} className="mx-auto mb-2" />
-              <p className="font-bold text-sm md:text-base">{name}</p>
+              {/* <p className="font-bold text-sm md:text-base">{name}</p> */}
+              <Typography size={16} className="font-bold md:text-base">
+                {name}
+              </Typography>
             </div>
           </div>
         ))}

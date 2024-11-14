@@ -8,11 +8,6 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 import { useUser } from "@/hooks/useUser";
-import Camera from "@/assets/lesson/camera.svg";
-import Microphone from "@/assets/lesson/microphone.svg";
-import Power from "@/assets/lesson/power.svg";
-import Prohibit from "@/assets/lesson/prohibit.svg";
-import Image from "next/image";
 import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
@@ -189,7 +184,7 @@ const VideoChat = () => {
             <button className="p-[9px] bg-black rounded-md">
               <Icon name="camera" size={42} color="white" />
             </button>
-            <button className="p-[9px] bg-red-400 rounded-md">
+            <button className="p-[9px] bg-red-400 rounded-md" onClick={handleCloseMatching}>
               <Icon name="power" size={42} color="white" />
             </button>
             <button className="p-[9px] bg-black rounded-md">
@@ -198,36 +193,43 @@ const VideoChat = () => {
           </div>
         </div>
       ) : (
-        <div className="h-auto">
-          <button className="cursor-pointer absolute bg-black rounded-full p-[10px] z-[100] top-[68px] right-[16px]">
-            <Image className="cursor-pointer" src={Prohibit} alt={""} width={25} height={25} />
-          </button>
-          <button
-            className="cursor-pointer absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2 bg-red-400 rounded-full p-[10px] z-[100] bottom-4 pb-safe-offset-2"
-            onClick={handleCloseMatching}
-          >
-            <Image className="cursor-pointer" src={Power} alt={""} width={25} height={25} />
-          </button>
-          <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center absolute top-1/2 -translate-y-1/2 left-[16px] bg-black  z-[100]">
-            <button className="cursor-pointer">
-              <Image className="cursor-pointer" src={Microphone} alt={""} width={32} height={32} />
-            </button>
-            <button className="cursor-pointer">
-              <Image className="cursor-pointer" src={Camera} alt={""} width={32} height={32} />
-            </button>
+        <div className="relative">
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-none z-[101]">
+            <div className="flex flex-col px-4 py-safe-offset-6 w-full h-full">
+              <div className="flex flex-1 justify-between items-start">
+                <video
+                  className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
+                  ref={remoteVideoRef}
+                  autoPlay
+                  playsInline
+                  onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+                  onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+                  onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+                  style={{ pointerEvents: "none" }}
+                />
+                <button className="bg-black rounded-full p-[10px]">
+                  <Icon name="prohibit" size={25} color="#BFBFBF" />
+                </button>
+              </div>
+              <div className="flex-1">
+                <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center bg-black">
+                  <button>
+                    <Icon name="microphone" size={32} color="#BFBFBF" />
+                  </button>
+                  <button>
+                    <Icon name="camera" size={32} color="#BFBFBF" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-center items-endflex-1">
+                <button className="bg-red-400 rounded-md p-[10px]" onClick={handleCloseMatching}>
+                  <Icon name="power" size={32} color="white" />
+                </button>
+              </div>
+            </div>
           </div>
           <video
-            className={"scale-x-[-1] absolute w-[136px] h-[136px] top-[68px] left-[16px] z-[100] object-cover"}
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
-            onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
-            onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
-            style={{ pointerEvents: "none" }}
-          />
-          <video
-            className={"scale-x-[-1] h-lvh object-cover"}
+            className={"relative scale-x-[-1] h-lvh object-cover"}
             ref={localVideoRef}
             autoPlay
             playsInline
@@ -235,7 +237,7 @@ const VideoChat = () => {
             onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
             onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
             style={{ pointerEvents: "none" }}
-          />
+          ></video>
         </div>
       )}
     </>

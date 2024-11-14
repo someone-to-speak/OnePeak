@@ -28,6 +28,13 @@ const FaqPage = () => {
   });
 
   const faqDataHandler = async () => {
+    if (!selectedType) {
+      return alert("문의 유형을 선택해주세요");
+    }
+    if (!content) {
+      return alert("사유를 작성해주세요");
+    }
+
     const userId = data?.id;
     const userNickname = data?.nickname;
     const isSuccess = await insertFaqData(userId!, userNickname!, selectedType, content);

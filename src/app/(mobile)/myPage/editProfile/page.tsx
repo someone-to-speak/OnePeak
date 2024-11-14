@@ -11,6 +11,7 @@ import { Typography } from "@/components/ui/typography";
 import { createClient } from "@/utils/supabase/client";
 import { useUser } from "@/hooks/useUser";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "react-toastify";
 
 const EditProfile = () => {
   const router = useRouter();
@@ -58,6 +59,7 @@ const EditProfile = () => {
           const data = await uploadImage(file);
           imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`;
         } catch {
+          toast.error("이미지 업로드에 실패했습니다.");
           return;
         }
       }
@@ -66,7 +68,7 @@ const EditProfile = () => {
       const { nickname, state_msg } = selectedProfile;
 
       if (!nickname || !imageUrl || !state_msg) {
-        alert("모두 입력해주세요.");
+        toast.warn("모두 입력해주세요.");
         return;
       }
 
@@ -80,9 +82,9 @@ const EditProfile = () => {
         .eq("id", userInfo.id);
 
       if (error) {
-        alert("프로필 업데이트에 실패했습니다.");
+        toast.error("프로필 업데이트에 실패했습니다.");
       } else {
-        alert("프로필이 성공적으로 업데이트되었습니다.");
+        toast.success("프로필이 성공적으로 업데이트되었습니다.");
         router.push("/myPage");
       }
     }
@@ -101,7 +103,7 @@ const EditProfile = () => {
                 alt="프로필 이미지"
                 className="object-cover"
                 priority
-                sizes="(max-width: 768px) 100px, (max-width: 1200px) 200px, 200px"
+                sizes="auto"
               />
             </div>
             <label htmlFor="file-upload" className="absolute right-0 bottom-0 mb-0 mr-0 cursor-pointer">
