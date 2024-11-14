@@ -1,11 +1,11 @@
 "use client";
-
+import caretleft from "@/assets/caret-left.svg";
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
-import WithIconHeader from "@/components/ui/WithIconHeader";
+// import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import NotificationToggle from "@/components/ui/toggle/notificationToggle";
 import { useUser } from "@/hooks/useUser";
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { cancelAccount } from "@/utils/myPage/cancelAccount";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 const SettingsPage = () => {
   const router = useRouter();
@@ -74,12 +75,25 @@ const SettingsPage = () => {
       toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
+  const handleClick = () => {
+    window.location.href = "/myPage";
+  };
 
   if (!userInfo?.id) return null;
   if (!languages) return null;
   return (
     <div className="flex flex-col md:gap-[70px]">
-      <WithIconHeader title="설정" />
+      {/* <WithIconHeader title="설정" /> */}
+      <div className="app-header">
+        <div className="flex items-center">
+          <button onClick={handleClick}>
+            <Image src={caretleft} alt={"caret-left"} className="app-header-icon" />
+          </button>
+          <Typography weight="bold" className="app-header-text">
+            설정
+          </Typography>
+        </div>
+      </div>
       <div className="flex flex-col w-full md:w-[674px] mx-auto">
         {languages.length > 0 && (
           <>
