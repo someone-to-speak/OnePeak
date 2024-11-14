@@ -7,7 +7,6 @@ import { reviewApi } from "@/services/supabaseChatbot";
 import Image from "next/image";
 import star from "@/assets/star.svg";
 import { Typography } from "@/components/ui/typography";
-import Button from "@/components/ui/button";
 
 type ReviewType = Tables<"review">;
 
