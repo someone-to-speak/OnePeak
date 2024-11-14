@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RealtimeChannel, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { initiateMatching } from "@/services/matchingService";
 import { removeUserFromQueue } from "@/repositories/matchingRepository";
@@ -24,25 +24,24 @@ export const useMatching = () => {
     matchingChannel.on<matche>(
       "postgres_changes",
       { event: "UPDATE", schema: "public", table: "matches" },
-      async (payload) => {
-        console.log("update");
-        await handleUpdateSignal(payload);
+      (payload) => {
+        handleUpdateSignal(payload);
       }
     );
     matchingChannel.subscribe((status) => {
       if (status === "SUBSCRIBED") console.log("subscribe");
       else if (status === "CHANNEL_ERROR") {
-        console.log("error");
         setupMatchingChannel();
-      } else if (status === "TIMED_OUT") console.log("timeout");
-      else console.log("closed");
+      } else if (status === "TIMED_OUT") {
+        cleanUp();
+      }
     });
 
     const roomId = await initiateMatching(userInfo);
 
     if (roomId) {
       setIsMatching(false);
-      await cleanUp();
+
       router.push(`/lesson/room?id=${roomId}`);
     }
   };
@@ -50,7 +49,6 @@ export const useMatching = () => {
   const handleUpdateSignal = async (payload: RealtimePostgresUpdatePayload<matche>) => {
     const updatedMatchQueue = payload;
     if (updatedMatchQueue.new.user_id === userInfo?.id) {
-      await cleanUp();
       router.push(`/lesson/room?id=${updatedMatchQueue.new.room_id}`);
     }
   };
@@ -59,6 +57,12 @@ export const useMatching = () => {
     await matchingChannelRef.current?.unsubscribe();
     await removeUserFromQueue(userInfo?.id as string);
   };
+
+  useEffect(() => {
+    return () => {
+      cleanUp();
+    };
+  }, [userInfo?.id]);
 
   return { setupMatchingChannel, userInfo, isLoading, isMatching };
 };
