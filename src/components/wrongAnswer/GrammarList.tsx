@@ -83,7 +83,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
         <div className=" hidden md:flex md:flex-col">
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
-        <div className="flex flex-col gap-[10px] md:gap-[20px]">
+        <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">
           {filteredAnswers?.map((question, index) => (
             <div
               key={index}
