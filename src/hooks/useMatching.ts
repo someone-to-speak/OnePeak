@@ -46,8 +46,7 @@ export const useMatching = () => {
     );
 
     matchingChannel.subscribe((status) => {
-      if (status === "SUBSCRIBED") console.log("subscribe");
-      else if (status === "CHANNEL_ERROR") {
+      if (status === "CHANNEL_ERROR") {
         setupMatchingChannel();
       } else if (status === "TIMED_OUT") {
         removeUserFromQueue(userInfo?.id as string);
