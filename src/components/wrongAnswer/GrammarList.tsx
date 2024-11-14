@@ -48,7 +48,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-full h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5 ">
         <button
           className={`${
             isReviewed === "미완료"
