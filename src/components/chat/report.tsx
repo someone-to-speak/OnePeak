@@ -10,8 +10,8 @@ const Report = () => {
   };
 
   return (
-    <div className="w-full px-[16px]  flex flex-col   bg-[#FFF] ">
-      <div className="flex gap-[6px] md:mt-[70px]  ">
+    <div className="w-full px-[16px]    bg-[#FFF] ">
+      <div className=" flex gap-[6px] md:mt-[70px]  ">
         <Image src={reportIcon} alt="신고하기 아이콘" className="md:hidden" />
         <h1
           className="text-[#0c0c0c] text-lg font-bold font-['SUIT']
@@ -21,10 +21,16 @@ const Report = () => {
         </h1>
       </div>{" "}
       <div className="md:max-w-[454px] md:flex md:flex-col md:mx-auto ">
-        <div className="flex flex-col gap-[28px] mt-[105px] mb-[238px] ">
+        <div className="w-full flex flex-col gap-[28px] mt-[105px] mb-[238px] ">
           <div className="flex flex-col gap-[6px]">
             <h3 className="text-[#0c0c0c] text-lg font-bold font-['SUIT']">사진첨부</h3>
-            <input type="file" onChange={handleImgFile} multiple />
+            <div className="w-[84px] bg-[#E7F7D9] p-[20.5px] rounded-[10px] md:w-[84px] md:mr-auto ">
+              <div className=" flex flex-col gap-[5px] items-center justify-center ">
+                <Image className="" src={cameraIcon} alt="카메라 아이콘" />
+                <p className="text-[#7bd232] text-[10px] font-medium font-['SUIT'] ">사진 등록</p>
+              </div>
+              <input type="file" onChange={handleImgFile} multiple className="hidden" />{" "}
+            </div>
           </div>
           <div className=" flex flex-col gap-[6px]">
             <h3 className="text-[#0c0c0c] text-lg font-bold font-['SUIT']'] ">신고사유</h3>
@@ -48,9 +54,3 @@ const Report = () => {
 };
 
 export default Report;
-// <div className="w-1/4 bg-[#E7F7D9] p-[20.5px] rounded-[10px] ">
-//   <div className="flex flex-col gap-[5px] items-center justify-center ">
-//     <Image className="" src={cameraIcon} alt="카메라 아이콘" />
-//     <p className="text-[#7bd232] text-[10px] font-medium font-['SUIT'] ">사진 등록</p>
-//   </div>
-// </div>
