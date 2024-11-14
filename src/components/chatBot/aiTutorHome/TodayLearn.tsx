@@ -3,10 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
-import Slider from "react-slick";
+// import Slider from "react-slick";
+import dynamic from "next/dynamic";
 import star from "@/assets/star.svg";
 import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
+
+const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
 const TodayLearn = () => {
   const router = useRouter();
@@ -42,7 +45,7 @@ const TodayLearn = () => {
         }
       },
       {
-        breakpoint: 9999, // PC
+        breakpoint: 5000, // PC
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
@@ -62,7 +65,7 @@ const TodayLearn = () => {
           매일 업데이트 되는 추천 학습
         </Typography>
       </div>
-      <Slider {...settings} className="[&_.slick-slide]:px-2 [&_.slick-track]:gap-4">
+      <Slider {...settings} className="[&_.slick-slide]:px-2 md:[&_.slick-track]:!translate-x-0 [&_.slick-track]:gap-4">
         {situations?.map((situation) => (
           <div key={situation.id} onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}>
             <div
