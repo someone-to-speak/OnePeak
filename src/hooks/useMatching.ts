@@ -65,6 +65,7 @@ export const useMatching = () => {
     window.addEventListener("beforeunload", cleanUp);
 
     return () => {
+      cleanUp();
       window.removeEventListener("beforeunload", cleanUp);
     };
   }, [cleanUp]);
