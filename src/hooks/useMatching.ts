@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RealtimeChannel, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { initiateMatching } from "@/services/matchingService";
-import { removeUserFromQueue } from "@/repositories/matchingRepository";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useUser } from "./useUser";
 import { matche } from "@/types/chatType/chatType";
+import { removeUserFromQueue } from "@/api/supabase/match";
 
 export const useMatching = () => {
   const supabase = createClient();
