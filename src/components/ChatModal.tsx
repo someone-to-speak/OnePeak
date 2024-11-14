@@ -9,6 +9,7 @@ interface ModalProps {
   confirmText?: string;
   cancelText?: string;
   confirmButtonStyle?: "danger" | "success" | "primary";
+  showCancel?: boolean;
   children?: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ const ChatModal = ({
   confirmText = "확인",
   cancelText = "취소",
   confirmButtonStyle = "primary",
+  showCancel = true, // 기본값 true
   children
 }: ModalProps) => {
   // 버튼 스타일 매핑
@@ -67,12 +69,14 @@ const ChatModal = ({
 
         {/* 버튼 영역 */}
         <div className="flex gap-4">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 text-white bg-gray-800 rounded-[10px] focus:outline-none focus:ring-2 focus:ring-gray-300"
-          >
-            {cancelText}
-          </button>
+          {showCancel && (
+            <button
+              onClick={onClose}
+              className="px-6 py-2 text-white bg-gray-800 rounded-[10px] focus:outline-none focus:ring-2 focus:ring-gray-300"
+            >
+              {cancelText}
+            </button>
+          )}
           <button
             onClick={onConfirm}
             className={`px-6 py-2 text-white rounded-[10px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${buttonStyles[confirmButtonStyle]}`}

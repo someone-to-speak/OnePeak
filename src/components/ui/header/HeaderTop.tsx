@@ -8,9 +8,13 @@ import CalendarIcon from "@/assets/calendar.svg";
 import NotificationBell from "../../notificationPopup/NotificationBell";
 import { Typography } from "../typography";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import ChatModal from "@/components/ChatModal";
 
 const HeaderTop = () => {
   const pathname = usePathname(); // 현재 경로 문자열 반환
+  // 오픈 예정 알림 모달
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 경로가 일치하는지 확인하는 함수
   const isActive = (path: string) => pathname === path;
@@ -40,9 +44,21 @@ const HeaderTop = () => {
           </div>
           <div className="flex items-center gap-[16px]">
             <NotificationBell />
-            <Link href="/attendance">
+            {/* <Link href="/attendance"> */}
+            <button onClick={() => setIsModalOpen(true)}>
               <Image src={CalendarIcon} alt="chalendar-icon" className="w-7 h-7" />
-            </Link>
+            </button>
+            <ChatModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onConfirm={() => setIsModalOpen(false)}
+              title="알림"
+              description="오픈 예정입니다"
+              confirmText="확인"
+              confirmButtonStyle="primary"
+              showCancel={false}
+            />
+            {/* </Link> */}
             <Link
               href="/myPage"
               className="bg-gray-900 hover:bg-gray-800 w-[48px] h-[48px] rounded-full flex items-center justify-center"
