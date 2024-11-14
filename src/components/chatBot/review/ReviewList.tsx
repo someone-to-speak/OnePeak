@@ -1,6 +1,7 @@
 import { dateUtils } from "@/utils/chatbot/date";
 import { Tables } from "../../../../database.types";
 import ReviewItem from "./ReviewItem";
+import { Typography } from "@/components/ui/typography";
 
 type ReviewType = Tables<"review">;
 
@@ -10,7 +11,6 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
-  console.log("reviews", reviews);
   if (!reviews.length) return <p>학습 내역이 없습니다!</p>;
 
   // 리뷰들을 날짜별로 그룹화
@@ -31,15 +31,21 @@ export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
         const [month, day] = dateKey.split("-");
 
         return (
-          <div key={dateKey}>
-            <div>
-              <p className="font-bold text-left text-[#595959]">{month}월</p>
-              <p className="font-bold text-left text-[#595959]">{day}</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-x-[18px] gap-y-[8px] md:auto-rows-max md: h-[710px] pl-10">
-              {dateReviews.map((review) => (
-                <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />
-              ))}
+          <div key={dateKey} className="mb-4 md:mb-6">
+            <div key={dateKey}>
+              <div className="flex flex-col">
+                <Typography size={14} weight={"bold"} className="text-left text-gray-300">
+                  {month}월
+                </Typography>
+                <Typography size={14} weight={"bold"} className="text-left text-gray-300">
+                  {day}
+                </Typography>
+              </div>
+              <div className="grid md:grid-cols-2 md:gap-x-[18px] md:gap-y-[8px] md:auto-rows-max md:h-[710px] pl-10">
+                {dateReviews.map((review) => (
+                  <ReviewItem key={review.id} review={review} onReviewClick={onReviewClick} />
+                ))}
+              </div>
             </div>
           </div>
         );

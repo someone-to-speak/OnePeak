@@ -28,16 +28,6 @@ export const dateUtils = {
 
     const [year, month, day] = dateStr.split("-");
 
-    console.log("Date parsing:", {
-      original: date,
-      extracted: dateStr,
-      result: {
-        year: parseInt(year, 10),
-        month: parseInt(month, 10),
-        day: parseInt(day, 10)
-      }
-    });
-
     return {
       year: parseInt(year, 10),
       month: parseInt(month, 10),
@@ -66,12 +56,6 @@ export const dateUtils = {
 
     const d1Str = getDateOnly(date1);
     const d2Str = getDateOnly(date2);
-
-    console.log("Comparing dates:", {
-      d1: d1Str,
-      d2: d2Str,
-      isEqual: d1Str === d2Str
-    });
 
     return d1Str === d2Str;
   },
