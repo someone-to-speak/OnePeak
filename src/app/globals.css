@@ -77,13 +77,8 @@
   }
 
   body {
-<<<<<<< HEAD
     font-family: "Pretendard", sans-serif;
     background-color: #fdfdfd;
-=======
-    font-family: "Pretendard", "SUIT", sans-serif;
-    background-color: white;
->>>>>>> 3120b50e11682c5b6033aa5a3a5ab19fdb431044
     color: var(--primary-50);
   }
 

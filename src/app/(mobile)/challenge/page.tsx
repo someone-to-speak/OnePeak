@@ -32,7 +32,7 @@ const ChallengePage = () => {
   return (
     <div className="flex flex-col md:gap-[60px]">
       <NoIconHeader title="챌린지" />
-      <div className="w-full h-[calc(100vh+20px)] md:h-full">
+      <div className="w-full h-[calc(100vh+110px)] md:h-full">
         <div>
           <div className="max-w-[343px] h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex flex-row justify-center items-center">
             {problems.map((problem, index) => (
@@ -43,13 +43,13 @@ const ChallengePage = () => {
                   selectedButtonIndex === index ? "bg-[#b0e484]" : "bg-[#f3f3f3]"
                 }`}
               >
-                <p
-                  className={`${
-                    selectedButtonIndex === index ? "text-[#325713]" : "text-[#a5a5a5]"
-                  } text-base font-bold`}
+                <Typography
+                  size={16}
+                  weight="bold"
+                  className={`${selectedButtonIndex === index ? "text-[#325713]" : "text-[#a5a5a5]"}`}
                 >
                   {problem.label}
-                </p>
+                </Typography>
               </div>
             ))}
           </div>
@@ -65,7 +65,7 @@ const ChallengePage = () => {
                       {problem.label} 챌린지를 통해 <br /> 실력을 확인해보세요!
                     </Typography>
                     <Image
-                      src={problem.type === "grammar" ? challIconGrammar : challIconWord}
+                      src={problem.type === "word" ? challIconWord : challIconGrammar}
                       alt={`${problem.type}-icon`}
                       className="my-[44px]"
                     />
@@ -81,12 +81,12 @@ const ChallengePage = () => {
                   <div className="w-full flex flex-row items-center justify-between">
                     <div className="flex flex-col">
                       <Typography size={18} weight="bold">
-                        {problem.type === "grammar" ? "문법 오답노트" : "단어 오답노트"}
+                        {problem.type === "word" ? "단어 오답노트" : "문법 오답노트"}
                       </Typography>
                       <Typography size={14} weight="medium" className="text-gray-500">
-                        {problem.type === "grammar"
-                          ? "배운 문법을 잊어버리지 않게 복습해보세요"
-                          : "배운 단어를 잊어버리지 않게 복습해보세요"}
+                        {problem.type === "word"
+                          ? "배운 단어를 잊어버리지 않게 복습해보세요"
+                          : "배운 문법을 잊어버리지 않게 복습해보세요"}
                       </Typography>
                     </div>
                     <Image className="rotate-180" src={caretLeft} alt="caret-left" />

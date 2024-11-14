@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import WithIconHeader from "@/components/ui/WithIconHeader";
@@ -15,9 +14,9 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { useLanguages } from "@/hooks/useLanguages";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
+import { cancelAccount } from "@/utils/myPage/cancelAccount";
 
 const SettingsPage = () => {
-  const supabase = createClient();
   const router = useRouter();
   const { userInfo } = useUser();
 
@@ -68,21 +67,6 @@ const SettingsPage = () => {
     }
   };
 
-  const cancelAccount = async () => {
-    if (!userInfo?.id) return;
-    const confirmation = confirm("정말 회원 계정을 탈퇴하시겠습니까?");
-    if (!confirmation) return;
-
-    try {
-      const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
-      if (error) throw error;
-      toast.success("회원 계정이 성공적으로 탈퇴되었습니다.");
-      handleLogout();
-    } catch {
-      toast.error("회원탈퇴에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-
   if (!userInfo?.id) return null;
 
   return (
@@ -116,7 +100,10 @@ const SettingsPage = () => {
             로그아웃
           </Typography>
         </button>
-        <button onClick={cancelAccount} className="border-b border-gray-800 text-left w-full py-[20px] px-2">
+        <button
+          onClick={() => cancelAccount({ userInfo, handleLogout })}
+          className="border-b border-gray-800 text-left w-full py-[20px] px-2"
+        >
           <Typography size={16} weight="medium">
             회원탈퇴
           </Typography>
