@@ -5,6 +5,7 @@ import reportIcon from "@/assets/report-icon.svg";
 import cameraIcon from "@/assets/camera-icon.svg";
 
 const Report = () => {
+  // useRef를 사용하여 div태그 클릭하면 input이 작동하게 함
   // input 요소를 참조할 useRef
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // div 클릭 시 파일 입력 트리거
