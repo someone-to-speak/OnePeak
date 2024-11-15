@@ -12,7 +12,7 @@ import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
 
-export default function SetLearnLanguage() {
+export default function SetMyLanguage() {
   const [selectedMyLanguage, setSelectedMyLanguage] = useState<string>("");
   const router = useRouter();
   const supabase = createClient();

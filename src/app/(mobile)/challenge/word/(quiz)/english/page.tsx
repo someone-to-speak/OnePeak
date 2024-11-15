@@ -23,7 +23,7 @@ const EnglishWordQuiz = () => {
 
   return (
     <div className="flex flex-col gap-[70px]">
-      {isLargeScreen && <WithIconHeader title="문법 챌린지" />}
+      {isLargeScreen && <WithIconHeader title="단어 챌린지" />}
       <RandomEnglishWordQuiz userId={userId} />
     </div>
   );
