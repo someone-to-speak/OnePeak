@@ -11,21 +11,31 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
 
   const startRecording = async () => {
     try {
+      console.log("1. 녹음 시작 시도");
+      alert("녹음을 시작합니다.");
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
           sampleRate: 16000
         }
       });
+      console.log("2. 스트림: ", stream);
+      console.log("3. 스트림 획득 성공 여부: ", stream.active);
+      alert("마이크 권한 획득 성공");
 
       // 브라우저가 지원하는 mimeType 확인
       const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/ogg";
+      console.log("4. 브라우저가 지원하는 mimeType: ", mimeType);
+      alert(`지원하는 mimeType: ${mimeType}`);
 
       // 오디오 형식을 명시적으로 지정
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      console.log("5. mediaRecorder 생성 성공: ", mediaRecorder);
       const chunks: Blob[] = [];
 
       mediaRecorder.ondataavailable = (e) => {
+        console.log("6. 데이터 수집: ", e.data.size, "bytes");
         if (e.data.size > 0) {
           chunks.push(e.data);
         }
@@ -34,6 +44,7 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
       mediaRecorder.onstop = async () => {
         try {
           const audioBlob = new Blob(chunks, { type: mimeType });
+          console.log("7. 생성된 Blob 크기: ", audioBlob.size, "bytes");
 
           // 오디오 길이/크기 체크 (1KB 미만이면 무시)
           if (audioBlob.size < 1000) {
@@ -42,6 +53,7 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
           }
 
           const audioFile = new File([audioBlob], "audio.webm", { type: mimeType });
+          console.log("9. 파일 생성 완료", audioFile.size);
           const text = await convertSpeechToText(audioFile);
 
           // 버그 처리
@@ -53,6 +65,7 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
           callback(text);
         } catch (error) {
           console.log("음성 변환 실패: ", error);
+          alert(`에러 발생: ${error}`);
           throw error;
         } finally {
           // 스트림 정지
