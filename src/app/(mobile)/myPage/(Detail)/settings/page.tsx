@@ -61,7 +61,7 @@ const SettingsPage = () => {
 
   //   try {
   //     await updateLearnLanguage(userInfo.id, language);
-  //     // setLearnLanguage(language);
+  //     setLearnLanguage(language);
   //   } catch {
   //     toast.error("언어설정에 오류가 생겼습니다.");
   //   }
@@ -91,12 +91,13 @@ const SettingsPage = () => {
               languageOptions={filteredMyLanguages}
               onLanguageChange={handleUpdateMyLanguage}
             />
+            {/* 추후 언어 추가시 구현 */}
             {/* <ImageSelectorDropDown
               text="학습 언어 변경"
               subtitle={learnLanguage}
               languageOptions={filteredLearnLanguages}
               onLanguageChange={handleUpdateLearnLanguage}
-            /> 추후 언어 추가시 구현 */}
+            /> */}
           </>
         )}
         <div className="border-b border-gray-800 flex flex-row items-center justify-between py-[20px] px-2">
