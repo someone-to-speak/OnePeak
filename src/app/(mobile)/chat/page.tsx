@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { conversationList, isFetched, isError } = useConversation();
-  console.log("conversationList", conversationList);
   const router = useRouter();
 
   if (!isFetched) {
