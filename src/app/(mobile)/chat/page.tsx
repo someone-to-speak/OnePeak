@@ -31,12 +31,10 @@ const Page = () => {
         </Typography>
       </div>
       {conversationList && conversationList.length > 0 ? (
-        conversationList?.map((conversation) => (
-          <div
-            className="flex flex-col gap-2 md:gap-3 flex-1 overflow-visible md:p-[20px] md:bg-gray-900 md:rounded-[24px]"
-            key={conversation.id}
-          >
+        <div className="flex flex-col gap-2 md:gap-3 flex-1 overflow-visible md:p-[20px] md:bg-gray-900 md:rounded-[24px]">
+          {conversationList?.map((conversation) => (
             <UserProfile
+              key={conversation.id}
               name={conversation.participants.user_info.nickname}
               country={conversation.participants.user_info.my_language.language_img_url}
               profileImage={conversation.participants.user_info.profile_url}
@@ -47,8 +45,8 @@ const Page = () => {
               learnLanguage={conversation.participants.user_info.learn_language.language_name}
               onClick={() => router.push(`/chat/room?id=${conversation.id}`)}
             ></UserProfile>
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
         <div className="flex-grow flex justify-center items-center">
           <Typography size={12} className="font-medium">

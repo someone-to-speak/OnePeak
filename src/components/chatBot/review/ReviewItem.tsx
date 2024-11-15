@@ -22,7 +22,6 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, onReviewClick }) => {
                 <Image key={i} src={star} alt="star" className="" />
               ))}
             </div>
-            {/* <p>{review.level}</p> */}
           </div>
           <p className="text-[14px] text-[#8C8C8C]">Can I get The One Coffee</p>
         </div>

@@ -80,7 +80,7 @@ export const fetchConversationList = async (userId: string) => {
         .select("*, user_info: user_id(*, my_language(*), learn_language(*))")
         .eq("conversation_id", conversation.id)
         .neq("user_id", userId)
-        .single();
+        .maybeSingle();
 
       return {
         ...conversation,

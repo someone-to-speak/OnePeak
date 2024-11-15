@@ -1,4 +1,5 @@
 import { dateUtils } from "@/utils/chatbot/date";
+import { Typography } from "../ui/typography";
 
 type CalendarHeaderProps = {
   currentDate: Date;
@@ -17,7 +18,9 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
     <button onClick={onPrevMonth} className="px-3 py-1 w-[20px]">
       ‹
     </button>
-    <span className="text-lg font-semibold mx-10">{dateUtils.formatYearMonth(currentDate)}</span>
+    <Typography size={20} weight={"bold"} className=" mx-10">
+      {dateUtils.formatYearMonth(currentDate)}
+    </Typography>
     <button onClick={onNextMonth} className="px-3 py-1">
       ›
     </button>

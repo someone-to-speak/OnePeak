@@ -13,7 +13,7 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <header className="w-full sticky top-0 left-0 right-0 px-[16px] mt-0 z-[200] bg-white">
+    <header className="w-full sticky top-0 left-0 right-0 px-[16px] mt-0 z-[200] bg-white pt-safe-offset-0">
       <div className="w-full h-12 flex justify-between items-center">
         <Image src={LogoIcon} alt="logo-icon" className="h-[27px]" />
         <div className="flex items-center gap-[16px]">

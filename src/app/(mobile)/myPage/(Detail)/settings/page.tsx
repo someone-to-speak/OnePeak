@@ -1,31 +1,40 @@
 "use client";
-
+import caretleft from "@/assets/caret-left.svg";
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
 import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
-import WithIconHeader from "@/components/ui/WithIconHeader";
+// import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import NotificationToggle from "@/components/ui/toggle/notificationToggle";
 import { useUser } from "@/hooks/useUser";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
-import { useLanguages } from "@/hooks/useLanguages";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
 import { cancelAccount } from "@/utils/myPage/cancelAccount";
+import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 const SettingsPage = () => {
   const router = useRouter();
   const { userInfo } = useUser();
-
   const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
-
-  const { data: languageData, isLoading: languageLoading } = useLanguages();
   const { isNotificationEnabled, handleNotificationToggle } = useSubscription(userInfo?.id || "");
   const [myLanguage, setMyLanguage] = useState<string>(profile?.my_language?.language_name || "");
   const [learnLanguage, setLearnLanguage] = useState<string>(profile?.learn_language?.language_name || "");
+
+  const {
+    data: languages,
+    error: languagesError,
+    isLoading: languagesLoading
+  } = useQuery({
+    queryKey: ["language"],
+    queryFn: () => fetchLanguageName()
+  });
+  if (languagesError) toast.error("언어 가져오기 실패.");
 
   useEffect(() => {
     if (profile) {
@@ -34,7 +43,7 @@ const SettingsPage = () => {
     }
   }, [profile]);
 
-  if (profileLoading || languageLoading) return <LoadingSpinner />;
+  if (profileLoading || languagesLoading) return <LoadingSpinner />;
 
   const handleUpdateMyLanguage = async (language: string) => {
     if (!userInfo?.id || !language) return;
@@ -66,25 +75,38 @@ const SettingsPage = () => {
       toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
+  const handleClick = () => {
+    window.location.href = "/myPage";
+  };
 
   if (!userInfo?.id) return null;
-
+  if (!languages) return null;
   return (
     <div className="flex flex-col md:gap-[70px]">
-      <WithIconHeader title="설정" />
+      {/* <WithIconHeader title="설정" /> */}
+      <div className="app-header">
+        <div className="flex items-center">
+          <button onClick={handleClick}>
+            <Image src={caretleft} alt={"caret-left"} className="app-header-icon" />
+          </button>
+          <Typography weight="bold" className="app-header-text">
+            설정
+          </Typography>
+        </div>
+      </div>
       <div className="flex flex-col w-full md:w-[674px] mx-auto">
-        {languageData.length > 0 && (
+        {languages.length > 0 && (
           <>
             <ImageSelectorDropDown
               text="내 모국어 변경"
               subtitle={myLanguage}
-              languageOptions={languageData}
+              languageOptions={languages}
               onLanguageChange={handleUpdateMyLanguage}
             />
             <ImageSelectorDropDown
               text="학습 언어 변경"
               subtitle={learnLanguage}
-              languageOptions={languageData}
+              languageOptions={languages}
               onLanguageChange={handleUpdateLearnLanguage}
             />
           </>

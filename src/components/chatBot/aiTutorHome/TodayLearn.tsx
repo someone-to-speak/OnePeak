@@ -3,9 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
-import Slider from "react-slick";
+// import Slider from "react-slick";
+import dynamic from "next/dynamic";
 import star from "@/assets/star.svg";
 import Image from "next/image";
+import { Typography } from "@/components/ui/typography";
+
+const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
 const TodayLearn = () => {
   const router = useRouter();
@@ -41,7 +45,7 @@ const TodayLearn = () => {
         }
       },
       {
-        breakpoint: 9999, // PC
+        breakpoint: 5000, // PC
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
@@ -53,11 +57,15 @@ const TodayLearn = () => {
 
   return (
     <div className="w-full max-w-[1024px] mx-auto ml-4">
-      <div className="mb-2">
-        <h1 className="text-[24px] font-bold">오늘의 학습</h1>
-        <p className="text-[12px] text-[#5d5d5d] font-normal">매일 업데이트 되는 추천 학습</p>
+      <div className="mb-2 flex flex-col">
+        <Typography size={24} weight={"bold"}>
+          오늘의 학습
+        </Typography>
+        <Typography size={14} weight={"normal"} className="text-[#5d5d5d]">
+          매일 업데이트 되는 추천 학습
+        </Typography>
       </div>
-      <Slider {...settings} className="[&_.slick-slide]:px-2 [&_.slick-track]:gap-4">
+      <Slider {...settings} className="[&_.slick-slide]:px-2 md:[&_.slick-track]:!translate-x-0 [&_.slick-track]:gap-4">
         {situations?.map((situation) => (
           <div key={situation.id} onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}>
             <div
@@ -81,8 +89,12 @@ const TodayLearn = () => {
                     <Image key={i} src={star} alt="star" />
                   ))}
                 </div>
-                <p className="text-[20px] font-bold">{situation.situation}</p>
-                <p className="text-[14px] font-normal">{situation.sentence}</p>
+                <Typography size={20} weight={"bold"}>
+                  {situation.situation}
+                </Typography>
+                <Typography size={14} weight={"normal"} className="text-gray-800">
+                  {situation.sentence}
+                </Typography>
               </div>
             </div>
           </div>
