@@ -25,8 +25,8 @@ const InputField: React.FC<InputFieldProps> = ({ sendMessage, sendMessageToChann
   const { register, handleSubmit, reset } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    sendMessage({ content: data.input as string });
     sendMessageToChannel({ content: data.input as string });
+    sendMessage({ content: data.input as string });
     reset({ input: "" });
   };
 
