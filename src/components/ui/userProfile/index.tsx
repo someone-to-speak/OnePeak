@@ -5,21 +5,23 @@ import { Typography } from "../typography";
 
 interface UserProfileProps {
   name: string;
-  country: string;
   profileImage: string;
   lastMessage: string;
   learnLanguageUrl: string;
   learnLanguage: string;
+  myLanguage: string;
+  myLanguageUrl: string;
   onClick: () => void;
 }
 
 const UserProfile = ({
   name,
-  country,
   profileImage,
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
+  myLanguage,
+  myLanguageUrl,
   onClick
 }: UserProfileProps) => {
   return (
@@ -32,10 +34,11 @@ const UserProfile = ({
       {/* content part */}
       <UserProfileContent
         name={name}
-        country={country}
         lastMessage={lastMessage}
         learnLanguageUrl={learnLanguageUrl}
         learnLanguage={learnLanguage}
+        myLanguage={myLanguage}
+        myLanguageUrl={myLanguageUrl}
         onClick={onClick}
       />
     </div>
@@ -52,17 +55,17 @@ const UserProfileImage = ({ profileImage }: { profileImage: string }) => {
 
 const UserProfileContent = ({
   name,
-  country,
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
+  myLanguageUrl,
   onClick
 }: Omit<UserProfileProps, "profileImage">) => {
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
-          <FlagIcon countryImageUrl={country} />
+          <FlagIcon countryImageUrl={myLanguageUrl} size={12} />
           <Typography size={16} className="font-bold text-gray-50 truncate w-[140px]">
             {name}
           </Typography>
