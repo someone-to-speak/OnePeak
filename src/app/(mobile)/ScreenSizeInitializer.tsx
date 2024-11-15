@@ -1,6 +1,6 @@
 "use client";
 
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { useEffect } from "react";
 
 const ScreenSizeInitializer = () => {

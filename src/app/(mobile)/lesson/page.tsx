@@ -8,11 +8,12 @@ import lessonCharactor from "@/assets/lesson/lesson-charactor.svg";
 import Image from "next/image";
 import SpinnerButton from "@/components/ui/SpinnerButton";
 import { Typography } from "@/components/ui/typography";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useMatchingStore, useScreenSizeStore } from "@/shared/StoreProvider";
 
 const LessonPage = () => {
   const { setupMatchingChannel, userInfo, isLoading, isMatching } = useMatching();
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
+  const setIsMatching = useMatchingStore((state) => state.setIsMatching);
 
   const handleClickMachingButton = async () => {
     if (!userInfo) {
@@ -59,7 +60,12 @@ const LessonPage = () => {
                   {isMatching ? (
                     <Button text="언어수업 취소하기" variant="stroke" className="md:w-[350px]" onClick={reload} />
                   ) : (
-                    <Button text="시작하기" onClick={handleClickMachingButton} />
+                    <Button
+                      text="시작하기"
+                      onClick={() => {
+                        setIsMatching(true);
+                      }}
+                    />
                   )}
                   <Typography size={14} weight="medium" className="text-gray-400 text-center">
                     1:1 랜덤 언어수업은 자동으로 녹음되어 채팅방에서 <br /> AI가 분석한 결과를 알 수 있어요!

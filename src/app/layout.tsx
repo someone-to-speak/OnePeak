@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./provider";
-import { ScreenSizeStoreProvider } from "@/shared/screen-store-provider";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { CombinedStoreProvider } from "@/shared/StoreProvider";
 
 export const metadata: Metadata = {
   title: "one peak",
@@ -31,7 +31,7 @@ export default function RootLayout({
       <body>
         <div className="h-full">
           <div className="w-full mx-auto my-0 min-h-full">
-            <ScreenSizeStoreProvider>
+            <CombinedStoreProvider>
               <ToastContainer
                 position="top-center"
                 autoClose={2000}
@@ -42,7 +42,7 @@ export default function RootLayout({
                 closeButton={false}
               />
               <Providers>{children}</Providers>
-            </ScreenSizeStoreProvider>
+            </CombinedStoreProvider>
           </div>
         </div>
       </body>
