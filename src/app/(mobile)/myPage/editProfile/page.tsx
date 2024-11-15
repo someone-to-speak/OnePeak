@@ -2,33 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { uploadImage } from "@/utils/myPage/imageUpload";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+import { toast } from "react-toastify";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import Button from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-import { createClient } from "@/utils/supabase/client";
-import { useUser } from "@/hooks/useUser";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { toast } from "react-toastify";
+import { useUser } from "@/hooks/useUser";
 
 const EditProfile = () => {
   const router = useRouter();
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const supabase = createClient();
   const { userInfo, isLoading } = useUser();
-  const [selectedProfile, setSelectedProfile] = useState(userInfo);
+  const { mutate } = useUpdateProfile();
+  const [file, setFile] = useState<File>();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string>("");
+  const [stateMsg, setStateMsg] = useState<string>("");
 
   useEffect(() => {
     if (userInfo) {
-      setSelectedProfile(userInfo);
       setPreviewUrl(userInfo.profile_url);
     }
   }, [userInfo]);
-
-  if (isLoading) return <LoadingSpinner />;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -39,56 +36,48 @@ const EditProfile = () => {
   };
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newNickname = e.target.value.slice(0, 12);
-    setSelectedProfile((prev) => ({ ...prev!, nickname: newNickname }));
+    setNickname(e.target.value.slice(0, 12));
   };
 
   const handleStateMsgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newStateMsg = e.target.value.slice(0, 12);
-    setSelectedProfile((prev) => ({ ...prev!, state_msg: newStateMsg }));
+    setStateMsg(e.target.value.slice(0, 12));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (userInfo?.id) {
-      let imageUrl = selectedProfile?.profile_url;
+    if (!userInfo?.id) return;
 
-      if (file) {
-        try {
-          const data = await uploadImage(file);
-          imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/Profile_url/${data.path}`;
-        } catch {
-          toast.error("이미지 업로드에 실패했습니다.");
-          return;
-        }
-      }
+    if (!nickname || !stateMsg) {
+      toast.warn("모든 항목을 입력해주세요.");
+      return;
+    }
 
-      if (!selectedProfile) return;
-      const { nickname, state_msg } = selectedProfile;
-
-      if (!nickname || !imageUrl || !state_msg) {
-        toast.warn("모두 입력해주세요.");
-        return;
-      }
-
-      const { error } = await supabase
-        .from("user_info")
-        .update({
+    try {
+      mutate(
+        {
+          userId: userInfo.id,
           nickname,
-          profile_url: imageUrl,
-          state_msg
-        })
-        .eq("id", userInfo.id);
-
-      if (error) {
-        toast.error("프로필 업데이트에 실패했습니다.");
-      } else {
-        toast.success("프로필이 성공적으로 업데이트되었습니다.");
-        router.push("/myPage");
-      }
+          state_msg: stateMsg,
+          file,
+          changedProfileUrl: userInfo.profile_url
+        },
+        {
+          onSuccess: () => {
+            toast.success("프로필 업데이트 성공");
+            router.push("/myPage");
+          },
+          onError: () => {
+            toast.error("프로필 업데이트에 실패했습니다.");
+          }
+        }
+      );
+    } catch {
+      toast.error("프로필 업데이트에 실패했습니다.");
     }
   };
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col justify-center gap-[24px] md:gap-[70px]">
@@ -124,13 +113,13 @@ const EditProfile = () => {
               닉네임
             </Typography>
             <Typography size={12} weight="medium" className="text-gray-500 text-right">
-              {selectedProfile?.nickname.length}/12
+              {nickname?.length}/12
             </Typography>
           </div>
           <div className="h-[50px] py-2.5 bg-white rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
             <input
               type="text"
-              value={selectedProfile?.nickname}
+              value={nickname}
               onChange={handleNicknameChange}
               placeholder="닉네임을 입력해주세요."
               className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
@@ -143,13 +132,13 @@ const EditProfile = () => {
               상태 메세지
             </Typography>
             <Typography size={12} weight="medium" className="text-gray-500 text-right">
-              {selectedProfile?.state_msg.length}/12
+              {stateMsg?.length}/12
             </Typography>
           </div>
           <div className="h-[50px] py-2.5 rounded-xl border border-gray-600 justify-start items-center inline-flex hover:border hover:border-primary-500">
             <input
               type="text"
-              value={selectedProfile?.state_msg}
+              value={stateMsg}
               onChange={handleStateMsgChange}
               placeholder="상태 메세지를 입력해주세요."
               className="text-left px-[20px] text-black text-sm font-medium font-['Pretendard'] leading-[21px]"
@@ -157,7 +146,7 @@ const EditProfile = () => {
           </div>
         </div>
         <div className="w-full fixed bottom-[90px] md:static">
-          <Button text="완료" disabled={!selectedProfile}></Button>
+          <Button text="완료" disabled={!nickname || !stateMsg}></Button>
         </div>
       </form>
     </div>

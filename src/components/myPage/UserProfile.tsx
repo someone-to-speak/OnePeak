@@ -24,11 +24,12 @@ const UserProfilePage = ({ userId }: UserProfileProps) => {
   return (
     <UserProfile
       name={profile.nickname || ""}
-      country={profile.my_language?.language_img_url || ""}
       profileImage={profile.profile_url || ""}
       lastMessage={profile.state_msg || ""}
+      learnLanguage={profile.learn_language?.language_name || ""}
+      myLanguage={profile.my_language?.language_name || ""}
       learnLanguageUrl={profile.learn_language?.language_img_url || ""}
-      learnLanguage={profile.learn_language?.language_img_url || ""}
+      myLanguageUrl={profile.my_language?.language_img_url || ""}
       onClick={() => router.push(`/myPage/editProfile`)}
     />
   );
