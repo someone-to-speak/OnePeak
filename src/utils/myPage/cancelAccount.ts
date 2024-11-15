@@ -20,9 +20,8 @@ export const cancelAccount = async ({ userInfo, handleLogout }: CancelAccountPro
     message: "정말 회원 계정을 탈퇴하시겠습니까?",
     onConfirm: async () => {
       try {
-        const { error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
-        if (error) throw error;
-        handleLogout();
+        const { data } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
+        if (data) handleLogout();
       } catch {
         toast.error("회원탈퇴에 실패했습니다. 다시 시도해주세요.");
       }

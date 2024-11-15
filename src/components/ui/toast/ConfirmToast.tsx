@@ -1,7 +1,8 @@
-// ConfirmToast.tsx
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React from "react";
+import Button from "../button";
+import { Typography } from "../typography";
 
 interface ConfirmToastProps {
   message: string;
@@ -12,27 +13,28 @@ interface ConfirmToastProps {
 export const confirmToast = ({ message, onConfirm, onCancel }: ConfirmToastProps) => {
   const ConfirmToastComponent = ({ closeToast }: { closeToast?: () => void }) => (
     <div className="text-center">
-      <p className="mb-2">{message}</p>
-      <div className="flex justify-center gap-2">
-        <button
-          className="px-4 py-2 bg-red-500 text-white rounded"
+      <Typography size={14} weight="bold" className="mb-2">
+        {message}
+      </Typography>
+      <div className="flex justify-center gap-8">
+        <Button
+          text="확인"
+          size="xs"
           onClick={() => {
             closeToast?.();
             onConfirm();
           }}
-        >
-          확인
-        </button>
-        <button
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
+        />
+        <Button
+          text="취소"
+          size="xs"
+          variant="stroke"
           onClick={() => {
             closeToast?.();
             onConfirm();
             if (onCancel) onCancel();
           }}
-        >
-          취소
-        </button>
+        />
       </div>
     </div>
   );
