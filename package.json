@@ -19,6 +19,7 @@
     "@nextui-org/system": "^2.2.6",
     "@nextui-org/tabs": "^2.0.37",
     "@nextui-org/theme": "^2.2.11",
+    "@sentry/nextjs": "^8",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/ssr": "^0.5.1",

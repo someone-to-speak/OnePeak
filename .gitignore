@@ -48,3 +48,5 @@ yarn.lock
 package.json
 
 database.types.ts
+# Sentry Config File
+.env.sentry-build-plugin
