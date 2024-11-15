@@ -11,8 +11,13 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
 
   const startRecording = async () => {
     try {
-      console.log("1. 녹음 시작 시도");
-      alert("녹음을 시작합니다.");
+      // console.log("1. 녹음 시작 시도");
+      // alert("녹음을 시작합니다.");
+      if (recorderState.isRecording) {
+        alert("이미 녹음 중입니다!");
+        return;
+      }
+      alert("녹음을 시작합니다. 현재 상태: " + recorderState.isRecording);
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -20,8 +25,7 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
           sampleRate: 16000
         }
       });
-      console.log("2. 스트림: ", stream);
-      console.log("3. 스트림 획득 성공 여부: ", stream.active);
+
       alert("마이크 권한 획득 성공");
 
       // 브라우저가 지원하는 mimeType 확인
@@ -79,16 +83,26 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
         mediaRecorder,
         chunks
       });
+      alert("녹음 시작 완료. 상태 업데이트 후: true");
     } catch (error) {
       console.log("마이크 접근 실패: ", error);
-      throw error;
+      // throw error;
+      // 에러 발생 시 상태 초기화
+      setRecorderState({
+        isRecording: false,
+        mediaRecorder: null,
+        chunks: []
+      });
     }
   };
+
   // 음성 녹음 중지
   const stopRecording = () => {
+    alert("녹음 중지 시도. 현재 상태: " + recorderState.isRecording);
     if (recorderState.mediaRecorder && recorderState.isRecording) {
       recorderState.mediaRecorder.stop();
       setRecorderState((prev) => ({ ...prev, isRecording: false }));
+      alert("녹음 중지 완료");
     }
   };
   return {
