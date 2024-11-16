@@ -1,5 +1,7 @@
+"use client";
+
 import { Message } from "@/app/types/chatBotType/chatBotType";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import mainIcon from "@/assets/main-icon.svg";
 import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
@@ -9,6 +11,14 @@ type ChatMessageListProps = {
 };
 
 const ChatMessageList = ({ messages }: ChatMessageListProps) => {
+  // 스크롤 관련 ref
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // 메시지가 추가될 때마다 스크롤
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   // 줄바꿈 문자를 JSX 엘리먼트로 변환하는 함수
   const formatMessage = (content: string) => {
     return content.split("\n").map((line, i) => (
