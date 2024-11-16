@@ -20,7 +20,6 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
 
       // 브라우저가 지원하는 mimeType 확인
       const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/ogg";
-      alert(`지원하는 mimeType: ${mimeType}`);
 
       // 오디오 형식을 명시적으로 지정
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
@@ -54,7 +53,6 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
           callback(text);
         } catch (error) {
           console.log("음성 변환 실패: ", error);
-          alert(`에러 발생: ${error}`);
           throw error;
         } finally {
           // 스트림 정지
