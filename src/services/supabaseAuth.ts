@@ -5,7 +5,9 @@ const redirectTo =
   process.env.NODE_ENV === "production"
     ? process.env.VERCEL_GIT_COMMIT_REF === "main"
       ? "https://onepeak.vercel.app" // main 브랜치
-      : "https://one-peak-dev.vercel.app" // dev 브랜치
+      : process.env.VERCEL_GIT_COMMIT_REF === "dev"
+      ? "https://one-peak-dev.vercel.app" // dev 브랜치
+      : "https://onepeak.vercel.app"
     : "http://localhost:3000"; // 개발 환경
 
 export const signInWithProvider = async (provider: Provider) => {
