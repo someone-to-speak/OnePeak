@@ -144,7 +144,7 @@ const WordList = ({ userId }: { userId: string }) => {
           {filteredAnswers?.map((question) => (
             <div
               key={question!.id}
-              className={`w-full h-auto  px-5 py-[18px] bg-white rounded-[10px] shadow-review  ${
+              className={`w-full h-auto px-5 py-[18px] bg-white rounded-[10px] shadow-review  ${
                 question!.isReviewed ? "border border-primary-500" : ""
               }`}
             >
