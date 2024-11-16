@@ -39,40 +39,35 @@ export const convertSpeechToText = async (audioFile: File) => {
 
     console.log("C. API 호출 시도");
 
-    // fetch를 try-catch로 감싸서 네트워크 에러 확인
-    let response;
     try {
-      response = await fetch("/api/chatBotWhisper", {
+      const response = await fetch("/api/chatBotSpeechToText", {
         method: "POST",
         body: formData
       });
+
       console.log("D. fetch 응답 받음:", {
         status: response.status,
         statusText: response.statusText,
         ok: response.ok
       });
-    } catch (fetchError) {
-      console.error("fetch 실패:", fetchError);
-      throw new Error("API 호출 실패");
-    }
 
-    // response.json() 호출을 try-catch로 감싸서 JSON 파싱 에러 확인
-    let data;
-    try {
-      data = await response.json();
+      const data = await response.json();
       console.log("E. 응답 데이터:", data);
-    } catch (jsonError) {
-      console.error("JSON 파싱 실패:", jsonError);
-      throw new Error("응답 데이터 처리 실패");
-    }
 
-    if (!response.ok) {
-      console.error("F. API 에러:", data);
-      throw new Error(data.error || "음성 변환 실패");
-    }
+      if (!response.ok) {
+        console.error("F. API 에러:", data);
+        throw new Error(data.error || "음성 변환 실패");
+      }
 
-    console.log("G. 변환 성공:", data.text);
-    return data.text;
+      console.log("G. 변환 성공:", data.text);
+      return data.text;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("fetch 또는 JSON 파싱 실패:", error.message);
+        throw error;
+      }
+      throw new Error("API 호출 중 오류 발생");
+    }
   } catch (error) {
     console.error("H. 최종 에러:", error);
     throw error;
