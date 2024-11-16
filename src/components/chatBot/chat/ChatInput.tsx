@@ -25,7 +25,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
   console.log("현재 녹음 상태: ", isRecording);
 
   const handleRecordingClick = () => {
-    alert(`현재 녹음 상태: ${isRecording}`);
     if (isRecording) {
       onStopRecording();
     } else {
