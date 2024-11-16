@@ -102,7 +102,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
               >
                 <div className="grow px-[20px] md:px-0">
                   <div className="flex flex-col gap-[10px] md:gap-0">
-                    <Typography size={16} weight="bold" className="text-left md:my-[10px]">
+                    <Typography size={16} weight="bold" className="text-left md:my-[10px] md:text-3xl">
                       {question?.content.split("_____").map((part, index) => (
                         <span key={index}>
                           {part}
@@ -113,7 +113,11 @@ const GrammarList = ({ userId }: { userId: string }) => {
                       ))}
                     </Typography>
                     <div className="border border-gray-900" />
-                    <Typography size={14} weight="medium" className="text-left text-gray-300 md:mt-[10px] md:mb-5">
+                    <Typography
+                      size={14}
+                      weight="medium"
+                      className="text-left text-gray-300 md:mt-[10px] md:mb-5 md:text-xl"
+                    >
                       {question?.reason}
                     </Typography>
                   </div>

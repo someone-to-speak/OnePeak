@@ -158,12 +158,12 @@ const WordList = ({ userId }: { userId: string }) => {
                     <Typography
                       size={14}
                       weight="bold"
-                      className="w-[100px] md:w-[200px] md:text-center text-left text-#000 break-words whitespace-pre-wrap md:text-[16px]"
+                      className="w-[100px] md:w-[200px] md:text-center text-left text-#000 break-words whitespace-pre-wrap md:text-2xl"
                     >
                       {question?.content}
                     </Typography>
                   </div>
-                  <Typography size={14} weight="medium" className="text-left text-#000 break-words">
+                  <Typography size={14} weight="medium" className="text-left text-#000 break-words md:text-xl">
                     {question?.reason}
                   </Typography>
                 </button>
