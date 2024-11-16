@@ -11,11 +11,24 @@ import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
+import { fetchMyLanguage } from "@/api/firstSetting/fetchMyLanguage";
+import { useUser } from "@/hooks/useUser";
 
 export default function SetLearnLanguage() {
   const [selectedLearnLanguage, setSelectedLearnLanguage] = useState<string>("");
+  const { userInfo } = useUser();
   const router = useRouter();
   const supabase = createClient();
+
+  // TanStack Query - 사용자가 선택한 my_language 가져오기
+  const {
+    data: selectedMyLanguage,
+    error: selectedMyLanguageError,
+    isLoading: selectedMyLanguageLoading
+  } = useQuery({
+    queryKey: ["selectedMyLanguage", userInfo?.id],
+    queryFn: () => fetchMyLanguage(userInfo?.id as string)
+  });
 
   // Tanstack Query - 지원언어 데이터 가져오기
   const {
@@ -27,12 +40,15 @@ export default function SetLearnLanguage() {
     queryFn: () => fetchLanguageName()
   });
 
-  const supportingLanguages = languages?.map((language) => language.language_name);
+  const supportingLanguages = languages
+    ?.map((language) => language.language_name)
+    .filter((language) => language !== selectedMyLanguage?.my_language);
 
   // 로딩 상태
-  if (languagesLoading) return <LoadingSpinner />;
+  if (languagesLoading || selectedMyLanguageLoading) return <LoadingSpinner />;
   // 오류 상태
   if (languagesError) return toast.error(`${languagesError.message}`);
+  if (selectedMyLanguageError) return toast.error(`${selectedMyLanguageError.message}`);
 
   const handleContinue = async () => {
     const { data } = await supabase.auth.getSession();

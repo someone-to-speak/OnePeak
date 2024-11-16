@@ -68,9 +68,16 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
       });
     } catch (error) {
       console.log("마이크 접근 실패: ", error);
-      throw error;
+      // throw error;
+      // 에러 발생 시 상태 초기화
+      setRecorderState({
+        isRecording: false,
+        mediaRecorder: null,
+        chunks: []
+      });
     }
   };
+
   // 음성 녹음 중지
   const stopRecording = () => {
     if (recorderState.mediaRecorder && recorderState.isRecording) {
