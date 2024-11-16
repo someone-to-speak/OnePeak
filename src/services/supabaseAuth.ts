@@ -9,6 +9,8 @@ const redirectTo =
       ? "https://one-peak-dev.vercel.app" // dev 브랜치
       : "https://onepeak.vercel.app"
     : "http://localhost:3000"; // 개발 환경
+console.log("NODE_ENV: ", process.env.NODE_ENV);
+console.log("VERCEL_GIT_COMMIT_REF: ", process.env.VERCEL_GIT_COMMIT_REF);
 
 export const signInWithProvider = async (provider: Provider) => {
   const supabase = createClient();
