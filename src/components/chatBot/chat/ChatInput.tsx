@@ -40,7 +40,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder="메세지를 입력해주세요."
+          placeholder={isRecording ? "음성을 녹음중입니다..." : "메세지를 입력해주세요."}
+          disabled={isRecording}
           aria-label="메시지 입력"
         />
         <button
@@ -58,7 +59,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
         onClick={handleRecordingClick}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
-        {/* {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />} */}
         {isRecording ? (
           <Image src={returnIcon} alt="녹음 시작" width={20} height={20} />
         ) : (

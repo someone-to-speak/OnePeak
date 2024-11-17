@@ -24,38 +24,52 @@ export const getChatResponse = async (messages: Message[], situation: string, le
   }
 };
 
-// 소리를 텍스트로 변환
+// 소리를 텍스트로 전환
 export const convertSpeechToText = async (audioFile: File) => {
   try {
+    console.log("A. convertSpeechToText 시작");
     const formData = new FormData();
-
     const blob = new Blob([await audioFile.arrayBuffer()], { type: "audio/webm" });
     formData.append("audio", blob, "audio.webm");
 
-    // console.log("전송할 파일 정보:", {
-    //   name: audioFile.name,
-    //   type: audioFile.type,
-    //   size: audioFile.size
-    // });
-
-    const response = await fetch("/api/whisper", {
-      method: "POST",
-      body: formData
+    console.log("B. FormData 생성 완료", {
+      blobSize: blob.size,
+      blobType: blob.type
     });
 
-    const data = await response.json();
+    console.log("C. API 호출 시도");
 
-    if (!response.ok) {
-      // const errorData = await response.json();
-      const errorData = data;
-      console.error("API Error:", errorData);
-      throw new Error("음성 변환 실패");
+    try {
+      const response = await fetch("/api/chatBotSpeechToText", {
+        method: "POST",
+        body: formData
+      });
+
+      console.log("D. fetch 응답 받음:", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      const data = await response.json();
+      console.log("E. 응답 데이터:", data);
+
+      if (!response.ok) {
+        console.error("F. API 에러:", data);
+        throw new Error(data.error || "음성 변환 실패");
+      }
+
+      console.log("G. 변환 성공:", data.text);
+      return data.text;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("fetch 또는 JSON 파싱 실패:", error.message);
+        throw error;
+      }
+      throw new Error("API 호출 중 오류 발생");
     }
-
-    // console.log("API Response:", data);
-    return data.text;
   } catch (error) {
-    console.log("음성 변환 중 오류: ", error);
+    console.error("H. 최종 에러:", error);
     throw error;
   }
 };
