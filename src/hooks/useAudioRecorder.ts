@@ -54,13 +54,13 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
       // MIME 타입 설정
       let mimeType = "audio/webm";
       if (isIOS || isSafari) {
-        mimeType = "audio/mp4";
+        mimeType = "audio/wav";
       }
 
       // MediaRecorder 옵션 설정
       const options = {
         mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : "audio/webm",
-        audioBitsPerSecond: 128000
+        audioBitsPerSecond: isIOS ? 64000 : 128000 // iOS에서 더 낮은 비트레이트 사용
       };
 
       const mediaRecorder = new MediaRecorder(stream, options);
@@ -82,7 +82,7 @@ export const useAudioRecorder = (callback: (text: string) => void) => {
             return;
           }
 
-          const audioFile = new File([audioBlob], "audio.webm", {
+          const audioFile = new File([audioBlob], `audio.${isIOS ? "wav" : "webm"}`, {
             type: options.mimeType
           });
 
