@@ -1,7 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { convertTextToSpeech } from "@/api/openAI/tts";
 import Image from "next/image";
@@ -11,10 +9,9 @@ import speaker from "@/assets/wrongAnswerNote/speaker-high.svg";
 import { Typography } from "../ui/typography";
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useWordQuestions } from "@/hooks/useWordQuestions";
+import { useUpdateIsReviewed } from "@/hooks/useUpdateIsReviewed";
 
 const WordList = ({ userId }: { userId: string }) => {
-  const supabase = createClient();
-  const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
   const [playingQuestionId, setPlayingQuestionId] = useState<number | null>(null);
 
@@ -24,19 +21,8 @@ const WordList = ({ userId }: { userId: string }) => {
   // 단어문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useWordQuestions();
 
-  const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
-    }
-  });
-  // const { mutate: toggleIsReviewed, isLoading, isError } = useUpdateIsReviewed(userId);
+  // 오답노트 완료,미완료로 변경하는 커스텀훅
+  const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
@@ -169,7 +155,7 @@ const WordList = ({ userId }: { userId: string }) => {
                 </button>
                 <button
                   onClick={() =>
-                    updateIsReviewed.mutate({
+                    toggleIsReviewed({
                       answerId: question!.answerId,
                       currentReviewed: question!.isReviewed
                     })

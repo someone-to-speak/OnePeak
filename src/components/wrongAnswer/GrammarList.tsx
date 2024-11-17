@@ -1,7 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
@@ -9,10 +7,9 @@ import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useGrammarQuestions } from "@/hooks/useGrammarQuestions";
+import { useUpdateIsReviewed } from "@/hooks/useUpdateIsReviewed";
 
 const GrammarList = ({ userId }: { userId: string }) => {
-  const supabase = createClient();
-  const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
   // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
@@ -21,18 +18,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
   // 문법문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useGrammarQuestions();
 
-  const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
-    }
-  });
+  // 오답노트 완료,미완료로 변경하는 커스텀훅
+  const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
@@ -93,7 +80,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
             >
               <button
                 onClick={() =>
-                  updateIsReviewed.mutate({
+                  toggleIsReviewed({
                     answerId: question!.answerId,
                     currentReviewed: question!.isReviewed
                   })
