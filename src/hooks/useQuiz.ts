@@ -12,29 +12,37 @@ type QuizProps = {
 
 export const useQuiz = ({ userId, language, type }: QuizProps) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
+  const [shuffledAnswers, setShuffledAnswers] = useState<{ [key: number]: string[] }>({});
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
   const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
   const [reason, setReason] = useState<{ [key: number]: string | null }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-  console.log(questions);
+
   useEffect(() => {
     const fetchQuestions = async () => {
-      try {
-        const response = await fetch(`/api/getRandomQuiz?language=${language}&type=${type}`);
-        const data = await response.json();
+      const response = await fetch(`/api/getRandomQuiz?language=${language}&type=${type}`);
+      const data = await response.json();
 
-        if (data.error) {
-          throw new Error(data.error.message);
-        }
-
-        setQuestions(data.questions);
-      } catch (error) {
-        console.error("문제 로드 오류:", error);
+      if (data.error) {
+        throw new Error(data.error.message);
       }
+
+      const shuffled = data.questions.reduce((acc: { [key: number]: string[] }, question: QuestionType) => {
+        acc[question.id] = shuffleAnswers([question.answer, question.wrong_answer]);
+        return acc;
+      }, {});
+
+      setQuestions(data.questions);
+      setShuffledAnswers(shuffled);
     };
+
     fetchQuestions();
   }, [language, type]);
+
+  const shuffleAnswers = (answers: string[]) => {
+    return answers.sort(() => Math.random() - 0.5);
+  };
 
   const handleAnswerSelect = (questionId: number, answer: string) => {
     setSelectedAnswers((prevAnswers) => ({
@@ -84,14 +92,14 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
       );
 
       router.push(`/challenge/${type}/result?message=${encodeURIComponent(scoreMessage)}`);
-    } catch (error) {
-      console.error("답안 저장 실패:", error);
+    } catch {
       router.push(`/challenge/${type}/result?message=${encodeURIComponent("답안 저장 실패")}`);
     }
   };
 
   return {
     questions,
+    shuffledAnswers,
     selectedAnswers,
     correctAnswers,
     reason,
