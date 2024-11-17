@@ -90,29 +90,29 @@ const WordList = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5">
+    <div className="flex flex-col gap-4 md:gap-[14px] md:px-3">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-[10px] justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
         <button
           className={`${
             isReviewed === "미완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("미완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             미완료
           </Typography>
         </button>
         <button
           className={`${
             isReviewed === "완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             완료
           </Typography>
         </button>
