@@ -11,19 +11,24 @@ import Button from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useUser } from "@/hooks/useUser";
+import ChatModal from "@/components/ChatModal";
 
 const EditProfile = () => {
   const router = useRouter();
-  const { userInfo, isLoading } = useUser();
+  const { userInfo, isLoading, refetch } = useUser();
   const { mutate } = useUpdateProfile();
   const [file, setFile] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string>("");
   const [stateMsg, setStateMsg] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 기존 프로필 정보 로딩
   useEffect(() => {
     if (userInfo) {
       setPreviewUrl(userInfo.profile_url);
+      setNickname(userInfo.nickname || "");
+      setStateMsg(userInfo.state_msg || "");
     }
   }, [userInfo]);
 
@@ -49,7 +54,6 @@ const EditProfile = () => {
     if (!userInfo?.id) return;
 
     if (!nickname || !stateMsg) {
-      toast.warn("모든 항목을 입력해주세요.");
       return;
     }
 
@@ -64,8 +68,8 @@ const EditProfile = () => {
         },
         {
           onSuccess: () => {
-            toast.success("프로필 업데이트 성공");
-            router.push("/myPage");
+            setIsModalOpen(true);
+            refetch();
           },
           onError: () => {
             toast.error("프로필 업데이트에 실패했습니다.");
@@ -75,6 +79,11 @@ const EditProfile = () => {
     } catch {
       toast.error("프로필 업데이트에 실패했습니다.");
     }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    router.push("/myPage");
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -149,6 +158,17 @@ const EditProfile = () => {
           <Button text="완료" disabled={!nickname || !stateMsg}></Button>
         </div>
       </form>
+
+      <ChatModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onConfirm={handleModalClose}
+        title="프로필 수정 완료"
+        description="프로필이 성공적으로 업데이트되었습니다."
+        confirmButtonStyle="success"
+        confirmText="확인"
+        showCancel={false}
+      />
     </div>
   );
 };

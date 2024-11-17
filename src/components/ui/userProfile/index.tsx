@@ -25,10 +25,7 @@ const UserProfile = ({
   onClick
 }: UserProfileProps) => {
   return (
-    <div
-      onClick={onClick}
-      className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none bg-white w-full items-center cursor-pointer")}
-    >
+    <div onClick={onClick} className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none w-full items-center")}>
       {/* image part */}
       <UserProfileImage profileImage={profileImage} />
       {/* content part */}
