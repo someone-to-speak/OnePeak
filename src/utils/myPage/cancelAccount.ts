@@ -15,7 +15,6 @@ export const cancelAccount = async ({ userInfo, handleLogout, onConfirm }: Cance
 
   if (!userInfo) return;
 
-  // onConfirm 실행 결과가 true인 경우에만 탈퇴 로직 진행
   if (onConfirm()) {
     try {
       const { data, error } = await supabase.from("user_info").update({ is_deleted: true }).eq("id", userInfo.id);
@@ -23,7 +22,7 @@ export const cancelAccount = async ({ userInfo, handleLogout, onConfirm }: Cance
       if (error) throw new Error(error.message);
 
       if (data) {
-        handleLogout(); // 로그아웃 실행
+        handleLogout();
       }
     } catch (err) {
       console.error("회원탈퇴 오류:", err);

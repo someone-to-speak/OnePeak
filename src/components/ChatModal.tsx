@@ -26,10 +26,9 @@ const ChatModal = ({
   showCancel = true, // 기본값 true
   children
 }: ModalProps) => {
-  // 버튼 스타일 매핑
   const buttonStyles = {
     danger: "bg-red-500 hover:bg-red-600",
-    success: "bg-green-500 hover:bg-green-600",
+    success: "bg-primary-500 hover:bg-primary-600",
     primary: "bg-primary-500"
   };
 

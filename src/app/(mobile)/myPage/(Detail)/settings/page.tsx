@@ -20,7 +20,7 @@ import { cancelAccount } from "@/utils/myPage/cancelAccount";
 
 const SettingsPage = () => {
   const router = useRouter();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading } = useUser();
   const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
   const { isNotificationEnabled, handleNotificationToggle } = useSubscription(userInfo?.id || "");
   const [myLanguage, setMyLanguage] = useState<string>(profile?.my_language?.language_name || "");
@@ -57,7 +57,7 @@ const SettingsPage = () => {
   }, [profile]);
 
   if (languagesError) return;
-  if (profileLoading || languagesLoading) return <LoadingSpinner />;
+  if (isLoading || profileLoading || languagesLoading) return <LoadingSpinner />;
 
   const filteredMyLanguages = languages?.filter((language) => language.language_name !== myLanguage) || [];
 
@@ -66,7 +66,7 @@ const SettingsPage = () => {
     try {
       await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
-      setIsLanguageUpdateModalOpen(true); // 언어 변경 모달 열기
+      setIsLanguageUpdateModalOpen(true);
     } catch {}
   };
 

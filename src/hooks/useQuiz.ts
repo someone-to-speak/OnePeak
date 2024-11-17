@@ -17,6 +17,7 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
   const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
   const [reason, setReason] = useState<{ [key: number]: string | null }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
 
   const saveAllAnswers = async () => {
     try {
+      setIsLoading(true);
       const score = questions.reduce((acc, question) => {
         return acc + (selectedAnswers[question.id] === question.answer ? 1 : 0);
       }, 0);
@@ -94,6 +96,8 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
       router.push(`/challenge/${type}/result?message=${encodeURIComponent(scoreMessage)}`);
     } catch {
       router.push(`/challenge/${type}/result?message=${encodeURIComponent("답안 저장 실패")}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,6 +110,7 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
     currentIndex,
     setCurrentIndex,
     handleAnswerSelect,
-    saveAllAnswers
+    saveAllAnswers,
+    isLoading
   };
 };

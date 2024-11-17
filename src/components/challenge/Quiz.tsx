@@ -28,14 +28,15 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
     currentIndex,
     setCurrentIndex,
     handleAnswerSelect,
-    saveAllAnswers
+    saveAllAnswers,
+    isLoading
   } = useQuiz({ userId, language, type });
   const currentQuestion = questions[currentIndex];
   const selectedCount = Object.keys(selectedAnswers).length;
   const progressPercentage = (currentIndex / questions.length) * 100;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
-  if (questions.length === 0) return <LoadingSpinner />;
+  if (questions.length === 0 || isLoading) return <LoadingSpinner />;
 
   return (
     <div className="w-full flex flex-col gap-[10px]">
@@ -61,8 +62,25 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
       <div className="w-full flex flex-col gap-[12px] md:flex-row md:gap-[30px]">
         {/* 문제 */}
         <div className="w-full h-[260px] md:max-w-[520px] md:h-[520px] bg-[#f3f3f3] rounded-xl flex-col justify-center items-center p-8 inline-flex">
-          <Typography size={26} weight="bold" className="text-center">
-            {currentQuestion.content}
+          <Typography size={26} weight="bold" className="text-center leading-loose">
+            {currentQuestion.content.split("_____").map((part, index) => (
+              <span key={index}>
+                {part}
+                {index < currentQuestion.content.split("____").length - 1 && (
+                  <span
+                    className={`inline-flex w-[109px] h-[40px] align-middle rounded-[10px] justify-center items-center text-[24px] mx-[10px] text-nowrap truncate ${
+                      selectedAnswers[currentQuestion.id]
+                        ? selectedAnswers[currentQuestion.id] === currentQuestion.answer
+                          ? "bg-secondary-900 border border-secondary-500"
+                          : "bg-[#F7D9D9] border border-[#F50000]"
+                        : "bg-white border border-[#D9D9D9] ${"
+                    }`}
+                  >
+                    {selectedAnswers[currentQuestion.id] || ""}
+                  </span>
+                )}
+              </span>
+            ))}
           </Typography>
         </div>
 
