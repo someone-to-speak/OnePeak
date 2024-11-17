@@ -28,9 +28,16 @@ export const getChatResponse = async (messages: Message[], situation: string, le
 export const convertSpeechToText = async (audioFile: File) => {
   try {
     console.log("A. convertSpeechToText 시작");
+
     const formData = new FormData();
-    const blob = new Blob([await audioFile.arrayBuffer()], { type: "audio/webm" });
-    formData.append("audio", blob, "audio.webm");
+
+    // 원본 파일의 타입을 유지
+    const blob = new Blob([await audioFile.arrayBuffer()], { type: audioFile.type });
+
+    // 파일 확장자 원본 타입에 맞게 설정
+    const fileExtension = audioFile.type.includes("wav") ? "wav" : "webm";
+
+    formData.append("audio", blob, `audio.${fileExtension}`);
 
     console.log("B. FormData 생성 완료", {
       blobSize: blob.size,
