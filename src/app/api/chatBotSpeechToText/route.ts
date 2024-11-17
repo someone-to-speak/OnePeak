@@ -10,27 +10,16 @@ const whisperai = new OpenAI({
 });
 
 export async function POST(request: NextRequest) {
-  console.log("API: 요청 시작");
-
   try {
     // FormData로 직접 파싱
     const formData = await request.formData();
-    console.log("API: FormData 파싱 완료");
-
     const audioFile = formData.get("audio") as File;
+
     if (!audioFile) {
-      console.log("API: 오디오 파일 없음");
       return NextResponse.json({ error: "오디오 파일이 없습니다" }, { status: 400 });
     }
 
-    console.log("API: 파일 받음", {
-      name: audioFile.name,
-      type: audioFile.type,
-      size: audioFile.size
-    });
-
     // Whisper API 호출
-    console.log("API: Whisper API 호출");
     const transcription = await whisperai.audio.transcriptions.create({
       file: audioFile,
       model: "whisper-1",
