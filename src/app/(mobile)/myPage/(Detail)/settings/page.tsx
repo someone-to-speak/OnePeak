@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
@@ -27,14 +28,16 @@ const SettingsPage = () => {
   const [isLanguageUpdateModalOpen, setIsLanguageUpdateModalOpen] = useState(false);
 
   const handleAccountDeletion = async () => {
-    const onConfirm = () => confirm("정말 탈퇴하시겠습니까?"); // 확인 모달
-
+    if (!userInfo) {
+      return;
+    }
     await cancelAccount({
       userInfo,
-      handleLogout: () => {
-        console.log("로그아웃 완료");
+      onConfirm: () => {
+        handleLogout();
+        return true;
       },
-      onConfirm
+      handleLogout
     });
   };
 
@@ -46,7 +49,6 @@ const SettingsPage = () => {
     queryKey: ["language"],
     queryFn: () => fetchLanguageName()
   });
-  if (languagesError) return;
 
   useEffect(() => {
     if (profile) {
@@ -54,6 +56,7 @@ const SettingsPage = () => {
     }
   }, [profile]);
 
+  if (languagesError) return;
   if (profileLoading || languagesLoading) return <LoadingSpinner />;
 
   const filteredMyLanguages = languages?.filter((language) => language.language_name !== myLanguage) || [];
@@ -64,9 +67,7 @@ const SettingsPage = () => {
       await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
       setIsLanguageUpdateModalOpen(true); // 언어 변경 모달 열기
-    } catch {
-      toast.error("언어설정에 오류가 생겼습니다.");
-    }
+    } catch {}
   };
 
   const handleLogout = async () => {

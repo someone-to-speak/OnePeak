@@ -7,13 +7,13 @@ interface UserInfo {
 interface CancelAccountProps {
   userInfo: UserInfo;
   handleLogout: () => void;
-  onConfirm: () => boolean; // onConfirm은 boolean 반환
+  onConfirm: () => true;
 }
 
 export const cancelAccount = async ({ userInfo, handleLogout, onConfirm }: CancelAccountProps) => {
   const supabase = createClient();
 
-  if (!userInfo?.id) return;
+  if (!userInfo) return;
 
   // onConfirm 실행 결과가 true인 경우에만 탈퇴 로직 진행
   if (onConfirm()) {
