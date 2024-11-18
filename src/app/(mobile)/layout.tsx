@@ -27,7 +27,10 @@ export default function MobileLayout({
     pathname === "/myPage/editProfile";
 
   const ignoredPaddingWithPath =
-    pathname?.startsWith("/lesson") || pathname?.endsWith("/") || pathname?.startsWith("/chat");
+    pathname?.startsWith("/lesson") ||
+    pathname?.endsWith("/") ||
+    pathname?.startsWith("/chat") ||
+    pathname?.startsWith("/reviewList");
 
   return (
     <div>

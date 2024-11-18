@@ -31,8 +31,8 @@ const redirectIfUnauthenticated = (data: UserInfo, request: NextRequest) => {
 // 미들웨어 함수
 export async function middleware(request: NextRequest) {
   const data = await getUserServer();
-  console.log("User data:", data);
-  console.log("Request Pathname:", request.nextUrl.pathname);
+  // console.log("User data:", data);
+  // console.log("Request Pathname:", request.nextUrl.pathname);
 
   // 차단된 사용자 리디렉션
   const blockedResponse = redirectIfBlocked(data, request);
