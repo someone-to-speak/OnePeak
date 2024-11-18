@@ -2,7 +2,7 @@ import { Message } from "@/app/types/chatBotType/chatBotType";
 
 export const getChatResponse = async (messages: Message[], situation: string, level: number) => {
   try {
-    const response = await fetch("/api/openai", {
+    const response = await fetch("/api/chatBotMessage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
