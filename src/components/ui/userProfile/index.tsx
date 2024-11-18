@@ -83,7 +83,7 @@ const UserProfileContent = ({
         <div className="flex items-center gap-0.5">
           <FlagIcon countryImageUrl={learnLanguageUrl} size={12} />
           <Typography size={12} className="font-bold">
-            {learnLanguage === "korean" ? "한국어" : "영어"}
+            {learnLanguage === "Korean" ? "한국어" : "영어"}
           </Typography>
         </div>
       </div>

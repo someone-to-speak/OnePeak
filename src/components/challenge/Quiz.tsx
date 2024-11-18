@@ -13,7 +13,7 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 
 type QuizProps = {
   userId: string;
-  language: "korean" | "english";
+  language: "Korean" | "English";
   type: "word" | "grammar";
 };
 
