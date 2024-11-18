@@ -21,25 +21,13 @@ const LessonPage = () => {
     }
   };
 
-  // const reload = () => {
-  //   window.location.reload();
-  // };
-
   if (isLoading) return <div>로딩중입니다..</div>;
 
   return (
-    <div className="flex flex-col md:gap-[35px] w-full">
+    <div className="flex flex-col md:gap-[70px] w-full">
       <div className="bg-white px-4">
         <NoIconHeader title="언어수업" />
       </div>
-      {/* <div className="relative w-full">
-      {/* 스피너 위치 주석처리
-      <div className="relative w-full">
-        <div className="fixed z-50 bottom-[90px] right-[16px]">{!isLargeScreen && isMatching && <SpinnerButton />}</div>
-        <div className="absolute inset-0 flex items-center justify-center z-50">
-          {isLargeScreen && isMatching && <SpinnerButton />}
-        </div>
-      </div> */}
       {/* 기존 페이지 내용 */}
       <div className="bg-white h-full">
         <div className="h-[640px] md:bg-tabletsLessonBackground bg-lessonBackground md:h-[737px] md:mb-0 mb-[80px]">
