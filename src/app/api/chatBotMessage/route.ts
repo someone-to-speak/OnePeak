@@ -1,5 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const OPENAI_API_KEY = process.env.OPEN_AI_KEY as string;
 
@@ -12,19 +12,22 @@ type ChatMessage = {
   content: string;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    const messages: ChatMessage[] = req.body.messages;
-    const situation: string = req.body.situation;
-    const level: number = req.body.level;
-    try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini", // 모델명
-        messages: [
-          {
-            role: "system",
-            // useSearchParams로 받아온 situation, level 적용
-            content: `
+type RequestBody = {
+  messages: ChatMessage[];
+  situation: string;
+  level: number;
+};
+
+export async function POST(request: NextRequest) {
+  try {
+    const { messages, situation, level }: RequestBody = await request.json();
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
             - 너는 존댓말을 사용하는 친절한 영어 선생님이야.
             - 너는 설명은 무조건 한국어로 해야 되고, 예시는 무조건 영어로 해야 해.
             - 영어 학습에 대한 난이도는 1이 제일 쉬운 난이도고 3이 제일 어려운 난이도야.
@@ -36,17 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             - 그리고 내가 이해하기 쉽게 나눠서 설명해.
             - 적절하게 이모지를 사용해줘.
             - 설명한 다음에 발음해보라고 해. 그 다음에 너가 발음을 교정해줘.`
-          },
-          ...messages
-        ]
-      });
-      res.status(200).json({ content: response.choices[0].message.content });
-    } catch (error) {
-      console.log("API 호출 실패: ", error);
-      res.status(500).json({ error: "API 호출 중 오류가 발생했습니다." });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+        },
+        ...messages
+      ] as ChatMessage[]
+    });
+
+    return NextResponse.json({ content: response.choices[0].message.content });
+  } catch (error) {
+    console.error("API 호출 실패:", error);
+    return NextResponse.json({ error: "API 호출 중 오류가 발생했습니다." }, { status: 500 });
   }
 }

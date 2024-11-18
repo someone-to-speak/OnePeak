@@ -21,9 +21,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onStartRecording,
   onStopRecording
 }) => {
-  // 상태 변화 디버깅
-  console.log("현재 녹음 상태: ", isRecording);
-
   const handleRecordingClick = () => {
     if (isRecording) {
       onStopRecording();
@@ -55,7 +52,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <button
         type="button"
         className={`ml-2 ${isRecording ? "" : ""} text-white`}
-        // onClick={isRecording ? onStopRecording : onStartRecording}
         onClick={handleRecordingClick}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
