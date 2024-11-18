@@ -58,7 +58,7 @@ const LessonPage = () => {
               <div className="flex items-center justify-center mx-auto mb-[10px]">
                 <div className="w-[343px] md:max-w-[390px] bg-white rounded-[20px] p-5 flex flex-col gap-4">
                   {isMatching ? (
-                    <Button text="언어수업 취소하기" variant="stroke" className="md:w-[350px]" onClick={reload} />
+                    <Button text="언어수업 취소하기" variant="stroke" onClick={reload} />
                   ) : (
                     <Button text="시작하기" onClick={handleClickMachingButton} />
                   )}
