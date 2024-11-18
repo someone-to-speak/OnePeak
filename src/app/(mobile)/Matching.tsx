@@ -28,10 +28,8 @@ const Matching = () => {
         className="
           fixed 
           bottom-0 
-          right-4
           pb-safe-offset-24
           md:top-[80px]
-          md:right-3
           z-[300]"
         style={{ right: "calc((100% - clamp(314px, 100%, 1024px)) / 2)", paddingRight: paddingRight }}
       >
