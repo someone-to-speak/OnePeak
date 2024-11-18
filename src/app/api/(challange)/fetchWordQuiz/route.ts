@@ -26,9 +26,8 @@ export async function POST(req: Request) {
           - Note: Please adhere to the specified response format! Create a difficult & unique vocabulary quiz where, if the question is in English, the English word is given and the Korean word is the answer, and if the question is in Korean, the English word is the answer.
           - number of questions: add 8 questions.
           - type: word
-          - reason: Please create reason in Korean.
           - language: Korean, English
-          - Response Format: [ { "content": {quiz of vocabulary}, "answer": {answer of quiz}, "wrong_answer": {wrong_answer}, "reason": {one of the grammatical groups, such as noun, verb and adjective. Format example: n.apple }, "language": {language of question}, "type": {always word} }]`
+          - Response Format: [ { "content": {quiz of vocabulary}, "answer": {answer of quiz}, "wrong_answer": {two wrong_answer}, "reason": {one of the grammatical groups, such as noun, verb and adjective. Plus With "answer of quiz". Format example: n.apple}, "language": {language of question}, "type": {always word} }]`
         }
       ]
     });

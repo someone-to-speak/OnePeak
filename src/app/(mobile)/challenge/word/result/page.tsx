@@ -28,7 +28,7 @@ const Result = () => {
 
   return (
     <>
-      {isLargeScreen && <NoIconHeader title="챌린지 결과" />}
+      <NoIconHeader title="챌린지 결과" />
       <div className="w-full flex flex-col">
         <div className="mx-auto">
           {message === "점수: 0 / 3" ? <Image src={zeroPoint} alt="zero" width={375} height={550} /> : null}

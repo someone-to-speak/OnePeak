@@ -30,9 +30,9 @@ const ChallengePage = () => {
   if (!userInfo?.id) return null;
 
   return (
-    <div className="flex flex-col md:gap-[60px]">
+    <div className="flex flex-col">
       <NoIconHeader title="챌린지" />
-      <div className="w-full h-[calc(100vh+110px)] md:h-full">
+      <div className="w-full h-screen md:h-full">
         <div>
           <div className="max-w-[343px] h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex flex-row justify-center items-center">
             {problems.map((problem, index) => (
@@ -56,7 +56,7 @@ const ChallengePage = () => {
           <Slider ref={sliderRef} {...settings}>
             {problems.map((problem) => (
               <div key={problem.type}>
-                <div className="flex flex-col mt-[24px] bg-primary-900 rounded-[12px] justify-between items-center p-8">
+                <div className="flex flex-col mt-[24px] bg-primary-900 rounded-[12px] justify-between items-center px-[16px] py-[32px]">
                   <div className="flex flex-col items-center justify-center">
                     <Typography size={22} weight="bold" className="text-center mb-[4px]">
                       {problem.label} 챌린지
@@ -70,8 +70,9 @@ const ChallengePage = () => {
                       className="my-[44px]"
                     />
                   </div>
-                  <Link href={problem.url} className="w-full">
-                    <Button text={`${problem.label} 풀러가기`} size="auto" />
+                  <Link href={problem.url} className="w-[375px]">
+                    {/* <Button text={`${problem.label} 풀러가기`} size="auto" /> */}
+                    <Button text="시작" size="auto" />
                   </Link>
                 </div>
                 <Link

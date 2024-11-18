@@ -16,8 +16,7 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
   const [correctAnswers, setCorrectAnswers] = useState<{ [key: number]: boolean | null }>({});
   const [reason, setReason] = useState<{ [key: number]: string | null }>({});
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,8 +28,18 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
         throw new Error(data.error.message);
       }
 
+      // const shuffled = data.questions.reduce((acc: { [key: number]: string[] }, question: QuestionType) => {
+      //   acc[question.id] = shuffleAnswers([question.answer, question.wrong_answer]);
+      //   return acc;
+      // }, {});
+
       const shuffled = data.questions.reduce((acc: { [key: number]: string[] }, question: QuestionType) => {
-        acc[question.id] = shuffleAnswers([question.answer, question.wrong_answer]);
+        const wrongAnswers = Array.isArray(question.wrong_answer)
+          ? question.wrong_answer
+          : JSON.parse(question.wrong_answer); // 문자열을 배열로 변환
+        const allAnswers = [question.answer, ...wrongAnswers];
+        console.log(allAnswers); // ["정상", "진행"]
+        acc[question.id] = shuffleAnswers(allAnswers);
         return acc;
       }, {});
 
@@ -107,8 +116,6 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
     selectedAnswers,
     correctAnswers,
     reason,
-    currentIndex,
-    setCurrentIndex,
     handleAnswerSelect,
     saveAllAnswers,
     isLoading

@@ -10,6 +10,7 @@ import Button from "../ui/button";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useScreenSizeStore } from "@/shared/StoreProvider";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { useState } from "react";
 
 type QuizProps = {
   userId: string;
@@ -18,6 +19,8 @@ type QuizProps = {
 };
 
 const Quiz = ({ userId, language, type }: QuizProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const router = useRouter();
   const {
     questions,
@@ -25,15 +28,13 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
     selectedAnswers,
     correctAnswers,
     reason,
-    currentIndex,
-    setCurrentIndex,
     handleAnswerSelect,
     saveAllAnswers,
     isLoading
   } = useQuiz({ userId, language, type });
   const currentQuestion = questions[currentIndex];
   const selectedCount = Object.keys(selectedAnswers).length;
-  const progressPercentage = (currentIndex / questions.length) * 100;
+  const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   if (questions.length === 0 || isLoading) return <LoadingSpinner />;
@@ -51,12 +52,12 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
             <Image src={close} alt="Close" className="w-6 h-6" />
           </button>
         </div>
-        <div className="relative mb-4 h-2 bg-primary-900">
-          <div
-            className="absolute h-full bg-primary-600 rounded transition-all duration-500 ease-in-out"
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
-        </div>
+      </div>
+      <div className="relative mb-4 h-2 bg-primary-900 left-0 right-0 w-full">
+        <div
+          className="absolute h-full bg-primary-600 rounded transition-all duration-500 ease-in-out"
+          style={{ width: `${progressPercentage}%` }}
+        ></div>
       </div>
 
       <div className="w-full flex flex-col gap-[12px] md:flex-row md:gap-[30px]">
@@ -100,14 +101,14 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
                 }`}
               >
                 <div className="w-full flex flex-row justify-between items-center">
-                  <Typography size={16} weight="bold">
+                  <Typography size={20} weight="bold">
                     {answer}
                   </Typography>
                   {selectedAnswers[currentQuestion.id] === answer && (
                     <Image
                       src={answer === currentQuestion.answer ? checkIcon : notAnswer}
                       alt={answer === currentQuestion.answer ? "Correct" : "Incorrect"}
-                      className="w-4 h-4"
+                      className={`${answer === currentQuestion.answer ? "w-[19px]" : "w-[15px]"}`}
                     />
                   )}
                 </div>
@@ -115,7 +116,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
             ))}
           </div>
           {selectedAnswers[currentQuestion.id] && !correctAnswers[currentQuestion.id] && reason[currentQuestion.id] && (
-            <div className="flex flex-col mt-[16px]">
+            <div className="flex flex-col mt-[16px] md:mt-0">
               <Typography size={16} weight="bold" className="text-[#f40000]">
                 오답:
               </Typography>
