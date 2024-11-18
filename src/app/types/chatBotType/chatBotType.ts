@@ -1,6 +1,7 @@
 export type Message = {
   role: "user" | "system" | "assistant";
   content: string;
+  timestamp: string;
 };
 
 export type CalendarDate = {
