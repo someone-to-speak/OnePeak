@@ -9,6 +9,7 @@ import { dateUtils } from "@/utils/chatbot/date";
 import { ReviewList } from "@/components/chatBot/review/ReviewList";
 import { reviewApi } from "@/services/supabaseChatbot";
 import WithIconHeader from "@/components/ui/WithIconHeader";
+import { Typography } from "@/components/ui/typography";
 
 type ReviewType = Tables<"review">;
 
@@ -42,9 +43,19 @@ const ReviewDetail = () => {
     router.push(`/review/?situation=${review.situation}&level=${review.level}&id=${review.id}`);
   };
 
-  if (isLoading) return <p>로딩 중...</p>;
+  if (isLoading)
+    return (
+      <Typography size={14} className="px-4">
+        로딩 중...
+      </Typography>
+    );
 
-  if (isError) return <p>오류가 발생했습니다!</p>;
+  if (isError)
+    return (
+      <Typography size={14} className="px-4">
+        오류가 발생했습니다!
+      </Typography>
+    );
 
   // 선택한 날짜의 리뷰 필터링
   const filteredReviews =
@@ -53,9 +64,10 @@ const ReviewDetail = () => {
     }) || [];
 
   return (
-    <div className="p-5">
-      <div className="flex">
+    <div>
+      <div className="flex md:mb-[70px]">
         <WithIconHeader title="복습하기" />
+        {/* {isLargeScreen && <div className="h-10 py-4"></div>} */}
       </div>
       <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 md:h-[calc(100vh-120px)]">
         <div className="flex justify-center md:flex-grow">

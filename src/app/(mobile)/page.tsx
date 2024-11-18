@@ -67,7 +67,7 @@ export default function Home() {
     <>
       <div className="relative w-full pb-20">
         {!isLargeScreen && <Header />}
-        <div className="h-10 py-4 bg-#FDFDFD"></div>
+        {isLargeScreen && <div className="h-10 py-4 bg-#FDFDFD"></div>}
         {/* 홈 화면 콘텐츠 */}
         <TodayLearn />
         <CustomizedLearn />
