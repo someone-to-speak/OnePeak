@@ -32,12 +32,13 @@ const LessonPage = () => {
       <div className="bg-white px-4">
         <NoIconHeader title="언어수업" />
       </div>
+      {/* 스피너 위치 주석처리
       <div className="relative w-full">
         <div className="fixed z-50 bottom-[90px] right-[16px]">{!isLargeScreen && isMatching && <SpinnerButton />}</div>
         <div className="absolute inset-0 flex items-center justify-center z-50">
           {isLargeScreen && isMatching && <SpinnerButton />}
         </div>
-      </div>
+      </div> */}
       {/* 기존 페이지 내용 */}
       <div className="bg-white h-full">
         <div className="h-[640px] md:bg-tabletsLessonBackground bg-lessonBackground md:h-[737px] md:mb-0 mb-[80px]">
