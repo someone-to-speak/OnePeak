@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import { Typography } from "@/components/ui/typography";
@@ -11,21 +11,22 @@ import { useUser } from "@/hooks/useUser";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { toast } from "react-toastify";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import ChatModal from "@/components/ChatModal";
 import { cancelAccount } from "@/utils/myPage/cancelAccount";
 
 const SettingsPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const [isAccountDeletionModalOpen, setIsAccountDeletionModalOpen] = useState(false);
+  const [isLanguageUpdateModalOpen, setIsLanguageUpdateModalOpen] = useState(false);
+
   const { userInfo, isLoading } = useUser();
   const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
   const { isNotificationEnabled, handleNotificationToggle } = useSubscription(userInfo?.id || "");
-  const [myLanguage, setMyLanguage] = useState<string>(profile?.my_language?.language_name || "");
-  const [isAccountDeletionModalOpen, setIsAccountDeletionModalOpen] = useState(false);
-  const [isLanguageUpdateModalOpen, setIsLanguageUpdateModalOpen] = useState(false);
 
   const handleAccountDeletion = async () => {
     if (!userInfo) {
@@ -46,41 +47,33 @@ const SettingsPage = () => {
     error: languagesError,
     isLoading: languagesLoading
   } = useQuery({
-    queryKey: ["language"],
+    queryKey: ["languagesInfo"],
     queryFn: () => fetchLanguageName()
   });
 
-  useEffect(() => {
-    if (profile) {
-      setMyLanguage(profile.my_language?.language_name || "");
-    }
-  }, [profile]);
+  const handleUpdateMyLanguage = async (language: string) => {
+    if (!userInfo?.id || !language) return;
+    await updateMyLanguage(userInfo.id, language);
+    setIsLanguageUpdateModalOpen(true);
+  };
+
+  const { mutate: updateMyLanguageMutate } = useMutation({
+    mutationFn: handleUpdateMyLanguage,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo?.id] })
+  });
 
   if (languagesError) return;
   if (isLoading || profileLoading || languagesLoading) return <LoadingSpinner />;
 
-  const filteredMyLanguages = languages?.filter((language) => language.language_name !== myLanguage) || [];
-
-  const handleUpdateMyLanguage = async (language: string) => {
-    if (!userInfo?.id || !language) return;
-    try {
-      await updateMyLanguage(userInfo.id, language);
-      setMyLanguage(language);
-      setIsLanguageUpdateModalOpen(true);
-    } catch {}
-  };
+  const filteredMyLanguages =
+    languages?.filter((language) => language.language_name !== profile?.my_language?.language_name) || [];
 
   const handleLogout = async () => {
     if (!userInfo?.id) return;
-    try {
-      await logout();
-      router.push("/");
-    } catch {
-      toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
-    }
+    await logout();
+    router.push("/");
   };
-
-  if (!userInfo?.id || !languages) return null;
+  if (!userInfo?.id || !languages || !profile?.my_language) return;
 
   return (
     <div className="flex flex-col md:gap-[70px]">
@@ -90,9 +83,9 @@ const SettingsPage = () => {
           <>
             <ImageSelectorDropDown
               text="내 모국어 변경"
-              subtitle={myLanguage}
+              subtitle={profile?.my_language?.language_name}
               languageOptions={filteredMyLanguages}
-              onLanguageChange={handleUpdateMyLanguage}
+              onLanguageChange={updateMyLanguageMutate}
             />
           </>
         )}
@@ -108,13 +101,14 @@ const SettingsPage = () => {
           </Typography>
         </button>
         <button
-          onClick={() => setIsAccountDeletionModalOpen(true)} // 모달 열기
+          onClick={() => setIsAccountDeletionModalOpen(true)}
           className="border-b border-gray-800 text-left w-full py-[20px] px-2"
         >
           <Typography size={16} weight="medium">
             회원탈퇴
           </Typography>
         </button>
+
         {/* 회원탈퇴 모달 */}
         <ChatModal
           isOpen={isAccountDeletionModalOpen}

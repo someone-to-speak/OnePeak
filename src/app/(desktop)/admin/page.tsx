@@ -1,6 +1,6 @@
 import FetchGrammarQuizButton from "@/components/challenge/FetchGrammarQuizButton";
 import FetchWordQuizButton from "@/components/challenge/FetchWordQuizButton";
-import Report from "@/components/chat/report";
+
 import Link from "next/link";
 import React from "react";
 
@@ -14,7 +14,6 @@ const UserManagementPage = () => {
       <Link href={"/admin/alarmManagement"}>알람관리</Link>
       <FetchGrammarQuizButton />
       <FetchWordQuizButton />
-      <Report />
     </div>
   );
 };

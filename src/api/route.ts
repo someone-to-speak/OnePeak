@@ -86,7 +86,7 @@ export const unWithdraw = async (targetUser: UserInfo) => {
 export const getBlockDetail = async (targetId: string) => {
   const browserClient = createClient();
   const { data, error } = await browserClient
-    .from("block")
+    .from("report")
     .select(`*,user_info:user_info!block_target_id_fkey1(nickname)`)
     .order("created_at", { ascending: false });
   if (error) errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
@@ -119,7 +119,7 @@ export const getBlockDetail = async (targetId: string) => {
 export const getBlockTargetUsers = async () => {
   const browserClient = createClient();
   const { data, error } = await browserClient
-    .from("block")
+    .from("report")
     .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
     .order("created_at", { ascending: false })
     .returns<BlockedUserInfo[]>();
@@ -261,3 +261,73 @@ export const insertFaqData = async (userId: string, userNickname: string, select
     .insert({ category: selectedType, content: content, user_id: userId, user_nickname: userNickname });
   return data.status === 201;
 };
+
+// 신고 이미지 버켓에 추가하기
+// 버켓에 같은 이름의 이미지가 있는지 체크
+const checkFileExistsAtReportBucket = async (fileName: string) => {
+  const browserClient = createClient();
+  const { data, error } = await browserClient.storage.from("report-image").list("", { search: fileName });
+
+  if (error) throw error;
+  return data && data.length > 0; // && 연산자는 두개의 조건이 참일때만 true
+};
+
+export const uploadReportImages = async (files: File[]) => {
+  const browserClient = createClient();
+  // 파일 이름이 한글이라면 버켓에 추가되지 않음 -> 어떠한 파일 이름이 들어와도 사용 할 수 있게 파일 이름을 UUID로 대체하고, 원래 파일의 확장자를 유지
+  const encodedFileNames = await Promise.all(
+    files.map(async (file) => {
+      const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
+      const encodedFileName = `${uuidv4()}.${fileExtension}`;
+      // 파일이 이미 존재하는지 확인
+
+      const fileExists = await checkFileExistsAtReportBucket(encodedFileName);
+      if (fileExists) {
+        // 중복 파일명이 있으면, 새로운 UUID를 추가하여 고유 이름 보장
+        return `${uuidv4()}_${encodedFileName}`;
+      } else {
+        return encodedFileName;
+      }
+    })
+  );
+
+  // bucket에 파일 추가
+  const uploadResults = await Promise.all(
+    files.map(async (file, idx) => {
+      const { data, error } = await browserClient.storage.from("report-image").upload(encodedFileNames[idx], file);
+      if (error) {
+        throw error;
+      }
+      return data;
+    })
+  );
+
+  return uploadResults;
+};
+
+// bucket으로부터 받은 이미지주소와 정보들을 faq 테이블에 넣기
+export const insertReportInfo = async ({
+  content,
+  targetId,
+  userId,
+  imageUrls
+}: {
+  content: string;
+  targetId: string;
+  userId: string;
+  imageUrls: string[];
+}) => {
+  const browserClient = createClient();
+  const { error } = await browserClient
+    .from("report")
+    .insert({ reason: content, target_id: targetId, user_id: userId, img_urls: imageUrls });
+  if (error) errorFn(error, "신고 내역을 추가하는데 실패하였습니다");
+};
+
+// // language 테이블 정보 가져오기
+// export const getLanguageList = async () => {
+//   const browserClient = createClient();
+//   const { data, error } = await browserClient.from("language").select().order("created_at", { ascending: false });
+//   if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
+//   return data || [];
+// };

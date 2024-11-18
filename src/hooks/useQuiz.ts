@@ -6,7 +6,7 @@ type QuestionType = Tables<"questions">;
 
 type QuizProps = {
   userId: string;
-  language: "korean" | "english";
+  language: "Korean" | "English";
   type: "word" | "grammar";
 };
 

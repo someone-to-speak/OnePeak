@@ -20,7 +20,7 @@ const FetchGrammarQuizButton = () => {
         },
         body: JSON.stringify({
           type: "grammar",
-          language: "korean, english",
+          language: "Korean, English",
           length: 4
         })
       });
