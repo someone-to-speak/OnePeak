@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import reportIcon from "@/assets/report-icon.svg";
 import cameraIcon from "@/assets/camera-icon.svg";
 import { insertReportInfo, uploadReportImages } from "@/api/route";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserClient } from "@/api/supabase/getUserClient";
 
 export type Props = {
@@ -20,7 +20,7 @@ const ReportPage = ({ params }: Props) => {
   const [content, setContent] = useState<string>("");
   const targetId = params.blockedUserId;
 
-  const { data, isPending, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["targetUserInfo"],
     queryFn: () => getUserClient()
   });

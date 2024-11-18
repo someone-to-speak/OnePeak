@@ -4,8 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Typography } from "../typography";
 import Icon from "../icon";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
-import { boolean } from "zod";
+
 import Overlay from "@/components/chat/overlay";
 
 interface UserProfileProps {
@@ -72,8 +71,7 @@ const UserProfileContent = ({
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
-  targetId,
-  onClick
+  targetId
 }: Omit<UserProfileProps, "profileImage">) => {
   const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false);
   const onClickDots = (e: React.MouseEvent<HTMLButtonElement>) => {

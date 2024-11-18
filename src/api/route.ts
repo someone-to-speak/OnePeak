@@ -3,7 +3,6 @@ import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "../../database.types";
 import { v4 as uuidv4 } from "uuid";
-import { escape } from "querystring";
 
 type UserInfo = Tables<"user_info">;
 
@@ -279,7 +278,7 @@ export const uploadReportImages = async (files: File[]) => {
   const encodedFileNames = await Promise.all(
     files.map(async (file) => {
       const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
-      let encodedFileName = `${uuidv4()}.${fileExtension}`;
+      const encodedFileName = `${uuidv4()}.${fileExtension}`;
       // 파일이 이미 존재하는지 확인
 
       const fileExists = await checkFileExistsAtReportBucket(encodedFileName);
