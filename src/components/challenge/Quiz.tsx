@@ -8,7 +8,7 @@ import notAnswer from "@/assets/not-answer.svg";
 import { Typography } from "../ui/typography";
 import Button from "../ui/button";
 import { useQuiz } from "@/hooks/useQuiz";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 type QuizProps = {
