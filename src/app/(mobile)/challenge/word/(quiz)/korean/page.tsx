@@ -3,7 +3,7 @@
 import RandomKoreanWordQuiz from "@/components/challenge/RandomKoreanWordQuiz";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import { useUser } from "@/hooks/useUser";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { Suspense } from "react";
 
 const KoreanWordQuizPage = () => {

@@ -1,7 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
@@ -9,10 +7,9 @@ import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useGrammarQuestions } from "@/hooks/useGrammarQuestions";
+import { useUpdateIsReviewed } from "@/hooks/useUpdateIsReviewed";
 
 const GrammarList = ({ userId }: { userId: string }) => {
-  const supabase = createClient();
-  const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
   // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
@@ -21,18 +18,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
   // 문법문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useGrammarQuestions();
 
-  const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
-    }
-  });
+  // 오답노트 완료,미완료로 변경하는 커스텀훅
+  const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
@@ -48,28 +35,28 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5 ">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-2.5 justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
         <button
           className={`${
             isReviewed === "미완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("미완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             미완료
           </Typography>
         </button>
         <button
           className={`${
             isReviewed === "완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             완료
           </Typography>
         </button>
@@ -93,7 +80,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
             >
               <button
                 onClick={() =>
-                  updateIsReviewed.mutate({
+                  toggleIsReviewed({
                     answerId: question!.answerId,
                     currentReviewed: question!.isReviewed
                   })
@@ -102,7 +89,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
               >
                 <div className="grow px-[20px] md:px-0">
                   <div className="flex flex-col gap-[10px] md:gap-0">
-                    <Typography size={16} weight="bold" className="text-left md:my-[10px]">
+                    <Typography size={16} weight="bold" className="text-left md:my-[10px] md:text-3xl">
                       {question?.content.split("_____").map((part, index) => (
                         <span key={index}>
                           {part}
@@ -113,7 +100,11 @@ const GrammarList = ({ userId }: { userId: string }) => {
                       ))}
                     </Typography>
                     <div className="border border-gray-900" />
-                    <Typography size={14} weight="medium" className="text-left text-gray-300 md:mt-[10px] md:mb-5">
+                    <Typography
+                      size={14}
+                      weight="medium"
+                      className="text-left text-gray-300 md:mt-[10px] md:mb-5 md:text-xl"
+                    >
                       {question?.reason}
                     </Typography>
                   </div>
