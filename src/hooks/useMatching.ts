@@ -38,11 +38,12 @@ export const useMatching = () => {
       console.log("handleUpdateSignal");
       const updatedMatchQueue = payload.new;
       if (updatedMatchQueue.user_id === userInfo?.id) {
+        setIsMatching(false);
         await cleanUp();
         router.push(`/lesson/room?id=${updatedMatchQueue.room_id}`);
       }
     },
-    [cleanUp, router, userInfo?.id]
+    [cleanUp, setIsMatching, router, userInfo?.id]
   );
 
   const startMatching = async (userInfo: UserInfo) => {
