@@ -1,3 +1,5 @@
+"use client";
+
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Typography } from "../ui/typography";
 
@@ -19,7 +21,7 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
   onLanguageChange
 }) => {
   const handleSelectionChange = (language: LanguageType) => {
-    onLanguageChange(language.language_name);
+    onLanguageChange(language.language_name); // 언어 변경 함수 호출
   };
 
   return (
@@ -38,7 +40,7 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
             </Typography>
           }
         >
-          <ul className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-2 p-4 bg-gray-900 rounded">
+          <ul className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2 p-4 bg-gray-900 rounded">
             {languageOptions.length > 0 ? (
               languageOptions.map((lang) => (
                 <li key={lang.language_name}>

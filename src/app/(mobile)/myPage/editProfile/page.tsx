@@ -12,10 +12,15 @@ import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useUser } from "@/hooks/useUser";
 import ChatModal from "@/components/ChatModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const EditProfile = () => {
   const router = useRouter();
-  const { userInfo, isLoading, refetch } = useUser();
+  const queryClient = useQueryClient();
+
+  const { userInfo, isLoading } = useUser();
+  const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
   const { mutate } = useUpdateProfile();
   const [file, setFile] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -25,12 +30,12 @@ const EditProfile = () => {
 
   // 기존 프로필 정보 로딩
   useEffect(() => {
-    if (userInfo) {
-      setPreviewUrl(userInfo.profile_url);
-      setNickname(userInfo.nickname || "");
-      setStateMsg(userInfo.state_msg || "");
+    if (profile) {
+      setPreviewUrl(profile.profile_url);
+      setNickname(profile.nickname || "");
+      setStateMsg(profile.state_msg || "");
     }
-  }, [userInfo]);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -51,11 +56,9 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userInfo?.id) return;
+    if (profileLoading) return <LoadingSpinner />;
 
-    if (!nickname || !stateMsg) {
-      return;
-    }
+    if (!nickname || !stateMsg || !userInfo?.id) return;
 
     try {
       mutate(
@@ -69,7 +72,7 @@ const EditProfile = () => {
         {
           onSuccess: () => {
             setIsModalOpen(true);
-            refetch();
+            queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo.id] });
           },
           onError: () => {
             toast.error("프로필 업데이트에 실패했습니다.");
