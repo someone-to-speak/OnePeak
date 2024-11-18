@@ -2,11 +2,15 @@
 
 import SpinnerButton from "@/components/ui/SpinnerButton";
 import { useMatching } from "@/hooks/useMatching";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { useEffect } from "react";
 
 const Matching = () => {
   console.log("Matching");
   const { isMatching, setupMatchingChannel, cleanUp } = useMatching();
+  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
+
+  const paddingRight = isLargeScreen ? "12px" : "16px";
   console.log("isMatching: ", isMatching);
   useEffect(() => {
     if (isMatching) {
@@ -19,19 +23,21 @@ const Matching = () => {
 
   if (isMatching) {
     return (
+      // <div className="w-full min-w-[314px] max-w-[1024px] mx-auto">
       <div
         className="
           fixed 
           bottom-0 
-          right-0 
-          pr-4
+          right-4
           pb-safe-offset-24
-          md:top-[25%] md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 
-          md:bottom-auto md:right-auto 
+          md:top-[80px]
+          md:right-3
           z-[300]"
+        style={{ right: "calc((100% - clamp(314px, 100%, 1024px)) / 2)", paddingRight: paddingRight }}
       >
         <SpinnerButton />
       </div>
+      // </div>
     );
   } else {
     return null;
