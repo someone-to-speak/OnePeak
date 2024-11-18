@@ -3,7 +3,7 @@
 import RandomEnglishWordQuiz from "@/components/challenge/RandomEnglishWordQuiz";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import { useUser } from "@/hooks/useUser";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { Suspense } from "react";
 
 const EnglishWordQuizPage = () => {
@@ -23,7 +23,7 @@ const EnglishWordQuiz = () => {
 
   return (
     <div className="flex flex-col gap-[70px]">
-      {isLargeScreen && <WithIconHeader title="문법 챌린지" />}
+      {isLargeScreen && <WithIconHeader title="단어 챌린지" />}
       <RandomEnglishWordQuiz userId={userId} />
     </div>
   );

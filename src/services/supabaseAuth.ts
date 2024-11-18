@@ -1,15 +1,12 @@
 import { createClient } from "@/utils/supabase/client";
 import { Provider } from "@supabase/supabase-js";
 
-const redirectTo = process.env.NODE_ENV === "production" ? "https://onepeak.vercel.app" : "http://localhost:3000";
-
 export const signInWithProvider = async (provider: Provider) => {
   const supabase = createClient();
 
   await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: redirectTo,
       queryParams: {
         access_type: "offline",
         prompt: "consent"

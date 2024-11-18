@@ -1,11 +1,10 @@
 "use client";
-import caretleft from "@/assets/caret-left.svg";
+
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState, useEffect } from "react";
-import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
+import { updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
-// import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import NotificationToggle from "@/components/ui/toggle/notificationToggle";
 import { useUser } from "@/hooks/useUser";
@@ -13,18 +12,34 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSubscription } from "@/hooks/useSubscription";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
-import { cancelAccount } from "@/utils/myPage/cancelAccount";
 import { fetchLanguageName } from "@/api/firstSetting/fetchLanguageName";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import WithIconHeader from "@/components/ui/WithIconHeader";
+import ChatModal from "@/components/ChatModal";
+import { cancelAccount } from "@/utils/myPage/cancelAccount";
 
 const SettingsPage = () => {
   const router = useRouter();
-  const { userInfo } = useUser();
+  const { userInfo, isLoading } = useUser();
   const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
   const { isNotificationEnabled, handleNotificationToggle } = useSubscription(userInfo?.id || "");
   const [myLanguage, setMyLanguage] = useState<string>(profile?.my_language?.language_name || "");
-  const [learnLanguage, setLearnLanguage] = useState<string>(profile?.learn_language?.language_name || "");
+  const [isAccountDeletionModalOpen, setIsAccountDeletionModalOpen] = useState(false);
+  const [isLanguageUpdateModalOpen, setIsLanguageUpdateModalOpen] = useState(false);
+
+  const handleAccountDeletion = async () => {
+    if (!userInfo) {
+      return;
+    }
+    await cancelAccount({
+      userInfo,
+      onConfirm: () => {
+        handleLogout();
+        return true;
+      },
+      handleLogout
+    });
+  };
 
   const {
     data: languages,
@@ -34,36 +49,25 @@ const SettingsPage = () => {
     queryKey: ["language"],
     queryFn: () => fetchLanguageName()
   });
-  if (languagesError) toast.error("언어 가져오기 실패.");
 
   useEffect(() => {
     if (profile) {
       setMyLanguage(profile.my_language?.language_name || "");
-      setLearnLanguage(profile.learn_language?.language_name || "");
     }
   }, [profile]);
 
-  if (profileLoading || languagesLoading) return <LoadingSpinner />;
+  if (languagesError) return;
+  if (isLoading || profileLoading || languagesLoading) return <LoadingSpinner />;
+
+  const filteredMyLanguages = languages?.filter((language) => language.language_name !== myLanguage) || [];
 
   const handleUpdateMyLanguage = async (language: string) => {
     if (!userInfo?.id || !language) return;
     try {
       await updateMyLanguage(userInfo.id, language);
       setMyLanguage(language);
-    } catch {
-      toast.error("언어설정에 오류가 생겼습니다.");
-    }
-  };
-
-  const handleUpdateLearnLanguage = async (language: string) => {
-    if (!userInfo?.id || !language) return;
-
-    try {
-      await updateLearnLanguage(userInfo.id, language);
-      setLearnLanguage(language);
-    } catch {
-      toast.error("언어설정에 오류가 생겼습니다.");
-    }
+      setIsLanguageUpdateModalOpen(true);
+    } catch {}
   };
 
   const handleLogout = async () => {
@@ -75,39 +79,20 @@ const SettingsPage = () => {
       toast.error("로그아웃에 실패했습니다. 다시 시도해주세요.");
     }
   };
-  const handleClick = () => {
-    window.location.href = "/myPage";
-  };
 
-  if (!userInfo?.id) return null;
-  if (!languages) return null;
+  if (!userInfo?.id || !languages) return null;
+
   return (
     <div className="flex flex-col md:gap-[70px]">
-      {/* <WithIconHeader title="설정" /> */}
-      <div className="app-header">
-        <div className="flex items-center">
-          <button onClick={handleClick}>
-            <Image src={caretleft} alt={"caret-left"} className="app-header-icon" />
-          </button>
-          <Typography weight="bold" className="app-header-text">
-            설정
-          </Typography>
-        </div>
-      </div>
+      <WithIconHeader title="설정" />
       <div className="flex flex-col w-full md:w-[674px] mx-auto">
         {languages.length > 0 && (
           <>
             <ImageSelectorDropDown
               text="내 모국어 변경"
               subtitle={myLanguage}
-              languageOptions={languages}
+              languageOptions={filteredMyLanguages}
               onLanguageChange={handleUpdateMyLanguage}
-            />
-            <ImageSelectorDropDown
-              text="학습 언어 변경"
-              subtitle={learnLanguage}
-              languageOptions={languages}
-              onLanguageChange={handleUpdateLearnLanguage}
             />
           </>
         )}
@@ -123,13 +108,35 @@ const SettingsPage = () => {
           </Typography>
         </button>
         <button
-          onClick={() => cancelAccount({ userInfo, handleLogout })}
+          onClick={() => setIsAccountDeletionModalOpen(true)} // 모달 열기
           className="border-b border-gray-800 text-left w-full py-[20px] px-2"
         >
           <Typography size={16} weight="medium">
             회원탈퇴
           </Typography>
         </button>
+        {/* 회원탈퇴 모달 */}
+        <ChatModal
+          isOpen={isAccountDeletionModalOpen}
+          onClose={() => setIsAccountDeletionModalOpen(false)}
+          onConfirm={handleAccountDeletion}
+          title="알림"
+          description="탈퇴하시겠습니까?"
+          confirmText="확인"
+          confirmButtonStyle="primary"
+          showCancel={true}
+        />
+        {/* 언어 변경 성공 모달 */}
+        <ChatModal
+          isOpen={isLanguageUpdateModalOpen}
+          onClose={() => setIsLanguageUpdateModalOpen(false)}
+          onConfirm={() => setIsLanguageUpdateModalOpen(false)}
+          title="알림"
+          description="모국어가 변경되었습니다."
+          confirmText="확인"
+          confirmButtonStyle="primary"
+          showCancel={false}
+        />
       </div>
     </div>
   );

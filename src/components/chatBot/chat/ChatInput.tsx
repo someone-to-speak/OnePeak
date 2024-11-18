@@ -21,6 +21,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onStartRecording,
   onStopRecording
 }) => {
+  // 상태 변화 디버깅
+  console.log("현재 녹음 상태: ", isRecording);
+
+  const handleRecordingClick = () => {
+    if (isRecording) {
+      onStopRecording();
+    } else {
+      onStartRecording();
+    }
+  };
+
   return (
     <form className="sticky bottom-0 flex w-full bg-gray-900 p-4" onSubmit={onSubmit}>
       <div className="flex-grow relative">
@@ -29,7 +40,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder="메세지를 입력해주세요."
+          placeholder={isRecording ? "음성을 녹음중입니다..." : "메세지를 입력해주세요."}
+          disabled={isRecording}
           aria-label="메시지 입력"
         />
         <button
@@ -40,14 +52,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
           <Image src={sendIcon} alt="전송" width={20} height={20} />
         </button>
       </div>
-      {/* 추후 녹음 진행 여부에 따라 아이콘 변경 예정 */}
       <button
         type="button"
         className={`ml-2 ${isRecording ? "" : ""} text-white`}
-        onClick={isRecording ? onStopRecording : onStartRecording}
+        // onClick={isRecording ? onStopRecording : onStartRecording}
+        onClick={handleRecordingClick}
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
-        {/* {isRecording ? <img src="/assets/mike.svg" alt="녹음 시작" /> : <img src="/assets/mike.svg" alt="녹음 중지" />} */}
         {isRecording ? (
           <Image src={returnIcon} alt="녹음 시작" width={20} height={20} />
         ) : (

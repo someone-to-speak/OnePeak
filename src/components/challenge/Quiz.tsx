@@ -8,7 +8,7 @@ import notAnswer from "@/assets/not-answer.svg";
 import { Typography } from "../ui/typography";
 import Button from "../ui/button";
 import { useQuiz } from "@/hooks/useQuiz";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 type QuizProps = {
@@ -21,20 +21,22 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
   const router = useRouter();
   const {
     questions,
+    shuffledAnswers,
     selectedAnswers,
     correctAnswers,
     reason,
     currentIndex,
     setCurrentIndex,
     handleAnswerSelect,
-    saveAllAnswers
+    saveAllAnswers,
+    isLoading
   } = useQuiz({ userId, language, type });
   const currentQuestion = questions[currentIndex];
   const selectedCount = Object.keys(selectedAnswers).length;
   const progressPercentage = (currentIndex / questions.length) * 100;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
-  if (questions.length === 0) return <LoadingSpinner />;
+  if (questions.length === 0 || isLoading) return <LoadingSpinner />;
 
   return (
     <div className="w-full flex flex-col gap-[10px]">
@@ -74,7 +76,6 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
                         : "bg-white border border-[#D9D9D9] ${"
                     }`}
                   >
-                    {/* 선택한 답이 있을 경우 답 표시 */}
                     {selectedAnswers[currentQuestion.id] || ""}
                   </span>
                 )}
@@ -86,7 +87,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
         {/* 답/설명 */}
         <div className="w-full md:h-[520px] flex flex-col md:justify-between">
           <div className="flex flex-col gap-2.5">
-            {[currentQuestion.answer, currentQuestion.wrong_answer].map((answer, index) => (
+            {shuffledAnswers[currentQuestion.id]?.map((answer, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(currentQuestion.id, answer)}
@@ -113,7 +114,6 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
               </button>
             ))}
           </div>
-
           {selectedAnswers[currentQuestion.id] && !correctAnswers[currentQuestion.id] && reason[currentQuestion.id] && (
             <div className="flex flex-col mt-[16px]">
               <Typography size={16} weight="bold" className="text-[#f40000]">
@@ -124,7 +124,6 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
               </Typography>
             </div>
           )}
-
           {isLargeScreen && (
             <div className="w-full">
               {selectedCount !== questions.length ? (
