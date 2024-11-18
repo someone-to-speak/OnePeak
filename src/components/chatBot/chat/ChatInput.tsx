@@ -1,7 +1,6 @@
 import Image from "next/image";
 import sendIcon from "@/assets/send.svg";
 import mikeIcon from "@/assets/mike.svg";
-import returnIcon from "@/assets/chatbot/return.svg";
 
 type ChatInputProps = {
   userInput: string;
@@ -37,7 +36,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder={isRecording ? "음성을 녹음중입니다..." : "메세지를 입력해주세요."}
+          placeholder={isRecording ? "🎤 음성을 녹음 중입니다..." : "메세지를 입력해주세요."}
           disabled={isRecording}
           aria-label="메시지 입력"
         />
@@ -46,7 +45,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="submit"
           aria-label="메시지 전송"
         >
-          <Image src={sendIcon} alt="전송" width={20} height={20} />
+          {isRecording ? "" : <Image src={sendIcon} alt="녹음 중지" width={20} height={20} />}
         </button>
       </div>
       <button
@@ -56,7 +55,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         aria-label={isRecording ? "음성 녹음 중지" : "음성 녹음 시작"}
       >
         {isRecording ? (
-          <Image src={returnIcon} alt="녹음 시작" width={20} height={20} />
+          <Image src={sendIcon} alt="녹음 시작" width={20} height={20} />
         ) : (
           <Image src={mikeIcon} alt="녹음 중지" width={20} height={20} />
         )}
