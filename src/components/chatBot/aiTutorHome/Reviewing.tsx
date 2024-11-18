@@ -74,7 +74,9 @@ const Reviewing = () => {
               <div className="flex flex-col mt-2 p-3 rounded-[10px] bg-white">
                 <div className="">
                   <div className="flex flex-row justify-between">
-                    <p className="text-[14px]">{review.situation}</p>
+                    <Typography size={14} className="text-[14px]">
+                      {review.situation}
+                    </Typography>
                     <div className="flex">
                       {Array.from({ length: review.level }, (_, i) => (
                         <Image key={i} src={star} alt="star" className="" />
