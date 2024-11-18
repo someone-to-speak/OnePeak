@@ -302,3 +302,10 @@ export const insertReportInfo = async ({
     .insert({ reason: content, target_id: targetId, user_id: userId, img_urls: imageUrls });
   if (error) errorFn(error, "신고 내역을 추가하는데 실패하였습니다");
 };
+
+// faq 테이블 정보 가져오기
+export const getFaqs = async () => {
+  const { data, error } = await browserClient.from("faq").select().order("created_at", { ascending: false });
+  if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
+  return data;
+};

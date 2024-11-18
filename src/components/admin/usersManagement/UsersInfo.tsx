@@ -46,7 +46,7 @@ const UsersInfo = () => {
   });
 
   // 페이지네이션 계산
-  const totalPages = usersInfo ? Math.ceil(usersInfo.length / usersPerPage) : 0;
+  const totalPages = usersInfo ? Math.max(1, Math.ceil(usersInfo.length / usersPerPage)) : 1;
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = usersInfo ? usersInfo.slice(indexOfFirstUser, indexOfLastUser) : [];

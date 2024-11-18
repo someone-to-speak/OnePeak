@@ -8,6 +8,7 @@ export type Props = {
 
 import { getBlockDetail } from "@/api/route";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import React from "react";
 
 const BlockDetail = ({ params }: Props) => {
@@ -28,14 +29,13 @@ const BlockDetail = ({ params }: Props) => {
           <h2 className="font-semibold text-lg mb-2">피신고자 닉네임: {detail.user_info![0].nickname}</h2>
           <p className="text-gray-700">신고자 ID: {detail.user_id}</p>
           <p className="text-gray-700">피신고자 ID: {detail.target_id}</p>
-          {/* 이미지 */}
+
           <div className="my-2">
-            {/* 여기에 이미지 컴포넌트를 추가할 수 있습니다. */}
-            {/* <img
-              src={detail.image_url}
-              alt={detail.user_info.nickname}
-              className="rounded-lg w-full h-32 object-cover"
-            /> */}
+            {detail.img_urls.map((imgUrl) => {
+              return (
+                <Image src={imgUrl} alt="신고한 이유 사진파일" className="rounded-lg w-full h-32 object-cover"></Image>
+              );
+            })}
           </div>
           <p className="text-gray-600">Reason: {detail.reason}</p>
           <p className="text-gray-500 text-sm">{new Date(detail.created_at!).toLocaleDateString()}</p>
