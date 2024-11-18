@@ -15,11 +15,10 @@ export const getUserForMatching = async () => {
   return data as UserInfoForMatching;
 };
 
-export const addToQueue = async (userInfo: UserInfo) => {
+export const addUserToMatchQueue = async (userInfo: UserInfo) => {
   const supabase = createClient();
   return await supabase.from("matches").insert({
     user_id: userInfo.id,
-    match_id: null,
     my_language: userInfo.my_language,
     learn_language: userInfo.learn_language
   });
@@ -30,7 +29,8 @@ export const getExistingQueue = async (userInfo: UserInfo) => {
   return await supabase.from("matches").select("*").eq("user_id", userInfo.id).is("match_id", null);
 };
 
-export const findMatch = async (userInfo: UserInfo) => {
+// "본인 제외" 매치 큐에서 조건에 맞는 사용자 불러오기
+export const findUserFromMatchQueue = async (userInfo: UserInfo) => {
   const supabase = createClient();
   return await supabase
     .from("matches")
@@ -40,12 +40,12 @@ export const findMatch = async (userInfo: UserInfo) => {
     .neq("user_id", userInfo.id);
 };
 
-export const updateMatch = async (partnerUserId: string, matchId: string, roomId: string) => {
+export const updateUserFromMatchQueue = async (partnerUserId: string, matchId: string, roomId: string) => {
   const supabase = createClient();
   return await supabase.from("matches").update({ match_id: matchId, room_id: roomId }).eq("user_id", partnerUserId);
 };
 
-export const removeUserFromQueue = async (userId: string) => {
+export const removeUserFromMatchQueue = async (userId: string) => {
   const supabase = createClient();
   return await supabase.from("matches").delete().eq("user_id", userId);
 };

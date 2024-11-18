@@ -8,9 +8,9 @@ import { SignalData } from "@/types/chatType/chatType";
 import { checkOrAddParticipant, createChannel, getOrCreateConversationId, insertMessage } from "@/api/supabase/chat";
 import { UUID } from "crypto";
 import { useUser } from "@/hooks/useUser";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 
 const VideoChatPage = () => {
   return (

@@ -1,29 +1,29 @@
 "use client";
 
 import React from "react";
-import { useMatching } from "@/hooks/useMatching";
 import Button from "@/components/ui/button/index";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 import lessonCharactor from "@/assets/lesson/lesson-charactor.svg";
 import Image from "next/image";
-// import SpinnerButton from "@/components/ui/SpinnerButton";
 import { Typography } from "@/components/ui/typography";
-// import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useUser } from "@/hooks/useUser";
+import { useMatchingStore } from "@/shared/StoreProvider";
 
 const LessonPage = () => {
-  const { setupMatchingChannel, userInfo, isLoading, isMatching } = useMatching();
-  // const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
+  const { userInfo, isLoading } = useUser();
+  const { isMatching, setIsMatching } = useMatchingStore((state) => state);
 
   const handleClickMachingButton = async () => {
-    if (!userInfo) {
-      alert("로그인 후 이용이 가능합니다.");
-      return;
+    if (isMatching) {
+      setIsMatching(false);
+    } else {
+      setIsMatching(true);
     }
-    await setupMatchingChannel();
   };
-  const reload = () => {
-    window.location.reload();
-  };
+
+  // const reload = () => {
+  //   window.location.reload();
+  // };
 
   if (isLoading) return <div>로딩중입니다..</div>;
 
@@ -32,6 +32,7 @@ const LessonPage = () => {
       <div className="bg-white px-4">
         <NoIconHeader title="언어수업" />
       </div>
+      {/* <div className="relative w-full">
       {/* 스피너 위치 주석처리
       <div className="relative w-full">
         <div className="fixed z-50 bottom-[90px] right-[16px]">{!isLargeScreen && isMatching && <SpinnerButton />}</div>
@@ -58,7 +59,7 @@ const LessonPage = () => {
               <div className="flex items-center justify-center mx-auto mb-[10px]">
                 <div className="w-[343px] md:max-w-[390px] bg-white rounded-[20px] p-5 flex flex-col gap-4">
                   {isMatching ? (
-                    <Button text="언어수업 취소하기" variant="stroke" onClick={reload} />
+                    <Button text="언어수업 취소하기" variant="stroke" onClick={handleClickMachingButton} />
                   ) : (
                     <Button text="시작하기" onClick={handleClickMachingButton} />
                   )}
