@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "../../database.types";
 import { v4 as uuidv4 } from "uuid";
-import { createClient } from "@/utils/supabase/server";
+
 type UserInfo = Tables<"user_info">;
 
 const errorFn = (error: PostgrestError | null, msg: string) => {
