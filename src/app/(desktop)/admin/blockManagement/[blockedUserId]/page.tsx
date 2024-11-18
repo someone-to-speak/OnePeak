@@ -25,8 +25,8 @@ const BlockDetail = ({ params }: Props) => {
     <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
       {data.map((detail) => (
         <div key={detail.id} className="bg-white shadow-md rounded-lg p-4">
-          <h2 className="font-semibold text-lg mb-2">피신고자 닉네임: {detail.user_info!.nickname}</h2>
-          <p className="text-gray-700">신고자 ID: {detail.user_info_id}</p>
+          <h2 className="font-semibold text-lg mb-2">피신고자 닉네임: {detail.user_info![0].nickname}</h2>
+          <p className="text-gray-700">신고자 ID: {detail.user_id}</p>
           <p className="text-gray-700">피신고자 ID: {detail.target_id}</p>
           {/* 이미지 */}
           <div className="my-2">
