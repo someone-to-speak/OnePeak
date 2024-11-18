@@ -7,7 +7,7 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import WithIconHeader from "@/components/ui/WithIconHeader";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
@@ -41,6 +41,7 @@ const ChatMessage = () => {
   const { messages, sendMessage } = useChatMessages(situation, level);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isRecording, startRecording, stopRecording } = useAudioRecorder();
+  const queryClient = useQueryClient();
 
   // 녹음 버튼 처리
   const handleRecordingClick = async () => {
@@ -79,6 +80,17 @@ const ChatMessage = () => {
       return reviewApi.postLearnMessage(stringMessages, review_id);
     },
     onSuccess: () => {
+      if (user?.id) {
+        // 리뷰 리스트 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["reviewList", user.id]
+        });
+
+        // 유저 정보 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["userInfo"]
+        });
+      }
       router.push("/");
     }
   });
