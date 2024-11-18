@@ -21,13 +21,14 @@ const Matching = () => {
     return (
       <div
         className="
-          fixed
-          bottom-[90px]
-          right-[16px]
+          fixed 
+          bottom-0 
+          right-0 
+          pr-4
           pb-safe-offset-24
-          md:absolute md:top-[31%] md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2
-          md:bottom-auto md:right-auto
-          z-50"
+          md:top-[25%] md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 
+          md:bottom-auto md:right-auto 
+          z-[300]"
       >
         <SpinnerButton />
       </div>
