@@ -5,7 +5,7 @@ import WithIconHeader from "@/components/ui/WithIconHeader";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
 
-const WrongWordPage = async () => {
+const WrongWordPage = () => {
   // 특정 페이지로 이동하는 함수 정의
   const router = useRouter();
   const handleBackToChallenge = () => {
