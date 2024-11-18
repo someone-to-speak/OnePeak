@@ -6,13 +6,13 @@ import Button from "@/components/ui/button/index";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 import lessonCharactor from "@/assets/lesson/lesson-charactor.svg";
 import Image from "next/image";
-import SpinnerButton from "@/components/ui/SpinnerButton";
+// import SpinnerButton from "@/components/ui/SpinnerButton";
 import { Typography } from "@/components/ui/typography";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+// import { useScreenSizeStore } from "@/shared/screen-store-provider";
 
 const LessonPage = () => {
   const { setupMatchingChannel, userInfo, isLoading, isMatching } = useMatching();
-  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
+  // const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const handleClickMachingButton = async () => {
     if (!userInfo) {
