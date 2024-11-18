@@ -27,7 +27,7 @@ export async function POST(req: Request) {
           - number of questions: add 8 questions.
           - type: grammar.
           - reason: explain reason in Korean.
-          - language: korean, english
+          - language: Korean, English
           - Response Format: [ { "content": {quiz of fill-in-the-blank}, "answer": {answer of quiz}, "wrong_answer": {wrong_answer}, "reason": {reason of quiz}, "language": {language of question}, "type": {always grammar} }]`
         }
       ]

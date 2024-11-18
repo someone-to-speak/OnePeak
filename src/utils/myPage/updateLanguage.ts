@@ -8,7 +8,7 @@ export const updateMyLanguage = async (userId: string, newLanguage: string) => {
     console.log("언어 설정 오류:", error.message);
     throw new Error("언어 설정을 저장하는데 문제가 발생했습니다.");
   }
-  const updatedLanguage = newLanguage === "korean" ? "english" : newLanguage === "english" ? "korean" : newLanguage;
+  const updatedLanguage = newLanguage === "Korean" ? "English" : newLanguage === "English" ? "Korean" : newLanguage;
 
   // Supabase에서 언어 업데이트
   const { error: learnLangError } = await supabase
