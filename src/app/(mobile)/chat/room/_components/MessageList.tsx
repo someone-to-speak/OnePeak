@@ -5,7 +5,7 @@ import MyChat from "./MyChat";
 import OtherChat from "./OhterChat";
 import { MessageWithUserInfo } from "@/types/chatType/chatType";
 import { useRef, useEffect } from "react";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 
 export const MessageList = ({ messages }: { messages: MessageWithUserInfo[] | undefined }) => {
   const { userInfo } = useUser();
