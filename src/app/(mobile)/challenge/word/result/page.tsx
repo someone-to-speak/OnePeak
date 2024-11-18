@@ -10,7 +10,6 @@ import onePoint from "@//assets/result/one-point.svg";
 import twoPoint from "@/assets/result/two-point.svg";
 import threePoint from "@/assets/result/three-point.svg";
 import Button from "@/components/ui/button";
-import { useScreenSizeStore } from "@/shared/StoreProvider";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 
 const ResultPage = () => {
@@ -24,7 +23,6 @@ const ResultPage = () => {
 const Result = () => {
   const searchParams = useSearchParams();
   const message = searchParams?.get("message");
-  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   return (
     <>
