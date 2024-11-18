@@ -1,29 +1,36 @@
 "use client";
 
-import { Typography } from "@/components/ui/typography";
-import { useMatchingStore } from "@/shared/StoreProvider";
+import SpinnerButton from "@/components/ui/SpinnerButton";
+import { useMatching } from "@/hooks/useMatching";
 import { useEffect } from "react";
 
 const Matching = () => {
-  const isMatching = useMatchingStore((state) => state.isMatching);
-  const setIsMatching = useMatchingStore((state) => state.setIsMatching);
-
+  console.log("Matching");
+  const { isMatching, setupMatchingChannel, cleanUp } = useMatching();
+  console.log("isMatching: ", isMatching);
   useEffect(() => {
     if (isMatching) {
+      setupMatchingChannel();
       console.log("매칭중");
     } else {
-      console.log("매칭종료");
+      cleanUp();
     }
-  }, [isMatching]);
+  }, [isMatching, setupMatchingChannel, cleanUp]);
 
   if (isMatching) {
     return (
-      <div className="fixed top-[30px] left-1/2 transform -translate-x-1/2 z-[300]">
-        <button className="px-3 py-2 bg-white rounded-sm" onClick={() => setIsMatching(false)}>
-          <Typography size={14} weight={"bold"}>
-            매칭중
-          </Typography>
-        </button>
+      <div
+        className="
+          fixed 
+          bottom-0 
+          right-0 
+          pr-4
+          pb-safe-offset-24
+          md:top-[25%] md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 
+          md:bottom-auto md:right-auto 
+          z-[300]"
+      >
+        <SpinnerButton />
       </div>
     );
   } else {

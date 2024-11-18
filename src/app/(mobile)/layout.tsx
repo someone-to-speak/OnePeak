@@ -8,7 +8,6 @@ import NavbarGnb from "@/components/ui/NavbarGnb";
 import ScreenSizeInitializer from "./ScreenSizeInitializer";
 import Footer from "@/components/ui/footer/Footer";
 import HeaderTop from "@/components/ui/header/HeaderTop";
-import Matching from "./Matching";
 import { useScreenSizeStore } from "@/shared/StoreProvider";
 
 export default function MobileLayout({
@@ -33,7 +32,6 @@ export default function MobileLayout({
   return (
     <div>
       <ScreenSizeInitializer />
-      <Matching />
       {isLargeScreen && <HeaderTop />}
       <div className="w-full max-w-[1024px] min-w-[320px] flex flex-col mx-auto my-0 min-h-full">
         <div className={`${!ignoredPaddingWithPath && "px-4"}`}>

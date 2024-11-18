@@ -4,6 +4,7 @@ import Providers from "./provider";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { CombinedStoreProvider } from "@/shared/StoreProvider";
+import Matching from "./(mobile)/Matching";
 
 export const metadata: Metadata = {
   title: "one peak",
@@ -41,7 +42,11 @@ export default function RootLayout({
                 toastClassName="toast-center max-w-[90%] md:m md:max-w-[400px] mx-auto p-6 bg-white shadow-lg text-wrap flex flex-col items-center"
                 closeButton={false}
               />
-              <Providers>{children}</Providers>
+
+              <Providers>
+                <Matching />
+                {children}
+              </Providers>
             </CombinedStoreProvider>
           </div>
         </div>
