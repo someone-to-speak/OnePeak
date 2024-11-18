@@ -88,13 +88,22 @@ const ChatMessage = () => {
     if (!user || messages.length === 0) return;
 
     try {
+      const { data: situationData } = await supabase
+        .from("situation")
+        .select("sentence")
+        .eq("situation", situation)
+        .single();
+
+      if (!situationData) throw new Error("Situation not found");
+
       const { data: newReview, error } = await supabase
         .from("review")
         .insert([
           {
             user_id: user.id,
             situation,
-            level
+            level,
+            sentence: situationData.sentence
           }
         ])
         .select("*")

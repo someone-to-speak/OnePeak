@@ -84,7 +84,7 @@ const Reviewing = () => {
                     </div>
                   </div>
                   <Typography size={14} className="text-[#8c8c8c]">
-                    {review.sentence}I'm going to update my key sentence
+                    {review.sentence}
                   </Typography>
                 </div>
                 <button
