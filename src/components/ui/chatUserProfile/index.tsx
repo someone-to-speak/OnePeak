@@ -1,8 +1,11 @@
+"use client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Typography } from "../typography";
 import Icon from "../icon";
+
+import Overlay from "@/components/chat/overlay";
 
 interface UserProfileProps {
   name: string;
@@ -11,7 +14,7 @@ interface UserProfileProps {
   lastMessage: string;
   learnLanguageUrl: string;
   learnLanguage: string;
-
+  targetId: string;
   onClick: () => void;
 }
 
@@ -22,7 +25,7 @@ const UserProfile = ({
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
-
+  targetId,
   onClick
 }: UserProfileProps) => {
   return (
@@ -37,6 +40,7 @@ const UserProfile = ({
       {/* content part */}
       <UserProfileContent
         name={name}
+        targetId={targetId}
         country={country}
         lastMessage={lastMessage}
         learnLanguageUrl={learnLanguageUrl}
@@ -67,9 +71,13 @@ const UserProfileContent = ({
   lastMessage,
   learnLanguageUrl,
   learnLanguage,
-
-  onClick
+  targetId
 }: Omit<UserProfileProps, "profileImage">) => {
+  const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false);
+  const onClickDots = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsOverlayVisible(!isOverlayVisible);
+  };
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-center">
@@ -79,9 +87,11 @@ const UserProfileContent = ({
             {name}
           </Typography>
         </div>
-        <button onClick={onClick} className="flex justify-center items-center">
+        <button onClick={onClickDots} className="flex justify-center items-center">
           <Icon name="dotThree" size={25} color="#0D0D0D" />
         </button>
+        {/* Report Overlay */}
+        {isOverlayVisible && <Overlay onClose={() => setIsOverlayVisible(false)} targetId={targetId} />}
       </div>
       <Typography size={12} className="text-gray-200 font-medium font-pretendard truncate md:text-[16px]">
         {lastMessage}
