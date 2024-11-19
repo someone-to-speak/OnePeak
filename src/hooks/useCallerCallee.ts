@@ -29,11 +29,12 @@ export const useCallerCallee = (roomId: string) => {
     const handlePresenceSync = () => {
       const users = channel.presenceState() as RealtimePresenceState<PresenceState>;
       console.log("users: ", users);
+      console.log("userId: ", userId);
       const allUsers = Object.keys(users).map((key) => ({
         id: key,
         joinedAt: users[key][0]?.joinedAt || Date.now() // 접속 시간
       }));
-
+      console.log("allUsers", allUsers);
       // 접속 시간 기준 정렬
       allUsers.sort((a, b) => a.joinedAt - b.joinedAt);
 
