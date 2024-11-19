@@ -90,10 +90,10 @@ export const useMessage = (conversationId: string) => {
 
         const newMessage = payload as MessageWithUserInfo;
 
-        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => [
-          ...(old || []),
-          newMessage
-        ]);
+        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => {
+          const newMessages = [...(old || []), newMessage];
+          return newMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        });
       })
       .subscribe();
 
