@@ -68,10 +68,10 @@ export const useMatching = () => {
   const setupMatchingChannel = useCallback(async () => {
     if (!userInfo || isLoading) return;
 
-    matchingChannelRef.current = supabase.channel("matches");
+    const channel = supabase.channel("matches");
 
-    matchingChannelRef.current
-      .on<matche>("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, (payload) => {
+    channel
+      .on<matche>("postgres_changes", { event: "UPDATE", schema: "public", table: "matches" }, async (payload) => {
         handleUpdateSignal(payload);
       })
       .subscribe(async (status) => {
@@ -87,6 +87,8 @@ export const useMatching = () => {
         } else if (status === "TIMED_OUT") {
         }
       });
+
+    matchingChannelRef.current = channel;
   }, [setIsMatching, cleanUp, handleUpdateSignal, isLoading, router, supabase, userInfo]);
 
   useEffect(() => {
