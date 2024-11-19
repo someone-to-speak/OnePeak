@@ -57,7 +57,7 @@ const TodayLearn = () => {
 
   return (
     <div className="w-full max-w-[1024px] mx-auto ml-4">
-      <div className="mb-2 flex flex-col">
+      <div className="mb-2 flex flex-col mt-[10px] md:mt-0">
         <Typography size={24} weight={"bold"}>
           오늘의 학습
         </Typography>
