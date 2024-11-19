@@ -80,7 +80,7 @@ export const unWithdraw = async (targetUser: UserInfo) => {
 export const getBlockDetail = async (targetId: string) => {
   const { data, error } = await browserClient
     .from("report")
-    .select(`*,user_info:user_info!block_target_id_fkey1(nickname)`)
+    .select(`*,user_info:user_info!block_target_id_fkey(nickname)`)
     .order("created_at", { ascending: false });
   if (error) errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
 
@@ -112,7 +112,7 @@ export const getBlockDetail = async (targetId: string) => {
 export const getBlockTargetUsers = async () => {
   const { data, error } = await browserClient
     .from("report")
-    .select(`target_id,user_info:user_info!block_target_id_fkey1(nickname,is_blocked)`)
+    .select(`target_id,user_info:user_info!block_target_id_fkey(nickname,is_blocked)`)
     .order("created_at", { ascending: false })
     .returns<BlockedUserInfo[]>();
 
@@ -120,7 +120,7 @@ export const getBlockTargetUsers = async () => {
     errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
     return [];
   }
-
+  console.log("data", data);
   // targetIdsCount를 객체 배열로 만들기
   const targetIdsCount = data?.reduce((acc, item) => {
     const existingEntry = acc.find((entry) => entry.id === item.target_id);
