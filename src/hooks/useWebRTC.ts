@@ -13,12 +13,11 @@ export const useWebRTC = (roomId: string) => {
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
+    console.log("webrtc-useEffect");
     const supabase = createClient();
     const channel = supabase.channel(`video-chat-${roomId}`);
 
     const setupLessonChannel = async () => {
-      if (!channelRef.current) return;
-
       channel
         .on("broadcast", { event: "ice-candidate" }, (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "offer" }, (payload) => handleSignalData(payload as SignalData))
@@ -34,7 +33,7 @@ export const useWebRTC = (roomId: string) => {
 
     const initializePeerConnection = async () => {
       if (peerConnection.current) return;
-
+      console.log("initializePeerConnection");
       try {
         const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
         peerConnection.current = new RTCPeerConnection(config);
@@ -77,6 +76,7 @@ export const useWebRTC = (roomId: string) => {
     setupLessonChannel();
 
     return () => {
+      console.log("webrtc-cleanup");
       peerConnection.current?.close();
       supabase.removeChannel(channel);
     };

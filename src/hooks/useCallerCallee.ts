@@ -16,6 +16,7 @@ export const useCallerCallee = (roomId: string) => {
   const userId = useRef<string>(uuidv4()); // 고유 사용자 ID 생성
 
   useEffect(() => {
+    console.log("c-useEffect");
     const channel = supabase.channel(`video-${roomId}`, {
       config: {
         presence: {

@@ -256,6 +256,7 @@ const VideoChat = () => {
   const { localVideoRef, remoteVideoRef, createOffer } = useWebRTC(roomId);
 
   useEffect(() => {
+    if (!role) return;
     console.log("role: ", role);
     if (role === "Caller") createOffer();
   }, [createOffer, role]);
