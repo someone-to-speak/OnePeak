@@ -40,6 +40,7 @@ export default function SetLearnLanguage() {
     queryFn: () => fetchLanguageName()
   });
 
+  // 지원 언어에서 사용자가 이미 선택한 모국어 제외
   const supportingLanguages = languages
     ?.map((language) => language.language_name)
     .filter((language) => language !== selectedMyLanguage?.my_language);
@@ -50,16 +51,19 @@ export default function SetLearnLanguage() {
   if (languagesError) return toast.error(`${languagesError.message}`);
   if (selectedMyLanguageError) return toast.error(`${selectedMyLanguageError.message}`);
 
+  // 학습언어 선택 후 다음 페이지로 이동하는 함수
   const handleContinue = async () => {
     const { data } = await supabase.auth.getSession();
     const userId = data?.session?.user?.id;
 
+    // 학습 언어를 사용자 정보에 업데이트
     if (userId && selectedLearnLanguage) {
       const { error } = await supabase
         .from("user_info")
         .update({ learn_language: selectedLearnLanguage })
         .eq("id", userId);
 
+      // 성공적으로 업데이트된 경우 다음 페이지로 이동
       if (!error) {
         router.push("/loginInfo/marketingConsent");
       }

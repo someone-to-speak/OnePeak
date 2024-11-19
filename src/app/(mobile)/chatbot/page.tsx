@@ -170,7 +170,7 @@ const ChatMessage = () => {
             confirmButtonStyle="primary"
           />
         </div>
-        <div className="flex-grow overflow-y-auto p-4 mb-16">
+        <div className="flex-grow overflow-y-auto mb-16">
           <ChatMessageList messages={messages} />
         </div>
       </div>

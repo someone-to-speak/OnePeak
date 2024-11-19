@@ -1,3 +1,5 @@
+// 언어수업 매칭 시에 나타나는 스피너버튼 UI 컴포넌트입니다.
+
 import React from "react";
 import { Typography } from "./typography";
 
