@@ -22,9 +22,12 @@ type RequestBody = {
 export async function POST(request: NextRequest) {
   try {
     const { messages, situation, level, prompt }: RequestBody = await request.json();
-
+    console.log("prompt", prompt);
+    console.log("situation", situation);
+    console.log("level", level);
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
+      temperature: 0,
       messages: [
         {
           role: "system",

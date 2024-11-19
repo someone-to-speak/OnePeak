@@ -10,7 +10,6 @@ const createTimestamp = () => {
 };
 
 export const useChatMessages = (situation: string, level: number, prompt: string) => {
-  console.log("prompt", prompt);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
@@ -54,7 +53,7 @@ export const useChatMessages = (situation: string, level: number, prompt: string
         throw error;
       }
     },
-    [situation, level]
+    [situation, level, prompt]
   );
 
   return { messages, sendMessage };
