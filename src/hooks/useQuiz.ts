@@ -38,7 +38,7 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
           ? question.wrong_answer
           : JSON.parse(question.wrong_answer); // 문자열을 배열로 변환
         const allAnswers = [question.answer, ...wrongAnswers];
-        console.log(allAnswers); // ["정상", "진행"]
+        console.log(allAnswers);
         acc[question.id] = shuffleAnswers(allAnswers);
         return acc;
       }, {});

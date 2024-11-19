@@ -2,6 +2,7 @@
 
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Typography } from "../ui/typography";
+import AccordionComponent from "../AccordionItem";
 
 type LanguageType = {
   language_name: string;
@@ -62,6 +63,12 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
           </ul>
         </AccordionItem>
       </Accordion>
+      <AccordionComponent
+        text={text}
+        subtitle={subtitle}
+        languageOptions={languageOptions}
+        handleSelectionChange={handleSelectionChange}
+      />
     </div>
   );
 };

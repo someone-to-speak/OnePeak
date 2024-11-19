@@ -92,7 +92,7 @@ const Quiz = ({ userId, language, type }: QuizProps) => {
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(currentQuestion.id, answer)}
-                className={`w-full h-16 px-5 py-2.5 rounded-[10px] justify-start items-center inline-flex text-left ${
+                className={`w-full h-16 md:h-[80px] px-5 py-2.5 rounded-[10px] justify-start items-center inline-flex text-left ${
                   selectedAnswers[currentQuestion.id] === answer
                     ? answer === currentQuestion.answer
                       ? "bg-[#ffedcc] border border-[#ffa500]"
