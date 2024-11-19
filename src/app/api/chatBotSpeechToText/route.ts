@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
       model: "whisper-1",
       language: "ko"
     });
-    console.log("API: Whisper API 응답", { text: transcription.text });
 
     return NextResponse.json({ text: transcription.text });
   } catch (error) {
