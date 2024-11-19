@@ -10,21 +10,22 @@ export const useCallerCallee = (roomId: string) => {
   const [role, setRole] = useState<"Caller" | "Calles" | null>(null);
   //   const channelRef = useRef<RealtimeChannel | null>(null);
 
-  const { userInfo } = useUser();
-
   useEffect(() => {
     const channel = supabase.channel(`video-${roomId}`);
 
     channel
       .on("presence", { event: "sync" }, () => {
-        const newState = channel.presenceState();
-        console.log("newState", newState);
+        const users = channel.presenceState();
+        const userKeys = Object.keys(users);
+        console.log("users", users);
+        console.log("userKeys", userKeys);
       })
       .subscribe(async (status) => {
         if (status !== "SUBSCRIBED") {
           return;
         }
-        await channel.track({ user: userInfo?.id });
+        await channel.track({ event: "join" });
+        console.log("track");
       });
 
     return () => {
