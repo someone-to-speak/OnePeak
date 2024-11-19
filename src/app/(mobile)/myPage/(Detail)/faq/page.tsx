@@ -59,8 +59,8 @@ const FaqPage = () => {
       return alert("사유를 작성해주세요");
     }
 
-    const userId = data?.id!;
-    const userNickname = data?.nickname!;
+    const userId = data?.id as string;
+    const userNickname = data?.nickname as string;
 
     mutate({ userId, userNickname, selectedType, content });
     setSelectedType("");

@@ -1,3 +1,4 @@
+"use client";
 import { getFaqs } from "@/api/route";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
@@ -7,6 +8,7 @@ const FaqPage = () => {
     queryKey: ["faqData"],
     queryFn: () => getFaqs()
   });
+  console.log("data", data);
 
   return <div>page</div>;
 };
