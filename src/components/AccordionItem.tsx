@@ -5,7 +5,11 @@ import { Typography } from "./ui/typography";
 interface LanguageOption {
   language_name: string;
 }
-
+interface SimpleAccordionProps {
+  text: React.ReactNode | string;
+  subtitle?: React.ReactNode | string;
+  children: React.ReactNode | string;
+}
 interface CustomAccordionProps {
   text: string;
   subtitle: string;
@@ -92,5 +96,42 @@ export const CustomAccordion: React.FC<CustomAccordionProps> = ({
         </AccordionBody>
       </Accordion>
     </>
+  );
+};
+
+export const SimpleAccordion: React.FC<SimpleAccordionProps> = ({ text, subtitle, children }) => {
+  const [open, setOpen] = React.useState<number | null>(null);
+
+  const handleOpen = (id: number) => setOpen(open === id ? null : id);
+
+  return (
+    <Accordion
+      open={open === 1}
+      icon={<Icon id={1} open={open ?? 0} />}
+      placeholder={undefined}
+      onPointerEnterCapture={undefined}
+      onPointerLeaveCapture={undefined}
+    >
+      <AccordionHeader
+        onClick={() => handleOpen(1)}
+        className="border-b border-gray-800 text-black"
+        placeholder={undefined}
+        onPointerEnterCapture={undefined}
+        onPointerLeaveCapture={undefined}
+      >
+        <div className="flex flex-col">
+          <Typography size={16} weight="medium" className="md:text-[20px]">
+            {text}
+          </Typography>
+          {subtitle && (
+            <Typography size={14} weight="medium" className="md:text-[16px] text-gray-500">
+              {subtitle}
+            </Typography>
+          )}
+        </div>
+      </AccordionHeader>
+
+      <AccordionBody>{children}</AccordionBody>
+    </Accordion>
   );
 };

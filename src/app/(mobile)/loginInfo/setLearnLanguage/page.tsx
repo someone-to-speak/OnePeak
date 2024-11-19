@@ -10,7 +10,6 @@ import check from "@/assets/check.svg";
 import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { toast } from "react-toastify";
 import { fetchMyLanguage } from "@/api/firstSetting/fetchMyLanguage";
 import { useUser } from "@/hooks/useUser";
 
@@ -48,8 +47,8 @@ export default function SetLearnLanguage() {
   // 로딩 상태
   if (languagesLoading || selectedMyLanguageLoading) return <LoadingSpinner />;
   // 오류 상태
-  if (languagesError) return toast.error(`${languagesError.message}`);
-  if (selectedMyLanguageError) return toast.error(`${selectedMyLanguageError.message}`);
+  if (languagesError) return console.error(`${languagesError.message}`);
+  if (selectedMyLanguageError) return console.error(`${selectedMyLanguageError.message}`);
 
   // 학습언어 선택 후 다음 페이지로 이동하는 함수
   const handleContinue = async () => {
