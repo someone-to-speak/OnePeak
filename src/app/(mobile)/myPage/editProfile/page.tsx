@@ -28,14 +28,13 @@ const EditProfile = () => {
   const [stateMsg, setStateMsg] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 기존 프로필 정보 로딩
   useEffect(() => {
     if (profile) {
       setPreviewUrl(profile.profile_url);
       setNickname(profile.nickname || "");
       setStateMsg(profile.state_msg || "");
     }
-  }, []);
+  }, [profile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];

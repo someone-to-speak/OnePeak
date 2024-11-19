@@ -15,7 +15,7 @@ const NotificationPopup = () => {
           .reverse()
           .map((noti) => (
             <div key={noti.id} className="flex flex-col border-b border-gray-800 py-[20px] px-4">
-              <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row justify-between items-center mb-[4px]">
                 <div className="flex flex-row gap-[8px]">
                   <Image src={stamp} alt="Stamp" width={16} height={16} />
                   <Typography size={16} weight="bold" className="w-[220px] truncate">
@@ -26,15 +26,13 @@ const NotificationPopup = () => {
                   {new Date(noti.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
                 </Typography>
               </div>
-              <Typography size={14} weight="medium" className="break-words line-clamp-1 hover:line-clamp-none">
+              <Typography size={14} weight="medium" className="break-words">
                 {noti.message}
               </Typography>
             </div>
           ))
       ) : (
-        <div className="w-[375px] h-[330px] flex items-center justify-center">
-          <LoadingSpinner />
-        </div>
+        <LoadingSpinner />
       )}
     </div>
   );

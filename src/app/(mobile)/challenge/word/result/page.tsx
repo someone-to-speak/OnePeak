@@ -10,7 +10,6 @@ import onePoint from "@//assets/result/one-point.svg";
 import twoPoint from "@/assets/result/two-point.svg";
 import threePoint from "@/assets/result/three-point.svg";
 import Button from "@/components/ui/button";
-import { useScreenSizeStore } from "@/shared/StoreProvider";
 import NoIconHeader from "@/components/ui/NoIconHeader";
 
 const ResultPage = () => {
@@ -24,11 +23,10 @@ const ResultPage = () => {
 const Result = () => {
   const searchParams = useSearchParams();
   const message = searchParams?.get("message");
-  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   return (
     <>
-      {isLargeScreen && <NoIconHeader title="챌린지 결과" />}
+      <NoIconHeader title="챌린지 결과" />
       <div className="w-full flex flex-col">
         <div className="mx-auto">
           {message === "점수: 0 / 3" ? <Image src={zeroPoint} alt="zero" width={375} height={550} /> : null}

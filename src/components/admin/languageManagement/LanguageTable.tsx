@@ -30,7 +30,7 @@ const LanguageTable = () => {
   if (isPending) {
     return (
       <div className="m-auto">
-        <LoadingSpinner />;
+        <LoadingSpinner />
       </div>
     );
   }
