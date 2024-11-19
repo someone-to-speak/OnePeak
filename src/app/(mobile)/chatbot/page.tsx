@@ -39,7 +39,6 @@ const ChatMessage = () => {
   const router = useRouter();
 
   // prompt 명령 가져오기
-  // FIXME
   const { data: prompt } = useQuery({
     queryKey: ["prompt"],
     queryFn: () => getPrompt()
