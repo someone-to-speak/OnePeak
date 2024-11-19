@@ -31,7 +31,7 @@ export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
   }, {} as Record<string, ReviewType[]>);
 
   return (
-    <div className="bg-[#F9F9F9] p-4 md:rounded-[24px]">
+    <div className="bg-[#F9F9F9] p-4 md:px-6 md:pt-[30px] md:rounded-[24px]">
       {Object.entries(groupedReviews).map(([dateKey, dateReviews]) => {
         const [month, day] = dateKey.split("-");
 
