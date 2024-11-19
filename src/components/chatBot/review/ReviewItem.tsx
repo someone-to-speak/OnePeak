@@ -23,7 +23,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, onReviewClick }) => {
               ))}
             </div>
           </div>
-          <p className="text-[14px] text-[#8C8C8C]">Can I get The One Coffee</p>
+          <p className="text-[14px] text-[#8C8C8C]">{review.sentence}</p>
         </div>
         <button
           onClick={() => {
