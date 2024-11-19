@@ -21,7 +21,7 @@ const LessonPage = () => {
     }
   };
 
-  if (isLoading) return <div>로딩중입니다..</div>;
+  if (isLoading) return <div>로딩중입니다...</div>;
 
   return (
     <div className="flex flex-col md:gap-[70px] w-full">
