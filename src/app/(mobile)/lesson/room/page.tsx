@@ -262,7 +262,7 @@ const VideoChat = () => {
     if (role === "Caller")
       setTimeout(async () => {
         await createOffer();
-      }, 1000);
+      }, 1500);
   }, [role]);
 
   return (
