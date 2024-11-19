@@ -24,39 +24,36 @@ export const useCallerCallee = (roomId: string) => {
       }
     });
 
-    channel
-      .on("presence", { event: "sync" }, () => {
-        const users = channel.presenceState();
-        const userKeys = Object.keys(users);
+    // 역할 설정이 아직 안 된 경우에만 설정
+    const handlePresenceSync = () => {
+      const users = channel.presenceState() as RealtimePresenceState<PresenceState>;
+      const allUsers = Object.keys(users).map((key) => ({
+        id: key,
+        joinedAt: users[key][0]?.joinedAt || Date.now() // 접속 시간
+      }));
 
-        // 역할 설정이 아직 안 된 경우에만 설정
-        if (userKeys.length === 2) {
-          const users = channel.presenceState() as RealtimePresenceState<PresenceState>;
-          const allUsers = Object.keys(users).map((key) => ({
-            id: key,
-            joinedAt: users[key][0]?.joinedAt || Date.now() // 접속 시간
-          }));
+      // 접속 시간 기준 정렬
+      allUsers.sort((a, b) => a.joinedAt - b.joinedAt);
 
-          // 접속 시간 기준 정렬
-          allUsers.sort((a, b) => a.joinedAt - b.joinedAt);
-
-          // 역할 설정
-          if (allUsers[0]?.id === userId.current) {
-            setRole("Callee"); // 가장 먼저 접속한 사용자는 Callee
-          } else {
-            setRole("Caller"); // 그 외 사용자는 Caller
-          }
+      if (!role && allUsers.length === 2) {
+        // 역할 설정
+        if (allUsers[0]?.id === userId.current) {
+          setRole("Callee"); // 가장 먼저 접속한 사용자는 Callee
+        } else {
+          setRole("Caller"); // 그 외 사용자는 Caller
         }
-      })
-      .subscribe(async (status) => {
-        if (status !== "SUBSCRIBED") return;
-        await channel.track({ joinedAt: Date.now() });
-      });
+      }
+    };
+
+    channel.on("presence", { event: "sync" }, handlePresenceSync).subscribe(async (status) => {
+      if (status !== "SUBSCRIBED") return;
+      await channel.track({ joinedAt: Date.now() });
+    });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, supabase]);
+  }, [role, roomId, supabase]);
 
   return { role };
 };
