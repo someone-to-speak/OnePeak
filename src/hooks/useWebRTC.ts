@@ -84,6 +84,7 @@ export const useWebRTC = (roomId: string) => {
 
   const createOffer = async () => {
     if (!peerConnection.current) return;
+    console.log("createOffer");
     try {
       const offer = await peerConnection.current.createOffer();
       await peerConnection.current.setLocalDescription(offer);
@@ -99,7 +100,7 @@ export const useWebRTC = (roomId: string) => {
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
-
+    console.log("payload", payload);
     const { event, sdp, candidate } = payload;
 
     try {
