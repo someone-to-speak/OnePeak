@@ -10,6 +10,7 @@
     gap: 20px;
     cursor: default;
     margin-top: 70px;
+    background-color: #fdfdfd;
   }
   .app-header-text {
     margin-left: 12px;
@@ -44,6 +45,7 @@
     align-items: center;
     gap: 6px;
     cursor: default;
+    background-color: #fdfdfd;
   }
   .app-header-text {
     font-size: 18px;
@@ -76,7 +78,7 @@
   }
 
   body {
-    font-family: "Pretendard", sans-serif;
+    font-family: "suit", sans-serif;
     background-color: #fdfdfd;
     color: var(--primary-50);
   }
