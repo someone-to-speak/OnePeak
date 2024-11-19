@@ -70,7 +70,7 @@ const ChallengePage = () => {
                       className="my-[44px]"
                     />
                   </div>
-                  <Link href={problem.url} className="min-w-[280px] md:w-[375px]">
+                  <Link href={problem.url} className="w-full md:w-[375px]">
                     {/* <Button text={`${problem.label} 풀러가기`} size="auto" /> */}
                     <Button text="시작" size="auto" />
                   </Link>
