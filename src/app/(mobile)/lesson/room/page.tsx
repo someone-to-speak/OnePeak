@@ -256,12 +256,16 @@ const VideoChat = () => {
   const { localVideoRef, remoteVideoRef, setupLessonChannel, createOffer } = useWebRTC(roomId);
 
   useEffect(() => {
-    if (!role) return;
-    console.log("role: ", role);
-    setTimeout(() => {
-      setupLessonChannel();
-    }, 2000);
-    if (role === "Caller") createOffer();
+    const init = async () => {
+      if (!role) return;
+      console.log("role: ", role);
+      setTimeout(async () => {
+        await setupLessonChannel();
+      }, 2000);
+      if (role === "Caller") await createOffer();
+    };
+
+    init();
   }, [createOffer, role, setupLessonChannel]);
 
   return (

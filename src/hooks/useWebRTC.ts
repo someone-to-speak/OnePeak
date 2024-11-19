@@ -25,12 +25,14 @@ export const useWebRTC = (roomId: string) => {
     //   .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
     channelRef.current.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
+        console.log("subscribe");
         await init();
       }
     });
   };
 
   const init = async () => {
+    console.log("init");
     if (peerConnection.current) return;
 
     try {
@@ -75,8 +77,9 @@ export const useWebRTC = (roomId: string) => {
   };
 
   const createOffer = async () => {
+    console.log("createOffer1");
     if (!peerConnection.current) return;
-
+    console.log("createOffer2");
     try {
       const offer = await peerConnection.current.createOffer();
       await peerConnection.current.setLocalDescription(offer);
@@ -92,7 +95,7 @@ export const useWebRTC = (roomId: string) => {
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
-
+    console.log("payload ", payload);
     const { event, sdp, candidate } = payload;
 
     try {
