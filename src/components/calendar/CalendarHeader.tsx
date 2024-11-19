@@ -14,7 +14,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onNextMonth,
   className = ""
 }) => (
-  <div className={`flex justify-center items-center mt-[10px] mb-3 ${className}`}>
+  <div className={`flex justify-center items-center mb-[20px] ${className}`}>
     <button onClick={onPrevMonth} className="px-3 py-1 w-[20px]">
       ‹
     </button>
