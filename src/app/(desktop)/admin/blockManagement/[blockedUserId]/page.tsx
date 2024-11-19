@@ -6,7 +6,7 @@ export type Props = {
   };
 };
 
-import { getBlockDetail } from "@/api/route";
+import { getBlockDetail } from "@/api/supabase/admin";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";

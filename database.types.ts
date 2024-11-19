@@ -11,15 +11,15 @@ export type Database = {
     Tables: {
       "AI-prompt": {
         Row: {
-          content: string | null
+          content: string
           id: number
         }
         Insert: {
-          content?: string | null
+          content?: string
           id?: number
         }
         Update: {
-          content?: string | null
+          content?: string
           id?: number
         }
         Relationships: []
@@ -388,7 +388,7 @@ export type Database = {
           created_at: string
           id: number
           level: number
-          sentence: string | null
+          sentence: string
           situation: string
           user_id: string
         }
@@ -396,7 +396,7 @@ export type Database = {
           created_at?: string
           id?: number
           level: number
-          sentence?: string | null
+          sentence: string
           situation: string
           user_id?: string
         }
@@ -404,7 +404,7 @@ export type Database = {
           created_at?: string
           id?: number
           level?: number
-          sentence?: string | null
+          sentence?: string
           situation?: string
           user_id?: string
         }

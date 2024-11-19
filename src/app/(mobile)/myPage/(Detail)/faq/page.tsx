@@ -1,5 +1,5 @@
 "use client";
-import { insertFaqData } from "@/api/route";
+import { insertFaqData } from "@/api/supabase/admin";
 import { getUserClient } from "@/api/supabase/getUserClient";
 import ChatModal from "@/components/ChatModal";
 import Button from "@/components/ui/button";

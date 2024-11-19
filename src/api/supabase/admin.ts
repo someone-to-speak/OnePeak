@@ -1,8 +1,8 @@
 import { BlockedUserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
-import { Tables } from "../../database.types";
 import { v4 as uuidv4 } from "uuid";
+import { Tables } from "../../../database.types";
 
 type UserInfo = Tables<"user_info">;
 
@@ -20,8 +20,8 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
       .select()
       .eq("is_blocked", true)
       .order("created_at", { ascending: false });
-    if (error) errorFn(error, "차단 회원만 불러오는데 실패하였습니다");
-    return data || [];
+    if (error) return errorFn(error, "차단 회원만 불러오는데 실패하였습니다");
+    return data;
   }
   if (type === "isDeleted") {
     const { data, error } = await browserClient
@@ -29,13 +29,13 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
       .select()
       .eq("is_deleted", false)
       .order("created_at", { ascending: false });
-    if (error) errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
-    return data || [];
+    if (error) return errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
+    return data;
   }
   if (type === "isAll") {
     const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) errorFn(error, "모든 사용자들 정보를 가져오는데 실패하였습니다");
-    return data || [];
+    if (error) return errorFn(error, "모든 사용자들 정보를 가져오는데 실패하였습니다");
+    return data;
   }
   if (type === "searchNickname" && theNickname) {
     const { data, error } = await browserClient
@@ -43,12 +43,12 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
       .select()
       .eq("nickname", theNickname)
       .order("created_at", { ascending: false });
-    if (error) errorFn(error, "해당 회원을 검색하는데 실패하였습니다");
-    return data || [];
+    if (error) return errorFn(error, "해당 회원을 검색하는데 실패하였습니다");
+    return data;
   } else {
     const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) errorFn(error, "사용자들 정보를 가져오는데 실패하였습니다");
-    return data || [];
+    if (error) return errorFn(error, "사용자들 정보를 가져오는데 실패하였습니다");
+    return data;
   }
 };
 
@@ -82,7 +82,7 @@ export const getBlockDetail = async (targetId: string) => {
     .from("report")
     .select(`*,user_info:user_info!block_target_id_fkey(nickname)`)
     .order("created_at", { ascending: false });
-  if (error) errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
+  if (error) return errorFn(error, "신고당한 유저를 불러오는데 실패하였습니다");
 
   // data가 존재할 경우에만 count를 계산
   const targetIdsCount: Record<string, number> = data
@@ -106,7 +106,7 @@ export const getBlockDetail = async (targetId: string) => {
     return item.target_id === targetId && filteredTargetIds.includes(item.target_id);
   });
 
-  return filteredData || [];
+  return filteredData;
 };
 
 export const getBlockTargetUsers = async () => {
@@ -161,7 +161,7 @@ export const getLanguageImg = async () => {
 // 언어 가져오기
 export const getLanguage = async () => {
   const { data, error } = await browserClient.from("language").select("langauge");
-  if (error) errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
+  if (error) return errorFn(error, "언어 정보를 가져오는데 실패하였습니다");
   return data;
 };
 
@@ -205,8 +205,8 @@ export const insertLanguageInfo = async ({ imageUrl, language }: { imageUrl: str
 // language 테이블 정보 가져오기
 export const getLanguageList = async () => {
   const { data, error } = await browserClient.from("language").select().order("created_at", { ascending: false });
-  if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
-  return data || [];
+  if (error) return errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
+  return data;
 };
 
 // 특정 언어 사용으로 변경
@@ -308,4 +308,14 @@ export const getFaqs = async () => {
   const { data, error } = await browserClient.from("faq").select().order("created_at", { ascending: false });
   if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
   return data;
+};
+
+// AI-prompt 명령어 가져오기
+export const getPrompt = async () => {
+  const { data, error } = await browserClient.from("AI-prompt").select("content");
+  if (error) {
+    return errorFn(error, "AI 프롬포트를 가져오는데 실패하였습니다");
+  }
+  // error가 있으면 null을 내려준다. error시 return을 해주면 null을 내려줄 일이 없으니 data가 null이 되지 않는다
+  return data[0];
 };

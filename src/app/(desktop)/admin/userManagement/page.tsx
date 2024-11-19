@@ -3,13 +3,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/route";
+import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/supabase/admin";
 
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { Tables } from "../../../../../database.types";
 import UsersTable from "@/components/admin/usersManagement/UsersTable";
 import PageNationUI from "@/components/admin/PageNationUI";
-import { userInfo } from "os";
 
 type UserInfo = Tables<"user_info">;
 

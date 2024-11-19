@@ -1,5 +1,5 @@
 "use client";
-import { getFaqs } from "@/api/route";
+import { getFaqs } from "@/api/supabase/admin";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 

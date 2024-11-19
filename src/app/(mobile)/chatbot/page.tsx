@@ -13,6 +13,7 @@ import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import ChatModal from "@/components/ChatModal";
 import { Typography } from "@/components/ui/typography";
+import { getPrompt } from "@/api/supabase/admin";
 
 const ChatMessagePage = () => {
   return (
@@ -24,7 +25,7 @@ const ChatMessagePage = () => {
 
 const ChatMessage = () => {
   const supabase = createClient();
-
+  const [prompt, setPrompt] = useState<string>("");
   // 유저 정보 조회
   const { data: user } = useQuery({
     queryKey: ["userInfo"],
@@ -37,8 +38,18 @@ const ChatMessage = () => {
   const level = Number(searchParams?.get("level"));
   const router = useRouter();
 
+  // prompt 명령 가져오기
+  const { data } = useQuery({
+    queryKey: ["prompt"],
+    queryFn: () => getPrompt()
+  });
+  if (data) {
+    const prompt = data.content;
+    setPrompt(prompt);
+  }
+
   const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level);
+  const { messages, sendMessage } = useChatMessages(situation, level, prompt);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isRecording, startRecording, stopRecording } = useAudioRecorder();
 

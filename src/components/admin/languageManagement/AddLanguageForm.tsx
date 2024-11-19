@@ -1,4 +1,4 @@
-import { insertLanguageInfo, uploadLanguageImage } from "@/api/route";
+import { insertLanguageInfo, uploadLanguageImage } from "@/api/supabase/admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
