@@ -16,6 +16,7 @@ export const useWebRTC = (roomId: string) => {
     console.log("webrtc-useEffect");
     const supabase = createClient();
     const channel = supabase.channel(`video-chat-${roomId}`);
+    let localStream: MediaStream;
 
     const setupLessonChannel = async () => {
       channel
@@ -56,7 +57,7 @@ export const useWebRTC = (roomId: string) => {
 
         const { videoConstraints, audioConstraints } = getDeviceMediaConstraints();
 
-        const localStream = await navigator.mediaDevices.getUserMedia({
+        localStream = await navigator.mediaDevices.getUserMedia({
           video: videoConstraints,
           audio: audioConstraints
         });
@@ -77,7 +78,15 @@ export const useWebRTC = (roomId: string) => {
 
     return () => {
       console.log("webrtc-cleanup");
-      peerConnection.current?.close();
+      // WebRTC PeerConnection 종료
+      if (peerConnection.current) {
+        peerConnection.current.close();
+      }
+
+      // 로컬 미디어 스트림 정리
+      const tracks = localStream.getTracks();
+      tracks.forEach((track) => track.stop()); // 모든 트랙 종료
+
       supabase.removeChannel(channel);
     };
   }, [roomId]);

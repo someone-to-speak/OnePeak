@@ -28,6 +28,7 @@ export const useCallerCallee = (roomId: string) => {
     // 역할 설정이 아직 안 된 경우에만 설정
     const handlePresenceSync = () => {
       const users = channel.presenceState() as RealtimePresenceState<PresenceState>;
+      console.log("users: ", users);
       const allUsers = Object.keys(users).map((key) => ({
         id: key,
         joinedAt: users[key][0]?.joinedAt || Date.now() // 접속 시간
