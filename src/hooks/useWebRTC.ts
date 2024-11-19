@@ -25,9 +25,9 @@ export const useWebRTC = (roomId: string) => {
 
     const setupLessonChannel = async () => {
       channel
-        .on("broadcast", { event: "ice-candidate" }, (payload) => handleSignalData(payload as SignalData))
-        .on("broadcast", { event: "offer" }, (payload) => handleSignalData(payload as SignalData))
-        .on("broadcast", { event: "answer" }, (payload) => handleSignalData(payload as SignalData))
+        .on("broadcast", { event: "ice-candidate" }, async (payload) => handleSignalData(payload as SignalData))
+        .on("broadcast", { event: "offer" }, async (payload) => handleSignalData(payload as SignalData))
+        .on("broadcast", { event: "answer" }, async (payload) => handleSignalData(payload as SignalData))
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
             await initializePeerConnection();
