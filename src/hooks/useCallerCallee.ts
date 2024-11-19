@@ -5,10 +5,10 @@ import { RealtimePresenceState } from "@supabase/supabase-js";
 import { useRef, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-interface PresenceState {
-  presence_ref: string;
-  joinedAt: number;
-}
+// interface PresenceState {
+//   presence_ref: string;
+//   joinedAt: number;
+// }
 
 export const useCallerCallee = (roomId: string) => {
   const supabase = createClient();
@@ -26,17 +26,16 @@ export const useCallerCallee = (roomId: string) => {
     });
 
     // 역할 설정이 아직 안 된 경우에만 설정
-    const handlePresenceSync = () => {
-      const users = channel.presenceState() as RealtimePresenceState<PresenceState>;
+    const handlePresenceSync = async () => {
+      const users = channel.presenceState();
       console.log("users: ", users);
       console.log("userId: ", userId);
       const allUsers = Object.keys(users).map((key) => ({
-        id: key,
-        joinedAt: users[key][0]?.joinedAt || Date.now() // 접속 시간
+        id: key
       }));
       console.log("allUsers", allUsers);
       // 접속 시간 기준 정렬
-      allUsers.sort((a, b) => a.joinedAt - b.joinedAt);
+      allUsers.sort((a, b) => a.id.localeCompare(b.id));
 
       if (!role && allUsers.length === 2) {
         // 역할 설정
@@ -50,7 +49,7 @@ export const useCallerCallee = (roomId: string) => {
 
     channel.on("presence", { event: "sync" }, handlePresenceSync).subscribe(async (status) => {
       if (status !== "SUBSCRIBED") return;
-      await channel.track({ joinedAt: Date.now() });
+      await channel.track({});
     });
 
     return () => {
