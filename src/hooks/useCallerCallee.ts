@@ -31,5 +31,5 @@ export const useCallerCallee = (roomId: string) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, supabase, userInfo?.id]);
+  }, [roomId, supabase]);
 };
