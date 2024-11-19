@@ -13,6 +13,7 @@ const UserManagementPage = () => {
       <Link href={"/admin/languageManagement"}>언어관리</Link>
       <Link href={"/admin/alarmManagement"}>알람관리</Link>
       <Link href={"/admin/faqManagement"}>1:1문의관리</Link>
+      <Link href={"/admin/aiPromptManagement"}>AI-prompt관리</Link>
       <FetchGrammarQuizButton />
       <FetchWordQuizButton />
     </div>

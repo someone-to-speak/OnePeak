@@ -32,16 +32,14 @@ const BlockDetail = ({ params }: Props) => {
           <h2 className="font-semibold text-xl  mb-2">피신고자 닉네임: {detail.user_info!.nickname}</h2>
           <p className="text-gray-300">피신고자 ID: {detail.target_id}</p>
           <p className="text-gray-300">신고자 ID: {detail.user_id}</p>
-
-          {/* 이미지 */}
           <div className="grid grid-cols-2 gap-4 my-4">
             {detail.img_urls.map((imgUrl, index) => (
               <div key={index} className="overflow-hidden rounded-lg">
                 <Image
                   src={imgUrl}
-                  width={300}
-                  height={200}
                   alt="신고한 이유 사진파일"
+                  width={300} // 적절한 width와 height 값을 설정
+                  height={200} // 비율을 유지하려면 둘 다 설정
                   className="w-full h-full object-cover"
                 />
               </div>

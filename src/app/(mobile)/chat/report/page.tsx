@@ -138,7 +138,7 @@ const ReportPage = ({ params }: Props) => {
         </div>
         <div className=" mb-[28px] flex  flex-wrap gap-[17px] ">
           {previewImgs.map((imgUrl, index) => (
-            <div key={index} className=" w-[30%] flex flex-col justify-center items-center ">
+            <div key={index} className="w-[30%] flex flex-col justify-center items-center ">
               <Image
                 className="rounded-[10px]"
                 src={imgUrl}

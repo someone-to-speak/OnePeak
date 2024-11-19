@@ -321,3 +321,9 @@ export const getPrompt = async () => {
     return data.content as string;
   }
 };
+
+// ai-prompt 지시 내용 수정
+export const updatePrompt = async (newContent: string) => {
+  const { error } = await browserClient.from("AI-prompt").update({ content: newContent }).eq("id", "1");
+  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+};
