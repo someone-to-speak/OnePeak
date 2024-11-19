@@ -312,10 +312,12 @@ export const getFaqs = async () => {
 
 // AI-prompt 명령어 가져오기
 export const getPrompt = async () => {
-  const { data, error } = await browserClient.from("AI-prompt").select("content");
+  const { data, error } = await browserClient.from("AI-prompt").select("content").maybeSingle();
   if (error) {
     return errorFn(error, "AI 프롬포트를 가져오는데 실패하였습니다");
   }
   // error가 있으면 null을 내려준다. error시 return을 해주면 null을 내려줄 일이 없으니 data가 null이 되지 않는다
-  return data[0];
+  if (data) {
+    return data.content as string;
+  }
 };

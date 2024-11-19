@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         ...messages
       ] as ChatMessage[]
     });
-
+    console.log("response", response);
     return NextResponse.json({ content: response.choices[0].message.content });
   } catch (error) {
     console.error("API 호출 실패:", error);

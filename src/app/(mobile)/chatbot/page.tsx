@@ -7,7 +7,7 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import WithIconHeader from "@/components/ui/WithIconHeader";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
@@ -25,7 +25,7 @@ const ChatMessagePage = () => {
 
 const ChatMessage = () => {
   const supabase = createClient();
-  const [prompt, setPrompt] = useState<string>("");
+
   // 유저 정보 조회
   const { data: user } = useQuery({
     queryKey: ["userInfo"],
@@ -39,19 +39,17 @@ const ChatMessage = () => {
   const router = useRouter();
 
   // prompt 명령 가져오기
-  const { data } = useQuery({
+  const { data: prompt = "" } = useQuery({
     queryKey: ["prompt"],
     queryFn: () => getPrompt()
   });
-  if (data) {
-    const prompt = data.content;
-    setPrompt(prompt);
-  }
 
   const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level, prompt);
+  // FIXME: type단언 고치기
+  const { messages, sendMessage } = useChatMessages(situation, level, prompt as string);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isRecording, startRecording, stopRecording } = useAudioRecorder();
+  const queryClient = useQueryClient();
 
   // 녹음 버튼 처리
   const handleRecordingClick = async () => {
@@ -90,6 +88,17 @@ const ChatMessage = () => {
       return reviewApi.postLearnMessage(stringMessages, review_id);
     },
     onSuccess: () => {
+      if (user?.id) {
+        // 리뷰 리스트 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["reviewList", user.id]
+        });
+
+        // 유저 정보 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["userInfo"]
+        });
+      }
       router.push("/");
     }
   });
@@ -99,13 +108,22 @@ const ChatMessage = () => {
     if (!user || messages.length === 0) return;
 
     try {
+      const { data: situationData } = await supabase
+        .from("situation")
+        .select("sentence")
+        .eq("situation", situation)
+        .single();
+
+      if (!situationData) throw new Error("Situation not found");
+
       const { data: newReview, error } = await supabase
         .from("review")
         .insert([
           {
             user_id: user.id,
             situation,
-            level
+            level,
+            sentence: situationData.sentence
           }
         ])
         .select("*")
