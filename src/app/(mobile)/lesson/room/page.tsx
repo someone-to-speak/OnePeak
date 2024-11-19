@@ -261,8 +261,8 @@ const VideoChat = () => {
       console.log("role: ", role);
       setTimeout(async () => {
         await setupLessonChannel();
+        if (role === "Caller") await createOffer();
       }, 2000);
-      if (role === "Caller") await createOffer();
     };
 
     init();
