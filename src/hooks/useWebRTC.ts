@@ -98,7 +98,7 @@ export const useWebRTC = (roomId: string) => {
     };
   }, [roomId]);
 
-  const createOffer = async () => {
+  const createOffer = useCallback(async () => {
     if (!peerConnection.current) return;
     console.log("createOffer");
     try {
@@ -112,7 +112,7 @@ export const useWebRTC = (roomId: string) => {
     } catch (error) {
       console.error("Error creating offer:", error);
     }
-  };
+  }, []);
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
@@ -161,7 +161,6 @@ export const useWebRTC = (roomId: string) => {
   }, []);
 
   return {
-    channelRef,
     localVideoRef,
     remoteVideoRef,
     createOffer,
