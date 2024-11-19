@@ -26,7 +26,7 @@ export const useCallerCallee = (roomId: string) => {
     });
 
     // 역할 설정이 아직 안 된 경우에만 설정
-    const handlePresenceSync = async () => {
+    const handlePresenceSync = () => {
       const users = channel.presenceState();
       console.log("users: ", users);
       console.log("userId: ", userId);
