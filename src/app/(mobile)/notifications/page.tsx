@@ -1,6 +1,5 @@
 "use client";
 
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import Image from "next/image";
 import stamp from "@/assets/stamp.svg";
 import WithIconHeader from "@/components/ui/WithIconHeader";
@@ -20,36 +19,31 @@ const NotificationPage = () => {
   return (
     <div className="flex flex-col md:gap-[70px]">
       <WithIconHeader title="알림" />
-      <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto">
+      <div className="flex flex-col justify-center w-full md:w-[674px] mx-auto  cursor-default">
         {notifi && notifi.length > 0 ? (
-          <Accordion isCompact>
+          <ul className="flex flex-col gap-4">
             {notifi
               .slice()
               .reverse()
               .map((noti) => (
-                <AccordionItem
-                  key={noti.id}
-                  title={
-                    <div className="w-full flex flex-row justify-between items-center gap-2">
-                      <div className="flex flex-row gap-2 items-center">
-                        <Image src={stamp} alt="Stamp" width={16} />
-                        <Typography size={16} weight="bold" className="text-wrap">
-                          {noti.title}
-                        </Typography>
-                      </div>
-                      <Typography size={14} weight="medium" className="text-gray-600 text-right text-nowrap">
-                        {new Date(noti.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                <li key={noti.id} className="flex flex-col p-4 border-b border-gray-900">
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="flex flex-row items-center gap-1">
+                      <Image src={stamp} alt="Stamp" width={16} />
+                      <Typography size={16} weight="bold" className="text-wrap">
+                        {noti.title}
                       </Typography>
                     </div>
-                  }
-                  className="border-b border-gray-800 py-4 cursor-default"
-                >
-                  <Typography size={14} weight="medium" className="break-words max-w-full">
+                    <Typography size={14} weight="medium" className="text-gray-600 text-right text-nowrap">
+                      {new Date(noti.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                    </Typography>
+                  </div>
+                  <Typography size={14} weight="medium" className="text-gray-200 mt-2">
                     {noti.message}
                   </Typography>
-                </AccordionItem>
+                </li>
               ))}
-          </Accordion>
+          </ul>
         ) : (
           <div className="mx-auto">
             <Typography size={16} weight="bold" className="md:text-[12px]">

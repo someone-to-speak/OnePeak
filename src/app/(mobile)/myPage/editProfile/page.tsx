@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
-import { toast } from "react-toastify";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import WithIconHeader from "@/components/ui/WithIconHeader";
@@ -74,12 +73,12 @@ const EditProfile = () => {
             queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo.id] });
           },
           onError: () => {
-            toast.error("프로필 업데이트에 실패했습니다.");
+            console.error("프로필 업데이트에 실패했습니다.");
           }
         }
       );
     } catch {
-      toast.error("프로필 업데이트에 실패했습니다.");
+      console.error("프로필 업데이트에 실패했습니다.");
     }
   };
 
