@@ -9,7 +9,7 @@ const createTimestamp = () => {
   ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 };
 
-export const useChatMessages = (situation: string, level: number) => {
+export const useChatMessages = (situation: string, level: number, prompt: string) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
@@ -30,7 +30,7 @@ export const useChatMessages = (situation: string, level: number) => {
         setMessages((prev) => {
           const updatedMessages = [...prev, userMessage];
 
-          getChatResponse(updatedMessages, situation, level)
+          getChatResponse(updatedMessages, situation, level, prompt)
             .then((botResponse) => {
               if (botResponse) {
                 const botMessage: Message = {
@@ -53,7 +53,7 @@ export const useChatMessages = (situation: string, level: number) => {
         throw error;
       }
     },
-    [situation, level]
+    [situation, level, prompt]
   );
 
   return { messages, sendMessage };

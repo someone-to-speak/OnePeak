@@ -13,6 +13,7 @@ import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import ChatModal from "@/components/ChatModal";
 import { Typography } from "@/components/ui/typography";
+import { getPrompt } from "@/api/supabase/admin";
 
 const ChatMessagePage = () => {
   return (
@@ -37,8 +38,15 @@ const ChatMessage = () => {
   const level = Number(searchParams?.get("level"));
   const router = useRouter();
 
+  // prompt 명령 가져오기
+  const { data: prompt } = useQuery({
+    queryKey: ["prompt"],
+    queryFn: () => getPrompt()
+  });
+
   const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level);
+  // FIXME: type단언 고치기
+  const { messages, sendMessage } = useChatMessages(situation, level, prompt as string);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isRecording, startRecording, stopRecording } = useAudioRecorder();
   const queryClient = useQueryClient();
