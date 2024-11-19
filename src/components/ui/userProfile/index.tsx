@@ -63,7 +63,7 @@ const UserProfileContent = ({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
           <FlagIcon countryImageUrl={myLanguageUrl} size={16} />
-          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px]">
+          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px] md:text-[20px]">
             {name}
           </Typography>
         </div>

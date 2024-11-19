@@ -90,13 +90,13 @@ const SettingsPage = () => {
           </>
         )}
         <div className="border-b border-gray-800 flex flex-row items-center justify-between py-[20px] px-2">
-          <Typography size={16} weight="medium" className="md:font-[20px]">
+          <Typography size={16} weight="medium" className="md:text-[20px]">
             알림 설정
           </Typography>
           <NotificationToggle isEnabled={isNotificationEnabled} onToggle={handleNotificationToggle} />
         </div>
         <button onClick={handleLogout} className="border-b border-gray-800 text-left w-full py-[20px] px-2">
-          <Typography size={16} weight="medium" className="md:font-[20px]">
+          <Typography size={16} weight="medium" className="md:text-[20px]">
             로그아웃
           </Typography>
         </button>
@@ -104,7 +104,7 @@ const SettingsPage = () => {
           onClick={() => setIsAccountDeletionModalOpen(true)}
           className="border-b border-gray-800 text-left w-full py-[20px] px-2"
         >
-          <Typography size={16} weight="medium" className="md:font-[20px]">
+          <Typography size={16} weight="medium" className="md:text-[20px]">
             회원탈퇴
           </Typography>
         </button>

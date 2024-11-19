@@ -14,12 +14,7 @@
     "@google-cloud/speech": "^6.7.0",
     "@hookform/resolvers": "^3.9.0",
     "@material-tailwind/react": "^2.1.10",
-    "@nextui-org/dropdown": "^2.1.31",
-    "@nextui-org/react": "^2.4.8",
-    "@nextui-org/spinner": "^2.0.34",
-    "@nextui-org/system": "^2.2.6",
     "@nextui-org/tabs": "^2.0.37",
-    "@nextui-org/theme": "^2.2.11",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/ssr": "^0.5.1",
@@ -77,6 +72,5 @@
     "storybook": "8.3.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
+  }
 }

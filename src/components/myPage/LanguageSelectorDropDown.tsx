@@ -1,8 +1,6 @@
 "use client";
 
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
-import { Typography } from "../ui/typography";
-import AccordionComponent from "../AccordionItem";
+import { CustomAccordion } from "../AccordionItem";
 
 type LanguageType = {
   language_name: string;
@@ -27,7 +25,7 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
 
   return (
     <div className="w-full">
-      <Accordion isCompact className="border-b border-gray-800">
+      {/* <Accordion isCompact className="border-b border-gray-800">
         <AccordionItem
           key={1}
           title={
@@ -62,8 +60,8 @@ const ImageSelectorDropDown: React.FC<ImageSelectorDropDownProps> = ({
             )}
           </ul>
         </AccordionItem>
-      </Accordion>
-      <AccordionComponent
+      </Accordion> */}
+      <CustomAccordion
         text={text}
         subtitle={subtitle}
         languageOptions={languageOptions}

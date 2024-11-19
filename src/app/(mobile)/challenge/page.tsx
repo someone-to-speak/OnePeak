@@ -30,9 +30,9 @@ const ChallengePage = () => {
   if (!userInfo?.id) return null;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full h-full md:h-full pb-[100px]">
       <NoIconHeader title="챌린지" />
-      <div className="w-full h-screen md:h-full">
+      <div className="w-full">
         <div>
           <div className="max-w-[343px] h-[46px] mt-[10px] mx-auto px-1 py-2.5 bg-[#f3f3f3] rounded-[22px] shadow-inner flex flex-row justify-center items-center">
             {problems.map((problem, index) => (
@@ -70,7 +70,7 @@ const ChallengePage = () => {
                       className="my-[44px]"
                     />
                   </div>
-                  <Link href={problem.url} className="w-[375px]">
+                  <Link href={problem.url} className="min-w-[280px] md:w-[375px]">
                     {/* <Button text={`${problem.label} 풀러가기`} size="auto" /> */}
                     <Button text="시작" size="auto" />
                   </Link>

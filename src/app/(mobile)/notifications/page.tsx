@@ -7,7 +7,6 @@ import WithIconHeader from "@/components/ui/WithIconHeader";
 import { Typography } from "@/components/ui/typography";
 import useNotifications from "@/hooks/useNotifications";
 import { useUser } from "@/hooks/useUser";
-import { Spinner } from "@nextui-org/spinner";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const NotificationPage = () => {
@@ -52,8 +51,10 @@ const NotificationPage = () => {
               ))}
           </Accordion>
         ) : (
-          <div className="flex items-center justify-center h-48">
-            <Spinner label="로딩중" color="success" />
+          <div className="mx-auto">
+            <Typography size={16} weight="bold" className="md:text-[12px]">
+              알림이 없습니다.
+            </Typography>
           </div>
         )}
       </div>
