@@ -253,15 +253,21 @@ const VideoChat = () => {
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const { role } = useCallerCallee(roomId);
-  const { localVideoRef, remoteVideoRef, createOffer } = useWebRTC(roomId);
+  const {
+    channelRef,
+    localVideoRef,
+    remoteVideoRef,
+    createOffer,
+    isCameraOn,
+    toggleCamera,
+    isMicOn,
+    toggleMicrophone
+  } = useWebRTC(roomId);
 
   useEffect(() => {
     if (!role) return;
     console.log("role: ", role);
-    if (role === "Caller")
-      setTimeout(async () => {
-        await createOffer();
-      }, 1500);
+    if (role === "Caller") createOffer();
   }, [createOffer, role]);
 
   return (
@@ -299,13 +305,21 @@ const VideoChat = () => {
           </div>
           <div className="w-full flex justify-center items-center gap-14">
             <button className="p-[9px] bg-black rounded-md">
-              <Icon name="camera" size={42} color="white" />
+              {isCameraOn ? (
+                <Icon name="cameraOn" size={42} color="white" onClick={toggleCamera} />
+              ) : (
+                <Icon name="cameraOff" size={42} color="white" onClick={toggleCamera} />
+              )}
             </button>
             <button className="p-[9px] bg-red-400 rounded-md">
               <Icon name="power" size={42} color="white" />
             </button>
             <button className="p-[9px] bg-black rounded-md">
-              <Icon name="microphone" size={42} color="white" />
+              {isMicOn ? (
+                <Icon name="microphoneOn" size={42} color="white" onClick={toggleMicrophone} />
+              ) : (
+                <Icon name="microphoneOff" size={42} color="white" onClick={toggleMicrophone} />
+              )}
             </button>
           </div>
         </div>
@@ -318,7 +332,6 @@ const VideoChat = () => {
                   className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
                   ref={remoteVideoRef}
                   autoPlay
-                  playsInline
                   onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
                   onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
                   onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
@@ -331,10 +344,18 @@ const VideoChat = () => {
               <div className="flex-1">
                 <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center bg-black">
                   <button>
-                    <Icon name="microphone" size={32} color="#BFBFBF" />
+                    {isMicOn ? (
+                      <Icon name="microphoneOn" size={32} color="#BFBFBF" onClick={toggleMicrophone} />
+                    ) : (
+                      <Icon name="microphoneOff" size={32} color="#BFBFBF" onClick={toggleMicrophone} />
+                    )}
                   </button>
                   <button>
-                    <Icon name="camera" size={32} color="#BFBFBF" />
+                    {isCameraOn ? (
+                      <Icon name="cameraOn" size={32} color="#BFBFBF" onClick={toggleCamera} />
+                    ) : (
+                      <Icon name="cameraOff" size={32} color="#BFBFBF" onClick={toggleCamera} />
+                    )}
                   </button>
                 </div>
               </div>
@@ -349,7 +370,6 @@ const VideoChat = () => {
             className={"relative scale-x-[-1] h-lvh object-cover"}
             ref={localVideoRef}
             autoPlay
-            playsInline
             onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
             onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
             onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시

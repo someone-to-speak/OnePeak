@@ -25,7 +25,7 @@ export const useMatching = () => {
 
   const cleanUp = useCallback(async () => {
     if (matchingChannelRef.current) {
-      await supabase.removeChannel(matchingChannelRef.current as RealtimeChannel);
+      await supabase.removeChannel(matchingChannelRef.current);
       if (userInfo?.id) {
         await removeUserFromMatchQueue(userInfo.id);
       }

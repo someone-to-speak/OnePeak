@@ -4,19 +4,24 @@ import { SignalData } from "@/types/chatType/chatType";
 import { getDeviceMediaConstraints } from "@/utils/media";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export const useWebRTC = (roomId: string) => {
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const localStream = useRef<MediaStream | null>(null);
+
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [isCameraOn, setIsCameraOn] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("channelRef.current: ", channelRef.current);
+    if (channelRef.current) return;
     console.log("webrtc-useEffect");
     const supabase = createClient();
     const channel = supabase.channel(`video-chat-${roomId}`);
-    let localStream: MediaStream;
 
     const setupLessonChannel = async () => {
       channel
@@ -57,17 +62,17 @@ export const useWebRTC = (roomId: string) => {
 
         const { videoConstraints, audioConstraints } = getDeviceMediaConstraints();
 
-        localStream = await navigator.mediaDevices.getUserMedia({
+        localStream.current = await navigator.mediaDevices.getUserMedia({
           video: videoConstraints,
           audio: audioConstraints
         });
 
         if (localVideoRef.current) {
-          localVideoRef.current.srcObject = localStream;
+          localVideoRef.current.srcObject = localStream.current;
         }
 
-        localStream.getTracks().forEach((track) => {
-          peerConnection.current?.addTrack(track, localStream);
+        localStream.current.getTracks().forEach((track) => {
+          if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
         });
       } catch (error) {
         console.error("Failed to initialize WebRTC:", error);
@@ -84,8 +89,10 @@ export const useWebRTC = (roomId: string) => {
       }
 
       // 로컬 미디어 스트림 정리
-      const tracks = localStream.getTracks();
-      tracks.forEach((track) => track.stop()); // 모든 트랙 종료
+      if (localStream.current) {
+        const tracks = localStream.current.getTracks();
+        tracks.forEach((track) => track.stop()); // 모든 트랙 종료
+      }
 
       supabase.removeChannel(channel);
     };
@@ -132,5 +139,35 @@ export const useWebRTC = (roomId: string) => {
     }
   };
 
-  return { localVideoRef, remoteVideoRef, createOffer };
+  const toggleCamera = useCallback(() => {
+    if (localStream.current) {
+      const videoTrack = localStream.current.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !videoTrack.enabled;
+        setIsCameraOn(videoTrack.enabled);
+      }
+    }
+  }, []);
+
+  // 마이크 토글
+  const toggleMicrophone = useCallback(() => {
+    if (localStream.current) {
+      const audioTrack = localStream.current.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !audioTrack.enabled;
+        setIsMicOn(audioTrack.enabled);
+      }
+    }
+  }, []);
+
+  return {
+    channelRef,
+    localVideoRef,
+    remoteVideoRef,
+    createOffer,
+    isCameraOn,
+    toggleCamera,
+    isMicOn,
+    toggleMicrophone
+  };
 };
