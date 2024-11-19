@@ -12,6 +12,7 @@ import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
 import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { useCallerCallee } from "@/hooks/useCallerCallee";
+import { useWebRTC } from "@/hooks/useWebRTC";
 
 const VideoChatPage = () => {
   return (
@@ -30,10 +31,10 @@ const VideoChatPage = () => {
 //   const localVideoRef = useRef<HTMLVideoElement>(null);
 //   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 //   const webrtcServiceRef = useRef<WebRTCService | null>(null);
-//   const channel = useRef(createChannel(roomId || ""));
+// const channel = useRef(createChannel(roomId || ""));
 //   const isSubscribed = useRef(false);
 
-//   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
+// const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
 //   const handleCloseMatching = async () => {
 //     channel.current?.send({
@@ -107,31 +108,31 @@ const VideoChatPage = () => {
 //     const init = async () => {
 //       if (isSubscribed.current) return;
 
-//       channel.current
-//         .on("broadcast", { event: "ice-candidate" }, (payload) =>
-//           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
-//         )
-//         .on("broadcast", { event: "offer" }, (payload) =>
-//           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
-//         )
-//         .on("broadcast", { event: "answer" }, (payload) =>
-//           webrtcServiceRef.current?.handleSignalData(payload as SignalData)
-//         )
-//         .on("broadcast", { event: "refresh" }, handleRefreshSignal)
-//         .on("broadcast", { event: "back" }, handleBackSignal)
-//         .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
-//       channel.current.subscribe(async (status) => {
-//         if (status === "SUBSCRIBED") {
-//           isSubscribed.current = true;
-//           // webrtc 연결을 위한 초기 설정
-//           webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
-//           await webrtcServiceRef.current.init();
+// channel.current
+//   .on("broadcast", { event: "ice-candidate" }, (payload) =>
+//     webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+//   )
+//   .on("broadcast", { event: "offer" }, (payload) =>
+//     webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+//   )
+//   .on("broadcast", { event: "answer" }, (payload) =>
+//     webrtcServiceRef.current?.handleSignalData(payload as SignalData)
+//   )
+//   .on("broadcast", { event: "refresh" }, handleRefreshSignal)
+//   .on("broadcast", { event: "back" }, handleBackSignal)
+//   .on("broadcast", { event: "closeMatching" }, handleCloseMatchingSignal);
+// channel.current.subscribe(async (status) => {
+//   if (status === "SUBSCRIBED") {
+//     isSubscribed.current = true;
+//     // webrtc 연결을 위한 초기 설정
+//     webrtcServiceRef.current = new WebRTCService(localVideoRef, remoteVideoRef, channel.current);
+//     await webrtcServiceRef.current.init();
 
-//           // sdp 정보 발신
-//           await webrtcServiceRef.current.createOffer();
-//         }
-//       });
-//     };
+//     // sdp 정보 발신
+//     await webrtcServiceRef.current.createOffer();
+//   }
+// });
+// };
 
 //     init();
 
@@ -148,17 +149,58 @@ const VideoChatPage = () => {
 //     };
 //   }, [isLargeScreen, handleCloseMatchingSignal, roomId, router]);
 
-//   return (
-//     <>
-//       {isLargeScreen ? (
-//         <div className="flex flex-col px-3">
-//           <Typography size={36} className="font-suit font-bold my-[70px]">
-//             1:1 언어수업
-//           </Typography>
-//           <div className="flex gap-[10px] mb-[50px]">
-//             <div className="flex-1 h-auto">
+// return (
+//   <>
+//     {isLargeScreen ? (
+//       <div className="flex flex-col px-3">
+//         <Typography size={36} className="font-suit font-bold my-[70px]">
+//           1:1 언어수업
+//         </Typography>
+//         <div className="flex gap-[10px] mb-[50px]">
+//           <div className="flex-1 h-auto">
+//             <video
+//               className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
+//               ref={remoteVideoRef}
+//               autoPlay
+//               playsInline
+//               onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+//               onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+//               onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+//               style={{ pointerEvents: "none" }}
+//             />
+//           </div>
+//           <div className="flex-1 h-auto">
+//             <video
+//               className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
+//               ref={localVideoRef}
+//               autoPlay
+//               playsInline
+//               onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+//               onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+//               onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+//               style={{ pointerEvents: "none" }}
+//             />
+//           </div>
+//         </div>
+//         <div className="w-full flex justify-center items-center gap-14">
+//           <button className="p-[9px] bg-black rounded-md">
+//             <Icon name="camera" size={42} color="white" />
+//           </button>
+//           <button className="p-[9px] bg-red-400 rounded-md" onClick={handleCloseMatching}>
+//             <Icon name="power" size={42} color="white" />
+//           </button>
+//           <button className="p-[9px] bg-black rounded-md">
+//             <Icon name="microphone" size={42} color="white" />
+//           </button>
+//         </div>
+//       </div>
+//     ) : (
+//       <div className="relative">
+//         <div className="absolute top-0 left-0 right-0 bottom-0 bg-none z-[101]">
+//           <div className="flex flex-col px-4 py-safe-offset-6 w-full h-full">
+//             <div className="flex flex-1 justify-between items-start">
 //               <video
-//                 className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
+//                 className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
 //                 ref={remoteVideoRef}
 //                 autoPlay
 //                 playsInline
@@ -167,92 +209,155 @@ const VideoChatPage = () => {
 //                 onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
 //                 style={{ pointerEvents: "none" }}
 //               />
+//               <button className="bg-black rounded-full p-[10px]">
+//                 <Icon name="prohibit" size={25} color="#BFBFBF" />
+//               </button>
 //             </div>
-//             <div className="flex-1 h-auto">
-//               <video
-//                 className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
-//                 ref={localVideoRef}
-//                 autoPlay
-//                 playsInline
-//                 onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
-//                 onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
-//                 onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
-//                 style={{ pointerEvents: "none" }}
-//               />
-//             </div>
-//           </div>
-//           <div className="w-full flex justify-center items-center gap-14">
-//             <button className="p-[9px] bg-black rounded-md">
-//               <Icon name="camera" size={42} color="white" />
-//             </button>
-//             <button className="p-[9px] bg-red-400 rounded-md" onClick={handleCloseMatching}>
-//               <Icon name="power" size={42} color="white" />
-//             </button>
-//             <button className="p-[9px] bg-black rounded-md">
-//               <Icon name="microphone" size={42} color="white" />
-//             </button>
-//           </div>
-//         </div>
-//       ) : (
-//         <div className="relative">
-//           <div className="absolute top-0 left-0 right-0 bottom-0 bg-none z-[101]">
-//             <div className="flex flex-col px-4 py-safe-offset-6 w-full h-full">
-//               <div className="flex flex-1 justify-between items-start">
-//                 <video
-//                   className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
-//                   ref={remoteVideoRef}
-//                   autoPlay
-//                   playsInline
-//                   onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
-//                   onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
-//                   onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
-//                   style={{ pointerEvents: "none" }}
-//                 />
-//                 <button className="bg-black rounded-full p-[10px]">
-//                   <Icon name="prohibit" size={25} color="#BFBFBF" />
+//             <div className="flex-1">
+//               <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center bg-black">
+//                 <button>
+//                   <Icon name="microphone" size={32} color="#BFBFBF" />
 //                 </button>
-//               </div>
-//               <div className="flex-1">
-//                 <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center bg-black">
-//                   <button>
-//                     <Icon name="microphone" size={32} color="#BFBFBF" />
-//                   </button>
-//                   <button>
-//                     <Icon name="camera" size={32} color="#BFBFBF" />
-//                   </button>
-//                 </div>
-//               </div>
-//               <div className="flex justify-center items-endflex-1">
-//                 <button className="bg-red-400 rounded-md p-[10px]" onClick={handleCloseMatching}>
-//                   <Icon name="power" size={32} color="white" />
+//                 <button>
+//                   <Icon name="camera" size={32} color="#BFBFBF" />
 //                 </button>
 //               </div>
 //             </div>
+//             <div className="flex justify-center items-endflex-1">
+//               <button className="bg-red-400 rounded-md p-[10px]" onClick={handleCloseMatching}>
+//                 <Icon name="power" size={32} color="white" />
+//               </button>
+//             </div>
 //           </div>
-//           <video
-//             className={"relative scale-x-[-1] h-lvh object-cover"}
-//             ref={localVideoRef}
-//             autoPlay
-//             playsInline
-//             onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
-//             onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
-//             onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
-//             style={{ pointerEvents: "none" }}
-//           ></video>
 //         </div>
-//       )}
-//     </>
-//   );
+//         <video
+//           className={"relative scale-x-[-1] h-lvh object-cover"}
+//           ref={localVideoRef}
+//           autoPlay
+//           playsInline
+//           onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+//           onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+//           onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+//           style={{ pointerEvents: "none" }}
+//         ></video>
+//       </div>
+//     )}
+//   </>
+// );
 // };
 
 const VideoChat = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as string;
+  const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const { role } = useCallerCallee(roomId);
-  console.log("role", role);
-  return <div>화상통화</div>;
+  const { localVideoRef, remoteVideoRef, setupLessonChannel, createOffer } = useWebRTC(roomId);
+
+  useEffect(() => {
+    if (!role) return;
+
+    setupLessonChannel();
+
+    if (role === "Caller") createOffer();
+  }, [createOffer, role, setupLessonChannel]);
+
+  return (
+    <>
+      {isLargeScreen ? (
+        <div className="flex flex-col px-3">
+          <Typography size={36} className="font-suit font-bold my-[70px]">
+            1:1 언어수업
+          </Typography>
+          <div className="flex gap-[10px] mb-[50px]">
+            <div className="flex-1 h-auto">
+              <video
+                className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+                onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+                onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+                style={{ pointerEvents: "none" }}
+              />
+            </div>
+            <div className="flex-1 h-auto">
+              <video
+                className={"w-full scale-x-[-1] aspect-[490/742] object-cover rounded-md"}
+                ref={localVideoRef}
+                autoPlay
+                playsInline
+                onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+                onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+                onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+                style={{ pointerEvents: "none" }}
+              />
+            </div>
+          </div>
+          <div className="w-full flex justify-center items-center gap-14">
+            <button className="p-[9px] bg-black rounded-md">
+              <Icon name="camera" size={42} color="white" />
+            </button>
+            <button className="p-[9px] bg-red-400 rounded-md">
+              <Icon name="power" size={42} color="white" />
+            </button>
+            <button className="p-[9px] bg-black rounded-md">
+              <Icon name="microphone" size={42} color="white" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="relative">
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-none z-[101]">
+            <div className="flex flex-col px-4 py-safe-offset-6 w-full h-full">
+              <div className="flex flex-1 justify-between items-start">
+                <video
+                  className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
+                  ref={remoteVideoRef}
+                  autoPlay
+                  playsInline
+                  onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+                  onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+                  onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+                  style={{ pointerEvents: "none" }}
+                />
+                <button className="bg-black rounded-full p-[10px]">
+                  <Icon name="prohibit" size={25} color="#BFBFBF" />
+                </button>
+              </div>
+              <div className="flex-1">
+                <div className="flex flex-col w-[50px] y-[130px] py-[13px] px-[9px] gap-[20px] rounded-[30px] items-center bg-black">
+                  <button>
+                    <Icon name="microphone" size={32} color="#BFBFBF" />
+                  </button>
+                  <button>
+                    <Icon name="camera" size={32} color="#BFBFBF" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-center items-endflex-1">
+                <button className="bg-red-400 rounded-md p-[10px]">
+                  <Icon name="power" size={32} color="white" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <video
+            className={"relative scale-x-[-1] h-lvh object-cover"}
+            ref={localVideoRef}
+            autoPlay
+            playsInline
+            onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
+            onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
+            onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
+            style={{ pointerEvents: "none" }}
+          ></video>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default VideoChatPage;

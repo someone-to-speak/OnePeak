@@ -28,8 +28,6 @@ export const useCallerCallee = (roomId: string) => {
       .on("presence", { event: "sync" }, () => {
         const users = channel.presenceState();
         const userKeys = Object.keys(users);
-        console.log("users", users);
-        console.log("userKeys", userKeys);
 
         // 역할 설정이 아직 안 된 경우에만 설정
         if (userKeys.length === 2) {
