@@ -250,8 +250,8 @@ const VideoChat = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as string;
 
-  const _ = useCallerCallee(roomId);
-
+  const { role } = useCallerCallee(roomId);
+  console.log("role", role);
   return <div>화상통화</div>;
 };
 
