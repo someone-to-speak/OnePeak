@@ -6,12 +6,11 @@ import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { useEffect } from "react";
 
 const Matching = () => {
-  console.log("Matching");
   const { isMatching, setupMatchingChannel, cleanUp } = useMatching();
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const paddingRight = isLargeScreen ? "12px" : "16px";
-  console.log("isMatching: ", isMatching);
+
   useEffect(() => {
     if (isMatching) {
       setupMatchingChannel();

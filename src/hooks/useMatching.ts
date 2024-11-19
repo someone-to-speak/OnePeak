@@ -24,7 +24,6 @@ export const useMatching = () => {
   const { isMatching, setIsMatching } = useMatchingStore((state) => state);
 
   const cleanUp = useCallback(async () => {
-    console.log("cleanUp");
     if (matchingChannelRef.current) {
       await supabase.removeChannel(matchingChannelRef.current as RealtimeChannel);
       if (userInfo?.id) {
@@ -35,7 +34,6 @@ export const useMatching = () => {
 
   const handleUpdateSignal = useCallback(
     async (payload: RealtimePostgresUpdatePayload<matche>) => {
-      console.log("handleUpdateSignal");
       const updatedMatchQueue = payload.new;
       if (updatedMatchQueue.user_id === userInfo?.id) {
         setIsMatching(false);
@@ -48,7 +46,7 @@ export const useMatching = () => {
 
   const startMatching = async (userInfo: UserInfo) => {
     const { data: matchQueue } = await findUserFromMatchQueue(userInfo);
-    console.log("matchQueue: ", matchQueue);
+
     if (matchQueue && matchQueue.length > 0) {
       const idx = getRandomNumber(matchQueue.length); // 랜덤 값 추출
       const matchPartner = matchQueue[idx];
@@ -77,11 +75,9 @@ export const useMatching = () => {
         handleUpdateSignal(payload);
       })
       .subscribe(async (status) => {
-        console.log("status: ", status);
         if (status === "SUBSCRIBED") {
           const roomId = await startMatching(userInfo);
           if (roomId) {
-            console.log("roomId: ", roomId);
             setIsMatching(false);
             await cleanUp();
             router.push(`/lesson/room?id=${roomId}`);
@@ -101,8 +97,6 @@ export const useMatching = () => {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      console.log("callback");
-
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [cleanUp]);

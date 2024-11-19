@@ -257,9 +257,10 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (!role) return;
-
-    setupLessonChannel();
-
+    console.log("role: ", role);
+    setTimeout(() => {
+      setupLessonChannel();
+    }, 2000);
     if (role === "Caller") createOffer();
   }, [createOffer, role, setupLessonChannel]);
 
