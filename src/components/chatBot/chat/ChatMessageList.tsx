@@ -58,6 +58,13 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
               {formatMessage(message.content)}
             </div>
           </div>
+          <Typography
+            size={10}
+            weight={"normal"}
+            className={`text-gray-500 self-end ml-2 ${message.role === "user" ? "order-first mr-2 ml-0" : ""}`}
+          >
+            {message.timestamp}
+          </Typography>
         </div>
       ))}
     </div>
