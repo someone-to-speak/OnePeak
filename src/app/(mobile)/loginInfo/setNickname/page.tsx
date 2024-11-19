@@ -10,14 +10,19 @@ export default function SetNickname() {
   const supabase = createClient();
   const maxTexts = 12; // 최대 글자 수 설정
 
+  // 닉네임 설정 후 다음 페이지로 이동하는 함수
   const handleContinue = async () => {
+    // 닉네임이 입력된 경우에만 실행
     if (nickname) {
-      const { data } = await supabase.auth.getSession();
-      const userId = data?.session?.user?.id;
+      const { data } = await supabase.auth.getSession(); // 현재 로그인 세션 가져오기
+      const userId = data?.session?.user?.id; // 사용자 ID 추출
 
+      // 사용자 ID가 유효한 경우
       if (userId) {
+        // 닉네임을 Supabase의 "user_info" 테이블에 업데이트
         const { error } = await supabase.from("user_info").update({ nickname }).eq("id", userId);
 
+        // 업데이트 성공 시 다음 단계로 이동
         if (!error) {
           router.push("/loginInfo/setMyLanguage");
         }
