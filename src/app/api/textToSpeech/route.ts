@@ -9,9 +9,9 @@ const openai = new OpenAI({
   apiKey: TTS_API_KEY
 });
 
-export const POST = async (reqeust: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   // 클라이언트로부터 전송된 JSON 데이터를 추출
-  const { text } = await reqeust.json();
+  const { text } = await request.json();
 
   // OpenAI TTS(Text-To-Speech) API 호출
   const mp3 = await openai.audio.speech.create({
