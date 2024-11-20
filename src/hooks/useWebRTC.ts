@@ -212,7 +212,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
       cleanupWebRTC();
     };
-  }, [cleanupWebRTC, handleCloseMatchingSignal, handleBackSignal, supabase, role, roomId]);
+  }, [cleanupWebRTC, handleCloseMatchingSignal, handleleaveAloneSignal, supabase, role, roomId]);
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
