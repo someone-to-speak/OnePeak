@@ -253,17 +253,19 @@ const VideoChat = () => {
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const { role } = useCallerCallee(roomId);
-  const { localVideoRef, remoteVideoRef, createOffer, isCameraOn, toggleCamera, isMicOn, toggleMicrophone } =
-    useWebRTC(roomId);
+  const { localVideoRef, remoteVideoRef, createOffer, isCameraOn, toggleCamera, isMicOn, toggleMicrophone } = useWebRTC(
+    roomId,
+    role as string
+  );
 
-  useEffect(() => {
-    if (!role) return;
-    console.log("role: ", role);
-    if (role === "Caller") createOffer();
-    // setTimeout(async () => {
-    //   createOffer();
-    // }, 1500);
-  }, [createOffer, role]);
+  // useEffect(() => {
+  //   if (!role) return;
+  //   console.log("role: ", role);
+  //   if (role === "Caller") createOffer();
+  //   // setTimeout(async () => {
+  //   //   createOffer();
+  //   // }, 1500);
+  // }, [createOffer, role]);
 
   return (
     <>

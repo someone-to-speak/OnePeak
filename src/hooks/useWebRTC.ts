@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export const useWebRTC = (roomId: string) => {
+export const useWebRTC = (roomId: string, role: string) => {
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -18,7 +18,7 @@ export const useWebRTC = (roomId: string) => {
 
   useEffect(() => {
     console.log("channelRef.current: ", channelRef.current);
-    if (channelRef.current) return;
+    if (channelRef.current || !role) return;
     console.log("webrtc-useEffect");
     const supabase = createClient();
     const channel = supabase.channel(`video-chat-${roomId}`);
@@ -60,23 +60,29 @@ export const useWebRTC = (roomId: string) => {
           }
         };
 
-        const { videoConstraints, audioConstraints } = getDeviceMediaConstraints();
+        await setupLocalStream();
 
-        localStream.current = await navigator.mediaDevices.getUserMedia({
-          video: videoConstraints,
-          audio: audioConstraints
-        });
-
-        if (localVideoRef.current) {
-          localVideoRef.current.srcObject = localStream.current;
-        }
-
-        localStream.current.getTracks().forEach((track) => {
-          if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
-        });
+        if (role === "Caller") createOffer();
       } catch (error) {
         console.error("Failed to initialize WebRTC:", error);
       }
+    };
+
+    const setupLocalStream = async () => {
+      const { videoConstraints, audioConstraints } = getDeviceMediaConstraints();
+
+      localStream.current = await navigator.mediaDevices.getUserMedia({
+        video: videoConstraints,
+        audio: audioConstraints
+      });
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = localStream.current;
+      }
+
+      localStream.current.getTracks().forEach((track) => {
+        if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
+      });
     };
 
     setupLessonChannel();
@@ -96,7 +102,7 @@ export const useWebRTC = (roomId: string) => {
 
       supabase.removeChannel(channel);
     };
-  }, [roomId]);
+  }, [role, roomId]);
 
   const createOffer = useCallback(async () => {
     if (!peerConnection.current) return;
