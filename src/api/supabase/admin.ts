@@ -134,7 +134,7 @@ export const getBlockTargetUsers = async () => {
 
   // 필터링 및 데이터 매핑
   const filteredData = targetIdsCount
-    ?.filter(({ count }) => count >= 2)
+    ?.filter(({ count }) => count >= 3)
     .map(({ id, count }) => {
       const item = data.find((d) => d.target_id === id);
       if (!item) return null;
@@ -303,10 +303,10 @@ export const insertReportInfo = async ({
   if (error) errorFn(error, "신고 내역을 추가하는데 실패하였습니다");
 };
 
-// faq 테이블 정보 가져오기
+// faq 테이블 문의내역 가져오기
 export const getFaqs = async () => {
   const { data, error } = await browserClient.from("faq").select().order("created_at", { ascending: false });
-  if (error) errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
+  if (error) return errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
   return data;
 };
 
@@ -326,4 +326,18 @@ export const getPrompt = async () => {
 export const updatePrompt = async (newContent: string) => {
   const { error } = await browserClient.from("AI-prompt").update({ content: newContent }).eq("id", "1");
   if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+};
+
+// 특정 문의내역 가져오기
+export const getTargetFaqData = async (targetFaqId: string) => {
+  const { data, error } = await browserClient.from("faq").select().eq("id", targetFaqId);
+  if (error) return errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+  return data[0];
+};
+
+// faq 테이블에 comment 삽입하기
+export const insertComment = async ({ answer, faqId }: { answer: string; faqId: string }) => {
+  const { error } = await browserClient.from("faq").update({ comment: answer }).eq("id", faqId);
+
+  if (error) errorFn(error, " 답변을 추가하는데 실패하였습니다");
 };
