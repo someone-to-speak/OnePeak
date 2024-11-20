@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { logout } from "@/utils/myPage/logout";
 import { useState } from "react";
-import { updateMyLanguage } from "@/utils/myPage/updateLanguage";
+import { updateLearnLanguage, updateMyLanguage } from "@/utils/myPage/updateLanguage";
 import ImageSelectorDropDown from "@/components/myPage/LanguageSelectorDropDown";
 import { Typography } from "@/components/ui/typography";
 import NotificationToggle from "@/components/ui/toggle/notificationToggle";
@@ -57,8 +57,19 @@ const SettingsPage = () => {
     setIsLanguageUpdateModalOpen(true);
   };
 
+  const handleUpdateLearnLanguage = async (language: string) => {
+    if (!userInfo?.id || !language) return;
+    await updateLearnLanguage(userInfo.id, language);
+    setIsLanguageUpdateModalOpen(true);
+  };
+
   const { mutate: updateMyLanguageMutate } = useMutation({
     mutationFn: handleUpdateMyLanguage,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo?.id] })
+  });
+
+  const { mutate: updateLearnLanguageMutate } = useMutation({
+    mutationFn: handleUpdateLearnLanguage,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo?.id] })
   });
 
@@ -68,12 +79,15 @@ const SettingsPage = () => {
   const filteredMyLanguages =
     languages?.filter((language) => language.language_name !== profile?.my_language?.language_name) || [];
 
+  const filteredLearnLanguages =
+    languages?.filter((language) => language.language_name !== profile?.learn_language?.language_name) || [];
+
   const handleLogout = async () => {
     if (!userInfo?.id) return;
     await logout();
     router.push("/");
   };
-  if (!userInfo?.id || !languages || !profile?.my_language) return;
+  if (!userInfo?.id || !languages || !profile?.my_language || !profile?.learn_language) return;
 
   return (
     <div className="flex flex-col md:gap-[70px]">
@@ -82,10 +96,16 @@ const SettingsPage = () => {
         {languages.length > 0 && (
           <>
             <ImageSelectorDropDown
-              text="내 모국어 변경"
+              text="모국어 변경"
               subtitle={profile?.my_language?.language_name}
               languageOptions={filteredMyLanguages}
               onLanguageChange={updateMyLanguageMutate}
+            />
+            <ImageSelectorDropDown
+              text="학습 언어 변경"
+              subtitle={profile?.learn_language?.language_name}
+              languageOptions={filteredLearnLanguages}
+              onLanguageChange={updateLearnLanguageMutate}
             />
           </>
         )}
@@ -126,7 +146,7 @@ const SettingsPage = () => {
           onClose={() => setIsLanguageUpdateModalOpen(false)}
           onConfirm={() => setIsLanguageUpdateModalOpen(false)}
           title="알림"
-          description="모국어가 변경되었습니다."
+          description="언어가 성공적으로 변경되었습니다."
           confirmText="확인"
           confirmButtonStyle="primary"
           showCancel={false}
