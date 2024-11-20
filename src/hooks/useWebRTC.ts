@@ -186,7 +186,7 @@ export const useWebRTC = (roomId: string, role: string) => {
   return {
     localVideoRef,
     remoteVideoRef,
-    createOffer,
+    // createOffer,
     isCameraOn,
     toggleCamera,
     isMicOn,
