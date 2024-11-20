@@ -73,7 +73,7 @@ export const useUpdateProfile = () => {
     onError: (error) => {
       console.log("error", error);
     },
-    onSettled: (error) => {
+    onSuccess: (error) => {
       if (userInfo?.id) {
         // 데이터가 성공적으로 업데이트된 후 쿼리 무효화
         queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo.id] });
