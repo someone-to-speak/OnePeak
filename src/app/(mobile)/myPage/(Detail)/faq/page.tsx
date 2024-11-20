@@ -125,8 +125,8 @@ const FaqPage = () => {
         onClose={handleModalClose}
         onConfirm={handleModalClose}
         title="알림"
-        description="문의가 성공적으로 접수되었습니다."
-        confirmButtonStyle="success"
+        description="차단된 사용자입니다. 궁금한 점이 있다면 문의를 남겨주세요"
+        confirmButtonStyle="danger"
         confirmText="확인"
         showCancel={false}
       />

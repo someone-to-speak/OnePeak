@@ -59,7 +59,7 @@ const ReportPage = ({ params }: Props) => {
 
   // 파일 선택 시 실행될 함수
   const handleImgFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 선택된  파일 1개를 가진 배열
+    // 선택된 파일 1개를 가진 배열
     const selectedImg = e.target.files?.[0];
     // 선택한 모든 파일을 담은 배열
     const imgUrlLists: string[] = [...previewImgs];
@@ -77,12 +77,12 @@ const ReportPage = ({ params }: Props) => {
     setPreviewImgs(imgUrlLists);
   };
 
-  // onChange를 통해서 함수가  돌아감 -> 같은 이미지 파일 연속으로 선택하면 변한게 없어서 onChange가 작동X -> onClick 할 때 마다 input에 있는 value값을 빈문자열로 초기화 해서 같은 파일 들어가더라도 변화를 만듬
+  // onChange를 통해서 함수가 돌아감 -> 같은 이미지 파일 연속으로 선택하면 변한게 없어서 onChange가 작동X -> onClick 할 때 마다 input에 있는 value값을 빈문자열로 초기화 해서 같은 파일 들어가더라도 변화를 만듬
   const resetInputValue = (e: React.MouseEvent<HTMLInputElement>) => {
     e.currentTarget.value = "";
   };
 
-  //  제출 버튼
+  // 제출 버튼
   const handleSubmit = async () => {
     if (!content) {
       return alert("사유를 적어주세요");
@@ -112,19 +112,19 @@ const ReportPage = ({ params }: Props) => {
     }
   };
 
-  // 버튼 클릭시 파일 리스트에서  이미지 삭제
+  // 버튼 클릭시 파일 리스트에서 이미지 삭제
   const handleDeleteImg = (index: number) => {
     const updatedImgs = previewImgs.filter((_, imgIndex) => imgIndex !== index);
     setPreviewImgs(updatedImgs);
   };
 
   return (
-    <div className="w-full px-[16px]  bg-[#FFF]  ">
-      <div className=" flex gap-[6px] mb-[70px] md:mt-[70px]  ">
+    <div className="w-full px-[16px] bg-[#FFF] ">
+      <div className=" flex gap-[6px] mb-[70px] md:mt-[70px] ">
         <Image src={reportIcon} alt="신고하기 아이콘" className="md:hidden" />
         <h1
           className="text-[#0c0c0c] text-lg font-bold font-['SUIT']
-       md:text-[#0c0c0c] md:text-4xl md:font-bold md:font-['SUIT'] "
+md:text-[#0c0c0c] md:text-4xl md:font-bold md:font-['SUIT'] "
         >
           신고하기
         </h1>
@@ -133,12 +133,12 @@ const ReportPage = ({ params }: Props) => {
         <h3 className="text-[#0c0c0c] mb-[6px] text-lg font-bold font-['SUIT']">사진첨부</h3>
         <div
           onClick={handleDivClick}
-          className="w-[84px] mb-[6px] bg-[#E7F7D9] cursor-pointer p-[20.5px] flex flex-col items-center rounded-[10px]  md:w-[84px] md:mr-auto "
+          className="w-[84px] mb-[6px] bg-[#E7F7D9] cursor-pointer p-[20.5px] flex flex-col items-center rounded-[10px] md:w-[84px] md:mr-auto "
         >
           <Image src={cameraIcon} alt="카메라 아이콘" />
-          <p className="text-[#7bd232]  text-[10px] font-medium font-['SUIT'] ">사진 등록</p>
+          <p className="text-[#7bd232] text-[10px] font-medium font-['SUIT'] ">사진 등록</p>
         </div>
-        <div className=" mb-[28px] flex  flex-wrap gap-[17px] ">
+        <div className=" mb-[28px] flex flex-wrap gap-[17px] ">
           {previewImgs.map((imgUrl, index) => (
             <div key={index} className="w-[30%] flex flex-col justify-center items-center ">
               <Image
@@ -166,15 +166,15 @@ const ReportPage = ({ params }: Props) => {
           placeholder="사유를 작성해 주세요"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full p-[20px] flex items-start border border-[#d9d9d9] rounded-[10px] bg-[#FDFDFD]   "
+          className="w-full p-[20px] flex items-start border border-[#d9d9d9] rounded-[10px] bg-[#FDFDFD] "
         ></textarea>
         <div className=" mt-[238px] flex gap-[10px] mb-[56px] ">
-          <button className="w-full p-[10px]  rounded-[10px] bg-[#D9D9D9]  text-center text-[#fcfcfc] text-base font-medium font-['SUIT']   ">
+          <button className="w-full p-[10px] rounded-[10px] bg-[#D9D9D9] text-center text-[#fcfcfc] text-base font-medium font-['SUIT'] ">
             취소
           </button>
           <button
             onClick={() => handleSubmit()}
-            className=" w-full p-[10px]  rounded-[10px] bg-[#F50000]  text-center text-[#fcfcfc] text-base font-medium font-['SUIT']   "
+            className=" w-full p-[10px] rounded-[10px] bg-[#F50000] text-center text-[#fcfcfc] text-base font-medium font-['SUIT'] "
           >
             신고
           </button>
