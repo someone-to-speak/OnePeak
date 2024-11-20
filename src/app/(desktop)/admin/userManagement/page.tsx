@@ -137,6 +137,7 @@ const UsersInfo = () => {
         </div>
       </div>
       <UsersTable
+        usersInfo={usersInfo}
         currentUsers={currentUsers}
         indexOfFirstUser={indexOfFirstUser}
         unblockUser={unblockUser.mutate}

@@ -65,7 +65,7 @@ const ChatModal = ({
         {/* 
         {description && <p className="text-gray-600 mb-8">{description}</p>} */}
         {description && (
-          <Typography size={14} className="text-gray-500 mb-5">
+          <Typography size={14} className="text-gray-500 mb-5 whitespace-pre-line">
             {description}
           </Typography>
         )}

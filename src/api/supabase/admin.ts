@@ -27,7 +27,7 @@ export const getUsersInfo = async (type: string, theNickname: string) => {
     const { data, error } = await browserClient
       .from("user_info")
       .select()
-      .eq("is_deleted", false)
+      .eq("is_deleted", true)
       .order("created_at", { ascending: false });
     if (error) return errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
     return data;

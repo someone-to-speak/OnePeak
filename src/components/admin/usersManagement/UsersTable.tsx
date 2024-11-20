@@ -1,9 +1,11 @@
 import React from "react";
 import { Tables } from "../../../../database.types";
+import { User } from "@supabase/supabase-js";
 
 type UserInfo = Tables<"user_info">;
 
 interface UsersTableProps {
+  usersInfo: UserInfo[];
   currentUsers: UserInfo[];
   indexOfFirstUser: number;
   unblockUser: (userInfo: UserInfo) => void;
@@ -13,6 +15,7 @@ interface UsersTableProps {
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
+  usersInfo,
   currentUsers,
   indexOfFirstUser,
   unblockUser,
