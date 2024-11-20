@@ -146,7 +146,7 @@ const SettingsPage = () => {
           onClose={() => setIsLanguageUpdateModalOpen(false)}
           onConfirm={() => setIsLanguageUpdateModalOpen(false)}
           title="알림"
-          description="모국어가 변경되었습니다."
+          description="언어가 성공적으로 변경되었습니다."
           confirmText="확인"
           confirmButtonStyle="primary"
           showCancel={false}
