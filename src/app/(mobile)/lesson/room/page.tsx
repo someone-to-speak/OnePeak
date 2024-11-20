@@ -35,25 +35,19 @@ const VideoChat = () => {
   };
 
   useEffect(() => {
-    const handleBackButton = () => {
-      console.log("handleBackButton");
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       channelRef.current?.send({
         type: "broadcast",
         event: "leaveAlone"
       });
+
+      event.preventDefault();
     };
 
-    const handlePopState = () => {
-      setTimeout(handleBackButton, 0);
-    };
-
-    // window.onpopstate = () => handlePopState();
-
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      // window.onpopstate = null; // 클린업 시 핸들러 제거
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [channelRef]);
 
