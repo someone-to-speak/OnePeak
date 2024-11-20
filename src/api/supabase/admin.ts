@@ -14,42 +14,48 @@ const browserClient = createClient();
 
 // 전체 회원 데이터 가져오기
 export const getUsersInfo = async (type: string, theNickname: string) => {
-  if (type === "isBlocked") {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("is_blocked", true)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "차단 회원만 불러오는데 실패하였습니다");
-    return data;
+  let data, error;
+
+  switch (type) {
+    case "isBlocked":
+      ({ data, error } = await browserClient
+        .from("user_info")
+        .select()
+        .eq("is_blocked", true)
+        .order("created_at", { ascending: false }));
+      break;
+
+    case "isDeleted":
+      ({ data, error } = await browserClient
+        .from("user_info")
+        .select()
+        .eq("is_deleted", true)
+        .order("created_at", { ascending: false }));
+      break;
+
+    case "isAll":
+      ({ data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false }));
+      break;
+
+    case "searchNickname":
+      if (theNickname) {
+        ({ data, error } = await browserClient
+          .from("user_info")
+          .select()
+          .eq("nickname", theNickname)
+          .order("created_at", { ascending: false }));
+      } else {
+        ({ data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false }));
+      }
+      break;
+
+    default:
+      ({ data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false }));
+      break;
   }
-  if (type === "isDeleted") {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("is_deleted", true)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
-    return data;
-  }
-  if (type === "isAll") {
-    const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) return errorFn(error, "모든 사용자들 정보를 가져오는데 실패하였습니다");
-    return data;
-  }
-  if (type === "searchNickname" && theNickname) {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("nickname", theNickname)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "해당 회원을 검색하는데 실패하였습니다");
-    return data;
-  } else {
-    const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) return errorFn(error, "사용자들 정보를 가져오는데 실패하였습니다");
-    return data;
-  }
+
+  if (error) return errorFn(error, "사용자 정보를 가져오는데 실패하였습니다");
+  return data || []; // null 대신 빈 배열을 반환
 };
 
 // 특정 회원 차단 해제
