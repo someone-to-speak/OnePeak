@@ -45,9 +45,9 @@ export const useWebRTC = (roomId: string, role: string) => {
         const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
         peerConnection.current = new RTCPeerConnection(config);
 
-        peerConnection.current.onicecandidate = async (event) => {
+        peerConnection.current.onicecandidate = (event) => {
           if (event.candidate) {
-            await channelRef.current?.send({
+            channelRef.current?.send({
               type: "broadcast",
               event: "ice-candidate",
               candidate: event.candidate
