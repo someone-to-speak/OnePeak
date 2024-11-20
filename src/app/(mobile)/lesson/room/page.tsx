@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
@@ -33,24 +33,6 @@ const VideoChat = () => {
 
     await close();
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-      console.log("handleBeforeUnload");
-      await channelRef.current?.send({
-        type: "broadcast",
-        event: "leaveAlone"
-      });
-
-      event.preventDefault();
-    };
-
-    window.addEventListener("popstate", async () => handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("popstate", async () => handleBeforeUnload);
-    };
-  }, [channelRef]);
 
   return (
     <>
