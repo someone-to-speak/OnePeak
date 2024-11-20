@@ -55,7 +55,7 @@ export const useMessage = (conversationId: string) => {
       // Rollback on error
       queryClient.setQueryData(["messages", conversationId], context?.previousMessages);
     },
-    onSettled: () => {
+    onSuccess: () => {
       // 데이터가 성공적으로 변경된 후 재-fetch
       queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
     }

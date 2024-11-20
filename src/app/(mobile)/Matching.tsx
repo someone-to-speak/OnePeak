@@ -22,7 +22,6 @@ const Matching = () => {
 
   if (isMatching) {
     return (
-      // <div className="w-full min-w-[314px] max-w-[1024px] mx-auto">
       <div
         className="
           fixed 
@@ -34,7 +33,6 @@ const Matching = () => {
       >
         <SpinnerButton />
       </div>
-      // </div>
     );
   } else {
     return null;

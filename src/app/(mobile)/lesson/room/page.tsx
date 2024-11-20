@@ -26,7 +26,7 @@ const VideoChatPage = () => {
 //   const router = useRouter();
 //   const searchParams = useSearchParams();
 //   const roomId = searchParams?.get("id") as UUID;
-//   const { userInfo } = useUser();
+// const { userInfo } = useUser();
 
 //   const localVideoRef = useRef<HTMLVideoElement>(null);
 //   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -46,23 +46,23 @@ const VideoChatPage = () => {
 //     await handleCloseMatchingSignal();
 //   };
 
-//   const handleStopRecording = useCallback(async () => {
-//     const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
+// const handleStopRecording = useCallback(async () => {
+//   const localAudioBlob = await webrtcServiceRef.current?.stopRecording();
 
-//     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-//     const fileName = `${roomId}_${timestamp}.webm`;
+//   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+//   const fileName = `${roomId}_${timestamp}.webm`;
 
-//     const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
-//     await checkOrAddParticipant(roomId as UUID, userInfo?.id as string);
-//     await insertMessage(roomId as UUID, url as string, "audio");
-//   }, [roomId, userInfo?.id]);
+//   const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
+//   await checkOrAddParticipant(roomId as UUID, userInfo?.id as string);
+//   await insertMessage(roomId as UUID, url as string, "audio");
+// }, [roomId, userInfo?.id]);
 
-//   const handleCloseMatchingSignal = useCallback(async () => {
-//     await channel.current?.unsubscribe();
-//     await handleStopRecording();
-//     await webrtcServiceRef.current?.closeConnection();
-//     router.replace("/lesson");
-//   }, [handleStopRecording, router]);
+// const handleCloseMatchingSignal = useCallback(async () => {
+//   await channel.current?.unsubscribe();
+//   await handleStopRecording();
+//   await webrtcServiceRef.current?.closeConnection();
+//   router.replace("/lesson");
+// }, [handleStopRecording, router]);
 
 //   useEffect(() => {
 //     if (!channel.current || !roomId) return;
@@ -247,25 +247,24 @@ const VideoChatPage = () => {
 // };
 
 const VideoChat = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams?.get("id") as string;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const { role } = useCallerCallee(roomId);
-  const { localVideoRef, remoteVideoRef, isCameraOn, toggleCamera, isMicOn, toggleMicrophone } = useWebRTC(
-    roomId,
-    role as string
-  );
+  const { channelRef, localVideoRef, remoteVideoRef, isCameraOn, toggleCamera, isMicOn, toggleMicrophone, close } =
+    useWebRTC(roomId, role as string);
 
-  // useEffect(() => {
-  //   if (!role) return;
-  //   console.log("role: ", role);
-  //   if (role === "Caller") createOffer();
-  //   // setTimeout(async () => {
-  //   //   createOffer();
-  //   // }, 1500);
-  // }, [createOffer, role]);
+  const handleClickedCloseButton = async () => {
+    channelRef.current?.send({
+      type: "broadcast",
+      event: "closeMatching"
+    });
+
+    await close();
+  };
+
+  // useEffect(() => {}, []);
 
   return (
     <>
@@ -308,7 +307,7 @@ const VideoChat = () => {
                 <Icon name="cameraOff" size={42} color="white" onClick={toggleCamera} />
               )}
             </button>
-            <button className="p-[9px] bg-red-400 rounded-md">
+            <button className="p-[9px] bg-red-400 rounded-md" onClick={handleClickedCloseButton}>
               <Icon name="power" size={42} color="white" />
             </button>
             <button className="p-[9px] bg-black rounded-md">
@@ -358,7 +357,7 @@ const VideoChat = () => {
               </div>
               <div className="flex justify-center items-endflex-1">
                 <button className="bg-red-400 rounded-md p-[10px]">
-                  <Icon name="power" size={32} color="white" />
+                  <Icon name="power" size={32} color="white" onClick={handleClickedCloseButton} />
                 </button>
               </div>
             </div>

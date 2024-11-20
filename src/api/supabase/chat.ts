@@ -14,7 +14,7 @@ export const createChannel = (roomId: string): RealtimeChannel => {
   return supabase.channel(`video-chat-${roomId}`);
 };
 
-export const getOrCreateConversationId = async (conversationId: UUID) => {
+export const createConversation = async (conversationId: string) => {
   const supabase = createClient();
   const { data: conversationData } = await supabase
     .from("conversations")
@@ -26,7 +26,7 @@ export const getOrCreateConversationId = async (conversationId: UUID) => {
   if (!conversationData) await supabase.from("conversations").insert({ id: conversationId });
 };
 
-export const checkOrAddParticipant = async (conversationId: UUID, participantId: string) => {
+export const checkOrAddParticipant = async (conversationId: string, participantId: string) => {
   const supabase = createClient();
   const { data: existingParticipant } = await supabase
     .from("participants")

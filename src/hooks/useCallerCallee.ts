@@ -1,14 +1,8 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { RealtimePresenceState } from "@supabase/supabase-js";
 import { useRef, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-// interface PresenceState {
-//   presence_ref: string;
-//   joinedAt: number;
-// }
 
 export const useCallerCallee = (roomId: string) => {
   const supabase = createClient();

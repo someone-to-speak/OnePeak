@@ -1,21 +1,92 @@
 "use client";
 
+import { checkOrAddParticipant, createConversation, insertMessage } from "@/api/supabase/chat";
+import { uploadRecording } from "@/api/supabase/record";
 import { SignalData } from "@/types/chatType/chatType";
 import { getDeviceMediaConstraints } from "@/utils/media";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useUser } from "./useUser";
+import { useRouter } from "next/navigation";
 
 export const useWebRTC = (roomId: string, role: string) => {
+  const { userInfo } = useUser();
+  const router = useRouter();
+
   const supabase = createClient();
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const localStream = useRef<MediaStream | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
 
-  const [isMicOn, setIsMicOn] = useState(true);
+  const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isCameraOn, setIsCameraOn] = useState<boolean>(true);
+
+  const cleanupWebRTC = useCallback(() => {
+    console.log("webrtc-cleanup");
+    // WebRTC PeerConnection 종료
+    if (peerConnection.current) {
+      peerConnection.current.close();
+      peerConnection.current = null;
+    }
+
+    // 로컬 미디어 스트림 정리
+    if (localStream.current) {
+      const tracks = localStream.current.getTracks();
+      tracks.forEach((track) => track.stop()); // 모든 트랙 종료
+      localStream.current = null;
+    }
+
+    // Supabase 채널 제거
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+  }, [supabase]);
+
+  // 녹음 종료
+  const stopRecording = useCallback(() => {
+    return new Promise<Blob | null>((resolve) => {
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(recordedChunks, { type: "audio/webm" });
+          resolve(audioBlob);
+        };
+      } else {
+        resolve(null);
+      }
+    });
+  }, [mediaRecorder, recordedChunks]);
+
+  // 녹음파일 저장
+  const saveRecording = useCallback(async () => {
+    const localAudioBlob = await stopRecording();
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const fileName = `${roomId}_${timestamp}.webm`;
+
+    const url = await uploadRecording(localAudioBlob as Blob, fileName as string);
+
+    await insertMessage(roomId, url as string, "audio");
+    await checkOrAddParticipant(roomId, userInfo?.id as string);
+  }, [roomId, stopRecording, userInfo?.id]);
+
+  // 화상 통화 종료 시그널 함수
+  const handleCloseMatchingSignal = useCallback(async () => {
+    await saveRecording();
+    router.replace("/lesson");
+  }, [saveRecording, router]);
+
+  // 화상 통화 종료
+  const close = async () => {
+    await createConversation(roomId as string);
+    await saveRecording();
+  };
 
   useEffect(() => {
     console.log("channelRef.current: ", channelRef.current);
@@ -24,12 +95,14 @@ export const useWebRTC = (roomId: string, role: string) => {
     console.log("role: ", role);
 
     const channel = supabase.channel(`video-chat-${roomId}`);
+    let offerTimeoutId: NodeJS.Timeout | null = null;
 
     const setupLessonChannel = async () => {
       channel
         .on("broadcast", { event: "ice-candidate" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "offer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "answer" }, async (payload) => handleSignalData(payload as SignalData))
+        .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal())
         .subscribe(async (status) => {
           console.log("Subscription status:", status);
           if (status === "SUBSCRIBED") {
@@ -66,7 +139,7 @@ export const useWebRTC = (roomId: string, role: string) => {
         await setupLocalStream();
 
         if (role === "Caller")
-          setTimeout(async () => {
+          offerTimeoutId = setTimeout(async () => {
             createOffer();
           }, 1500);
       } catch (error) {
@@ -89,6 +162,16 @@ export const useWebRTC = (roomId: string, role: string) => {
       localStream.current.getTracks().forEach((track) => {
         if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
       });
+
+      const recorder = new MediaRecorder(localStream.current, { mimeType: "audio/webm" });
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          setRecordedChunks((prev) => [...prev, event.data]);
+        }
+      };
+      setMediaRecorder(recorder);
+
+      recorder.start();
     };
 
     const createOffer = async () => {
@@ -110,37 +193,13 @@ export const useWebRTC = (roomId: string, role: string) => {
     setupLessonChannel();
 
     return () => {
-      console.log("webrtc-cleanup");
-      // WebRTC PeerConnection 종료
-      if (peerConnection.current) {
-        peerConnection.current.close();
+      if (offerTimeoutId) {
+        clearTimeout(offerTimeoutId);
       }
 
-      // 로컬 미디어 스트림 정리
-      if (localStream.current) {
-        const tracks = localStream.current.getTracks();
-        tracks.forEach((track) => track.stop()); // 모든 트랙 종료
-      }
-
-      supabase.removeChannel(channel);
+      cleanupWebRTC();
     };
-  }, [supabase, role, roomId]);
-
-  // const createOffer = useCallback(async () => {
-  //   if (!peerConnection.current) return;
-  //   console.log("createOffer");
-  //   try {
-  //     const offer = await peerConnection.current.createOffer();
-  //     await peerConnection.current.setLocalDescription(offer);
-  //     await channelRef.current?.send({
-  //       type: "broadcast",
-  //       event: "offer",
-  //       sdp: offer
-  //     });
-  //   } catch (error) {
-  //     console.error("Error creating offer:", error);
-  //   }
-  // }, []);
+  }, [cleanupWebRTC, handleCloseMatchingSignal, supabase, role, roomId]);
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
@@ -189,12 +248,13 @@ export const useWebRTC = (roomId: string, role: string) => {
   }, []);
 
   return {
+    channelRef,
     localVideoRef,
     remoteVideoRef,
-    // createOffer,
     isCameraOn,
     toggleCamera,
     isMicOn,
-    toggleMicrophone
+    toggleMicrophone,
+    close
   };
 };
