@@ -13,7 +13,7 @@ import React from "react";
 import { blockDetail } from "@/type";
 
 const BlockDetail = ({ params }: Props) => {
-  const { data }: { data: blockDetail[] } = useQuery({
+  const { data }: { data: blockDetail[] | undefined } = useQuery({
     queryKey: ["blockDetail", params.blockedUserId],
     queryFn: () => {
       if (!params.blockedUserId) {

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tables } from "../../../../../../database.types";
 import { getTargetFaqData, insertComment } from "@/api/supabase/admin";
 import { useState } from "react";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export type Props = {
   params: {
@@ -15,7 +16,7 @@ const FaqDetailPage = ({ params }: Props) => {
   const queryClient = useQueryClient();
   const [answer, setAnswer] = useState<string>("");
 
-  const { data }: { data: faqDetail } = useQuery({
+  const { data }: { data: faqDetail | undefined } = useQuery({
     queryKey: ["faqDetail", params.faqId],
     queryFn: () => {
       if (!params.faqId) {
@@ -26,7 +27,7 @@ const FaqDetailPage = ({ params }: Props) => {
   });
   console.log(data);
 
-  const { mutate } = useMutation({
+  const { mutate, isPending, isError } = useMutation({
     mutationFn: ({ answer, faqId }: { answer: string; faqId: string }) => insertComment({ answer, faqId }),
     onSuccess: () => {
       alert("답변을 추가하였습니다");
@@ -44,6 +45,18 @@ const FaqDetailPage = ({ params }: Props) => {
     mutate({ answer, faqId: params.faqId });
     setAnswer("");
   };
+
+  if (isPending) {
+    return (
+      <div className="m-auto">
+        <LoadingSpinner />;
+      </div>
+    );
+  }
+  if (isError) {
+    return <div> 문의 상세 정보를 불러오는데 실패하였습니다</div>;
+  }
+
   return (
     <div>
       <p>문의자ID: {data.user_id}</p>

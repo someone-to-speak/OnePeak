@@ -1,4 +1,4 @@
-import { blockDetail, BlockedUserInfo } from "@/type";
+import { BlockedUserInfo } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import { PostgrestError } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
@@ -106,7 +106,7 @@ export const getBlockDetail = async (targetId: string) => {
     return item.target_id === targetId && filteredTargetIds.includes(item.target_id);
   });
 
-  return filteredData as blockDetail[];
+  return filteredData;
 };
 
 export const getBlockTargetUsers = async () => {
