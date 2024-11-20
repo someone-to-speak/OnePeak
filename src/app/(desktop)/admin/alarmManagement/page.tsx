@@ -32,7 +32,9 @@ const AlarmManagementPage = () => {
     <form onSubmit={submitAlarm} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4 text-center">알림 전송</h2>
       <select value={selectedType} onChange={handleChange} className="w-full p-2 mb-4 border rounded">
-        <option value="">알림 종류</option>
+        <option value="" disabled>
+          알림 종류
+        </option>
         <option value="marketingMsg">마케팅 알람</option>
         <option value="noticeMsg">공지 알람</option>
       </select>
