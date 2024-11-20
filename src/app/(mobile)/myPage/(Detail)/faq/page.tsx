@@ -6,11 +6,12 @@ import Button from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { Typography } from "@/components/ui/typography";
 import WithIconHeader from "@/components/ui/WithIconHeader";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import React, { useEffect, useState } from "react";
 
 const FaqPage = () => {
+  const queryClient = useQueryClient();
   const [selectedType, setSelectedType] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +24,25 @@ const FaqPage = () => {
   const { data, isPending, isError } = useQuery({
     queryKey: ["targetUserInfo"],
     queryFn: () => getUserClient()
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: ({
+      userId,
+      userNickname,
+      selectedType,
+      content
+    }: {
+      userId: string;
+      userNickname: string;
+      selectedType: string;
+      content: string;
+    }) => insertFaqData(userId, userNickname, selectedType, content),
+    onSuccess: () => {
+      setIsModalOpen(true);
+
+      queryClient.invalidateQueries({ queryKey: ["faqData"] });
+    }
   });
 
   useEffect(() => {
@@ -39,14 +59,10 @@ const FaqPage = () => {
       return alert("사유를 작성해주세요");
     }
 
-    const userId = data?.id;
-    const userNickname = data?.nickname;
-    const isSuccess = await insertFaqData(userId!, userNickname!, selectedType, content);
-    if (isSuccess) {
-      setIsModalOpen(true);
-    } else {
-      alert("문의하는데 실패하였습니다. 다시 시도해주세요");
-    }
+    const userId = data?.id as string;
+    const userNickname = data?.nickname as string;
+
+    mutate({ userId, userNickname, selectedType, content });
     setSelectedType("");
     setContent("");
   };

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { insertLanguageInfo } from "@/api/supabase/admin";
 import CountrySelect from "./CountrySelect";
 import { useCountries } from "use-react-countries";
 import Button from "./ui/button";
+import { insertLanguageInfo } from "@/api/supabase/admin";
 
 export function CountriesSelect() {
   const { countries } = useCountries();
@@ -49,7 +49,7 @@ export function CountriesSelect() {
 
   return (
     <div className="w-full flex flex-row gap-[30px] justify-between items-center bg-white my-[20px] px-[16px]">
-      <CountrySelect selectedCountry={selectedCountry} onCountryChange={handleSelectChange} />
+      <CountrySelect selectedCountryLanguages={selectedCountry} onCountryChange={handleSelectChange} />
       <Button onClick={handleSubmit} text="선택된 국가 저장" />
     </div>
   );
