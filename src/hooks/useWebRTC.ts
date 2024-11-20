@@ -163,14 +163,17 @@ export const useWebRTC = (roomId: string, role: string) => {
         if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
       });
 
-      mediaRecorder.current = new MediaRecorder(localStream.current, { mimeType: "audio/webm" });
-      mediaRecorder.current.ondataavailable = (event) => {
+      const audioOnlyStream = new MediaStream(localStream.current.getAudioTracks());
+      const recorder = new MediaRecorder(audioOnlyStream);
+      mediaRecorder.current = recorder;
+
+      recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           setRecordedChunks((prev) => [...prev, event.data]);
         }
       };
 
-      mediaRecorder.current.start();
+      recorder.start();
     };
 
     const createOffer = async () => {
