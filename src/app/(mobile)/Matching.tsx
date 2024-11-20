@@ -14,7 +14,6 @@ const Matching = () => {
   useEffect(() => {
     if (isMatching) {
       setupMatchingChannel();
-      console.log("매칭중");
     } else {
       cleanUp();
     }

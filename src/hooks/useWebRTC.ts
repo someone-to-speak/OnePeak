@@ -27,7 +27,6 @@ export const useWebRTC = (roomId: string, role: string) => {
   const [isCameraOn, setIsCameraOn] = useState<boolean>(true);
 
   const cleanupWebRTC = useCallback(() => {
-    console.log("webrtc-cleanup");
     // WebRTC PeerConnection 종료
     if (peerConnection.current) {
       peerConnection.current.close();
@@ -54,7 +53,6 @@ export const useWebRTC = (roomId: string, role: string) => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         mediaRecorder.current.onstop = () => {
-          console.log("recordedChunks", recordedChunks);
           const audioBlob = new Blob(recordedChunks.current, { type: "audio/webm" });
           resolve(audioBlob);
         };
@@ -67,7 +65,7 @@ export const useWebRTC = (roomId: string, role: string) => {
   // 녹음파일 저장
   const saveRecording = useCallback(async () => {
     const localAudioBlob = await stopRecording();
-    console.log("localAudioBlob", localAudioBlob);
+
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `${roomId}_${timestamp}.webm`;
 
@@ -91,16 +89,12 @@ export const useWebRTC = (roomId: string, role: string) => {
   }, [roomId, saveRecording, router]);
 
   const handleleaveAloneSignal = useCallback(() => {
-    console.log("handleleaveAloneSignal");
     alert("사용자와의 연결이 끊어졌습니다.");
     router.replace("/lesson");
   }, [router]);
 
   useEffect(() => {
-    console.log("channelRef.current: ", channelRef.current);
     if (channelRef.current || !role) return;
-    console.log("webrtc-useEffect");
-    console.log("role: ", role);
 
     const channel = supabase.channel(`video-chat-${roomId}`);
     let offerTimeoutId: NodeJS.Timeout | null = null;
@@ -113,7 +107,6 @@ export const useWebRTC = (roomId: string, role: string) => {
         .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal())
         .on("broadcast", { event: "leaveAlone" }, () => handleleaveAloneSignal())
         .subscribe(async (status) => {
-          console.log("Subscription status:", status);
           if (status === "SUBSCRIBED") {
             await initializePeerConnection();
           }
@@ -124,7 +117,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
     const initializePeerConnection = async () => {
       if (peerConnection.current) return;
-      console.log("initializePeerConnection");
+
       try {
         const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
         peerConnection.current = new RTCPeerConnection(config);
@@ -173,24 +166,22 @@ export const useWebRTC = (roomId: string, role: string) => {
       });
 
       const audioOnlyStream = new MediaStream(localStream.current.getAudioTracks());
-      console.log("Audio Tracks:", audioOnlyStream.getAudioTracks());
+
       const recorder = new MediaRecorder(audioOnlyStream);
       mediaRecorder.current = recorder;
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          console.log("event: ", event);
           recordedChunks.current.push(event.data);
         }
       };
 
       recorder.start();
-      console.log("Recorder started:", recorder.state);
     };
 
     const createOffer = async () => {
       if (!peerConnection.current) return;
-      console.log("createOffer");
+
       try {
         const offer = await peerConnection.current.createOffer();
         await peerConnection.current.setLocalDescription(offer);
@@ -217,7 +208,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
-    console.log("payload", payload);
+
     const { event, sdp, candidate } = payload;
 
     try {
