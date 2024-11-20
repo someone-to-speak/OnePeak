@@ -134,7 +134,7 @@ export const getBlockTargetUsers = async () => {
 
   // 필터링 및 데이터 매핑
   const filteredData = targetIdsCount
-    ?.filter(({ count }) => count >= 2)
+    ?.filter(({ count }) => count >= 3)
     .map(({ id, count }) => {
       const item = data.find((d) => d.target_id === id);
       if (!item) return null;
@@ -338,5 +338,6 @@ export const getTargetFaqData = async (targetFaqId: string) => {
 // faq 테이블에 comment 삽입하기
 export const insertComment = async ({ answer, faqId }: { answer: string; faqId: string }) => {
   const { error } = await browserClient.from("faq").update({ comment: answer }).eq("id", faqId);
+
   if (error) errorFn(error, " 답변을 추가하는데 실패하였습니다");
 };
