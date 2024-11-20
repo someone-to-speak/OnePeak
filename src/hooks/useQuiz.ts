@@ -28,15 +28,11 @@ export const useQuiz = ({ userId, language, type }: QuizProps) => {
         throw new Error(data.error.message);
       }
 
-      // const shuffled = data.questions.reduce((acc: { [key: number]: string[] }, question: QuestionType) => {
-      //   acc[question.id] = shuffleAnswers([question.answer, question.wrong_answer]);
-      //   return acc;
-      // }, {});
-
       const shuffled = data.questions.reduce((acc: { [key: number]: string[] }, question: QuestionType) => {
         const wrongAnswers = Array.isArray(question.wrong_answer)
           ? question.wrong_answer
-          : JSON.parse(question.wrong_answer); // 문자열을 배열로 변환
+          : JSON.parse(question.wrong_answer);
+        // wrong answer로 파싱되는 ["오답1","오답2] 인 문자열을 배열로 변환
         const allAnswers = [question.answer, ...wrongAnswers];
         console.log(allAnswers);
         acc[question.id] = shuffleAnswers(allAnswers);
