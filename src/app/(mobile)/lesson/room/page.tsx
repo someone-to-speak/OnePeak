@@ -136,9 +136,9 @@ const VideoChatPage = () => {
 
 //     init();
 
-//     window.onpopstate = () => {
-//       setTimeout(handleBackButton, 0);
-//     };
+// window.onpopstate = () => {
+//   setTimeout(handleBackButton, 0);
+// };
 
 //     // window.addEventListener("popstate", handleBackButton);
 //     window.addEventListener("beforeunload", handleRefresh);
@@ -264,18 +264,24 @@ const VideoChat = () => {
     await close();
   };
 
-  useEffect(() => {
-    window.addEventListener("popstate", () => {
-      channelRef.current?.send({
-        type: "broadcast",
-        event: "leaveAlone"
-      });
+  const handleBackButton = useCallback(() => {
+    channelRef.current?.send({
+      type: "broadcast",
+      event: "leaveAlone"
     });
+  }, [channelRef]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setTimeout(handleBackButton, 0);
+    };
+
+    window.onpopstate = handlePopState;
 
     return () => {
-      window.removeEventListener("popstate", () => {});
+      window.onpopstate = null; // 클린업 시 핸들러 제거
     };
-  }, [channelRef]);
+  }, [handleBackButton]);
 
   return (
     <>
