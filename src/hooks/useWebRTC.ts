@@ -83,10 +83,10 @@ export const useWebRTC = (roomId: string, role: string) => {
   }, [saveRecording, router]);
 
   // 화상 통화 종료
-  const close = async () => {
+  const close = useCallback(async () => {
     await createConversation(roomId as string);
     await saveRecording();
-  };
+  }, [roomId, saveRecording]);
 
   useEffect(() => {
     console.log("channelRef.current: ", channelRef.current);

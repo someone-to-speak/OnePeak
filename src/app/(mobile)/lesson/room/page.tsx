@@ -256,7 +256,7 @@ const VideoChat = () => {
     useWebRTC(roomId, role as string);
 
   const handleClickedCloseButton = async () => {
-    channelRef.current?.send({
+    await channelRef.current?.send({
       type: "broadcast",
       event: "closeMatching"
     });
