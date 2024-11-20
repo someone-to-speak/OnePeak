@@ -111,7 +111,7 @@ export const useWebRTC = (roomId: string, role: string) => {
         .on("broadcast", { event: "offer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "answer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal())
-        .on("broadcast", { event: "leaveAlone" }, handleleaveAloneSignal)
+        .on("broadcast", { event: "leaveAlone" }, () => handleleaveAloneSignal())
         .subscribe(async (status) => {
           console.log("Subscription status:", status);
           if (status === "SUBSCRIBED") {

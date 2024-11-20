@@ -264,15 +264,15 @@ const VideoChat = () => {
     await close();
   };
 
-  const handleBackButton = useCallback(() => {
-    console.log("handleBackButton");
-    channelRef.current?.send({
-      type: "broadcast",
-      event: "leaveAlone"
-    });
-  }, [channelRef]);
-
   useEffect(() => {
+    const handleBackButton = () => {
+      console.log("handleBackButton");
+      channelRef.current?.send({
+        type: "broadcast",
+        event: "leaveAlone"
+      });
+    };
+
     const handlePopState = () => {
       setTimeout(handleBackButton, 0);
     };
@@ -282,7 +282,7 @@ const VideoChat = () => {
     return () => {
       window.onpopstate = null; // 클린업 시 핸들러 제거
     };
-  }, [handleBackButton]);
+  }, [channelRef]);
 
   return (
     <>
