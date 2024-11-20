@@ -91,10 +91,9 @@ export const useWebRTC = (roomId: string, role: string) => {
   }, [roomId, saveRecording, router]);
 
   const handleleaveAloneSignal = useCallback(async () => {
-    cleanupWebRTC();
     alert("사용자와의 연결이 끊어졌습니다.");
     router.replace("/lesson");
-  }, [cleanupWebRTC, router]);
+  }, [router]);
 
   useEffect(() => {
     console.log("channelRef.current: ", channelRef.current);
