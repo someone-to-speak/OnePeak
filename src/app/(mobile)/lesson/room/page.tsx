@@ -259,11 +259,11 @@ const VideoChat = () => {
   useEffect(() => {
     if (!role) return;
     console.log("role: ", role);
-    if (role === "Caller")
-      setTimeout(async () => {
-        await createOffer();
-      }, 1500);
-  }, [role]);
+    if (role === "Caller") createOffer();
+    // setTimeout(async () => {
+    //   createOffer();
+    // }, 1500);
+  }, [createOffer, role]);
 
   return (
     <>
