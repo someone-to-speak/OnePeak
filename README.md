@@ -1,9 +1,7 @@
 
-<h1>외국어 배우고 싶은 사람 다 나한테 말해봐! ONE PEAK </h1>
+<h1> 🎉 외국어 배우고 싶은 사람 다 나한테 말해봐! ONE PEAK </h1>
 
 <br>
-
-
 
 
 ![인트로](https://github.com/user-attachments/assets/d6091c81-ee7f-4fd6-91c8-114c585f3cd4)
@@ -594,6 +592,378 @@
 <br><br>
 
 
+
+# 🛠 Trouble Shooting
+
+<details>
+
+<summary> Trouble1️⃣ 웹 사이즈의 페이지에 모바일 사이즈의 레이아웃이 적용되는 문제 </summary>
+
+### 🚨 문제 발생
+    
+관리자 페이지에서 불필요한 하단 탭이 노출되는 현상 발생
+    
+### 💡 해결 방법
+    
+1. 모바일 버전과 웹 버전 폴더를 분리한 후
+2. app 폴더 안에 root layout 파일은 그대로 두고, 분리한 폴더 안에 각각 layout 파일을 넣어 CSS를 다르게 적용시켰습니다.
+    
+> root layout은 모든 페이지에서 공통적으로 적용되는 파일이기 때문에 app 폴더 안에 없으면 Next.js가 파일을 추적하지 못합니다. 따라서 기존의 layout 파일은 그대로 유지하였습니다.
+
+![image](https://github.com/user-attachments/assets/2bafbfd5-c9c0-4ddd-93b6-c157d0512a91)
+
+</details>
+
+
+<details>
+
+<summary> Trouble2️⃣ 로컬 날짜와 supabase 날짜 형식이 일치하지 않던 문제 </summary>
+
+### 🚨 문제 발생
+    
+캘린더에서 오늘 날짜 클릭 시 어제 날짜의 데이터가 보이는 오류 발생
+
+### 🔍 원인 추론
+
+시간대를 변환하다 생긴 오류로 추정
+
+```tsx
+isSameDay: (date1: Date | string, date2: Date | string) => {
+    // 모든 날짜를 YYYY-MM-DD 형식으로 통일
+    const getDateOnly = (date: Date | string) => {
+      if (typeof date === "string") {
+        // UTC ISO 문자열인 경우
+        return date.split("T")[0];
+      }
+      // Date 객체인 경우
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    const d1Str = getDateOnly(date1);
+    const d2Str = getDateOnly(date2);
+
+    console.log("Comparing dates:", {
+      d1: d1Str,
+      d2: d2Str,
+      isEqual: d1Str === d2Str
+    });
+
+    return d1Str === d2Str;
+  },
+```
+
+1. `getFullYear()`, `getMonth()`, `getDate()`는 로컬 시간대(시스템 시간대) 기준으로 값을 반환
+
+```tsx
+getMonthAndDay: (date: Date | string) => {
+    const [year, month, day] = dateUtils.formatDate(date).split("-");
+    return {
+        year: parseInt(year, 10),
+        month: parseInt(month, 10),
+        day: parseInt(day, 10)
+    };
+}
+```
+
+1. 서버와 클라이언트의 시간대가 다르면 다른 날짜가 반환될 수 있는 가능성이 있다는 사실을 파악
+
+### 💡 해결 방법
+
+1. KST(한국 시간대)로 명시적으로 변환시켰습니다.
+2. Supabase의 날짜 문자열을 그대로 사용하면서 로컬의 시간대도 같은 형식으로 통일시켰습니다.
+3. 마지막으로 원본 날짜 부분만 직접 문자열로 추출하여 사용하였습니다.
+</details>
+
+<details>
+
+<summary> Trouble3️⃣ service-worker 명칭 이슈 </summary>
+    
+### 🚨 문제 발생
+    
+PWA가 모바일 기기에서 서비스워커를 읽지 못하는 상황 발생
+    
+```tsx
+const registeration = await navigator.serviceWorker.ready;
+```
+    
+### 🔍 원인 추론
+    
+명칭을 잘못 지정한 것 같다고 판단
+    
+### 💡 해결 방법
+    
+ready가 아닌 명시적인 이름으로 지정하여 해결하였습니다.
+
+```tsx
+const registeration = await navigator.serviceWorker("/service-worker.js");
+```
+</details>
+
+
+<details>
+
+<summary> Trouble4️⃣ 모바일 디바이스에서만 작동하지 않는 STT </summary>
+
+### 🚨 문제 발생
+
+STT(Speech to Text) 기능을 활용하기 위하여 `MediaRecorder`를 이용하였는데, PC에서는 작동하지만 **모바일** **디바이스에서만 작동하지 않는 문제**가 발생
+
+### 🔍 원인 추론
+
+iOS에서 `MediaRecorder` 를 지원하지 않음
+
+- 확장자 변경 전 마이크에도 접근하지 못 하는 상황
+![image (1)](https://github.com/user-attachments/assets/953f5e64-63c1-4cb4-b9ae-ac9d6c2facf1)
+
+
+
+- 확장자를 mp4로 변경하여 마이크 접근은 가능해졌지만 파일 변환 중 오류 생김
+![image (2)](https://github.com/user-attachments/assets/e6acadce-0b40-4d71-a4c9-91dff0f0b1f4)
+
+
+### 해결 방법
+
+기존에 사용하던 `mediaRecorder` API 대신에 크로스 브라우징 호환성이 뛰어난 `RecordRTC` 라이브러리를 사용하였습니다. 
+
+<aside>
+💡
+
+**크로스 브라우징(Cross Browsing)**이란?
+
+웹 페이지 또는 웹 애플리케이션이 다양한 브라우저와 버전에서 개발자의 의도대로 올바르게 작동하도록 하는 작업
+
+</aside>
+
+❌ 수정 전: MediaRecorder API 사용
+
+```jsx
+const mediaRecorder = new MediaRecorder(stream, { mimeType });
+```
+
+✅ 수정 후: RecordRTC 사용
+
+```jsx
+import type RecordRTC from "recordrtc";
+const { default: RecordRTC, StereoAudioRecorder } = await import("recordrtc");
+const recorder = new RecordRTC(stream, {
+  type: "audio",
+  mimeType: "audio/wav",
+  recorderType: StereoAudioRecorder,
+  numberOfAudioChannels: 1,
+  desiredSampRate: 16000,
+  timeSlice: 1000
+});
+```
+
+### 결과
+![image (3)](https://github.com/user-attachments/assets/bb9a0317-8a3f-48e4-94c4-a252fedf06a2){: style="width:300px;" }
+
+</details>
+
+
+
+<details>
+
+<summary> Trouble5️⃣ 새로고침을 해야만 나타나는 이슈 </summary>
+    
+### 🚨 문제 발생
+    
+챌린지 문제를 풀고 결과페이지에서 오답노트 페이지로 이동했을 때, 틀린 문제가 바로 오답노트 리스트에 나타나지 않고 새로고침을 해야만 나타남
+    사용자의 틀린 문제와 답변 데이터를 불러올 때 useQuery를 사용했는데, 프로젝트에서 TanStack Query의 `QueryClient`를 생성할 때, 전역 설정으로 `defaultOptions`를 지정했을 가능성이 있으며, 이 시간이 0이 아닐 수 있다. 정말로 60초로 설정되어 있었다.
+
+```jsx
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        // SSR 환경에서는, 기본 staleTime을 0 이상으로 설정하여
+        // 클라이언트에서 바로 다시 데이터를 가져오는 것을 방지하는 것이 일반적입니다.
+        staleTime: 60 * 1000
+      }
+    }
+  });
+}
+
+function getQueryClient() {
+  if (isServer) {
+    return makeQueryClient();
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+}
+
+export default function Providers({ children }: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+### 💡 해결 방법
+
+해결 방법 : 이 경우, `useQuery`에서 명시적으로 `staleTime: 0`을 설정하지 않으면 기본적으로 전역 설정이 적용됩니다. 따라서, useQuery를 사용할 때 `staleTime` 옵션을 0으로 명시적으로 설정했습니다.
+
+```jsx
+export const useUserWrongAnswers = (userId: string) => {
+  const fetchUserWrongAnswers = async (): Promise<UserAnswerType[]> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("user_answer")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("is_corrected", false);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ["userAnswers", userId],
+    queryFn: fetchUserWrongAnswers,
+    staleTime: 0
+  });
+};
+```
+
+### 결과
+
+결과는 새로고침 하지 않아도 문제를 풀고 결과페이지에서 오답노트페이지로 이동하자마자 바로 데이터를 불러올 수 있었습니다.
+
+</details>
+
+
+
+<details>
+
+<summary> Trouble6️⃣ 테이블에 삽입되는 파싱값 이슈 </summary>
+    
+### 🚨 문제 발생
+    
+모든 답이 1번인 이슈 해결 후 오답이 1개가 아닌 2개로 변경해야하는 이슈. 
+문자열로 오답을 받아온 데이터를 아래 형식으로 “questions” 테이블에 파싱됨
+
+```jsx
+{
+  1: ["정답1", {"오답1","오답2"}],
+  2: [{"오답2","오답3"}, "정답2"],
+  3: ["정답3", {"오답4","오답5"}]
+}
+```
+
+### 💡 해결 방법
+
+1. **`shuffleAnswers` 호출**: `shuffleAnswers(allAnswers)`를 호출하여 정답과 오답 배열을 무작위로 섞는다.
+2. **`acc`에 추가**: `question.id`를 키로 사용하여 `acc` 객체에 spread operator로 섞인 답변 배열을 저장.
+
+### 결과
+
+정답이 1개 오답이 2개로 변환 완료
+![스크린샷 2024-11-21 오전 12 14 03](https://github.com/user-attachments/assets/5d871546-348c-4213-b95d-8819e749f211)
+
+
+</details>
+
+<details>
+
+<summary> Trouble7️⃣ 중복 파일이 하나만 미리보기가 됨 </summary>
+
+### 🚨 문제 발생
+
+input type:file태그에 onChange에 useState를 활용하여 입력된 파일을 저장한 후 이를 미리보기 사진으로 사용.
+각기 다른 파일을 넣을때는 문제가 없지만, 같은 파일을 두번 넣을 경우 사진이 두개 보여지는 것이 아니라 하나만 미리보기가 됨.
+
+### 🔍 원인 추론
+
+onChange를 통해서 함수가 돌아가는 환경에서, 같은 파일을 연속으로 선택하면 변화를 인지못하고 onChange가 작동 안함
+
+```jsx
+  // 파일 선택 시 실행될 함수
+  const handleImgFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 선택된 파일 1개를 가진 배열
+    const selectedImg = e.target.files?.[0];
+    // 선택한 모든 파일을 담은 배열
+    const imgUrlLists: string[] = [...previewImgs];
+
+    if (selectedImg) {
+      setFiles((prev) => [...prev, selectedImg]);
+      const currentImgUrl = URL.createObjectURL(selectedImg!);
+      imgUrlLists.push(currentImgUrl);
+    }
+
+    setPreviewImgs(imgUrlLists);
+  };
+
+return
+        <input
+          type="file"
+          onChange={handleImgFile}
+          multiple
+          className="hidden"
+          ref={fileInputRef}
+        />{" "}
+
+```
+
+### 💡 해결 방법
+
+ 하여 onClick을 사용하여, 클릭할때마다 useState로 입력돼있는 값을 빈문자열로 초기화 시켜 같은 파일이 들어와도 빈문자열에서 파일이 생기는 것으로 되는거니까 변화라고 인식하게 함
+
+```jsx
+// 파일 선택 시 실행될 함수
+  const handleImgFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 선택된 파일 1개를 가진 배열
+    const selectedImg = e.target.files?.[0];
+    // 선택한 모든 파일을 담은 배열
+    const imgUrlLists: string[] = [...previewImgs];
+
+    if (selectedImg) {
+      setFiles((prev) => [...prev, selectedImg]);
+      const currentImgUrl = URL.createObjectURL(selectedImg!);
+      imgUrlLists.push(currentImgUrl);
+    }
+     
+    setPreviewImgs(imgUrlLists);
+  };
+
+const resetInputValue = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.value = "";
+  };
+
+return
+        <input
+          type="file"
+          onChange={handleImgFile}
+          onClick={resetInputValue}
+          multiple
+          className="hidden"
+          ref={fileInputRef}
+        />{" "}
+```
+
+### 결과
+
+동일한 파일도 연속으로 첨부 가능해짐
+
+<img width="458" alt="image (4)" src="https://github.com/user-attachments/assets/c449f40e-e435-48b5-ad3c-8e1e91ed1d5a">
+
+</details>
+
+
+
+<br><br>
+
+  
 # 🧪 Technologies & Tools
 
 ## 📋 Languages
