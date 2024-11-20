@@ -63,7 +63,10 @@ export const useWebRTC = (roomId: string, role: string) => {
 
         await setupLocalStream();
 
-        if (role === "Caller") await createOffer();
+        if (role === "Caller")
+          setTimeout(async () => {
+            createOffer();
+          });
       } catch (error) {
         console.error("Failed to initialize WebRTC:", error);
       }
