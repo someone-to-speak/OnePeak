@@ -12,19 +12,19 @@ import Image from "next/image";
 import React from "react";
 
 const BlockDetail = ({ params }: Props) => {
-  const { data = [] } = useQuery({
+  const { data } = useQuery({
     queryKey: ["blockDetail", params.blockedUserId],
     queryFn: () => {
-      if (!params.blockedUserId) {
-        throw new Error("id가 필요합니다");
-      }
       return getBlockDetail(params.blockedUserId);
-    }
+    },
+    enabled: !!params.blockedUserId
   });
+
+  console.log("data", data);
 
   return (
     <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {data.map((detail) => (
+      {data?.map((detail) => (
         <div
           key={detail.id}
           className="bg-white shadow-lg rounded-xl p-6 flex flex-col space-y-4 hover:shadow-2xl transition-shadow duration-300"
@@ -38,8 +38,8 @@ const BlockDetail = ({ params }: Props) => {
                 <Image
                   src={imgUrl}
                   alt="신고한 이유 사진파일"
-                  width={300} // 적절한 width와 height 값을 설정
-                  height={200} // 비율을 유지하려면 둘 다 설정
+                  width={300}
+                  height={200}
                   className="w-full h-full object-cover"
                 />
               </div>
