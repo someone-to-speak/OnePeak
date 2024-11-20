@@ -86,7 +86,8 @@ export const useWebRTC = (roomId: string, role: string) => {
   const close = useCallback(async () => {
     await createConversation(roomId as string);
     await saveRecording();
-  }, [roomId, saveRecording]);
+    router.replace("/lesson");
+  }, [roomId, saveRecording, router]);
 
   useEffect(() => {
     console.log("channelRef.current: ", channelRef.current);
@@ -169,6 +170,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
+          console.log("event: ", event);
           setRecordedChunks((prev) => [...prev, event.data]);
         }
       };
