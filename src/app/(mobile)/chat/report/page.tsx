@@ -38,9 +38,11 @@ const ReportPage = ({ params }: Props) => {
       userId: string;
       targetId: string;
       imageUrls: string[];
-    }) => insertReportInfo({ content, userId, targetId, imageUrls }),
+    }) => insertReportInfo({ content, targetId, userId, imageUrls }),
     onSuccess: () => {
       alert("신고가 접수되었습니다");
+      console.log("targetId", targetId);
+      console.log("userId", userId);
       queryClient.invalidateQueries({ queryKey: ["blockDetail", targetId] });
     }
   });
