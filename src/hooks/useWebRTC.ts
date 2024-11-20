@@ -31,6 +31,7 @@ export const useWebRTC = (roomId: string, role: string) => {
         .on("broadcast", { event: "offer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "answer" }, async (payload) => handleSignalData(payload as SignalData))
         .subscribe(async (status) => {
+          console.log("Subscription status:", status);
           if (status === "SUBSCRIBED") {
             await initializePeerConnection();
           }
@@ -64,7 +65,10 @@ export const useWebRTC = (roomId: string, role: string) => {
 
         await setupLocalStream();
 
-        if (role === "Caller") await createOffer();
+        if (role === "Caller")
+          setTimeout(async () => {
+            createOffer();
+          }, 1500);
       } catch (error) {
         console.error("Failed to initialize WebRTC:", error);
       }
