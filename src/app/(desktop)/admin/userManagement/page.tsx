@@ -14,17 +14,15 @@ type UserInfo = Tables<"user_info">;
 
 const UsersInfo = () => {
   const queryClient = useQueryClient();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [type, setType] = useState<string>("");
+  const [theNickname, setTheNickname] = useState<string>("");
+
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       targetNickname: ""
     }
   });
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
-
-  const [type, setType] = useState<string>("");
-  const [theNickname, setTheNickname] = useState<string>("");
 
   // 유저들 정보 가져오기
   const {
@@ -37,6 +35,7 @@ const UsersInfo = () => {
   });
 
   // 페이지네이션 계산
+  const usersPerPage = 10;
   const totalPages = usersInfo ? Math.max(1, Math.ceil(usersInfo.length / usersPerPage)) : 1;
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -149,7 +148,7 @@ const UsersInfo = () => {
         handlePageChange={handlePageChange}
         currentPage={currentPage}
         totalPages={totalPages}
-        usersInfo={usersInfo}
+        data={usersInfo}
       />
     </div>
   );

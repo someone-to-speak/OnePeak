@@ -12,10 +12,12 @@ export type formatedTarget = {
 
 export type blockDetail = {
   created_at: Date;
+  img_urls: string[];
   id: number;
   reason: string;
+  user_id: string;
   target_id: string;
-  user_info: string;
+  user_info: { nickname: string };
   nickname: string;
   user_info_id: string;
 };
