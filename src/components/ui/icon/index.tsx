@@ -1,11 +1,13 @@
 import React from "react";
 import {
   ArrowUp,
-  Camera,
+  CameraOn,
+  CameraOff,
   CareLeft,
   ChatsTeardropIcon,
   DotThree,
-  Microphone,
+  MicrophoneOn,
+  MicrophoneOff,
   Pause,
   PencilSimpleIcon,
   Play,
@@ -26,8 +28,10 @@ export type IconType =
   | "pause"
   | "arrowup"
   | "power"
-  | "microphone"
-  | "camera"
+  | "microphoneOn"
+  | "microphoneOff"
+  | "cameraOn"
+  | "cameraOff"
   | "prohibit";
 
 interface IconProps {
@@ -49,8 +53,10 @@ const iconComponents = {
   pause: Pause,
   arrowup: ArrowUp,
   power: Power,
-  microphone: Microphone,
-  camera: Camera,
+  microphoneOn: MicrophoneOn,
+  microphoneOff: MicrophoneOff,
+  cameraOn: CameraOn,
+  cameraOff: CameraOff,
   prohibit: Prohibit
 };
 

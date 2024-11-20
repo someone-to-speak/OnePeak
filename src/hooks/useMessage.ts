@@ -55,7 +55,7 @@ export const useMessage = (conversationId: string) => {
       // Rollback on error
       queryClient.setQueryData(["messages", conversationId], context?.previousMessages);
     },
-    onSettled: () => {
+    onSuccess: () => {
       // 데이터가 성공적으로 변경된 후 재-fetch
       queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
     }
@@ -90,10 +90,10 @@ export const useMessage = (conversationId: string) => {
 
         const newMessage = payload as MessageWithUserInfo;
 
-        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => [
-          ...(old || []),
-          newMessage
-        ]);
+        queryClient.setQueryData<MessageWithUserInfo[]>(["messages", conversationId], (old) => {
+          const newMessages = [...(old || []), newMessage];
+          return newMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        });
       })
       .subscribe();
 
