@@ -1,20 +1,20 @@
 "use client";
 
-import RandomKoreanWordQuiz from "@/components/challenge/RandomKoreanWordQuiz";
+import RandomKoreanGrammarQuiz from "@/components/challenge/RandomKoreanGrammarQuiz";
 import WithIconHeader from "@/components/ui/WithIconHeader";
 import { useUser } from "@/hooks/useUser";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { Suspense } from "react";
 
-const KoreanWordQuizPage = () => {
+const KoreanGrammarQuizPage = () => {
   return (
     <Suspense>
-      <KoreanWordQuiz />
+      <KoreanGrammarQuiz />
     </Suspense>
   );
 };
 
-const KoreanWordQuiz = () => {
+const KoreanGrammarQuiz = () => {
   const { userInfo } = useUser();
   const userId = userInfo?.id;
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
@@ -23,10 +23,10 @@ const KoreanWordQuiz = () => {
 
   return (
     <div className="flex flex-col gap-[70px]">
-      {isLargeScreen && <WithIconHeader title="단어 챌린지" />}
-      <RandomKoreanWordQuiz userId={userId} />
+      {isLargeScreen && <WithIconHeader title="문법 챌린지" />}
+      <RandomKoreanGrammarQuiz userId={userId} />
     </div>
   );
 };
 
-export default KoreanWordQuizPage;
+export default KoreanGrammarQuizPage;

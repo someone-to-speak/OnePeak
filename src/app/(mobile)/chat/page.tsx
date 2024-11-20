@@ -35,6 +35,7 @@ const Page = () => {
           {conversationList?.map((conversation) => (
             <UserProfile
               key={conversation.id}
+              targetId={conversation.participants.user_info.id}
               name={conversation.participants.user_info.nickname}
               country={conversation.participants.user_info.my_language.language_img_url}
               profileImage={conversation.participants.user_info.profile_url}

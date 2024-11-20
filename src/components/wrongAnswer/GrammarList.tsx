@@ -1,7 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Image from "next/image";
 import noActiveCheck from "@/assets/noactive-check.svg";
@@ -9,10 +7,9 @@ import activeCheck from "@/assets/active-check.svg";
 import { Typography } from "../ui/typography";
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useGrammarQuestions } from "@/hooks/useGrammarQuestions";
+import { useUpdateIsReviewed } from "@/hooks/useUpdateIsReviewed";
 
 const GrammarList = ({ userId }: { userId: string }) => {
-  const supabase = createClient();
-  const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
 
   // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
@@ -21,23 +18,17 @@ const GrammarList = ({ userId }: { userId: string }) => {
   // 문법문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useGrammarQuestions();
 
-  const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
+  // 틀린 문제를 '완료' 또는 '미완료'로 상태를 변경하는 훅
+  const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
-    }
-  });
+  // 데이터 로딩 중 표시
+  if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
 
-  if (userAnswersLoading || questionsLoading) return <p>로딩중</p>;
+  // 데이터 로드 오류 처리
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
+  // 현재 상태("미완료" 또는 "완료")에 따라 userAnswers 필터링
   const filteredAnswers = userAnswers
     ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
@@ -48,28 +39,29 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5 ">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-1 justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
+        {/* 상태 전환 버튼 (미완료 / 완료) */}
         <button
           className={`${
             isReviewed === "미완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("미완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             미완료
           </Typography>
         </button>
         <button
           className={`${
             isReviewed === "완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             완료
           </Typography>
         </button>
@@ -84,6 +76,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
         <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">
+          {/* 필터링된 오답 데이터를 순회하며 UI를 생성 */}
           {filteredAnswers?.map((question, index) => (
             <div
               key={index}
@@ -91,18 +84,19 @@ const GrammarList = ({ userId }: { userId: string }) => {
                 question!.isReviewed ? "border border-primary-500" : ""
               }`}
             >
+              {/* 상태 변경 버튼 */}
               <button
                 onClick={() =>
-                  updateIsReviewed.mutate({
-                    answerId: question!.answerId,
-                    currentReviewed: question!.isReviewed
+                  toggleIsReviewed({
+                    answerId: question!.answerId, // 답변 ID를 전달
+                    currentReviewed: question!.isReviewed // 현재 상태를 전달
                   })
                 }
                 className="w-full flex flex-row items-center justify-between"
               >
                 <div className="grow px-[20px] md:px-0">
                   <div className="flex flex-col gap-[10px] md:gap-0">
-                    <Typography size={16} weight="bold" className="text-left md:my-[10px]">
+                    <Typography size={16} weight="bold" className="text-left md:my-[10px] md:text-3xl">
                       {question?.content.split("_____").map((part, index) => (
                         <span key={index}>
                           {part}
@@ -113,11 +107,16 @@ const GrammarList = ({ userId }: { userId: string }) => {
                       ))}
                     </Typography>
                     <div className="border border-gray-900" />
-                    <Typography size={14} weight="medium" className="text-left text-gray-300 md:mt-[10px] md:mb-5">
+                    <Typography
+                      size={14}
+                      weight="medium"
+                      className="text-left text-gray-300 md:mt-[10px] md:mb-5 md:text-xl"
+                    >
                       {question?.reason}
                     </Typography>
                   </div>
                 </div>
+                {/* 상태 아이콘 표시 */}
                 <div className="flex-none">
                   <Image
                     src={question!.isReviewed ? activeCheck : noActiveCheck}

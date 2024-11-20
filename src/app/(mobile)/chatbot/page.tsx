@@ -7,12 +7,13 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import ChatInput from "@/components/chatBot/chat/ChatInput";
 import ChatMessageList from "@/components/chatBot/chat/ChatMessageList";
 import WithIconHeader from "@/components/ui/WithIconHeader";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { reviewApi } from "@/services/supabaseChatbot";
 import { AiMessages } from "@/type";
 import { createClient } from "@/utils/supabase/client";
 import ChatModal from "@/components/ChatModal";
 import { Typography } from "@/components/ui/typography";
+import { getPrompt } from "@/api/supabase/admin";
 
 const ChatMessagePage = () => {
   return (
@@ -37,20 +38,34 @@ const ChatMessage = () => {
   const level = Number(searchParams?.get("level"));
   const router = useRouter();
 
-  const [userInput, setUserInput] = useState<string>("");
-  const { messages, sendMessage } = useChatMessages(situation, level);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // prompt 명령 가져오기
+  const { data: prompt } = useQuery({
+    queryKey: ["prompt"],
+    queryFn: () => getPrompt()
+  });
 
-  const handleTranscribedText = async (text: string) => {
+  const [userInput, setUserInput] = useState<string>("");
+  // FIXME: type단언 고치기
+  const { messages, sendMessage } = useChatMessages(situation, level, prompt as string);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isRecording, startRecording, stopRecording } = useAudioRecorder();
+  const queryClient = useQueryClient();
+
+  // 녹음 버튼 처리
+  const handleRecordingClick = async () => {
     try {
-      // 음성으로 변환된 텍스트를 메세지로 처리
-      await sendMessage(text);
+      if (isRecording) {
+        const text = await stopRecording();
+        if (text.trim()) {
+          await sendMessage(text);
+        }
+      } else {
+        await startRecording();
+      }
     } catch (error) {
-      console.log("메세지 전송 실패: ", error);
+      console.log("녹음 실패: ", error);
     }
   };
-
-  const { isRecording, startRecording, stopRecording } = useAudioRecorder(handleTranscribedText);
 
   // 전송 버튼
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +74,6 @@ const ChatMessage = () => {
 
     try {
       sendMessage(userInput);
-      console.log("messages", messages);
       setUserInput("");
     } catch (error) {
       console.log("메세지 전송 실패: ", error);
@@ -74,6 +88,17 @@ const ChatMessage = () => {
       return reviewApi.postLearnMessage(stringMessages, review_id);
     },
     onSuccess: () => {
+      if (user?.id) {
+        // 리뷰 리스트 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["reviewList", user.id]
+        });
+
+        // 유저 정보 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["userInfo"]
+        });
+      }
       router.push("/");
     }
   });
@@ -83,13 +108,22 @@ const ChatMessage = () => {
     if (!user || messages.length === 0) return;
 
     try {
+      const { data: situationData } = await supabase
+        .from("situation")
+        .select("sentence")
+        .eq("situation", situation)
+        .single();
+
+      if (!situationData) throw new Error("Situation not found");
+
       const { data: newReview, error } = await supabase
         .from("review")
         .insert([
           {
             user_id: user.id,
             situation,
-            level
+            level,
+            sentence: situationData.sentence
           }
         ])
         .select("*")
@@ -136,7 +170,7 @@ const ChatMessage = () => {
             confirmButtonStyle="primary"
           />
         </div>
-        <div className="flex-grow overflow-y-auto p-4 mb-16">
+        <div className="flex-grow overflow-y-auto mb-16">
           <ChatMessageList messages={messages} />
         </div>
       </div>
@@ -146,7 +180,7 @@ const ChatMessage = () => {
         isRecording={isRecording}
         onSubmit={handleSubmit}
         onStartRecording={startRecording}
-        onStopRecording={stopRecording}
+        onStopRecording={handleRecordingClick}
         onEndChat={handleEndChat}
       />
     </div>

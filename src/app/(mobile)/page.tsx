@@ -5,7 +5,7 @@ import CustomizedLearn from "@/components/chatBot/aiTutorHome/CustomizedLearn";
 import Reviewing from "@/components/chatBot/aiTutorHome/Reviewing";
 import TodayLearn from "@/components/chatBot/aiTutorHome/TodayLearn";
 import Header from "@/components/ui/header/Header";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ export default function Home() {
     <>
       <div className="relative w-full pb-20">
         {!isLargeScreen && <Header />}
-        <div className="h-10 py-4 bg-#FDFDFD"></div>
+        {isLargeScreen && <div className="h-10 py-4 bg-#FDFDFD"></div>}
         {/* 홈 화면 콘텐츠 */}
         <TodayLearn />
         <CustomizedLearn />

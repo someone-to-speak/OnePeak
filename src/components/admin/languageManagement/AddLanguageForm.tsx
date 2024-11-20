@@ -1,4 +1,4 @@
-import { insertLanguageInfo, uploadLanguageImage } from "@/api/route";
+import { insertLanguageInfo, uploadLanguageImage } from "@/api/supabase/admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -30,8 +30,7 @@ const AddLanguageForm = () => {
 
   const handleUpload = async () => {
     if (!file) {
-      alert("파일을 선택해주세요");
-      return;
+      return alert("파일을 선택해주세요");
     }
 
     // 버켓에 이미지 추가하기
@@ -39,16 +38,6 @@ const AddLanguageForm = () => {
     // 버켓에서 이미지 주소 받아오기
     const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/language-image/${data.path}`;
 
-    // 받아온 이미지 주소를 langauge 테이블에 넣기
-    // try {
-    //   await insertLanguageInfo(imageUrl, language);
-    //   alert("언어와 이미지를 추가하였습니다");
-    //   setPreviewUrl("");
-    //   setLanguage("");
-    // } catch (error) {
-    //   console.error("Error inserting language image:", error);
-    //   alert("이미지 삽입 중 오류가 발생했습니다.");
-    // }
     mutate({ imageUrl, language });
     setPreviewUrl("");
     setLanguage("");

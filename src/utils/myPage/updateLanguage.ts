@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/client";
-import { toast } from "react-toastify";
 
 export const updateMyLanguage = async (userId: string, newLanguage: string) => {
   const supabase = createClient();
@@ -9,7 +8,7 @@ export const updateMyLanguage = async (userId: string, newLanguage: string) => {
     console.log("언어 설정 오류:", error.message);
     throw new Error("언어 설정을 저장하는데 문제가 발생했습니다.");
   }
-  const updatedLanguage = newLanguage === "korean" ? "english" : newLanguage === "english" ? "korean" : newLanguage;
+  const updatedLanguage = newLanguage === "Korean" ? "English" : newLanguage === "English" ? "Korean" : newLanguage;
 
   // Supabase에서 언어 업데이트
   const { error: learnLangError } = await supabase
@@ -21,7 +20,7 @@ export const updateMyLanguage = async (userId: string, newLanguage: string) => {
     throw new Error("언어 설정을 저장하는데 문제가 발생했습니다.");
   }
 
-  return toast.success("언어가 성공적으로 변경되었습니다.");
+  return;
 };
 
 // export const updateLearnLanguage = async (userId: string, newLanguage: string) => {
@@ -34,5 +33,5 @@ export const updateMyLanguage = async (userId: string, newLanguage: string) => {
 //     throw new Error("언어 설정을 저장하는데 문제가 발생했습니다.");
 //   }
 
-//   return toast.success("언어가 성공적으로 변경되었습니다.");
+//   return;
 // };

@@ -6,9 +6,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { usePathname } from "next/navigation";
 import NavbarGnb from "@/components/ui/NavbarGnb";
 import ScreenSizeInitializer from "./ScreenSizeInitializer";
-import { useScreenSizeStore } from "@/shared/screen-store-provider";
 import Footer from "@/components/ui/footer/Footer";
 import HeaderTop from "@/components/ui/header/HeaderTop";
+import { useScreenSizeStore } from "@/shared/StoreProvider";
 
 export default function MobileLayout({
   children
@@ -27,7 +27,10 @@ export default function MobileLayout({
     pathname === "/myPage/editProfile";
 
   const ignoredPaddingWithPath =
-    pathname?.startsWith("/lesson") || pathname?.endsWith("/") || pathname?.startsWith("/chat");
+    pathname?.startsWith("/lesson") ||
+    pathname?.endsWith("/") ||
+    pathname?.startsWith("/chat") ||
+    pathname?.startsWith("/reviewList");
 
   return (
     <div>

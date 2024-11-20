@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack
 import React, { useState } from "react";
 
 import { BlockedUserInfo } from "@/type";
-import { block, getBlockTargetUsers, unblock } from "@/api/route";
+import { block, getBlockTargetUsers, unblock } from "@/api/supabase/admin";
 import PageNationUI from "@/components/admin/PageNationUI";
 import BlcokedUserTable from "@/components/admin/blockManagement/BlcokedUserTable";
 
@@ -17,7 +17,6 @@ const BlockManagementPage = () => {
     queryKey: ["blockTargetUsers"],
     queryFn: () => getBlockTargetUsers()
   });
-  console.log("data", data);
 
   const blockUser = useMutation({
     mutationFn: (target: BlockedUserInfo) => block(target.target_id),
@@ -36,7 +35,7 @@ const BlockManagementPage = () => {
   });
 
   // 페이지네이션 계산
-  const totalPages = data ? Math.ceil(data.length / usersPerPage) : 0;
+  const totalPages = data ? Math.max(1, Math.ceil(data.length / usersPerPage)) : 1;
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = data ? data.slice(indexOfFirstUser, indexOfLastUser) : [];

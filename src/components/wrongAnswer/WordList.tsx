@@ -1,7 +1,7 @@
+// WordList 컴포넌트는 사용자가 틀린 단어 문제를 '미완료' 또는 '완료' 상태로 관리하고, 단어와 관련된 텍스트 음성을 재생할 수 있는 기능을 제공합니다.
+
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { convertTextToSpeech } from "@/api/openAI/tts";
 import Image from "next/image";
@@ -11,37 +11,26 @@ import speaker from "@/assets/wrongAnswerNote/speaker-high.svg";
 import { Typography } from "../ui/typography";
 import { useUserWrongAnswers } from "@/hooks/useUserWrongAnswers";
 import { useWordQuestions } from "@/hooks/useWordQuestions";
+import { useUpdateIsReviewed } from "@/hooks/useUpdateIsReviewed";
 
 const WordList = ({ userId }: { userId: string }) => {
-  const supabase = createClient();
-  const queryClient = useQueryClient();
   const [isReviewed, setIsReviewed] = useState<"미완료" | "완료">("미완료");
-  const [playingQuestionId, setPlayingQuestionId] = useState<number | null>(null);
+  const [playingQuestionId, setPlayingQuestionId] = useState<number | null>(null); // 현재 재생 중인 질문의 ID를 관리 (null이면 재생 중이 아님)
 
-  // 사용자의 틀린문제 데이터를 가져오는 커스텀훅
+  // 사용자의 틀린답변 데이터를 가져오는 커스텀훅
   const { data: userAnswers, error: userAnswersError, isLoading: userAnswersLoading } = useUserWrongAnswers(userId);
 
   // 단어문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useWordQuestions();
 
-  const updateIsReviewed = useMutation({
-    mutationFn: async ({ answerId, currentReviewed }: { answerId: number; currentReviewed: boolean }) => {
-      const { error } = await supabase.from("user_answer").update({ is_reviewed: !currentReviewed }).eq("id", answerId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userAnswers", userId] });
-    }
-  });
-  // const { mutate: toggleIsReviewed, isLoading, isError } = useUpdateIsReviewed(userId);
+  // 틀린 문제를 '완료' 또는 '미완료'로 상태를 변경하는 훅
+  const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
   if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
+  // 현재 상태("미완료" 또는 "완료")에 따라 userAnswers 필터링
   const filteredAnswers = userAnswers
     ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
@@ -50,12 +39,12 @@ const WordList = ({ userId }: { userId: string }) => {
     })
     .filter((item) => item !== null);
 
-  // 텍스트를 음성으로 변환하는 함수
+  // 텍스트를 음성으로 변환하고 재생하는 함수
   const handleTextToSpeech = async (text: string, questionId: number) => {
     if (!text || playingQuestionId === questionId) return;
 
     try {
-      // 이전 재생 중인 오디오가 있다면 중지
+      // 이전 재생 중인 오디오가 있다면 중지 및 초기화
       if (playingQuestionId) {
         const prevAudio = document.getElementById(`audio-${playingQuestionId}`) as HTMLAudioElement;
         if (prevAudio) {
@@ -64,17 +53,16 @@ const WordList = ({ userId }: { userId: string }) => {
         }
       }
 
-      // 음성 데이터를 Base64 형식으로 받아오기
+      // OpenAI API 호출을 통해 음성 데이터를 Base64 형식으로 가져오기
       const base64Audio = await convertTextToSpeech(text);
 
+      // Base64 데이터를 Blob 객체로 변환하여 오디오 재생 준비
       // Base64 문자열을 Blob 객체로 변환
-      const byteCharacters = atob(base64Audio); // Base64를 디코딩
+      const byteCharacters = atob(base64Audio); // Base64 디코딩
       const byteNumbers = new Array(byteCharacters.length);
-
       for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
-
       const byteArray = new Uint8Array(byteNumbers);
       // Blob 객체 생성 (MP3 형식)
       const blob = new Blob([byteArray], { type: "audio/mp3" });
@@ -85,48 +73,49 @@ const WordList = ({ userId }: { userId: string }) => {
         existingAudio.remove();
       }
 
-      // 새 오디오 엘리먼트 생성 및 재생
+      // 오디오 엘리먼트 생성 및 재생
       const audio = new Audio(URL.createObjectURL(blob));
       audio.id = `audio-${questionId}`;
 
-      audio.onplay = () => setPlayingQuestionId(questionId);
+      audio.onplay = () => setPlayingQuestionId(questionId); // 재생 시작 시 현재 재생 중인 질문 ID 설정
       audio.onended = () => {
-        setPlayingQuestionId(null);
-        URL.revokeObjectURL(audio.src);
+        setPlayingQuestionId(null); // 재생 완료 후 초기화
+        URL.revokeObjectURL(audio.src); // Blob URL 메모리 해제
       };
 
-      document.body.appendChild(audio);
+      document.body.appendChild(audio); // 재생을 위해 오디오 엘리먼트를 DOM에 추가
       await audio.play();
     } catch (error) {
-      console.error("텍스트 변환 오류:", error);
+      console.error("텍스트 변환 오류:", error); // 에러 처리
       setPlayingQuestionId(null);
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto h-[46px] p-2.5 justify-center items-center md:bg-transparent md:gap-5">
+    <div className="flex flex-col gap-4 md:gap-[14px] md:px-3">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-1 justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
+        {/* 상태 전환 버튼 (미완료 / 완료) */}
         <button
           className={`${
             isReviewed === "미완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("미완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             미완료
           </Typography>
         </button>
         <button
           className={`${
             isReviewed === "완료"
-              ? "w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-700 text-primary-200"
-              : "bg-gray-900 text-gray-600 w-[163px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
+              ? "w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex bg-primary-800 text-primary-400"
+              : "bg-gray-900 text-gray-600 w-[163px] md:w-[90px] h-[38px] rounded-[22px] justify-center items-center inline-flex"
           }`}
           onClick={() => setIsReviewed("완료")}
         >
-          <Typography size={16} weight="medium">
+          <Typography size={16} weight="medium" className="md:text-2xl md:font-bold">
             완료
           </Typography>
         </button>
@@ -141,10 +130,11 @@ const WordList = ({ userId }: { userId: string }) => {
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
         <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">
+          {/* 필터링된 오답 데이터를 순회하며 UI를 생성 */}
           {filteredAnswers?.map((question) => (
             <div
               key={question!.id}
-              className={`w-full h-auto  px-5 py-[18px] bg-white rounded-[10px] shadow-review  ${
+              className={`w-full h-auto px-5 py-[18px] bg-white rounded-[10px] shadow-review  ${
                 question!.isReviewed ? "border border-primary-500" : ""
               }`}
             >
@@ -158,20 +148,21 @@ const WordList = ({ userId }: { userId: string }) => {
                     <Typography
                       size={14}
                       weight="bold"
-                      className="w-[100px] md:w-[200px] md:text-center text-left text-#000 break-words whitespace-pre-wrap md:text-[16px]"
+                      className="w-[100px] md:w-[200px] md:text-center text-left text-#000 break-words whitespace-pre-wrap md:text-2xl"
                     >
                       {question?.content}
                     </Typography>
                   </div>
-                  <Typography size={14} weight="medium" className="text-left text-#000 break-words">
+                  <Typography size={14} weight="medium" className="text-left text-#000 break-words md:text-xl">
                     {question?.reason}
                   </Typography>
                 </button>
+                {/* 상태 변경 버튼 */}
                 <button
                   onClick={() =>
-                    updateIsReviewed.mutate({
-                      answerId: question!.answerId,
-                      currentReviewed: question!.isReviewed
+                    toggleIsReviewed({
+                      answerId: question!.answerId, // 답변 ID를 전달
+                      currentReviewed: question!.isReviewed // 현재 상태를 전달
                     })
                   }
                   className="flex-shrink-0 ml-4 w-6"

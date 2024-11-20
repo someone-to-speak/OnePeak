@@ -57,7 +57,7 @@ const TodayLearn = () => {
 
   return (
     <div className="w-full max-w-[1024px] mx-auto ml-4">
-      <div className="mb-2 flex flex-col">
+      <div className="mb-2 flex flex-col mt-[10px] md:mt-0">
         <Typography size={24} weight={"bold"}>
           오늘의 학습
         </Typography>
@@ -65,11 +65,11 @@ const TodayLearn = () => {
           매일 업데이트 되는 추천 학습
         </Typography>
       </div>
-      <Slider {...settings} className="[&_.slick-slide]:px-2 md:[&_.slick-track]:!translate-x-0 [&_.slick-track]:gap-4">
+      <Slider {...settings} className="[&_.slick-slide]:pr-2 md:[&_.slick-track]:!translate-x-0 [&_.slick-track]:gap-2">
         {situations?.map((situation) => (
           <div key={situation.id} onClick={(e) => handleLearnSelect(e, situation.situation, situation.level)}>
             <div
-              className="relative p-4 rounded-lg h-[320px] flex flex-col 
+              className="relative p-4 rounded-[12px] h-[320px] flex flex-col 
               w-[244px] md:w-full" // 모바일에서 244px, PC에서 full
             >
               {situation.image_url ? (
@@ -77,22 +77,22 @@ const TodayLearn = () => {
                   src={situation.image_url}
                   alt={situation.situation}
                   fill
-                  className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                  className="absolute inset-0 w-full h-full object-cover rounded-[12px]"
                 />
               ) : (
                 <div className="absolute inset-0 bg-primary-900 rounded-lg" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent rounded-lg" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent rounded-[12px]" />
               <div className="relative flex flex-col mt-auto mb-3 text-white">
                 <div className="flex">
                   {Array.from({ length: situation.level }, (_, i) => (
                     <Image key={i} src={star} alt="star" />
                   ))}
                 </div>
-                <Typography size={20} weight={"bold"}>
+                <Typography size={20} weight={"bold"} className="md:text-[24px]">
                   {situation.situation}
                 </Typography>
-                <Typography size={14} weight={"normal"} className="text-gray-800">
+                <Typography size={14} weight={"normal"} className="md:text-[18px] text-gray-800">
                   {situation.sentence}
                 </Typography>
               </div>

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
-import { toast } from "react-toastify";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import WithIconHeader from "@/components/ui/WithIconHeader";
@@ -11,21 +10,30 @@ import Button from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useUser } from "@/hooks/useUser";
+import ChatModal from "@/components/ChatModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const EditProfile = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { userInfo, isLoading } = useUser();
+  const { data: profile, isLoading: profileLoading } = useUserProfile(userInfo?.id || "");
   const { mutate } = useUpdateProfile();
   const [file, setFile] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string>("");
   const [stateMsg, setStateMsg] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (userInfo) {
-      setPreviewUrl(userInfo.profile_url);
+    if (profile) {
+      setPreviewUrl(profile.profile_url);
+      setNickname(profile.nickname || "");
+      setStateMsg(profile.state_msg || "");
     }
-  }, [userInfo]);
+  }, [profile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -46,12 +54,9 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userInfo?.id) return;
+    if (profileLoading) return <LoadingSpinner />;
 
-    if (!nickname || !stateMsg) {
-      toast.warn("모든 항목을 입력해주세요.");
-      return;
-    }
+    if (!nickname || !stateMsg || !userInfo?.id) return;
 
     try {
       mutate(
@@ -64,17 +69,22 @@ const EditProfile = () => {
         },
         {
           onSuccess: () => {
-            toast.success("프로필 업데이트 성공");
-            router.push("/myPage");
+            setIsModalOpen(true);
+            queryClient.invalidateQueries({ queryKey: ["userProfile", userInfo.id] });
           },
           onError: () => {
-            toast.error("프로필 업데이트에 실패했습니다.");
+            console.error("프로필 업데이트에 실패했습니다.");
           }
         }
       );
     } catch {
-      toast.error("프로필 업데이트에 실패했습니다.");
+      console.error("프로필 업데이트에 실패했습니다.");
     }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    router.push("/myPage");
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -149,6 +159,17 @@ const EditProfile = () => {
           <Button text="완료" disabled={!nickname || !stateMsg}></Button>
         </div>
       </form>
+
+      <ChatModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onConfirm={handleModalClose}
+        title="프로필 수정 완료"
+        description="프로필이 성공적으로 업데이트되었습니다."
+        confirmButtonStyle="success"
+        confirmText="확인"
+        showCancel={false}
+      />
     </div>
   );
 };

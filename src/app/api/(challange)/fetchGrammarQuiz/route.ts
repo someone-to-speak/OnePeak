@@ -23,12 +23,12 @@ export async function POST(req: Request) {
         {
           role: "system",
           content: `Create a fill-in-the-blank problem that meets the following requirements:
-          - Note: Please adhere to the specified response format! The problem must be a logically sound and indisputable question. The 'content' should only contain the fill-in-the-blank problem. It should be a blank-fill question that does not include any hints or meanings of the answer within the sentence. Generate a one-line fill-in-the-blank question. The sentence should not hint at the answer. It should be a problem that can only be inferred in one line, without any context. Do not include any multiple-choice expressions that could provide hints within the sentence. Example: Yesterday, I went to the library and _____ read a book.
-          - number of questions: add 8 questions.
-          - type: grammar.
-          - reason: explain reason in Korean.
-          - language: korean, english
-          - Response Format: [ { "content": {quiz of fill-in-the-blank}, "answer": {answer of quiz}, "wrong_answer": {wrong_answer}, "reason": {reason of quiz}, "language": {language of question}, "type": {always grammar} }]`
+- Note: Please adhere to the specified response format! The problem must be a logically sound and indisputable question. The 'content' should only contain the fill-in-the-blank problem. It should be a blank-fill question that does not include any hints or meanings of the answer within the sentence. Generate a one-line ( example: _____ ) fill-in-the-blank question. The sentence should not hint at the answer. It should be a problem that can only be inferred in one line, without any context. Do not include any multiple-choice expressions that could provide hints within the sentence. Example: Yesterday, I went to the library and _____ read a book.
+- number of questions: add 8 questions.
+- type: grammar
+- reason: The explanation for the quiz should always be in Korean. 
+- language: Korean, English
+- Response Format: [ { "content": {quiz of fill-in-the-blank}, "answer": {answer of quiz}, "wrong_answer": {two wrong_answer}, "reason": {reason of quiz (always in Korean)}, "language": {language of question}, "type": {always grammar} }]`
         }
       ]
     });

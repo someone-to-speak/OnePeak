@@ -1,13 +1,13 @@
 import { Message } from "@/app/types/chatBotType/chatBotType";
 
-export const getChatResponse = async (messages: Message[], situation: string, level: number) => {
+export const getChatResponse = async (messages: Message[], situation: string, level: number, prompt: string) => {
   try {
-    const response = await fetch("/api/openai", {
+    const response = await fetch("/api/chatBotMessage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ messages, situation, level }), // messages 배열을 JSON으로 변환
+      body: JSON.stringify({ messages, situation, level, prompt }), // messages 배열을 JSON으로 변환
       next: {
         revalidate: 86400000 // 하루
       }
@@ -24,38 +24,40 @@ export const getChatResponse = async (messages: Message[], situation: string, le
   }
 };
 
-// 소리를 텍스트로 변환
+// 소리를 텍스트로 전환
 export const convertSpeechToText = async (audioFile: File) => {
   try {
     const formData = new FormData();
 
-    const blob = new Blob([await audioFile.arrayBuffer()], { type: "audio/webm" });
-    formData.append("audio", blob, "audio.webm");
+    // 원본 파일의 타입을 유지
+    const blob = new Blob([await audioFile.arrayBuffer()], { type: audioFile.type });
 
-    // console.log("전송할 파일 정보:", {
-    //   name: audioFile.name,
-    //   type: audioFile.type,
-    //   size: audioFile.size
-    // });
+    // 파일 확장자 원본 타입에 맞게 설정
+    const fileExtension = audioFile.type.includes("wav") ? "wav" : "webm";
 
-    const response = await fetch("/api/whisper", {
-      method: "POST",
-      body: formData
-    });
+    formData.append("audio", blob, `audio.${fileExtension}`);
 
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/chatBotSpeechToText", {
+        method: "POST",
+        body: formData
+      });
 
-    if (!response.ok) {
-      // const errorData = await response.json();
-      const errorData = data;
-      console.error("API Error:", errorData);
-      throw new Error("음성 변환 실패");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "음성 변환 실패");
+      }
+
+      return data.text;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("fetch 또는 JSON 파싱 실패:", error.message);
+        throw error;
+      }
+      throw new Error("API 호출 중 오류 발생");
     }
-
-    // console.log("API Response:", data);
-    return data.text;
   } catch (error) {
-    console.log("음성 변환 중 오류: ", error);
     throw error;
   }
 };

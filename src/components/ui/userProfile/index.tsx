@@ -25,10 +25,7 @@ const UserProfile = ({
   onClick
 }: UserProfileProps) => {
   return (
-    <div
-      onClick={onClick}
-      className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none bg-white w-full items-center cursor-pointer")}
-    >
+    <div onClick={onClick} className={cn("flex gap-[10px] py-[20px] rounded-[10px] border-none w-full items-center")}>
       {/* image part */}
       <UserProfileImage profileImage={profileImage} />
       {/* content part */}
@@ -65,8 +62,8 @@ const UserProfileContent = ({
     <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
-          <FlagIcon countryImageUrl={myLanguageUrl} size={12} />
-          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px]">
+          <FlagIcon countryImageUrl={myLanguageUrl} size={16} />
+          <Typography size={16} className="font-bold text-gray-50 truncate w-[140px] md:text-[20px]">
             {name}
           </Typography>
         </div>
@@ -84,9 +81,9 @@ const UserProfileContent = ({
           학습 언어
         </Typography>
         <div className="flex items-center gap-0.5">
-          <FlagIcon countryImageUrl={learnLanguageUrl} size={12} />
+          <FlagIcon countryImageUrl={learnLanguageUrl} size={14} />
           <Typography size={12} className="font-bold">
-            {learnLanguage === "korean" ? "한국어" : "영어"}
+            {learnLanguage === "Korean" ? "한국어" : "영어"}
           </Typography>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { insertAlarmInfo } from "@/api/route";
+import { insertAlarmInfo } from "@/api/supabase/admin";
 import React, { useState } from "react";
 
 const AlarmManagementPage = () => {

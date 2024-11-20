@@ -25,7 +25,7 @@ const MyPage = () => {
         ].map(({ href, label }) => (
           <div key={href} className="border-b border-gray-800 py-[20px]">
             <Link href={href}>
-              <Typography size={16} weight="medium">
+              <Typography size={16} weight="medium" className="md:text-[20px]">
                 {label}
               </Typography>
             </Link>

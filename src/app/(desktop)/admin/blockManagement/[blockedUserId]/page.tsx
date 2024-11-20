@@ -6,8 +6,9 @@ export type Props = {
   };
 };
 
-import { getBlockDetail } from "@/api/route";
+import { getBlockDetail } from "@/api/supabase/admin";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import React from "react";
 
 const BlockDetail = ({ params }: Props) => {
@@ -22,22 +23,30 @@ const BlockDetail = ({ params }: Props) => {
   });
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {data.map((detail) => (
-        <div key={detail.id} className="bg-white shadow-md rounded-lg p-4">
-          <h2 className="font-semibold text-lg mb-2">피신고자 닉네임: {detail.user_info!.nickname}</h2>
-          <p className="text-gray-700">신고자 ID: {detail.user_info_id}</p>
-          <p className="text-gray-700">피신고자 ID: {detail.target_id}</p>
-          {/* 이미지 */}
-          <div className="my-2">
-            {/* 여기에 이미지 컴포넌트를 추가할 수 있습니다. */}
-            {/* <img
-              src={detail.image_url}
-              alt={detail.user_info.nickname}
-              className="rounded-lg w-full h-32 object-cover"
-            /> */}
+        <div
+          key={detail.id}
+          className="bg-white shadow-lg rounded-xl p-6 flex flex-col space-y-4 hover:shadow-2xl transition-shadow duration-300"
+        >
+          <h2 className="font-semibold text-xl  mb-2">피신고자 닉네임: {detail.user_info!.nickname}</h2>
+          <p className="text-gray-300">피신고자 ID: {detail.target_id}</p>
+          <p className="text-gray-300">신고자 ID: {detail.user_id}</p>
+          <div className="grid grid-cols-2 gap-4 my-4">
+            {detail.img_urls.map((imgUrl, index) => (
+              <div key={index} className="overflow-hidden rounded-lg">
+                <Image
+                  src={imgUrl}
+                  alt="신고한 이유 사진파일"
+                  width={300} // 적절한 width와 height 값을 설정
+                  height={200} // 비율을 유지하려면 둘 다 설정
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
-          <p className="text-gray-600">Reason: {detail.reason}</p>
+
+          <p>Reason: {detail.reason}</p>
           <p className="text-gray-500 text-sm">{new Date(detail.created_at!).toLocaleDateString()}</p>
         </div>
       ))}

@@ -2,38 +2,58 @@ import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
 import { useCallback, useState } from "react";
 
-export const useChatMessages = (situation: string, level: number) => {
+const createTimestamp = () => {
+  const now = new Date();
+  return `${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+    now.getHours()
+  ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+};
+
+export const useChatMessages = (situation: string, level: number, prompt: string) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
-      content: `안녕하세요! ${situation}에 대해 학습하러 오셨군요? 준비가 되셨다면 start라고 입력해주세요.`
+      content: `안녕하세요! ${situation}에 대해 학습하러 오셨군요? 준비가 되셨다면 start라고 입력해주세요.`,
+      timestamp: createTimestamp()
     }
   ]);
 
   const sendMessage = useCallback(
     async (content: string) => {
-      // 사용자 메세지 추가
-      const userMessage: Message = {
-        role: "user",
-        content
-      };
-      setMessages((prev) => [...prev, userMessage]);
       try {
-        // 챗봇의 응답 가져오기
-        const botResponse = await getChatResponse([...messages, userMessage], situation, level);
+        const userMessage: Message = {
+          role: "user",
+          content,
+          timestamp: createTimestamp()
+        };
 
-        if (botResponse) {
-          const botMessage: Message = { role: "assistant", content: botResponse };
+        setMessages((prev) => {
+          const updatedMessages = [...prev, userMessage];
 
-          //챗봇 메세지 추가
-          setMessages((prev) => [...prev, botMessage]);
-        }
+          getChatResponse(updatedMessages, situation, level, prompt)
+            .then((botResponse) => {
+              if (botResponse) {
+                const botMessage: Message = {
+                  role: "assistant",
+                  content: botResponse,
+                  timestamp: createTimestamp()
+                };
+                setMessages((currentMessages) => [...currentMessages, botMessage]);
+              }
+            })
+            .catch((error) => {
+              console.log("챗봇 응답 실패: ", error);
+              throw error;
+            });
+
+          return updatedMessages;
+        });
       } catch (error) {
-        console.log("챗봇 응답 실패: ", error);
+        console.log("메시지 처리 실패: ", error);
         throw error;
       }
     },
-    [messages, situation, level]
+    [situation, level, prompt]
   );
 
   return { messages, sendMessage };

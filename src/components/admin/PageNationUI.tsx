@@ -16,7 +16,7 @@ const PageNationUI: React.FC<PageNationUIProps> = ({ handlePageChange, currentPa
     <div>
       <div className=" flex items-center justify-center gap-2 mt-4">
         <button
-          className="px-3 py-1 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-100"
+          className="px-3 py-1 text-white bg-gray-300 rounded hover:bg-gray-200 disabled:opacity-100"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -28,7 +28,7 @@ const PageNationUI: React.FC<PageNationUIProps> = ({ handlePageChange, currentPa
         </div>
 
         <button
-          className="px-3 py-1  text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-100"
+          className="px-3 py-1  text-white bg-gray-300 rounded hover:bg-gray-200 disabled:opacity-100"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
