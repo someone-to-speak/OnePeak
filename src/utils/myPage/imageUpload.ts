@@ -12,12 +12,12 @@ const checkFileExists = async (fileName: string) => {
 export const uploadImage = async (file: File) => {
   const supabase = createClient();
   try {
-    const fileExtension = file.name.split(".").pop();
-    let encodedFileName = `${uuidv4()}.${fileExtension}`;
+    const fileExtension = file.name.split(".").pop(); // 파일 확장자 추출
+    let encodedFileName = `${uuidv4()}.${fileExtension}`; // 중복된 파일 처리: 고유한 파일 이름
 
     const fileExists = await checkFileExists(encodedFileName);
     if (fileExists) {
-      encodedFileName = `${uuidv4()}_${encodedFileName}`;
+      encodedFileName = `${uuidv4()}_${encodedFileName}`; // 중복된 파일 이름이 있을 경우, 새로운 UUID를 추가하여 파일 이름 생성
     }
 
     const { data, error } = await supabase.storage.from("Profile_url").upload(encodedFileName, file);

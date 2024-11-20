@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import reportIcon from "@/assets/report-icon.svg";
 import cameraIcon from "@/assets/camera-icon.svg";
-import { insertReportInfo, uploadReportImages } from "@/api/route";
+import { insertReportInfo, uploadReportImages } from "@/api/supabase/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserClient } from "@/api/supabase/getUserClient";
 

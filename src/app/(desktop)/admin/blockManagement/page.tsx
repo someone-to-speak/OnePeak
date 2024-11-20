@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack
 import React, { useState } from "react";
 
 import { BlockedUserInfo } from "@/type";
-import { block, getBlockTargetUsers, unblock } from "@/api/route";
+import { block, getBlockTargetUsers, unblock } from "@/api/supabase/admin";
 import PageNationUI from "@/components/admin/PageNationUI";
 import BlcokedUserTable from "@/components/admin/blockManagement/BlcokedUserTable";
 

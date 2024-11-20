@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UsersTable from "./UsersTable";
 import PageNationUI from "../PageNationUI";
-import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/route";
+import { block, withdraw, getUsersInfo, unblock, unWithdraw } from "@/api/supabase/admin";
 
 import { Tables } from "../../../../database.types";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
