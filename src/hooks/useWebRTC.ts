@@ -7,6 +7,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 export const useWebRTC = (roomId: string, role: string) => {
+  const supabase = createClient();
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -21,7 +22,7 @@ export const useWebRTC = (roomId: string, role: string) => {
     if (channelRef.current || !role) return;
     console.log("webrtc-useEffect");
     console.log("role: ", role);
-    const supabase = createClient();
+
     const channel = supabase.channel(`video-chat-${roomId}`);
 
     const setupLessonChannel = async () => {
@@ -63,10 +64,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
         await setupLocalStream();
 
-        if (role === "Caller")
-          setTimeout(async () => {
-            createOffer();
-          });
+        if (role === "Caller") await createOffer();
       } catch (error) {
         console.error("Failed to initialize WebRTC:", error);
       }
@@ -122,7 +120,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
       supabase.removeChannel(channel);
     };
-  }, [role, roomId]);
+  }, [supabase, role, roomId]);
 
   // const createOffer = useCallback(async () => {
   //   if (!peerConnection.current) return;

@@ -253,7 +253,7 @@ const VideoChat = () => {
   const isLargeScreen = useScreenSizeStore((state) => state.isLargeScreen);
 
   const { role } = useCallerCallee(roomId);
-  const { localVideoRef, remoteVideoRef, createOffer, isCameraOn, toggleCamera, isMicOn, toggleMicrophone } = useWebRTC(
+  const { localVideoRef, remoteVideoRef, isCameraOn, toggleCamera, isMicOn, toggleMicrophone } = useWebRTC(
     roomId,
     role as string
   );
