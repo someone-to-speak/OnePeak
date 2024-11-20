@@ -54,12 +54,7 @@ const BlockManagementPage = () => {
         unblockUser={unblockUser.mutate}
         blockUser={blockUser.mutate}
       />
-      <PageNationUI
-        handlePageChange={handlePageChange}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        usersInfo={data}
-      />
+      <PageNationUI handlePageChange={handlePageChange} currentPage={currentPage} totalPages={totalPages} data={data} />
     </div>
   );
 };

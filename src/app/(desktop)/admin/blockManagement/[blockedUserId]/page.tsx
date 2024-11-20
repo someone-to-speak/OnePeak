@@ -10,9 +10,10 @@ import { getBlockDetail } from "@/api/supabase/admin";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
+import { blockDetail } from "@/type";
 
 const BlockDetail = ({ params }: Props) => {
-  const { data = [] } = useQuery({
+  const { data }: { data: blockDetail[] } = useQuery({
     queryKey: ["blockDetail", params.blockedUserId],
     queryFn: () => {
       if (!params.blockedUserId) {
@@ -21,15 +22,16 @@ const BlockDetail = ({ params }: Props) => {
       return getBlockDetail(params.blockedUserId);
     }
   });
+  console.log("data", data);
 
   return (
     <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {data.map((detail) => (
+      {data?.map((detail) => (
         <div
           key={detail.id}
           className="bg-white shadow-lg rounded-xl p-6 flex flex-col space-y-4 hover:shadow-2xl transition-shadow duration-300"
         >
-          <h2 className="font-semibold text-xl  mb-2">피신고자 닉네임: {detail.user_info!.nickname}</h2>
+          <h2 className="font-semibold text-xl  mb-2">피신고자 닉네임: {detail.user_info.nickname}</h2>
           <p className="text-gray-300">피신고자 ID: {detail.target_id}</p>
           <p className="text-gray-300">신고자 ID: {detail.user_id}</p>
           <div className="grid grid-cols-2 gap-4 my-4">
@@ -38,8 +40,8 @@ const BlockDetail = ({ params }: Props) => {
                 <Image
                   src={imgUrl}
                   alt="신고한 이유 사진파일"
-                  width={300} // 적절한 width와 height 값을 설정
-                  height={200} // 비율을 유지하려면 둘 다 설정
+                  width={300}
+                  height={200}
                   className="w-full h-full object-cover"
                 />
               </div>

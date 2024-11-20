@@ -1,16 +1,41 @@
 "use client";
 import { getFaqs } from "@/api/supabase/admin";
+
+import React, { useState } from "react";
+import { Tables } from "../../../../../database.types";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import FaqTable from "@/components/admin/faqManagement/faqTable";
+import PageNationUI from "@/components/admin/PageNationUI";
+
+type FaqData = Tables<"faq">;
 
 const FaqPage = () => {
-  const { data } = useQuery({
-    queryKey: ["faqData"],
-    queryFn: () => getFaqs()
-  });
-  console.log("data", data);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  return <div>page</div>;
+  // 문의내역 가져오기
+  const { data } = useQuery<FaqData[]>({
+    queryKey: ["faqData"],
+    queryFn: getFaqs
+  });
+
+  // 페이지네이션
+  const faqsPerPage = 10;
+  const totalPages = data ? Math.max(1, Math.ceil(data.length / faqsPerPage)) : 1;
+  const indexOfLastFaq = currentPage * faqsPerPage;
+  const indexOfFirstFaq = indexOfLastFaq - faqsPerPage;
+  const currentFaqs = data ? data.slice(indexOfFirstFaq, indexOfLastFaq) : [];
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  return (
+    <div>
+      <FaqTable currentFaqs={currentFaqs} indexOfFirstFaq={indexOfFirstFaq} />
+      <PageNationUI handlePageChange={handlePageChange} currentPage={currentPage} totalPages={totalPages} data={data} />
+    </div>
+  );
 };
 
 export default FaqPage;
