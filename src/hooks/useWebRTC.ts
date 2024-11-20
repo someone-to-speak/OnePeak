@@ -21,7 +21,7 @@ export const useWebRTC = (roomId: string, role: string) => {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const localStream = useRef<MediaStream | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
-  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const recordedChunks = useRef<Blob[]>([]);
 
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isCameraOn, setIsCameraOn] = useState<boolean>(true);
@@ -54,7 +54,8 @@ export const useWebRTC = (roomId: string, role: string) => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         mediaRecorder.current.onstop = () => {
-          const audioBlob = new Blob(recordedChunks, { type: "audio/webm" });
+          console.log("recordedChunks", recordedChunks);
+          const audioBlob = new Blob(recordedChunks.current, { type: "audio/webm" });
           resolve(audioBlob);
         };
       } else {
@@ -66,7 +67,7 @@ export const useWebRTC = (roomId: string, role: string) => {
   // 녹음파일 저장
   const saveRecording = useCallback(async () => {
     const localAudioBlob = await stopRecording();
-
+    console.log("localAudioBlob", localAudioBlob);
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const fileName = `${roomId}_${timestamp}.webm`;
 
@@ -165,17 +166,19 @@ export const useWebRTC = (roomId: string, role: string) => {
       });
 
       const audioOnlyStream = new MediaStream(localStream.current.getAudioTracks());
+      console.log("Audio Tracks:", audioOnlyStream.getAudioTracks());
       const recorder = new MediaRecorder(audioOnlyStream);
       mediaRecorder.current = recorder;
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           console.log("event: ", event);
-          setRecordedChunks((prev) => [...prev, event.data]);
+          recordedChunks.current.push(event.data);
         }
       };
 
       recorder.start();
+      console.log("Recorder started:", recorder.state);
     };
 
     const createOffer = async () => {
