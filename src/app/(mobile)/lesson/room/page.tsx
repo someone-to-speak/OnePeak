@@ -277,7 +277,7 @@ const VideoChat = () => {
       setTimeout(handleBackButton, 0);
     };
 
-    window.onpopstate = handlePopState;
+    window.onpopstate = () => handlePopState();
 
     return () => {
       window.onpopstate = null; // 클린업 시 핸들러 제거
