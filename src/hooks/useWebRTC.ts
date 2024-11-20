@@ -88,11 +88,6 @@ export const useWebRTC = (roomId: string, role: string) => {
     router.replace("/lesson");
   }, [roomId, saveRecording, router]);
 
-  const handleleaveAloneSignal = useCallback(() => {
-    alert("사용자와의 연결이 끊어졌습니다.");
-    router.replace("/lesson");
-  }, [router]);
-
   useEffect(() => {
     if (channelRef.current || !role) return;
 
@@ -105,7 +100,6 @@ export const useWebRTC = (roomId: string, role: string) => {
         .on("broadcast", { event: "offer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "answer" }, async (payload) => handleSignalData(payload as SignalData))
         .on("broadcast", { event: "closeMatching" }, async () => handleCloseMatchingSignal())
-        .on("broadcast", { event: "leaveAlone" }, () => handleleaveAloneSignal())
         .subscribe(async (status) => {
           if (status === "SUBSCRIBED") {
             await initializePeerConnection();
@@ -135,6 +129,16 @@ export const useWebRTC = (roomId: string, role: string) => {
         peerConnection.current.ontrack = (event) => {
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = event.streams[0];
+          }
+        };
+
+        peerConnection.current.oniceconnectionstatechange = () => {
+          const state = peerConnection.current?.iceConnectionState;
+
+          if (state === "disconnected" || state === "failed" || state === "closed") {
+            // 상대방 이탈 처리
+            alert("사용자와의 연결이 끊어졌습니다.");
+            router.replace("/lesson");
           }
         };
 
@@ -204,7 +208,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
       cleanupWebRTC();
     };
-  }, [cleanupWebRTC, handleCloseMatchingSignal, handleleaveAloneSignal, supabase, role, roomId]);
+  }, [cleanupWebRTC, handleCloseMatchingSignal, router, supabase, role, roomId]);
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;

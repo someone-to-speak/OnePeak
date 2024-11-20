@@ -35,8 +35,9 @@ const VideoChat = () => {
   };
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      channelRef.current?.send({
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      console.log("handleBeforeUnload");
+      await channelRef.current?.send({
         type: "broadcast",
         event: "leaveAlone"
       });
@@ -44,10 +45,10 @@ const VideoChat = () => {
       event.preventDefault();
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", async () => handleBeforeUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", async () => handleBeforeUnload);
     };
   }, [channelRef]);
 
