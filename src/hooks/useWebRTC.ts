@@ -48,7 +48,7 @@ export const useWebRTC = (roomId: string, role: string) => {
 
         peerConnection.current.onicecandidate = async (event) => {
           if (event.candidate) {
-            await channelRef.current?.send({
+            await channel.send({
               type: "broadcast",
               event: "ice-candidate",
               candidate: event.candidate
@@ -93,7 +93,7 @@ export const useWebRTC = (roomId: string, role: string) => {
       try {
         const offer = await peerConnection.current.createOffer();
         await peerConnection.current.setLocalDescription(offer);
-        await channelRef.current?.send({
+        await channel.send({
           type: "broadcast",
           event: "offer",
           sdp: offer
