@@ -264,7 +264,18 @@ const VideoChat = () => {
     await close();
   };
 
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    window.addEventListener("popstate", () => {
+      channelRef.current?.send({
+        type: "broadcast",
+        event: "leaveAlone"
+      });
+    });
+
+    return () => {
+      window.removeEventListener("popstate", () => {});
+    };
+  }, [channelRef]);
 
   return (
     <>
