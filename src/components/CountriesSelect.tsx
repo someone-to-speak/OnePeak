@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { insertLanguageInfo } from "@/api/route";
+
 import CountrySelect from "./CountrySelect";
 import { useCountries } from "use-react-countries";
 import Button from "./ui/button";
+import { insertLanguageInfo } from "@/api/supabase/admin";
 
 export function CountriesSelect() {
   const { countries } = useCountries();
