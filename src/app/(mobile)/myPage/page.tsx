@@ -18,10 +18,10 @@ const MyPage = () => {
         <UserProfilePage userId={userInfo.id} />
         {[
           { href: "/myPage/faq", label: "1:1 문의하기" },
-          { href: "/myPage/subscription", label: "구독관리" },
+          { href: "/myPage", label: "구독관리" },
           { href: "/myPage/settings", label: "설정" },
-          { href: "/myPage/privacyPolicy", label: "개인정보 보호 정책" },
-          { href: "/myPage/servicePolicy", label: "서비스 이용약관" }
+          { href: "/myPage", label: "개인정보 보호 정책" },
+          { href: "/myPage", label: "서비스 이용약관" }
         ].map(({ href, label }) => (
           <div key={href} className="border-b border-gray-800 py-[20px]">
             <Link href={href}>

@@ -1,6 +1,5 @@
 import React from "react";
 import { Tables } from "../../../../database.types";
-import { User } from "@supabase/supabase-js";
 
 type UserInfo = Tables<"user_info">;
 
@@ -15,7 +14,6 @@ interface UsersTableProps {
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
-  usersInfo,
   currentUsers,
   indexOfFirstUser,
   unblockUser,
