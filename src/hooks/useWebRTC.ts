@@ -90,7 +90,8 @@ export const useWebRTC = (roomId: string, role: string) => {
     router.replace("/lesson");
   }, [roomId, saveRecording, router]);
 
-  const handleleaveAloneSignal = useCallback(async () => {
+  const handleleaveAloneSignal = useCallback(() => {
+    console.log("handleleaveAloneSignal");
     alert("사용자와의 연결이 끊어졌습니다.");
     router.replace("/lesson");
   }, [router]);

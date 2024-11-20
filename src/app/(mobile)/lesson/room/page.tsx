@@ -265,6 +265,7 @@ const VideoChat = () => {
   };
 
   const handleBackButton = useCallback(() => {
+    console.log("handleBackButton");
     channelRef.current?.send({
       type: "broadcast",
       event: "leaveAlone"
