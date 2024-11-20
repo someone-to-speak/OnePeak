@@ -12,11 +12,12 @@ type FaqData = Tables<"faq">;
 
 const FaqPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [type, setType] = useState<string>("");
 
   // 문의내역 가져오기
   const { data, isLoading, isError } = useQuery<FaqData[] | undefined>({
-    queryKey: ["faqData"],
-    queryFn: getFaqs
+    queryKey: ["faqData", type],
+    queryFn: () => getFaqs(type)
   });
 
   if (isLoading)
@@ -43,7 +44,19 @@ const FaqPage = () => {
   };
 
   return (
-    <div>
+    <div className="w-full">
+      <div className="flex items-center justify-center py-6 text-2xl gap-6 cursor-pointer">
+        <p>정렬기준 선택:</p>
+        <button onClick={() => setType("isAnswered")} className="border  rounded-md px-2 ">
+          답변완료내역
+        </button>
+        <button onClick={() => setType("isNotAnswered")} className="border  rounded-md px-2 ">
+          답변미완료내역
+        </button>
+        <button onClick={() => setType("")} className="border  rounded-md px-2 ">
+          전체문의내역
+        </button>
+      </div>
       <FaqTable currentFaqs={currentFaqs} indexOfFirstFaq={indexOfFirstFaq} />
       <PageNationUI handlePageChange={handlePageChange} currentPage={currentPage} totalPages={totalPages} data={data} />
     </div>
