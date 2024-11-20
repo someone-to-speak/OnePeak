@@ -54,7 +54,7 @@ const PlayGround = () => {
         </Typography>
 
         <div className="space-y-2">
-          <Icon name="camera" />
+          <Icon name="cameraOn" />
           <Icon name="chats" />
           <Icon name="pencil" />
           <Icon name="trophy" />
