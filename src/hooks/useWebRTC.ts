@@ -20,7 +20,7 @@ export const useWebRTC = (roomId: string, role: string) => {
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const localStream = useRef<MediaStream | null>(null);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
 
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
@@ -51,9 +51,9 @@ export const useWebRTC = (roomId: string, role: string) => {
   // 녹음 종료
   const stopRecording = useCallback(() => {
     return new Promise<Blob | null>((resolve) => {
-      if (mediaRecorder) {
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
+      if (mediaRecorder.current) {
+        mediaRecorder.current.stop();
+        mediaRecorder.current.onstop = () => {
           const audioBlob = new Blob(recordedChunks, { type: "audio/webm" });
           resolve(audioBlob);
         };
@@ -163,15 +163,14 @@ export const useWebRTC = (roomId: string, role: string) => {
         if (localStream.current) peerConnection.current?.addTrack(track, localStream.current);
       });
 
-      const recorder = new MediaRecorder(localStream.current, { mimeType: "audio/webm" });
-      recorder.ondataavailable = (event) => {
+      mediaRecorder.current = new MediaRecorder(localStream.current, { mimeType: "audio/webm" });
+      mediaRecorder.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
           setRecordedChunks((prev) => [...prev, event.data]);
         }
       };
-      setMediaRecorder(recorder);
 
-      recorder.start();
+      mediaRecorder.current.start();
     };
 
     const createOffer = async () => {
