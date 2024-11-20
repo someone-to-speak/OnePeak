@@ -83,7 +83,7 @@ const WordList = ({ userId }: { userId: string }) => {
         URL.revokeObjectURL(audio.src); // Blob URL 메모리 해제
       };
 
-      document.body.appendChild(audio); // 재생을 위해 오디오 엘리먼트를 DOM에 추가
+      document.body.appendChild(audio); // 재생을 위해 오디오 엘리먼트를 DOM에 추가->직접돔 건들지마
       await audio.play();
     } catch (error) {
       console.error("텍스트 변환 오류:", error); // 에러 처리

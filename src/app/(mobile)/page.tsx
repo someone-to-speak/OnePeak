@@ -24,7 +24,7 @@ export default function Home() {
 
       if (data.session) {
         setIsLoggedIn(true); // 세션이 있으면 로그인 상태로 설정
-        // 로그인 후 user_info 테이블을 확인
+        // 로그인 후 user_info 테이블을 확인 -> useUser()훅으로 통일
         const { data: userInfo } = await supabase
           .from("user_info")
           .select("nickname, my_language, learn_language, is_blocked")
