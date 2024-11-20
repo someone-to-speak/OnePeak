@@ -22,9 +22,11 @@ export class WebRTCService {
   }
 
   async init() {
+    // RTCPeerConnection 객체 초기화(구글 STUN 서버)
     const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
     this.peerConnection = new RTCPeerConnection(config);
 
+    // 피어에 연결할 수 있는 후보를 검색하는데 사용되는 서비스 == ICE
     this.peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
         await this.channel.send({
@@ -35,22 +37,11 @@ export class WebRTCService {
       }
     };
 
-    // this.peerConnection.oniceconnectionstatechange = () => {
-    //   if (this.peerConnection?.iceConnectionState === "disconnected") {
-    //   }
-    // };
-
     this.peerConnection.ontrack = (event) => {
       this.remoteStream = event.streams[0];
 
       if (this.remoteVideoRef.current) {
-        // this.remoteVideoRef.current.srcObject = event.streams[0];
         this.remoteVideoRef.current.srcObject = this.remoteStream;
-        // this.remoteVideoRef.current?.play();
-
-        // this.remoteVideoRef.current.onloadedmetadata = () => {
-        //   this.remoteVideoRef.current?.play();
-        // };
       }
     };
 
