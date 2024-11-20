@@ -7,7 +7,6 @@ import {
 import { UserInfo } from "@/types/userType/userType";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { UUID } from "crypto";
 
 export const createChannel = (roomId: string): RealtimeChannel => {
   const supabase = createClient();
