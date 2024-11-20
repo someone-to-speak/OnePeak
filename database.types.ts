@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      "AI-prompt": {
+        Row: {
+          content: string
+          id: number
+        }
+        Insert: {
+          content?: string
+          id?: number
+        }
+        Update: {
+          content?: string
+          id?: number
+        }
+        Relationships: []
+      }
       answers: {
         Row: {
           content: string
@@ -373,7 +388,7 @@ export type Database = {
           created_at: string
           id: number
           level: number
-          sentence: string | null
+          sentence: string
           situation: string
           user_id: string
         }
@@ -381,7 +396,7 @@ export type Database = {
           created_at?: string
           id?: number
           level: number
-          sentence?: string | null
+          sentence: string
           situation: string
           user_id?: string
         }
@@ -389,7 +404,7 @@ export type Database = {
           created_at?: string
           id?: number
           level?: number
-          sentence?: string | null
+          sentence?: string
           situation?: string
           user_id?: string
         }

@@ -10,7 +10,6 @@ import check from "@/assets/check.svg";
 import Image from "next/image";
 import { Typography } from "@/components/ui/typography";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { toast } from "react-toastify";
 
 export default function SetMyLanguage() {
   const [selectedMyLanguage, setSelectedMyLanguage] = useState<string>("");
@@ -27,20 +26,24 @@ export default function SetMyLanguage() {
     queryFn: () => fetchLanguageName()
   });
 
+  // 언어 이름만 추출
   const supportingLanguages = languages?.map((language) => language.language_name);
 
   // 로딩 상태
   if (languagesLoading) return <LoadingSpinner />;
   // 오류 상태
-  if (languagesError) return toast.error(`${languagesError.message}`);
+  if (languagesError) return console.error(`${languagesError.message}`);
 
+  // 내언어 선택 후 다음 페이지로 이동하는 함수
   const handleContinue = async () => {
-    const { data } = await supabase.auth.getSession();
-    const userId = data?.session?.user?.id;
+    const { data } = await supabase.auth.getSession(); // 현재 로그인 세션 가져오기
+    const userId = data?.session?.user?.id; // 사용자 ID 추출
 
     if (userId && selectedMyLanguage) {
+      // 내언어를 Supabase의 "user_info" 테이블에 업데이트
       const { error } = await supabase.from("user_info").update({ my_language: selectedMyLanguage }).eq("id", userId);
 
+      // 업데이트 성공 시 다음 단계로 이동
       if (!error) {
         router.push("/loginInfo/setLearnLanguage");
       }

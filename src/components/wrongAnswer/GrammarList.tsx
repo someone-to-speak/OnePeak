@@ -18,13 +18,17 @@ const GrammarList = ({ userId }: { userId: string }) => {
   // 문법문제 데이터를 가져오는 커스텀훅
   const { data: questions, error: questionsError, isLoading: questionsLoading } = useGrammarQuestions();
 
-  // 오답노트 완료,미완료로 변경하는 커스텀훅
+  // 틀린 문제를 '완료' 또는 '미완료'로 상태를 변경하는 훅
   const { mutate: toggleIsReviewed } = useUpdateIsReviewed(userId);
 
-  if (userAnswersLoading || questionsLoading) return <p>로딩중</p>;
+  // 데이터 로딩 중 표시
+  if (userAnswersLoading || questionsLoading) return <p>로딩중입니다...</p>;
+
+  // 데이터 로드 오류 처리
   if (userAnswersError) return <p>{userAnswersError.message}</p>;
   if (questionsError) return <p>{questionsError.message}</p>;
 
+  // 현재 상태("미완료" 또는 "완료")에 따라 userAnswers 필터링
   const filteredAnswers = userAnswers
     ?.filter((answer) => (isReviewed === "미완료" ? !answer.is_reviewed : answer.is_reviewed))
     .map((answer) => {
@@ -35,7 +39,8 @@ const GrammarList = ({ userId }: { userId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 md:gap-[30px] md:px-3">
-      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-2.5 justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
+      <div className="bg-gray-900 flex rounded-[22px] w-[343px] mx-auto md:ml-1 h-[46px] p-1 justify-center items-center md:justify-start md:bg-transparent md:gap-[10px]">
+        {/* 상태 전환 버튼 (미완료 / 완료) */}
         <button
           className={`${
             isReviewed === "미완료"
@@ -71,6 +76,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
           <Typography size={22} className="md:font-bold">{`${isReviewed === "미완료" ? "미완료" : "완료"}`}</Typography>
         </div>
         <div className="flex flex-col gap-[10px] md:gap-[20px] md:max-h-[411px] overflow-y-auto">
+          {/* 필터링된 오답 데이터를 순회하며 UI를 생성 */}
           {filteredAnswers?.map((question, index) => (
             <div
               key={index}
@@ -78,11 +84,12 @@ const GrammarList = ({ userId }: { userId: string }) => {
                 question!.isReviewed ? "border border-primary-500" : ""
               }`}
             >
+              {/* 상태 변경 버튼 */}
               <button
                 onClick={() =>
                   toggleIsReviewed({
-                    answerId: question!.answerId,
-                    currentReviewed: question!.isReviewed
+                    answerId: question!.answerId, // 답변 ID를 전달
+                    currentReviewed: question!.isReviewed // 현재 상태를 전달
                   })
                 }
                 className="w-full flex flex-row items-center justify-between"
@@ -109,6 +116,7 @@ const GrammarList = ({ userId }: { userId: string }) => {
                     </Typography>
                   </div>
                 </div>
+                {/* 상태 아이콘 표시 */}
                 <div className="flex-none">
                   <Image
                     src={question!.isReviewed ? activeCheck : noActiveCheck}

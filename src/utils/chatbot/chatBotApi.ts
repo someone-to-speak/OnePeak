@@ -1,13 +1,13 @@
 import { Message } from "@/app/types/chatBotType/chatBotType";
 
-export const getChatResponse = async (messages: Message[], situation: string, level: number) => {
+export const getChatResponse = async (messages: Message[], situation: string, level: number, prompt: string) => {
   try {
-    const response = await fetch("/api/openai", {
+    const response = await fetch("/api/chatBotMessage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ messages, situation, level }), // messages 배열을 JSON으로 변환
+      body: JSON.stringify({ messages, situation, level, prompt }), // messages 배열을 JSON으로 변환
       next: {
         revalidate: 86400000 // 하루
       }
@@ -27,8 +27,6 @@ export const getChatResponse = async (messages: Message[], situation: string, le
 // 소리를 텍스트로 전환
 export const convertSpeechToText = async (audioFile: File) => {
   try {
-    console.log("A. convertSpeechToText 시작");
-
     const formData = new FormData();
 
     // 원본 파일의 타입을 유지
@@ -39,34 +37,18 @@ export const convertSpeechToText = async (audioFile: File) => {
 
     formData.append("audio", blob, `audio.${fileExtension}`);
 
-    console.log("B. FormData 생성 완료", {
-      blobSize: blob.size,
-      blobType: blob.type
-    });
-
-    console.log("C. API 호출 시도");
-
     try {
       const response = await fetch("/api/chatBotSpeechToText", {
         method: "POST",
         body: formData
       });
 
-      console.log("D. fetch 응답 받음:", {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok
-      });
-
       const data = await response.json();
-      console.log("E. 응답 데이터:", data);
 
       if (!response.ok) {
-        console.error("F. API 에러:", data);
         throw new Error(data.error || "음성 변환 실패");
       }
 
-      console.log("G. 변환 성공:", data.text);
       return data.text;
     } catch (error) {
       if (error instanceof Error) {
@@ -76,7 +58,6 @@ export const convertSpeechToText = async (audioFile: File) => {
       throw new Error("API 호출 중 오류 발생");
     }
   } catch (error) {
-    console.error("H. 최종 에러:", error);
     throw error;
   }
 };

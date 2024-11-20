@@ -23,7 +23,7 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
   const formatMessage = (content: string) => {
     return content.split("\n").map((line, i) => (
       <React.Fragment key={i}>
-        <Typography size={12} weight={"normal"}>
+        <Typography size={12} weight={"normal"} className="md:text-[16px]">
           {line}
         </Typography>
         {i !== content.split("\n").length - 1 && <br />}
@@ -32,16 +32,12 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
   };
 
   return (
-    <div className="space-y-3 max-w-3xl mx-auto">
+    <div className="space-y-3 mx-auto mt-[10px] md:mt-[70px]">
       {messages.map((message, index) => (
-        <div
-          key={index}
-          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} items-start gap-2`}
-        >
+        <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} items-start`}>
           {/* user가 아닌 경우 앱아이콘 노출 */}
           {message.role !== "user" && (
-            <div className="w-[30px] h-[30px] bg-primary-900 font-medium rounded-[25px] flex items-center justify-center">
-              {/* <img src="/images/MainIcon.svg" alt="이미지" className="w-6 h-[26px]" /> */}
+            <div className="w-[30px] h-[30px] bg-primary-900 font-medium rounded-[25px] flex items-center justify-center mr-[6px]">
               <Image src={mainIcon} alt="메인아이콘" width={20} height={20} />
             </div>
           )}
@@ -49,7 +45,7 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
           <div
             className={`
             relative py-2 px-3 rounded-2xl shadow-sm
-            max-w-[214px] text-justify text-sm mx-3
+            max-w-[214px] md:max-w-[354px] text-justify text-sm
             ${message.role === "user" ? "bg-primary-800 text-black rounded-br-none " : "bg-gray-900 rounded-tl-none"}
           `}
           >
@@ -62,6 +58,13 @@ const ChatMessageList = ({ messages }: ChatMessageListProps) => {
               {formatMessage(message.content)}
             </div>
           </div>
+          <Typography
+            size={10}
+            weight={"normal"}
+            className={`text-gray-500 self-end ml-2 ${message.role === "user" ? "order-first mr-2 ml-0" : ""}`}
+          >
+            {message.timestamp}
+          </Typography>
         </div>
       ))}
     </div>

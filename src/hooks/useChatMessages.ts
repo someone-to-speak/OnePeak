@@ -2,36 +2,42 @@ import { Message } from "@/app/types/chatBotType/chatBotType";
 import { getChatResponse } from "@/utils/chatbot/chatBotApi";
 import { useCallback, useState } from "react";
 
-export const useChatMessages = (situation: string, level: number) => {
+const createTimestamp = () => {
+  const now = new Date();
+  return `${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+    now.getHours()
+  ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+};
+
+export const useChatMessages = (situation: string, level: number, prompt: string) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
-      content: `안녕하세요! ${situation}에 대해 학습하러 오셨군요? 준비가 되셨다면 start라고 입력해주세요.`
+      content: `안녕하세요! ${situation}에 대해 학습하러 오셨군요? 준비가 되셨다면 start라고 입력해주세요.`,
+      timestamp: createTimestamp()
     }
   ]);
 
   const sendMessage = useCallback(
     async (content: string) => {
       try {
-        // 사용자 메세지 추가
         const userMessage: Message = {
           role: "user",
-          content
+          content,
+          timestamp: createTimestamp()
         };
 
-        // 함수형 업데이트를 사용하여 최신 상태 보장
         setMessages((prev) => {
           const updatedMessages = [...prev, userMessage];
 
-          // 챗봇의 응답 가져오기
-          getChatResponse(updatedMessages, situation, level)
+          getChatResponse(updatedMessages, situation, level, prompt)
             .then((botResponse) => {
               if (botResponse) {
                 const botMessage: Message = {
                   role: "assistant",
-                  content: botResponse
+                  content: botResponse,
+                  timestamp: createTimestamp()
                 };
-                // 챗봇 메세지 추가
                 setMessages((currentMessages) => [...currentMessages, botMessage]);
               }
             })
@@ -47,7 +53,7 @@ export const useChatMessages = (situation: string, level: number) => {
         throw error;
       }
     },
-    [situation, level]
+    [situation, level, prompt]
   );
 
   return { messages, sendMessage };

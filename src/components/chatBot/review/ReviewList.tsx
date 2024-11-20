@@ -11,7 +11,12 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
-  if (!reviews.length) return <p>학습 내역이 없습니다!</p>;
+  if (!reviews.length)
+    return (
+      <Typography size={14} className="px-4">
+        학습 내역이 없습니다.
+      </Typography>
+    );
 
   // 리뷰들을 날짜별로 그룹화
   const groupedReviews = reviews.reduce((acc, review) => {
@@ -26,7 +31,7 @@ export const ReviewList = ({ reviews, onReviewClick }: ReviewListProps) => {
   }, {} as Record<string, ReviewType[]>);
 
   return (
-    <div className="bg-[#F9F9F9] p-4 md:rounded-[24px]">
+    <div className="bg-[#F9F9F9] p-4 md:px-6 md:pt-[30px] md:rounded-[24px]">
       {Object.entries(groupedReviews).map(([dateKey, dateReviews]) => {
         const [month, day] = dateKey.split("-");
 

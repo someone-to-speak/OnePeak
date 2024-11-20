@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import reportIcon from "@/assets/report-icon.svg";
 import cameraIcon from "@/assets/camera-icon.svg";
-import { insertReportInfo, uploadReportImages } from "@/api/route";
+import { insertReportInfo, uploadReportImages } from "@/api/supabase/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserClient } from "@/api/supabase/getUserClient";
 
@@ -138,7 +138,7 @@ const ReportPage = ({ params }: Props) => {
         </div>
         <div className=" mb-[28px] flex  flex-wrap gap-[17px] ">
           {previewImgs.map((imgUrl, index) => (
-            <div key={index} className=" w-[30%] flex flex-col justify-center items-center ">
+            <div key={index} className="w-[30%] flex flex-col justify-center items-center ">
               <Image
                 className="rounded-[10px]"
                 src={imgUrl}
