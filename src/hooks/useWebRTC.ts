@@ -20,6 +20,7 @@ export const useWebRTC = (roomId: string, role: string) => {
     console.log("channelRef.current: ", channelRef.current);
     if (channelRef.current || !role) return;
     console.log("webrtc-useEffect");
+    console.log("role: ", role);
     const supabase = createClient();
     const channel = supabase.channel(`video-chat-${roomId}`);
 
@@ -85,6 +86,22 @@ export const useWebRTC = (roomId: string, role: string) => {
       });
     };
 
+    const createOffer = async () => {
+      if (!peerConnection.current) return;
+      console.log("createOffer");
+      try {
+        const offer = await peerConnection.current.createOffer();
+        await peerConnection.current.setLocalDescription(offer);
+        await channelRef.current?.send({
+          type: "broadcast",
+          event: "offer",
+          sdp: offer
+        });
+      } catch (error) {
+        console.error("Error creating offer:", error);
+      }
+    };
+
     setupLessonChannel();
 
     return () => {
@@ -104,21 +121,21 @@ export const useWebRTC = (roomId: string, role: string) => {
     };
   }, [role, roomId]);
 
-  const createOffer = useCallback(async () => {
-    if (!peerConnection.current) return;
-    console.log("createOffer");
-    try {
-      const offer = await peerConnection.current.createOffer();
-      await peerConnection.current.setLocalDescription(offer);
-      await channelRef.current?.send({
-        type: "broadcast",
-        event: "offer",
-        sdp: offer
-      });
-    } catch (error) {
-      console.error("Error creating offer:", error);
-    }
-  }, []);
+  // const createOffer = useCallback(async () => {
+  //   if (!peerConnection.current) return;
+  //   console.log("createOffer");
+  //   try {
+  //     const offer = await peerConnection.current.createOffer();
+  //     await peerConnection.current.setLocalDescription(offer);
+  //     await channelRef.current?.send({
+  //       type: "broadcast",
+  //       event: "offer",
+  //       sdp: offer
+  //     });
+  //   } catch (error) {
+  //     console.error("Error creating offer:", error);
+  //   }
+  // }, []);
 
   const handleSignalData = async (payload: SignalData) => {
     if (!peerConnection.current) return;
