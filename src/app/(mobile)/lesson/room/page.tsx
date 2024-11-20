@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Typography } from "@/components/ui/typography";
 import Icon from "@/components/ui/icon";
@@ -33,26 +33,6 @@ const VideoChat = () => {
 
     await close();
   };
-
-  useEffect(() => {
-    const handleBackButton = () => {
-      console.log("handleBackButton");
-      channelRef.current?.send({
-        type: "broadcast",
-        event: "leaveAlone"
-      });
-    };
-
-    const handlePopState = () => {
-      setTimeout(handleBackButton, 0);
-    };
-
-    window.onpopstate = () => handlePopState();
-
-    return () => {
-      window.onpopstate = null; // 클린업 시 핸들러 제거
-    };
-  }, [channelRef]);
 
   return (
     <>
@@ -116,6 +96,7 @@ const VideoChat = () => {
                   className={"scale-x-[-1] w-[136px] h-[136px] rounded-[8px]"}
                   ref={remoteVideoRef}
                   autoPlay
+                  playsInline
                   onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
                   onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
                   onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시
@@ -154,6 +135,7 @@ const VideoChat = () => {
             className={"relative scale-x-[-1] h-lvh object-cover"}
             ref={localVideoRef}
             autoPlay
+            playsInline
             onPlay={(e) => e.preventDefault()} // 재생 이벤트 무시
             onPause={(e) => e.preventDefault()} // 일시정지 이벤트 무시
             onClick={(e) => e.preventDefault()} // 클릭 이벤트 무시

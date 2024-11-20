@@ -10,7 +10,6 @@ export const useCallerCallee = (roomId: string) => {
   const userId = useRef<string>(uuidv4()); // 고유 사용자 ID 생성
 
   useEffect(() => {
-    console.log("c-useEffect");
     const channel = supabase.channel(`video-${roomId}`, {
       config: {
         presence: {
@@ -22,12 +21,10 @@ export const useCallerCallee = (roomId: string) => {
     // 역할 설정이 아직 안 된 경우에만 설정
     const handlePresenceSync = () => {
       const users = channel.presenceState();
-      console.log("users: ", users);
-      console.log("userId: ", userId);
       const allUsers = Object.keys(users).map((key) => ({
         id: key
       }));
-      console.log("allUsers", allUsers);
+
       // 접속 시간 기준 정렬
       allUsers.sort((a, b) => a.id.localeCompare(b.id));
 
