@@ -8,17 +8,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserClient } from "@/api/supabase/getUserClient";
 
 export type Props = {
-  params: {
-    blockedUserId: string;
+  searchParams: {
+    targetId: string;
   };
 };
 
-const ReportPage = ({ params }: Props) => {
+const ReportPage = ({ searchParams }: Props) => {
   const queryClient = useQueryClient();
   const [previewImgs, setPreviewImgs] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
-  const targetId = params.blockedUserId;
+  const targetId = searchParams.targetId;
 
   const { data } = useQuery({
     queryKey: ["targetUserInfo"],
