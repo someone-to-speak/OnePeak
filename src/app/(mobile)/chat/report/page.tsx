@@ -7,6 +7,7 @@ import { insertReportInfo, uploadReportImages } from "@/api/supabase/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserClient } from "@/api/supabase/getUserClient";
 
+// 쿼리스트링 받아오는 방법, (+ queryString은 params가 아니고 searchParams로 온다)
 export type Props = {
   searchParams: {
     targetId: string;
