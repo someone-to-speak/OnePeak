@@ -47,14 +47,11 @@ const FaqPage = () => {
 
   useEffect(() => {
     if (data?.is_blocked) {
-      setIsModalOpen(true);
+      alert("차단된 사용자 입니다. 궁금하신 점이 있다면 문의를 남겨주세요");
     }
   }, [data?.is_blocked]);
 
   const faqDataHandler = async () => {
-    if (!selectedType) {
-      setIsModalOpen(true);
-    }
     if (!content) {
       return alert("사유를 작성해주세요");
     }
@@ -97,7 +94,9 @@ const FaqPage = () => {
                 setSelectedType(e.target.value);
               }}
             >
-              <option value="disabled">문의 유형 선택</option>
+              <option value="" disabled>
+                문의 유형 선택
+              </option>
               <option value="inquiry">1:1 문의하기</option>
               <option value="unblockRequest">차단 해지 신청</option>
             </select>
@@ -125,8 +124,8 @@ const FaqPage = () => {
         onClose={handleModalClose}
         onConfirm={handleModalClose}
         title="알림"
-        description="차단된 사용자입니다. 궁금한 점이 있다면 문의를 남겨주세요"
-        confirmButtonStyle="danger"
+        description="문의가 접수되었습니다"
+        confirmButtonStyle="success"
         confirmText="확인"
         showCancel={false}
       />

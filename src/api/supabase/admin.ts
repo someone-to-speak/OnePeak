@@ -14,42 +14,46 @@ const browserClient = createClient();
 
 // 전체 회원 데이터 가져오기
 export const getUsersInfo = async (type: string, theNickname: string) => {
-  if (type === "isBlocked") {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("is_blocked", true)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "차단 회원만 불러오는데 실패하였습니다");
-    return data;
+  let data, error;
+
+  switch (type) {
+    case "isBlocked":
+      ({ data, error } = await browserClient
+        .from("user_info")
+        .select()
+        .eq("is_blocked", true)
+        .order("created_at", { ascending: false }));
+      break;
+
+    case "isDeleted":
+      ({ data, error } = await browserClient
+        .from("user_info")
+        .select()
+        .eq("is_deleted", true)
+        .order("created_at", { ascending: false }));
+      break;
+
+    case "isAll":
+      ({ data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false }));
+      break;
+
+    case "searchNickname":
+      if (theNickname) {
+        ({ data, error } = await browserClient
+          .from("user_info")
+          .select()
+          .eq("nickname", theNickname)
+          .order("created_at", { ascending: false }));
+      }
+      break;
+
+    default:
+      ({ data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false }));
+      break;
   }
-  if (type === "isDeleted") {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("is_deleted", true)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "탈퇴 회원만 불러오는데 실패하였습니다");
-    return data;
-  }
-  if (type === "isAll") {
-    const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) return errorFn(error, "모든 사용자들 정보를 가져오는데 실패하였습니다");
-    return data;
-  }
-  if (type === "searchNickname" && theNickname) {
-    const { data, error } = await browserClient
-      .from("user_info")
-      .select()
-      .eq("nickname", theNickname)
-      .order("created_at", { ascending: false });
-    if (error) return errorFn(error, "해당 회원을 검색하는데 실패하였습니다");
-    return data;
-  } else {
-    const { data, error } = await browserClient.from("user_info").select().order("created_at", { ascending: false });
-    if (error) return errorFn(error, "사용자들 정보를 가져오는데 실패하였습니다");
-    return data;
-  }
+
+  if (error) return errorFn(error, "사용자 정보를 가져오는데 실패하였습니다");
+  return data || []; // null 대신 빈 배열을 반환
 };
 
 // 특정 회원 차단 해제
@@ -199,7 +203,7 @@ export const insertLanguageInfo = async ({ imageUrl, language }: { imageUrl: str
   const { error } = await browserClient
     .from("language")
     .insert({ language_img_url: imageUrl, language_name: language, status: true });
-  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+  if (error) errorFn(error, "언어를 추가하는데 실패하였습니다");
 };
 
 // language 테이블 정보 가져오기
@@ -216,7 +220,7 @@ export const changeToUse = async (targetLanguage: number) => {
     .update({ status: true })
     .eq("id", targetLanguage)
     .order("created_at", { ascending: false });
-  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
+  if (error) errorFn(error, "해당 언어를 활성화하는데 실패하였습니다");
 };
 
 // 특정 언어 사용으로 변경
@@ -226,7 +230,7 @@ export const changeToUnuse = async (targetLanguage: number) => {
     .update({ status: false })
     .eq("id", targetLanguage)
     .order("created_at", { ascending: false });
-  if (error) errorFn(error, "해당 유저를 차단해제하는데 실패하였습니다");
+  if (error) errorFn(error, " 해당 언어의 상태를 비활성화하는데 실패하였습니다");
 };
 
 // bucket으로부터 받은 이미지 주소 language 테이블에 넣기
@@ -304,10 +308,33 @@ export const insertReportInfo = async ({
 };
 
 // faq 테이블 문의내역 가져오기
-export const getFaqs = async () => {
-  const { data, error } = await browserClient.from("faq").select().order("created_at", { ascending: false });
-  if (error) return errorFn(error, "전체 언어 리스트를 가져오는데 실패하였습니다");
-  return data;
+export const getFaqs = async (type: string) => {
+  let data, error;
+
+  switch (type) {
+    case "isAnswered":
+      ({ data, error } = await browserClient
+        .from("faq")
+        .select("*")
+        .not("comment", "eq", "") // comment가 빈 문자열이 아닌 경우만 필터링
+        .order("created_at", { ascending: false }));
+      break;
+
+    case "isNotAnswered":
+      ({ data, error } = await browserClient
+        .from("faq")
+        .select("*")
+        .eq("comment", "")
+        .order("created_at", { ascending: false }));
+      break;
+
+    default:
+      ({ data, error } = await browserClient.from("faq").select().order("created_at", { ascending: false }));
+      break;
+  }
+
+  if (error) return errorFn(error, "1:1 문의 정보를 가져오는데 실패하였습니다");
+  return data || []; // null 대신 빈 배열을 반환
 };
 
 // AI-prompt 명령어 가져오기
@@ -325,13 +352,13 @@ export const getPrompt = async () => {
 // ai-prompt 지시 내용 수정
 export const updatePrompt = async (newContent: string) => {
   const { error } = await browserClient.from("AI-prompt").update({ content: newContent }).eq("id", "1");
-  if (error) errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+  if (error) errorFn(error, "AI-prompt 지시 내용을 수정하는데 실패하였습니다");
 };
 
 // 특정 문의내역 가져오기
 export const getTargetFaqData = async (targetFaqId: string) => {
   const { data, error } = await browserClient.from("faq").select().eq("id", targetFaqId);
-  if (error) return errorFn(error, "언어 정보를 추가하는데 실패하였습니다");
+  if (error) return errorFn(error, "문의 내역를 추가하는데 실패하였습니다");
   return data[0];
 };
 

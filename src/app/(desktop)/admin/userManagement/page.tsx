@@ -101,8 +101,8 @@ const UsersInfo = () => {
   }
 
   return (
-    <div className="flex flex-col p-4">
-      <div className="flex gap-16 px-auto py-3">
+    <div className=" w-full flex flex-col p-4">
+      <div className="flex justify-center  items-center gap-16 py-3">
         <form onSubmit={handleSubmit(onSubmit)} className="mb-4">
           <input
             type="text"
